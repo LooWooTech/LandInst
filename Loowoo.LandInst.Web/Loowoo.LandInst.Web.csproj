@@ -135,6 +135,29 @@
   <ItemGroup>
     <Content Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\_ViewStart.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\_Layout.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\User\SignUp.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Loowoo.LandInst.Common\Loowoo.LandInst.Common.csproj">
+      <Project>{2b92b3b7-122e-47c6-ae45-97fa663a2d80}</Project>
+      <Name>Loowoo.LandInst.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Loowoo.LandInst.Manager\Loowoo.LandInst.Manager.csproj">
+      <Project>{5f5710c8-9c4a-4d89-916d-11e063ecfe24}</Project>
+      <Name>Loowoo.LandInst.Manager</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Loowoo.LandInst.Model\Loowoo.LandInst.Model.csproj">
+      <Project>{c9c2de67-d34a-4fb9-b1a2-09d0cebe3f8b}</Project>
+      <Name>Loowoo.LandInst.Model</Name>
+    </ProjectReference>
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

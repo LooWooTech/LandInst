@@ -9,9 +9,14 @@ namespace Loowoo.LandInst.Manager
 {
     public class UserManager
     {
-        public void Save(User user)
-        { 
-            
+        public void AddUser(User user)
+        {
+
+        }
+
+        public void SaveMember(User user, Member member)
+        {
+
         }
     }
 }
