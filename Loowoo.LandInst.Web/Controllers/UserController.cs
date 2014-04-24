@@ -9,19 +9,37 @@ namespace Loowoo.LandInst.Web.Controllers
 {
     public class UserController : ControllerBase
     {
+        [Authorize]
         public ActionResult Index()
         {
             return View();
         }
 
+        [HttpGet]
         public ActionResult SignIn()
         {
             return View();
         }
 
+        [HttpPost]
+        public ActionResult SignIn(string username, string password)
+        {
+            var user = Core.UserManager.GetUser(username, password);
+            if (user == null)
+            {
+                throw new ArgumentException("用户名或密码错误！");
+            }
+
+            //Save Login
+            HttpContext.SaveAuth(user);
+
+            return JsonSuccess();
+        }
+
         public ActionResult SignOut()
         {
-            return View();
+            AuthUtils.ClearAuth();
+            return Redirect("/user/signin");
         }
 
         [HttpGet]

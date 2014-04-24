@@ -18,5 +18,16 @@ namespace Loowoo.LandInst.Manager
         {
 
         }
+
+        public User GetUser(string username, string password)
+        {
+            return new User
+            {
+                UserID = 1,
+                Username = username,
+                Password = password,
+                Role = UserRole.Member
+            };
+        }
     }
 }
