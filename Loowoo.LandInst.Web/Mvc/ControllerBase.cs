@@ -12,6 +12,14 @@ namespace Loowoo.LandInst.Web
     {
         protected ManagerCore Core = new ManagerCore();
 
+        protected UserIdentity Identity
+        {
+            get
+            {
+                return (UserIdentity)HttpContext.User.Identity;
+            }
+        }
+
         protected ActionResult JsonSuccess(object data = null)
         {
             return Content(new { result = true, data = data }.ToJson());

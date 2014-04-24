@@ -41,6 +41,7 @@
   <ItemGroup>
     <Compile Include="Institution.cs" />
     <Compile Include="Member.cs" />
+    <Compile Include="MemberProfile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="User.cs" />
   </ItemGroup>

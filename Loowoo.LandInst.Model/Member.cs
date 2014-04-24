@@ -12,7 +12,7 @@ namespace Loowoo.LandInst.Model
 
         public int InstitutionID { get; set; }
 
-        public string IDCard { get; set; }
+        public string IDNo { get; set; }
 
         public string RealName { get; set; }
 
@@ -22,7 +22,7 @@ namespace Loowoo.LandInst.Model
 
         public string Email { get; set; }
 
-        public string Telephone { get; set; }
+        public string MobilePhone { get; set; }
     }
 
 }

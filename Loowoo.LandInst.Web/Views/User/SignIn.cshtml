@@ -24,7 +24,8 @@
             var data = $(this).serialize();
             $.post("/user/signin", data, function (json) {
                 if (json.result) {
-                    window.location.href = "/user/";
+                    //不同的人跳转不同的默认页面
+                    window.location.href = "/member/";
                 } else {
                     
                 }

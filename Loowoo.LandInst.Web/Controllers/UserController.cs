@@ -9,10 +9,9 @@ namespace Loowoo.LandInst.Web.Controllers
 {
     public class UserController : ControllerBase
     {
-        [Authorize]
         public ActionResult Index()
         {
-            return View();
+            return Redirect("/user/signin");
         }
 
         [HttpGet]
@@ -59,12 +58,9 @@ namespace Loowoo.LandInst.Web.Controllers
             return JsonSuccess();
         }
 
-
         public ActionResult ForgetPwd()
         {
             return View();
         }
-
-
     }
 }
