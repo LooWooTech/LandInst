@@ -12,8 +12,12 @@ namespace Loowoo.LandInst.Manager
     {
         public List<Exam> GetExams(ExamFilter filter = null)
         {
-
             return new List<Exam> { new Exam { ID = 1, Name = "测试考试" } };
+        }
+
+        public List<MemberExam> GetMemberExams(int userId)
+        {
+            return new List<MemberExam> { new MemberExam { ExamID = 1, ExamName = "测试考试", UserID = 1, SignTime = DateTime.Now } };
         }
     }
 }

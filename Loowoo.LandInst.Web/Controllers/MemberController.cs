@@ -24,6 +24,7 @@ namespace Loowoo.LandInst.Web.Controllers
 
         public new ActionResult Profile()
         {
+            ViewBag.Profile = Core.MemberManager.GetProfile(Identity.UserID);
             return View();
         }
 
@@ -34,6 +35,7 @@ namespace Loowoo.LandInst.Web.Controllers
 
         public ActionResult ExamResult()
         {
+            ViewBag.Exams = Core.ExamManager.GetMemberExams(Identity.UserID);
             return View();
         }
 

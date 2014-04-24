@@ -12,11 +12,13 @@ namespace Loowoo.LandInst.Model
 
         public int ExamID { get; set; }
 
+        public string ExamName { get; set; }
+
         public DateTime SignTime { get; set; }
 
         public DateTime? ApprovalTime { get; set; }
 
-        public bool SignStatus { get; set; }
+        public bool Approvaled { get; set; }
 
         public int ExamResult { get; set; }
     }

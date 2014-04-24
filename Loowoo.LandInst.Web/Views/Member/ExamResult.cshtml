@@ -1,6 +1,40 @@
-﻿@{
+﻿@using Loowoo.LandInst.Model
+@{
     ViewBag.Title = "ExamResult";
     Layout = "_Layout.cshtml";
+    List<MemberExam> exams = ViewBag.Exams;
 }
 
-<h2>ExamResult</h2>
+<h2>成绩查询</h2>
+<table>
+    <tr>
+        <th>考试</th>
+        <th>报名时间</th>
+        <th>批准时间</th>
+        <th>考试结果</th>
+    </tr>
+    @foreach (var exam in exams)
+    {
+        <tr>
+            <td>@(exam.ExamName)</td>
+            <td>@(exam.SignTime.ToShortDateString())</td>
+            <td>@(exam.ApprovalTime.HasValue ? exam.ApprovalTime.Value.ToShortDateString() : "尚未审批")
+            </td>
+            <td>@if (exam.Approvaled)
+                {
+                    if (exam.ExamResult > 0)
+                    { 
+                <span>考试通过</span>
+                    }
+                    else
+                    {
+                <span>未通过</span>
+                    }
+                }
+                else
+                {
+                <span>尚未考试</span>
+                }</td>
+        </tr>
+    }
+</table>

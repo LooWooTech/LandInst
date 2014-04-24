@@ -27,7 +27,11 @@ namespace Loowoo.LandInst.Manager
 
         public MemberProfile GetProfile(int userId)
         {
-            return new MemberProfile { };
+            return new MemberProfile
+            {
+                UserID = userId,
+                RealName = "郑良军",
+            };
         }
     }
 }
