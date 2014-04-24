@@ -37,7 +37,7 @@ namespace Loowoo.LandInst.Web.Controllers
 
         public ActionResult SignOut()
         {
-            AuthUtils.ClearAuth();
+            HttpContext.ClearAuth();
             return Redirect("/user/signin");
         }
 
@@ -53,7 +53,7 @@ namespace Loowoo.LandInst.Web.Controllers
 
             user.Role = UserRole.Member;
             Core.UserManager.AddUser(user);
-            Core.UserManager.SaveMember(user, member);
+            Core.MemberManager.SaveMember(user, member);
 
             return JsonSuccess();
         }

@@ -13,15 +13,21 @@ namespace Loowoo.LandInst.Web.Controllers
     {
         public ActionResult Index()
         {
+            var member = Core.MemberManager.GetMember(Identity.UserID);
+            ViewBag.Member = member;
+            if (member.InstitutionID > 0)
+            {
+                ViewBag.Institution = Core.InstitutionManager.GetInsitution(member.InstitutionID);
+            }
             return View();
         }
 
-        public ActionResult Profile()
+        public new ActionResult Profile()
         {
             return View();
         }
 
-        public ActionResult EditProfile()
+        public ActionResult SubmitProfile()
         {
             return View();
         }
@@ -34,6 +40,12 @@ namespace Loowoo.LandInst.Web.Controllers
         [HttpGet]
         public ActionResult SignUpExam()
         {
+            ViewBag.Profile = Core.MemberManager.GetProfile(Identity.UserID);
+            ViewBag.Exams = Core.ExamManager.GetExams(new Model.Filters.ExamFilter
+            {
+                SignTime = DateTime.Now.Date,
+                UserID = Identity.UserID
+            });
             return View();
         }
 

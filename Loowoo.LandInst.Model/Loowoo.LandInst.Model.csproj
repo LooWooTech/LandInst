@@ -39,10 +39,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Exam.cs" />
+    <Compile Include="Filters\ExamFilter.cs" />
     <Compile Include="Institution.cs" />
     <Compile Include="Member.cs" />
     <Compile Include="MemberProfile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="MemberExam.cs" />
     <Compile Include="User.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

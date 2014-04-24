@@ -13,7 +13,7 @@ namespace Loowoo.LandInst.Web
 
         public static void SaveAuth(this HttpContextBase context, User user)
         {
-            var ticket = new FormsAuthenticationTicket(user.UserID.ToString() + "|" + user.Role, true, 60);
+            var ticket = new FormsAuthenticationTicket(user.ID.ToString() + "|" + user.Role, true, 60);
             var cookieValue = FormsAuthentication.Encrypt(ticket);
             var cookie = new HttpCookie(_cookieName, cookieValue);
             context.Response.Cookies.Remove(_cookieName);
@@ -48,9 +48,13 @@ namespace Loowoo.LandInst.Web
             return UserIdentity.Guest;
         }
 
-        public static void ClearAuth()
+        public static void ClearAuth(this HttpContextBase context)
         {
-            FormsAuthentication.SignOut();
+            var cookie = context.Request.Cookies.Get(_cookieName);
+            if (cookie == null) return;
+            cookie.Value = null;
+            cookie.Expires = DateTime.Now.AddDays(-1);
+            context.Response.SetCookie(cookie);
         }
     }
 }

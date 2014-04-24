@@ -14,20 +14,16 @@ namespace Loowoo.LandInst.Manager
 
         }
 
-        public void SaveMember(User user, Member member)
-        {
-
-        }
-
         public User GetUser(string username, string password)
         {
             return new User
             {
-                UserID = 1,
+                ID = 1,
                 Username = username,
                 Password = password,
                 Role = UserRole.Member
             };
         }
+
     }
 }

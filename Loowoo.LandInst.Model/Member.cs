@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,6 +24,17 @@ namespace Loowoo.LandInst.Model
         public string Email { get; set; }
 
         public string MobilePhone { get; set; }
+
+        public MemberStatus Status { get; set; }
     }
 
+    public enum MemberStatus
+    {
+        [Description("新注册用户")]
+        NewUser,
+        [Description("通过考试")]
+        PassExam,
+        [Description("机构从业人员")]
+        Staff
+    }
 }
