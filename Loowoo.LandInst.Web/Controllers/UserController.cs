@@ -32,7 +32,7 @@ namespace Loowoo.LandInst.Web.Controllers
             //Save Login
             HttpContext.SaveAuth(user);
 
-            return JsonSuccess();
+            return JsonSuccess(new { role = user.Role.ToString().ToLower() });
         }
 
         public ActionResult SignOut()

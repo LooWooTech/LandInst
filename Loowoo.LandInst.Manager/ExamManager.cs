@@ -19,5 +19,15 @@ namespace Loowoo.LandInst.Manager
         {
             return new List<MemberExam> { new MemberExam { ExamID = 1, ExamName = "测试考试", UserID = 1, SignTime = DateTime.Now } };
         }
+
+        public Exam GetExam(int examId)
+        {
+            return new Exam();
+        }
+
+        public void Add(MemberExam memberExam)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

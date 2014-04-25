@@ -16,5 +16,49 @@ namespace Loowoo.LandInst.Web.Controllers
             return View();
         }
 
+        public new ActionResult Profile()
+        {
+            return View();
+        }
+
+        public ActionResult EditProfile()
+        {
+            return View();
+        }
+
+        public ActionResult ChangeProfile()
+        {
+            return View("EditProfile");
+        }
+
+        public ActionResult Logout()
+        {
+            return View();
+        }
+
+        public ActionResult AnnualCheck()
+        {
+            return View();
+        }
+
+        public ActionResult Educations()
+        {
+            return View();
+        }
+
+        public ActionResult Members()
+        {
+            return View();
+        }
+
+        public ActionResult ChangeMember()
+        {
+            return View();
+        }
+
+        public ActionResult History()
+        {
+            return View();
+        }
     }
 }

@@ -21,7 +21,7 @@ namespace Loowoo.LandInst.Manager
                 ID = 1,
                 Username = username,
                 Password = password,
-                Role = UserRole.Member
+                Role = UserRole.Institution
             };
         }
 

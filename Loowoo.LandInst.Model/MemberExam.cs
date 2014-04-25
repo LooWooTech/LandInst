@@ -8,6 +8,11 @@ namespace Loowoo.LandInst.Model
 {
     public class MemberExam
     {
+        public MemberExam()
+        {
+            SignTime = DateTime.Now;
+        }
+
         public int UserID { get; set; }
 
         public int ExamID { get; set; }

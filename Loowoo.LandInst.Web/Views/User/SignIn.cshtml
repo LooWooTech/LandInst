@@ -25,7 +25,20 @@
             $.post("/user/signin", data, function (json) {
                 if (json.result) {
                     //不同的人跳转不同的默认页面
-                    window.location.href = "/member/";
+                    console.log(json.data.role);
+                    var redirectUrl = "/member/";
+                    switch (json.data.role) {
+                        case "member":
+                            redirectUrl = "/member/";
+                            break;
+                        case "institution":
+                            redirectUrl = "/institution/";
+                            break;
+                        case "admin":
+                            redirectUrl = "/admin/";
+                            break;
+                    }
+                    window.location.href = redirectUrl;
                 } else {
                     
                 }

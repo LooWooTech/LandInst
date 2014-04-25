@@ -157,6 +157,17 @@
     <Content Include="Views\Member\Profile.cshtml" />
     <Content Include="Views\Member\ExamResult.cshtml" />
     <Content Include="Views\Member\SignUpExam.cshtml" />
+    <Content Include="Views\Institution\Index.cshtml" />
+    <Content Include="Views\Institution\_Layout.cshtml" />
+    <Content Include="Views\Member\Education.cshtml" />
+    <Content Include="Views\Institution\Members.cshtml" />
+    <Content Include="Views\Institution\ChangeMember.cshtml" />
+    <Content Include="Views\Institution\EditProfile.cshtml" />
+    <Content Include="Views\Institution\Profile.cshtml" />
+    <Content Include="Views\Institution\Logout.cshtml" />
+    <Content Include="Views\Institution\AnnualCheck.cshtml" />
+    <Content Include="Views\Institution\Educations.cshtml" />
+    <Content Include="Views\Institution\History.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

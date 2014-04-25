@@ -54,7 +54,19 @@ namespace Loowoo.LandInst.Web.Controllers
         [HttpPost]
         public ActionResult SignUpExam(MemberProfile profile, int examId)
         {
+            Core.MemberManager.SaveProfile(profile);
+            var exam  = Core.ExamManager.GetExam(examId);
+            if(exam == null)
+            {
+                throw new ArgumentException("examId");
+            }
+            Core.ExamManager.Add(new MemberExam { UserID = Identity.UserID, ExamID = examId, ExamName = exam.Name});
             return JsonSuccess();
+        }
+
+        public ActionResult Education()
+        {
+            return View();
         }
     }
 }

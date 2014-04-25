@@ -33,5 +33,10 @@ namespace Loowoo.LandInst.Manager
                 RealName = "郑良军",
             };
         }
+
+        public void SaveProfile(MemberProfile profile)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
