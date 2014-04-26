@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Loowoo.LandInst.Model;
+using Loowoo.LandInst.Model.Filters;
 
 namespace Loowoo.LandInst.Manager
 {
@@ -37,6 +38,11 @@ namespace Loowoo.LandInst.Manager
         public void SaveProfile(MemberProfile profile)
         {
             throw new NotImplementedException();
+        }
+
+        public List<Member> GetMembers(MemberFilter filter)
+        {
+            return new List<Member>();
         }
     }
 }
