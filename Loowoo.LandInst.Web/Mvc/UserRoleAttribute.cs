@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Web;
-using System.Web.Http.Filters;
 using System.Web.Mvc;
 using Loowoo.LandInst.Model;
 
@@ -26,14 +25,16 @@ namespace Loowoo.LandInst.Web
                 return;
             }
 
-            if (Role <= currentUser.Role)
+            if (Role == currentUser.Role)
             {
                 return;
             }
             else
             {
-                throw new HttpException(401, "你没有权限查看此页面");
+                //throw new HttpException(401, "你没有权限查看此页面");
             }
+
+            return;
         }
     }
 }

@@ -25,5 +25,9 @@ namespace Loowoo.LandInst.Manager
             };
         }
 
+        public User GetUser(int userId)
+        {
+            return new User();
+        }
     }
 }

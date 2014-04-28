@@ -17,7 +17,7 @@ namespace Loowoo.LandInst.Web.Controllers
             ViewBag.Member = member;
             if (member.InstitutionID > 0)
             {
-                ViewBag.Institution = Core.InstitutionManager.GetInsitution(member.InstitutionID);
+                ViewBag.Institution = Core.InstitutionManager.GetInstitution(member.InstitutionID);
             }
             return View();
         }
@@ -35,7 +35,7 @@ namespace Loowoo.LandInst.Web.Controllers
 
         public ActionResult ExamResult()
         {
-            ViewBag.Exams = Core.ExamManager.GetMemberExams(Identity.UserID);
+            ViewBag.Exams = Core.ExamManager.GetExams(Identity.UserID);
             return View();
         }
 
@@ -60,7 +60,7 @@ namespace Loowoo.LandInst.Web.Controllers
             {
                 throw new ArgumentException("examId");
             }
-            Core.ExamManager.Add(new MemberExam { UserID = Identity.UserID, ExamID = examId, ExamName = exam.Name});
+            Core.ExamManager.AddExam(new MemberExam { UserID = Identity.UserID, ExamID = examId, ExamName = exam.Name});
             return JsonSuccess();
         }
 

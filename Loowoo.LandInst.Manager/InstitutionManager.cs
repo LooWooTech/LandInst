@@ -4,15 +4,21 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Loowoo.LandInst.Model;
+using Loowoo.LandInst.Model.Filters;
 
 namespace Loowoo.LandInst.Manager
 {
     public class InstitutionManager
     {
 
-        public Institution GetInsitution(int userId)
+        public Institution GetInstitution(int userId)
         {
             return new Institution();
+        }
+
+        public List<Institution> GetInstitutions(InstitutionFilter filter)
+        {
+            return new List<Institution>();
         }
 
         public void AddShareholder(Shareholder shareholder)

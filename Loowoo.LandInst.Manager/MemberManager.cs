@@ -10,9 +10,14 @@ namespace Loowoo.LandInst.Manager
 {
     public class MemberManager
     {
-        public void SaveMember(User user, Member member)
+        public void AddMember(User user, Member member)
         {
 
+        }
+
+        public void UpdateMember(Member member)
+        { 
+            
         }
 
         public Member GetMember(int userId)

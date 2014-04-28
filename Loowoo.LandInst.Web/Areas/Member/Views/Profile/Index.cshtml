@@ -1,0 +1,10 @@
+﻿@using Loowoo.LandInst.Model
+@{
+    ViewBag.Title = "Profile";
+    Layout = "~/Areas/Member/Views/Shared/_Layout.cshtml";
+
+    MemberProfile profile = ViewBag.Profile;
+}
+
+<h2>个人资料</h2>
+<label>真实姓名：</label>@(profile.RealName)

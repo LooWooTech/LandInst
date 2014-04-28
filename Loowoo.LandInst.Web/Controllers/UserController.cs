@@ -53,7 +53,7 @@ namespace Loowoo.LandInst.Web.Controllers
 
             user.Role = UserRole.Member;
             Core.UserManager.AddUser(user);
-            Core.MemberManager.SaveMember(user, member);
+            Core.MemberManager.AddMember(user, member);
 
             return JsonSuccess();
         }

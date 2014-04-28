@@ -14,6 +14,8 @@ namespace Loowoo.LandInst.Model
 
         public DateTime CreateTime { get; set; }
 
+        public InstitutionType Type { get; set; }
+
         /// <summary>
         /// 机构全称
         /// </summary>
@@ -33,6 +35,12 @@ namespace Loowoo.LandInst.Model
         /// 法人代表
         /// </summary>
         public string LegalRepresentative { get; set; }
+    }
+
+    public enum InstitutionType
+    { 
+        土地规划,
+        土地勘测
     }
 
     public enum InstitutionStatus

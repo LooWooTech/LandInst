@@ -1,0 +1,47 @@
+﻿@using Loowoo.LandInst.Model
+@using Loowoo.LandInst.Common
+@{
+    ViewBag.Title = "报名考试";
+    Layout = "~/Areas/Member/Views/Shared/_Layout.cshtml";
+
+    MemberProfile profile = ViewBag.Profile;
+    List<Exam> exams = ViewBag.Exams;
+
+    if (exams.Count == 0)
+    {
+    <h2>暂无考试条目，无法报名</h2>
+        return;
+    }
+}
+
+<h2>报名考试</h2>
+<form id="signupexam-form" role="form" class="form-horizontal" method="post">
+    <label class="control-label">姓名</label>
+    <input type="text" name="Realname" class="form-control input-sm" disabled="disabled" />
+    <label class="control-label">民族</label>
+    <input type="text" name="Nationality" class="form-control input-sm" />
+    <label class="control-label">籍贯</label>
+    <input type="text" name="NativePlace" class="form-control input-sm" />
+
+    <label>选择考试：</label>
+    <select name="ExamId" class="form-control input-sm">
+        @foreach (var exam in exams)
+        { 
+            <option value="@(exam.ID)">@(exam.Name)</option>
+        }
+    </select>
+
+    <div>请确保以上资料填写完整</div>
+    <button type="submit" class="btn btn-primary">提交注册</button>
+</form>
+<script>
+    $(function () {
+        $("#signupexam-form").submit(function () {
+            var data = $(this).serialize();
+            $.post("/member/signupexam", data, function (json) {
+
+            }, "json");
+            return false;
+        });
+    });
+</script>

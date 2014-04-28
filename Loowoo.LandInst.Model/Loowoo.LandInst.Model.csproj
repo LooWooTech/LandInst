@@ -39,16 +39,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AnnualApproval.cs" />
     <Compile Include="Certification.cs" />
     <Compile Include="Education.cs" />
     <Compile Include="Exam.cs" />
     <Compile Include="Filters\EducationFilter.cs" />
     <Compile Include="Filters\ExamFilter.cs" />
+    <Compile Include="Filters\InstitutionFilter.cs" />
     <Compile Include="Filters\MemberFilter.cs" />
     <Compile Include="Filters\PageFilter.cs" />
     <Compile Include="Institution.cs" />
     <Compile Include="InstitutionProfile.cs" />
-    <Compile Include="ProfileCheck.cs" />
+    <Compile Include="Approval.cs" />
     <Compile Include="Member.cs" />
     <Compile Include="MemberProfile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

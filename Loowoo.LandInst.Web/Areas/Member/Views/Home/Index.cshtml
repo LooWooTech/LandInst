@@ -1,0 +1,25 @@
+﻿@using Loowoo.LandInst.Model
+@using Loowoo.LandInst.Common
+@{
+    Layout = "~/Areas/Member/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "会员首页";
+    Member member = ViewBag.Member;
+    Institution institution = ViewBag.Instituion;
+    MemberProfile profile = ViewBag.Profile;
+}
+
+<h2>欢迎页</h2>
+
+<label>真实姓名：</label>
+@(member.RealName)
+<label>所属机构：</label>@(institution == null ? "无机构" : institution.Name)
+<label>当前状态：</label>@(member.Status.GetDescription())
+
+@if (member.Status == MemberStatus.NewUser)
+{ 
+    <a href="/member/exam/signup">报名参加考试</a>
+}
+@if (member.Status == MemberStatus.PassExam)
+{ 
+    <a href="/member/institution/">申请机构</a>
+}

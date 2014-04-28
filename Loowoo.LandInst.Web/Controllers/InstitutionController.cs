@@ -26,7 +26,7 @@ namespace Loowoo.LandInst.Web.Controllers
         [HttpGet]
         public ActionResult EditProfile()
         {
-            ViewBag.ProfileCheck = Core.ProfileCheckManager.GetCheck(Identity.UserID, CheckType.Register);
+            ViewBag.Approval = Core.ApprovalManager.GetApproval(Identity.UserID, ApprovalType.MemberRegister);
             return View();
         }
 
@@ -51,7 +51,7 @@ namespace Loowoo.LandInst.Web.Controllers
         [HttpPost]
         public ActionResult Logout(string fullName)
         {
-            var inst = Core.InstitutionManager.GetInsitution(Identity.UserID);
+            var inst = Core.InstitutionManager.GetInstitution(Identity.UserID);
             if (inst != null && inst.FullName == fullName)
             {
                 Core.InstitutionManager.LogoutInstitution(inst);

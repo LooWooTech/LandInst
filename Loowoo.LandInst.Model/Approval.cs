@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Loowoo.LandInst.Model
 {
-    public class ProfileCheck
+    public class Approval
     {
         public int ID { get; set; }
 
@@ -14,24 +14,28 @@ namespace Loowoo.LandInst.Model
 
         public DateTime? CheckTime { get; set; }
 
-        public bool Pass { get; set; }
+        public bool Result { get; set; }
 
         public string Note { get; set; }
 
-        public CheckType Type { get; set; }
+        public ApprovalType Type { get; set; }
 
         public bool IsLocked
         {
             get
             {
-                return !CheckTime.HasValue || Pass;
-        }
+                return !CheckTime.HasValue || Result;
+            }
         }
     }
 
-    public enum CheckType
+    public enum ApprovalType
     {
-        Register, Change
-
+        MemberRegister,
+        MemeberTransfer,
+        InstitutionRegister,
+        Education,
+        Exam,
+        Annual
     }
 }
