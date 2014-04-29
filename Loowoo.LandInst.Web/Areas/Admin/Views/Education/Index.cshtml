@@ -1,0 +1,40 @@
+﻿@using Loowoo.LandInst.Model
+@{
+    ViewBag.Title = "继续教育管理";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    List<Education> list = ViewBag.List;
+}
+
+<h2>继续教育管理</h2>
+<div class="">
+    <a href="/admin/education/edit">添加</a>
+</div>
+<table class="table">
+    <tr>
+        <th>名称</th>
+        <th>起始时间</th>
+        <th>结束时间</th>
+        <th>学时</th>
+        <th>教育机构</th>
+        <th>管理</th>
+    </tr>
+    @foreach (var edu in list)
+    { 
+        <tr>
+            <td>@(edu.Name)</td>
+            <td>@(edu.StartDate.ToShortDateString())</td>
+            <td>@(edu.EndDate.ToShortDateString())</td>
+            <td>@(edu.Hours)小时</td>
+            <td>@(edu.Agency)</td>
+            <td>
+                <a href="/admin/education/edit?id=@(edu.ID)">编辑</a>
+                <a href="/admin/education/delete?id=@(edu.ID)">删除</a>
+            </td>
+        </tr>
+    }
+    <tr>
+        <td colspan="6">
+            @(Html.Partial("_pagination",ViewBag.Page as object))
+        </td>
+    </tr>
+</table>

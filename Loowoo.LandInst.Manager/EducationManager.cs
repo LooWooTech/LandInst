@@ -11,13 +11,13 @@ namespace Loowoo.LandInst.Manager
     public class EducationManager
     {
         public void AddEducation(Education education)
-        { 
-        
+        {
+
         }
 
         public void CheckEducation(int memberId)
-        { 
-            
+        {
+
         }
 
         public List<Education> GetEducations(EducationFilter filter = null)
@@ -31,6 +31,16 @@ namespace Loowoo.LandInst.Manager
         }
 
         public void SaveEducation(Education education)
+        {
+
+        }
+
+        public List<MemberEducation> GetMemberEducations(EducationFilter filter)
+        {
+            return new List<MemberEducation>() { new MemberEducation { EducationID = 1, MemberID = 1, MemberName = "Test", EduName = "test" } };
+        }
+
+        public void Approval(int memberId, int eduId, bool result)
         {
 
         }

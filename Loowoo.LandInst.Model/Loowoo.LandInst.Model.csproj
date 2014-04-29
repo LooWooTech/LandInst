@@ -52,6 +52,7 @@
     <Compile Include="InstitutionProfile.cs" />
     <Compile Include="Approval.cs" />
     <Compile Include="Member.cs" />
+    <Compile Include="MemberEducation.cs" />
     <Compile Include="MemberProfile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="MemberExam.cs" />

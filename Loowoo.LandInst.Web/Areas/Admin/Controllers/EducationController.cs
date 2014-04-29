@@ -19,7 +19,7 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
         }
 
         [HttpGet]
-        public ActionResult Edit(int id)
+        public ActionResult Edit(int id = 0)
         {
             ViewBag.Model = Core.EducationManager.GetEducatoin(id);
             return View();
@@ -32,10 +32,36 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
             return JsonSuccess();
         }
 
-        public ActionResult Approval(int id)
+        public ActionResult Approvals(int eduId = 0, int page = 1)
         {
-            return JsonSuccess();
+            var filter = new EducationFilter
+            {
+                PageIndex = page,
+                EducationID = eduId,
+            };
+            ViewBag.List = Core.EducationManager.GetMemberEducations(filter);
+            return View();
         }
 
+
+        public ActionResult Approval(string memberId, string eduId, bool result = true)
+        {
+            var memberIds = memberId.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(id => int.Parse(id)).ToArray();
+            var eduIds = eduId.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(id => int.Parse(id)).ToArray();
+
+            for (var i = 0; i < memberIds.Length; i++)
+            {
+                try
+                {
+                    Core.EducationManager.Approval(memberIds[i], eduIds[i], result);
+                }
+                catch
+                {
+
+                }
+            }
+
+            return JsonSuccess();
+        }
     }
 }

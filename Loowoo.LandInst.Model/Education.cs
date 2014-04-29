@@ -10,7 +10,7 @@ namespace Loowoo.LandInst.Model
     {
         public int ID { get; set; }
 
-        public int MemberID { get; set; }
+        public string Name { get; set; }
 
         public DateTime StartDate { get; set; }
 
@@ -28,6 +28,6 @@ namespace Loowoo.LandInst.Model
 
         public string Agency { get; set; }
 
-        public bool Checked { get; set; }
+
     }
 }

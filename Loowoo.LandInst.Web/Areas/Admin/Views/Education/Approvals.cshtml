@@ -1,0 +1,54 @@
+﻿@using Loowoo.LandInst.Model
+@{
+    ViewBag.Title = "Approvals";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    List<MemberEducation> list = ViewBag.List;
+}
+
+<h2>继续教育审批</h2>
+<input id="btn-agree" type="button" class="btn btn-primary" value="通过审批" />
+<input id="btn-disgree" type="button" class="btn btn-danger" value="不通过" />
+<table class="table">
+    <tr>
+        <th><input id="btn-select" type="checkbox" /></th>
+        <th>会员姓名</th>
+        <th>继续教育名称</th>
+        <th>申请时间</th>
+        <th>审批状态</th>
+        <th>审批时间</th>
+        <th>管理</th>
+    </tr>
+    @foreach (MemberEducation edu in list)
+    { 
+        <tr>
+            <td>
+                <input type="checkbox" name="memberId" value="@(edu.MemberID)|@(edu.EducationID)" />
+            </td>
+            <td>@(edu.MemberName)</td>
+            <td>@(edu.EduName)</td>
+            <td>@(edu.CreateTime)</td>
+            <td>@(edu.Approval ? "已通过" : "未通过")</td>
+            <td>@(edu.ApprovalTime)</td>
+        </tr>
+    }
+    <tr>
+        <td colspan="6">
+            @Html.Partial("_pagination", ViewBag.Page as object)
+        </td>
+    </tr>
+</table>
+
+<script>
+    $(function () {
+        $("#btn-select").click(function () {
+            $("input[type='checkbox']").prop('checked', this.checked);
+        });
+
+        function getData()
+        {
+            var values = $("input[name='memberId']").val()
+            console.log(values);
+        }
+    });
+
+</script>

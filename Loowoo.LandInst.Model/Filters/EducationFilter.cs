@@ -11,5 +11,9 @@ namespace Loowoo.LandInst.Model.Filters
         public DateTime? Date { get; set; }
 
         public int? InstitutionID { get; set; }
+
+        public int? EducationID { get; set; }
+
+        public bool? Approval { get; set; }
     }
 }
