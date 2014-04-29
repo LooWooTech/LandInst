@@ -31,11 +31,12 @@ namespace Loowoo.LandInst.Model
 
     public enum ApprovalType
     {
-        MemberRegister,
-        MemeberTransfer,
-        InstitutionRegister,
-        Education,
-        Exam,
-        Annual
+        Register,//注册、登记
+        Change,//信息变更
+        Transfer,//会员转移
+        Working,//会员执业
+        Annual,//年审
+        Education,//继续教育
+        Exam//报名考试
     }
 }

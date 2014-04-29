@@ -8,6 +8,11 @@ namespace Loowoo.LandInst.Model
 {
     public class User
     {
+        public User()
+        {
+            RegisterTime = DateTime.Now;
+        }
+
         public int ID { get; set; }
 
         public string Username { get; set; }
@@ -20,7 +25,7 @@ namespace Loowoo.LandInst.Model
 
         public DateTime RegisterTime { get; set; }
 
-        public DateTime LastLoginTime { get; set; }
+        public DateTime? LastLoginTime { get; set; }
 
         public UserRole Role { get; set; }
 

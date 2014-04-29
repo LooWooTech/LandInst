@@ -10,7 +10,8 @@
 <input id="btn-disgree" type="button" class="btn btn-danger" value="不通过" />
 <table class="table">
     <tr>
-        <th><input id="btn-select" type="checkbox" /></th>
+        <th>
+            <input id="btn-select" type="checkbox" /></th>
         <th>会员姓名</th>
         <th>继续教育名称</th>
         <th>申请时间</th>
@@ -22,7 +23,7 @@
     { 
         <tr>
             <td>
-                <input type="checkbox" name="memberId" value="@(edu.MemberID)|@(edu.EducationID)" />
+                <input type="checkbox" name="id" value="@(edu.MemberID)|@(edu.EducationID)" />
             </td>
             <td>@(edu.MemberName)</td>
             <td>@(edu.EduName)</td>
@@ -44,10 +45,23 @@
             $("input[type='checkbox']").prop('checked', this.checked);
         });
 
-        function getData()
-        {
-            var values = $("input[name='memberId']").val()
-            console.log(values);
+        $("#btn-agree").click(function () {
+            var data = getData();
+            $.post("/admin/education/approval", data, function () {
+                    
+            });
+        });
+
+        function getData() {
+            var memberId = [];
+            var eduId = [];
+            $("input[name='id']:checked").each(function () {
+                var val = $(this).val();
+                memberId.push(val.split('|')[0]);
+                eduId.push(val.split('|')[1]);
+
+            });
+            return { memberId: memberId.join(), eduId: eduId.join() };
         }
     });
 

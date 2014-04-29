@@ -37,7 +37,10 @@ namespace Loowoo.LandInst.Manager
 
         public List<MemberEducation> GetMemberEducations(EducationFilter filter)
         {
-            return new List<MemberEducation>() { new MemberEducation { EducationID = 1, MemberID = 1, MemberName = "Test", EduName = "test" } };
+            return new List<MemberEducation>() { 
+                new MemberEducation { EducationID = 1, MemberID = 1, MemberName = "Test", EduName = "test" } 
+                ,new MemberEducation { EducationID = 2, MemberID = 1, MemberName = "Test", EduName = "test" } 
+            };
         }
 
         public void Approval(int memberId, int eduId, bool result)

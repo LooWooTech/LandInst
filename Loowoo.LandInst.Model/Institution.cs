@@ -8,9 +8,9 @@ namespace Loowoo.LandInst.Model
 {
     public class Institution
     {
-        public int UserID { get; set; }
+        public int ID { get; set; }
 
-        public InstitutionStatus Status {get;set;}
+        public InstitutionStatus Status { get; set; }
 
         public DateTime CreateTime { get; set; }
 
@@ -31,6 +31,10 @@ namespace Loowoo.LandInst.Model
         /// </summary>
         public string RegistrationNo { get; set; }
 
+        public string City { get; set; }
+
+        public string MobilePhone { get; set; }
+
         /// <summary>
         /// 法人代表
         /// </summary>
@@ -38,13 +42,13 @@ namespace Loowoo.LandInst.Model
     }
 
     public enum InstitutionType
-    { 
-        土地规划,
+    {
+        土地规划 = 1,
         土地勘测
     }
 
     public enum InstitutionStatus
-    { 
-        
+    {
+
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Loowoo.LandInst.Common;
 using Loowoo.LandInst.Model;
 using Loowoo.LandInst.Model.Filters;
 
@@ -33,22 +34,35 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
         }
 
         [HttpGet]
-        public ActionResult Edit(int instId = 0)
+        public ActionResult Edit(int id = 0)
         {
-            if (instId > 0)
-            {
-                ViewBag.Model = Core.InstitutionManager.GetInstitution(instId);
-            }
+            ViewBag.Model = Core.InstitutionManager.GetInstitution(id) ?? new Model.Institution();
             return View();
         }
 
         [HttpPost]
-        public ActionResult Edit(Model.Institution entity)
+        public ActionResult Edit(string username, Model.Institution inst, Model.InstitutionProfile profile)
         {
-            return JsonSuccess();
+            var user = Core.UserManager.GetUser(username);
+            if (user != null)
+            {
+                throw new ArgumentException("用户名已被使用！");
+            }
+
+            user = new User
+            {
+                Username = username,
+                Password = StringHelper.GenerateRandomString(8),
+                Role = UserRole.Institution
+            };
+
+            Core.UserManager.AddUser(user);
+            Core.InstitutionManager.SaveInstitution(inst);
+            Core.InstitutionManager.SaveProfile(profile);
+            return JsonSuccess(new { user });
         }
 
-        public ActionResult Approval(int instId)
+        public ActionResult Approval(int id)
         {
             return JsonSuccess();
         }

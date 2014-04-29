@@ -17,7 +17,7 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
         public ActionResult Edit()
         {
             ViewBag.Profile = Core.InstitutionManager.GetProfile(Identity.UserID);
-            ViewBag.Approval = Core.ApprovalManager.GetApproval(Identity.UserID, ApprovalType.MemberRegister);
+            ViewBag.Approval = Core.ApprovalManager.GetApproval(Identity.UserID, ApprovalType.Register);
             return View();
         }
 

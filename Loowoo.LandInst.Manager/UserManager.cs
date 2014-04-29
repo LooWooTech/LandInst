@@ -16,6 +16,17 @@ namespace Loowoo.LandInst.Manager
 
         public User GetUser(string username, string password)
         {
+            //var user = GetUser(username);
+            //if (user == null)
+            //{
+            //    throw new ArgumentException("用户名不存在");
+            //}
+
+            //if (user.Password != password)
+            //{
+            //    throw new ArgumentException("密码不正确！");
+            //}
+
             return new User
             {
                 ID = 1,
@@ -23,6 +34,11 @@ namespace Loowoo.LandInst.Manager
                 Password = password,
                 Role = UserRole.Institution
             };
+        }
+
+        public User GetUser(string username)
+        {
+            return new User();
         }
 
         public User GetUser(int userId)

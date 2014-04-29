@@ -49,5 +49,13 @@ namespace Loowoo.LandInst.Manager
         {
             return new InstitutionProfile();
         }
+
+        public void SaveInstitution(Institution inst)
+        {
+        }
+
+        public void SaveProfile(InstitutionProfile profile)
+        {
+        }
     }
 }

@@ -1,0 +1,75 @@
+﻿@using Loowoo.LandInst.Model
+@{
+    Institution model = ViewBag.Model;
+    ViewBag.Title = model.ID > 0 ? "修改机构" : "添加新机构";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<h2>@(ViewBag.Title)</h2>
+<form id="institution-form" role="form" class="form-horizontal">
+    <label class="control-label">登录用户名</label>
+    <input type="text" name="Username" class="form-control input-sm" />
+
+    <label class="control-label">机构类别</label>
+    <div class="radio-inline">
+        <label><input type="radio" name="InstitutionType" value="1" checked="checked" />土地规划机构</label>
+    </div>
+    <div class="radio-inline">
+        <label><input type="radio" name="InstitutionType" value="2" />土地勘测机构</label>
+    </div>
+
+    <br />
+    <label class="control-label">机构简称</label>
+    <input type="text" name="Name" class="form-control input-sm" />
+
+    <label class="control-label">机构全称</label>
+    <input type="text" name="FullName" class="form-control input-sm" />
+
+    <label class="control-label">工商注册号</label>
+    <input type="text" name="RegistrationNo" class="form-control input-sm" />
+
+    <label class="control-label">法人代表</label>
+    <input type="text" name="LegalRepresentative" class="form-control input-sm" />
+
+    <label class="control-label">注册资金</label>
+    <input type="text" name="RegisteredCapital" class="form-control input-sm" />
+
+    <label class="control-label">经营范围</label>
+    <input type="text" name="BusinessScope" class="form-control input-sm" />
+
+    <label class="control-label">注册证书号</label>
+    <input type="text" name="CertificateNo" class="form-control input-sm" />
+
+    <label class="control-label">利税总额</label>
+    <input type="text" name="TotalProfits" class="form-control input-sm" />
+
+    <label class="control-label">经营期限</label>
+    <input type="text" name="OperatingPeriod" class="form-control input-sm" />
+
+    <label class="control-label">地址</label>
+    <input type="text" name="Address" class="form-control input-sm" />
+
+    <label class="control-label">邮编</label>
+    <input type="text" name="Postcode" class="form-control input-sm" />
+
+    <label class="control-label">电子信箱</label>
+    <input type="text" name="Email" class="form-control input-sm" />
+
+    <label class="control-label">公司网站</label>
+    <input type="text" name="Website" class="form-control input-sm" />
+
+
+    <button type="submit" class="btn btn-primary">提交注册</button>
+
+</form>
+<script>
+    $(function () {
+        $("#institution-form").submit(function () {
+            var data = $(this).serialize();
+            $.post("/institution/edit", data, function (json) {
+
+            }, "json");
+            return false;
+        });
+    });
+</script>
