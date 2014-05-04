@@ -24,7 +24,7 @@ namespace Loowoo.LandInst.Manager
         {
             return new Member
             {
-                UserID = userId,
+                ID = userId,
                 RealName = "郑良军",
 
             };
@@ -35,7 +35,7 @@ namespace Loowoo.LandInst.Manager
         {
             return new MemberProfile
             {
-                UserID = userId,
+                ID = userId,
                 RealName = "郑良军",
             };
         }

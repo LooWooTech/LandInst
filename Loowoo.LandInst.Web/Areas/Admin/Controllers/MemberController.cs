@@ -91,5 +91,16 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
             return View();
         }
 
+        [HttpGet]
+        public ActionResult ResetPwd()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult ResetPwd(string userId)
+        {
+            return JsonSuccess();
+        }
     }
 }

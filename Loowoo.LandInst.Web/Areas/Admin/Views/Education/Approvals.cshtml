@@ -46,11 +46,19 @@
         });
 
         $("#btn-agree").click(function () {
-            var data = getData();
-            $.post("/admin/education/approval", data, function () {
-                    
-            });
+            submitApproval(true);
         });
+
+        $("#btn-disagree").click(function () {
+            submitApproval(false);
+        });
+
+        function submitApproval(result) {
+            var data = getData();
+            $.post("/admin/education/approval?result=" + result, data, function () {
+
+            });
+        }
 
         function getData() {
             var memberId = [];

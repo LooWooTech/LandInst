@@ -1,15 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Loowoo.LandInst.Model
 {
+    [Table("Member")]
     public class Member
     {
-        public int UserID { get; set; }
+        [Key]
+        public int ID { get; set; }
 
         public int InstitutionID { get; set; }
 
@@ -26,6 +30,10 @@ namespace Loowoo.LandInst.Model
         public string MobilePhone { get; set; }
 
         public MemberStatus Status { get; set; }
+
+        public string Username { get; set; }
+
+        public string InstitutionName { get; set; }
     }
 
     public enum MemberStatus
