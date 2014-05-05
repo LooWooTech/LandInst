@@ -9,7 +9,5 @@ namespace Loowoo.LandInst.Model.Filters
     public class ExamFilter
     {
         public DateTime? SignTime { get; set; }
-
-        public int? UserID { get; set; }
     }
 }

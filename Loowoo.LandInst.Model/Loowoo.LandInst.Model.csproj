@@ -56,6 +56,7 @@
     <Compile Include="Filters\InstitutionFilter.cs" />
     <Compile Include="Filters\MemberFilter.cs" />
     <Compile Include="Filters\PageFilter.cs" />
+    <Compile Include="InfoData.cs" />
     <Compile Include="Institution.cs" />
     <Compile Include="InstitutionProfile.cs" />
     <Compile Include="Approval.cs" />

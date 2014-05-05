@@ -60,7 +60,9 @@
     <Compile Include="AnnualApprovalManager.cs" />
     <Compile Include="DBDataContext.cs" />
     <Compile Include="EducationManager.cs" />
+    <Compile Include="EFExtensions.cs" />
     <Compile Include="ExamManager.cs" />
+    <Compile Include="InfoDataManager.cs" />
     <Compile Include="InstitutionManager.cs" />
     <Compile Include="ManagerBase.cs" />
     <Compile Include="ManagerCore.cs" />

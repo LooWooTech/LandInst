@@ -53,7 +53,7 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
             {
                 Username = username,
                 Password = StringHelper.GenerateRandomString(8),
-                Role = UserRole.Institution
+                UserRole = (int)UserRole.Institution
             };
 
             Core.UserManager.AddUser(user);

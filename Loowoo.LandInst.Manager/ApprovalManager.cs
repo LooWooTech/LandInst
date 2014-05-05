@@ -7,19 +7,26 @@ using Loowoo.LandInst.Model;
 
 namespace Loowoo.LandInst.Manager
 {
-    public class ApprovalManager
+    public class ApprovalManager : ManagerBase
     {
         public Approval GetApproval(int infoId, ApprovalType type)
         {
-            return new Approval();
+            using (var db = GetDataContext())
+            {
+                return db.Approvals.FirstOrDefault(e => e.InfoID == infoId && e.Type == type);
+            }
         }
 
         public void UpdateApproval(int infoId, ApprovalType type, bool result)
         {
-            var entity = GetApproval(infoId, type);
-            entity.CheckTime = DateTime.Now;
-            entity.Result = result;
-            //update db
+            using (var db = GetDataContext())
+            {
+                var entity = db.Approvals.FirstOrDefault(e => e.InfoID == infoId && e.Type == type);
+                if (entity == null) return;
+                entity.ApprovalTime = DateTime.Now;
+                entity.Result = result;
+                db.SaveChanges();
+            }
         }
     }
 }

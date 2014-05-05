@@ -29,10 +29,13 @@ namespace Loowoo.LandInst.Model
 
         public string MobilePhone { get; set; }
 
+        [Column(TypeName = "int")]
         public MemberStatus Status { get; set; }
 
+        [NotMapped]
         public string Username { get; set; }
 
+        [NotMapped]
         public string InstitutionName { get; set; }
     }
 

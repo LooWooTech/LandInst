@@ -8,26 +8,52 @@ using Loowoo.LandInst.Model.Filters;
 
 namespace Loowoo.LandInst.Manager
 {
-    public class ExamManager
+    public class ExamManager : ManagerBase
     {
-        public List<Exam> GetExams(ExamFilter filter = null)
+        public List<Exam> GetExams()
         {
-            return new List<Exam> { new Exam { ID = 1, Name = "测试考试" } };
+            using (var db = GetDataContext())
+            {
+                return db.Exams.ToList();
+            }
         }
 
-        public List<MemberExam> GetExams(int userId)
+        public List<MemberExam> GetMemberExams(int userId)
         {
-            return new List<MemberExam> { new MemberExam { ExamID = 1, ExamName = "测试考试", UserID = 1, SignTime = DateTime.Now } };
+            return Core.InfoDataManager.GetModel<List<MemberExam>>(userId, InfoType.Exam, InfoStatus.Normal);
         }
 
         public Exam GetExam(int examId)
         {
-            return new Exam();
+            using (var db = GetDataContext())
+            {
+                return db.Exams.FirstOrDefault(e => e.ID == examId);
+            }
         }
 
-        public void AddExam(MemberExam memberExam)
+        public void SaveExam(Exam exam)
         {
+            using (var db = GetDataContext())
+            {
+                if (exam.ID > 0)
+                {
+                    var entity = db.Exams.FirstOrDefault(e => e.ID == exam.ID);
+                    if (entity != null)
+                    {
+                        db.Entry(entity).CurrentValues.SetValues(exam);
+                    }
+                }
+                else
+                {
+                    db.Exams.Add(exam);
+                }
+                db.SaveChanges();
+            }
+        }
 
+        public void SaveMemberExam(int userId, MemberExam memberExam)
+        {
+            Core.InfoDataManager.UpdateListItem(userId, InfoType.Exam, InfoStatus.Normal, memberExam);
         }
     }
 }

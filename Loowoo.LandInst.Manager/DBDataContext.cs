@@ -24,5 +24,17 @@ namespace Loowoo.LandInst.Manager
         public DbSet<User> Users { get; set; }
 
         public DbSet<Member> Members { get; set; }
+
+        public DbSet<Institution> Institutions { get; set; }
+
+        public DbSet<InfoData> InfoDatas { get; set; }
+
+        public DbSet<Education> Educations { get; set; }
+
+        public DbSet<MemberEducation> MemberEducations { get; set; }
+
+        public DbSet<Exam> Exams { get; set; }
+
+        public DbSet<Approval> Approvals { get; set; }
     }
 }

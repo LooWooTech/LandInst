@@ -35,11 +35,7 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
         [HttpPost]
         public ActionResult Logout(string fullName)
         {
-            var inst = Core.InstitutionManager.GetInstitution(Identity.UserID);
-            if (inst != null && inst.FullName == fullName)
-            {
-                Core.InstitutionManager.LogoutInstitution(inst);
-            }
+            Core.InstitutionManager.LogoutInstitution(fullName);
             return JsonSuccess();
         }
 

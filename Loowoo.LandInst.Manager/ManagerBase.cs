@@ -8,6 +8,8 @@ namespace Loowoo.LandInst.Manager
 {
     public class ManagerBase
     {
+        protected ManagerCore Core = ManagerCore.Instance;
+
         protected DBDataContext GetDataContext()
         {
             return new DBDataContext();

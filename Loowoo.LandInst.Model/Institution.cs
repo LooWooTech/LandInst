@@ -1,19 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Loowoo.LandInst.Model
 {
+    [Table("Institution")]
     public class Institution
     {
+        [Key]
         public int ID { get; set; }
 
+        [Column(TypeName = "int")]
         public InstitutionStatus Status { get; set; }
 
         public DateTime CreateTime { get; set; }
 
+        [Column(TypeName = "int")]
         public InstitutionType Type { get; set; }
 
         /// <summary>
@@ -49,6 +55,8 @@ namespace Loowoo.LandInst.Model
 
     public enum InstitutionStatus
     {
-
+        Register,
+        Approval,
+        Logout,
     }
 }

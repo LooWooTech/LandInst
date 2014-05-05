@@ -1,30 +1,37 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Loowoo.LandInst.Model
 {
+    [Table("Approval")]
     public class Approval
     {
+        [Key]
+        [DatabaseGenerated(System.ComponentModel.DataAnnotations.Schema.DatabaseGeneratedOption.Identity)]
         public int ID { get; set; }
 
-        public int ProfileID { get; set; }
+        public int InfoID { get; set; }
 
-        public DateTime? CheckTime { get; set; }
+        public DateTime? ApprovalTime { get; set; }
 
         public bool Result { get; set; }
 
         public string Note { get; set; }
 
+        [Column(TypeName = "int")]
         public ApprovalType Type { get; set; }
 
+        [NotMapped]
         public bool IsLocked
         {
             get
             {
-                return !CheckTime.HasValue || Result;
+                return !ApprovalTime.HasValue || Result;
             }
         }
     }

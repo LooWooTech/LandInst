@@ -11,5 +11,7 @@ namespace Loowoo.LandInst.Model.Filters
         public int? InstID { get; set; }
 
         public string LikeName { get; set; }
+
+        public MemberStatus? Status { get; set; }
     }
 }

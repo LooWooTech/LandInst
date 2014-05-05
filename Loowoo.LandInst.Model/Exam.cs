@@ -1,13 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Loowoo.LandInst.Model
 {
+    [Table("Exam")]
     public class Exam
     {
+        [Key]
+        [DatabaseGenerated(System.ComponentModel.DataAnnotations.Schema.DatabaseGeneratedOption.Identity)]
         public int ID { get; set; }
 
         public DateTime StartSignTime { get; set; }
@@ -20,6 +25,6 @@ namespace Loowoo.LandInst.Model
 
         public string Name { get; set; }
 
-        public string Content { get; set; }
+        public string Summary { get; set; }
     }
 }

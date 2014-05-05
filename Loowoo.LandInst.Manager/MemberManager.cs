@@ -8,46 +8,83 @@ using Loowoo.LandInst.Model.Filters;
 
 namespace Loowoo.LandInst.Manager
 {
-    public class MemberManager
+    public class MemberManager : ManagerBase
     {
         public void AddMember(User user, Member member)
         {
-
+            Core.UserManager.AddUser(user);
+            using (var db = GetDataContext())
+            {
+                member.ID = user.ID;
+                db.Members.Add(member);
+                db.SaveChanges();
+            }
         }
 
         public void UpdateMember(Member member)
-        { 
-            
+        {
+            using (var db = GetDataContext())
+            {
+                var entity = db.Members.FirstOrDefault(e => e.ID == member.ID);
+                if (entity == null)
+                {
+                    throw new ArgumentException("Member.ID");
+                }
+                db.Entry(entity).CurrentValues.SetValues(member);
+                db.SaveChanges();
+            }
         }
 
         public Member GetMember(int userId)
         {
-            return new Member
+            if (userId == 0) return null;
+            using (var db = GetDataContext())
             {
-                ID = userId,
-                RealName = "郑良军",
-
-            };
+                return db.Members.FirstOrDefault(e => e.ID == userId);
+            }
         }
 
 
-        public MemberProfile GetProfile(int userId)
+        public MemberProfile GetProfile(int userId, InfoStatus status = InfoStatus.Normal)
         {
-            return new MemberProfile
-            {
-                ID = userId,
-                RealName = "郑良军",
-            };
+            if (userId == 0) return null;
+
+            return Core.InfoDataManager.GetModel<MemberProfile>(userId, InfoType.MemberProfile, status);
         }
 
         public void SaveProfile(MemberProfile profile)
         {
-            throw new NotImplementedException();
+            Core.InfoDataManager.Update(new InfoData
+            {
+                InfoID = profile.ID,
+                InfoType = InfoType.MemberProfile,
+                Data = profile.ToBytes(),
+                Status = InfoStatus.Draft
+            });
         }
 
         public List<Member> GetMembers(MemberFilter filter)
         {
-            return new List<Member>();
+            using (var db = GetDataContext())
+            {
+                var query = db.Members.AsQueryable();
+                if (filter.InstID.HasValue)
+                {
+                    query = query.Where(e => e.InstitutionID == filter.InstID.Value);
+                }
+
+                if (!string.IsNullOrEmpty(filter.LikeName))
+                {
+                    query = query.Where(e => e.RealName.Contains(filter.LikeName));
+                }
+
+                if (filter.Status.HasValue)
+                {
+                    query = query.Where(e => e.Status == filter.Status.Value);
+                }
+
+                return query.SetPage(filter).ToList();
+            }
         }
     }
 }

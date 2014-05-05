@@ -30,9 +30,9 @@ namespace Loowoo.LandInst.Model
 
         public DateTime RegisterTime { get; set; }
 
-        public DateTime? LastLoginTime { get; set; }
+        public DateTime LastLoginTime { get; set; }
 
-        public UserRole Role { get; set; }
+        public int UserRole { get; set; }
 
         public bool Deleted { get; set; }
     }

@@ -8,9 +8,12 @@ namespace Loowoo.LandInst.Model
 {
     public class Shareholder
     {
-        public int ID { get; set; }
+        public Shareholder()
+        {
+            ID = Guid.NewGuid().ToString();
+        }
 
-        public int InstID { get; set; }
+        public string ID { get; set; }
 
         public string Name { get; set; }
 

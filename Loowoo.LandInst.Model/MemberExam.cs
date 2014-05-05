@@ -13,8 +13,6 @@ namespace Loowoo.LandInst.Model
             SignTime = DateTime.Now;
         }
 
-        public int UserID { get; set; }
-
         public int ExamID { get; set; }
 
         public string ExamName { get; set; }

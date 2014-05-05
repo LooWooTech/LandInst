@@ -11,7 +11,7 @@ namespace Loowoo.LandInst.Web.Areas.Member.Controllers
     {
         public ActionResult Index()
         {
-            ViewBag.List = Core.ExamManager.GetExams(Identity.UserID);
+            ViewBag.List = Core.ExamManager.GetMemberExams(Identity.UserID);
             return View();
         }
 
@@ -19,11 +19,7 @@ namespace Loowoo.LandInst.Web.Areas.Member.Controllers
         public ActionResult SignUp()
         {
             ViewBag.Profile = Core.MemberManager.GetProfile(Identity.UserID);
-            ViewBag.Exams = Core.ExamManager.GetExams(new Model.Filters.ExamFilter
-            {
-                SignTime = DateTime.Now.Date,
-                UserID = Identity.UserID
-            });
+            ViewBag.Exams = Core.ExamManager.GetMemberExams(Identity.UserID);
 
             return View();
         }
@@ -37,7 +33,7 @@ namespace Loowoo.LandInst.Web.Areas.Member.Controllers
             {
                 throw new ArgumentException("examId");
             }
-            Core.ExamManager.AddExam(new MemberExam { UserID = Identity.UserID, ExamID = examId, ExamName = exam.Name });
+            Core.ExamManager.SaveMemberExam(Identity.UserID, new MemberExam { ExamID = examId, ExamName = exam.Name });
             return JsonSuccess();
         }
 

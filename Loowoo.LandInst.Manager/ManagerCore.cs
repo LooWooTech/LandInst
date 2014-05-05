@@ -8,6 +8,8 @@ namespace Loowoo.LandInst.Manager
 {
     public class ManagerCore
     {
+        public static ManagerCore Instance = new ManagerCore();
+
         private UserManager _userManager;
         public UserManager UserManager
         {
@@ -51,7 +53,11 @@ namespace Loowoo.LandInst.Manager
             get { return _anualCheckManager == null ? _anualCheckManager = new AnnualApprovalManager() : _anualCheckManager; }
         }
 
-
+        private InfoDataManager _infodataManager;
+        public InfoDataManager InfoDataManager
+        {
+            get { return _infodataManager == null ? _infodataManager = new InfoDataManager() : _infodataManager; }
+        }
 
     }
 }
