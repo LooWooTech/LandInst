@@ -10,11 +10,19 @@ namespace Loowoo.LandInst.Manager
 {
     public class ExamManager : ManagerBase
     {
-        public List<Exam> GetExams()
+        public List<Exam> GetExams(ExamFilter filter)
         {
             using (var db = GetDataContext())
             {
-                return db.Exams.ToList();
+                var query = db.Exams.AsQueryable();
+                if (filter == null) return query.ToList();
+
+                if (filter.SignTime.HasValue)
+                {
+                    query = query.Where(e => e.StartSignTime <= filter.SignTime.Value && e.EndSignTime >= filter.SignTime.Value);
+                }
+
+                return query.ToList();
             }
         }
 

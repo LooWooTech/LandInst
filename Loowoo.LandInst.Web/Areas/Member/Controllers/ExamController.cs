@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Loowoo.LandInst.Model;
+using Loowoo.LandInst.Model.Filters;
 
 namespace Loowoo.LandInst.Web.Areas.Member.Controllers
 {
@@ -11,7 +12,7 @@ namespace Loowoo.LandInst.Web.Areas.Member.Controllers
     {
         public ActionResult Index()
         {
-            ViewBag.List = Core.ExamManager.GetMemberExams(Identity.UserID);
+            ViewBag.List = Core.ExamManager.GetMemberExams(Identity.UserID) ?? new List<MemberExam>();
             return View();
         }
 
@@ -19,7 +20,10 @@ namespace Loowoo.LandInst.Web.Areas.Member.Controllers
         public ActionResult SignUp()
         {
             ViewBag.Profile = Core.MemberManager.GetProfile(Identity.UserID);
-            ViewBag.Exams = Core.ExamManager.GetMemberExams(Identity.UserID);
+            ViewBag.Exams = Core.ExamManager.GetExams(new ExamFilter
+            {
+                SignTime = DateTime.Now.Date
+            });
 
             return View();
         }

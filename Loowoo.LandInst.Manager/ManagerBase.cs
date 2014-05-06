@@ -12,7 +12,9 @@ namespace Loowoo.LandInst.Manager
 
         protected DBDataContext GetDataContext()
         {
-            return new DBDataContext();
+            var db =  new DBDataContext();
+            db.Database.Connection.Open();
+            return db;
         }
     }
 }

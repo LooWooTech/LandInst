@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Loowoo.LandInst.Model
 {
-    public class InstitutionProfile
+    [NotMapped]
+    public class InstitutionProfile : Institution
     {
-        public int InstitutionID { get; set; }
 
         /// <summary>
         /// 注册资金
