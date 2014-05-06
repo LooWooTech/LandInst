@@ -53,12 +53,12 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
             {
                 Username = username,
                 Password = StringHelper.GenerateRandomString(8),
-                UserRole = (int)UserRole.Institution
+                Role = UserRole.Institution
             };
 
             Core.UserManager.AddUser(user);
             Core.InstitutionManager.SaveInstitution(inst);
-            Core.InstitutionManager.SaveProfile(profile);
+            Core.InstitutionManager.SaveProfile(inst.ID, profile);
             return JsonSuccess(new { user });
         }
 

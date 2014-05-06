@@ -98,11 +98,11 @@ namespace Loowoo.LandInst.Manager
             }
         }
 
-        public void SaveProfile(InstitutionProfile profile, InfoStatus status = InfoStatus.Draft)
+        public void SaveProfile(int instId, InstitutionProfile profile, InfoStatus status = InfoStatus.Draft)
         {
             Core.InfoDataManager.Update(new InfoData
             {
-                InfoID = profile.ID,
+                InfoID = instId,
                 InfoType = InfoType.InstitutionProfile,
                 Status = status,
                 Data = profile.ToBytes(),

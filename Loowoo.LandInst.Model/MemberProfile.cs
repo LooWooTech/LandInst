@@ -7,8 +7,11 @@ using System.Threading.Tasks;
 
 namespace Loowoo.LandInst.Model
 {
+    [NotMapped]
     public class MemberProfile : Member
     {
+        public int MemberID { get; set; }
+
         /// <summary>
         /// 职称
         /// </summary>

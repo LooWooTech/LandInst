@@ -34,10 +34,10 @@ namespace Loowoo.LandInst.Model
         Exam
     }
 
+    [Flags]
     public enum InfoStatus
     {
         Normal = 1,
         Draft = 2,
-        Deleted = 3,
     }
 }

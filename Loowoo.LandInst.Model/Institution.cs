@@ -12,6 +12,7 @@ namespace Loowoo.LandInst.Model
     public class Institution
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int ID { get; set; }
 
         [Column(TypeName = "int")]

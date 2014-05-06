@@ -10,15 +10,31 @@ namespace Loowoo.LandInst.Manager
 {
     public class MemberManager : ManagerBase
     {
-        public void AddMember(User user, Member member)
+        public void AddMember(Member member)
         {
-            Core.UserManager.AddUser(user);
             using (var db = GetDataContext())
             {
-                member.ID = user.ID;
                 db.Members.Add(member);
                 db.SaveChanges();
             }
+
+            AddProfile(member);
+        }
+
+        private void AddProfile(Member member)
+        {
+            var profile = new MemberProfile
+            {
+                MemberID = member.ID,
+            };
+            Core.InfoDataManager.Add(new InfoData
+            {
+                InfoID = member.ID,
+                InfoType = InfoType.MemberProfile,
+                Data = profile.ToBytes(),
+                Status = InfoStatus.Draft,
+
+            });
         }
 
         public void UpdateMember(Member member)
@@ -45,7 +61,7 @@ namespace Loowoo.LandInst.Manager
         }
 
 
-        public MemberProfile GetProfile(int userId, InfoStatus status = InfoStatus.Normal)
+        public MemberProfile GetProfile(int userId, InfoStatus status = InfoStatus.Normal | InfoStatus.Draft)
         {
             if (userId == 0) return null;
 
@@ -56,7 +72,7 @@ namespace Loowoo.LandInst.Manager
         {
             Core.InfoDataManager.Update(new InfoData
             {
-                InfoID = profile.ID,
+                InfoID = profile.MemberID,
                 InfoType = InfoType.MemberProfile,
                 Data = profile.ToBytes(),
                 Status = InfoStatus.Draft

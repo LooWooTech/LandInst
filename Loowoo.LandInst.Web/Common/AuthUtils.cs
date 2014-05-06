@@ -13,7 +13,7 @@ namespace Loowoo.LandInst.Web
 
         public static void SaveAuth(this HttpContextBase context, User user)
         {
-            var ticket = new FormsAuthenticationTicket(user.ID.ToString() + "|" + user.UserRole, true, 60);
+            var ticket = new FormsAuthenticationTicket(user.ID.ToString() + "|" + user.Role, true, 60);
             var cookieValue = FormsAuthentication.Encrypt(ticket);
             var cookie = new HttpCookie(_cookieName, cookieValue);
             context.Response.Cookies.Remove(_cookieName);

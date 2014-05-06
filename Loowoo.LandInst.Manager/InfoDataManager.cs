@@ -41,7 +41,7 @@ namespace Loowoo.LandInst.Manager
             Update(model);
         }
 
-        public InfoData GetModel(int infoId, InfoType infoType, InfoStatus status)
+        public InfoData GetModel(int infoId, InfoType infoType, InfoStatus status = InfoStatus.Draft)
         {
             if (infoId == 0)
             {
@@ -49,7 +49,12 @@ namespace Loowoo.LandInst.Manager
             }
             using (var db = GetDataContext())
             {
-                var model = db.InfoDatas.FirstOrDefault(e => e.InfoID == infoId && e.InfoType == infoType && e.Status == status);
+                var list = db.InfoDatas.Where(e => e.InfoID == infoId && e.InfoType == infoType).ToList();
+                var model = list.FirstOrDefault(e => e.Status == status);
+                if (model == null)
+                {
+                    return list.FirstOrDefault();
+                }
                 return model;
             }
         }

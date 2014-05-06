@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace Loowoo.LandInst.Model
 {
-    public class InstitutionProfile : Institution
+    public class InstitutionProfile
     {
+        public int InstitutionID { get; set; }
 
         /// <summary>
         /// 注册资金

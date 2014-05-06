@@ -32,7 +32,7 @@ namespace Loowoo.LandInst.Web.Controllers
             //Save Login
             HttpContext.SaveAuth(user);
 
-            return JsonSuccess(new { role = user.UserRole.ToString().ToLower() });
+            return JsonSuccess(new { role = user.Role.ToString().ToLower() });
         }
 
         public ActionResult SignOut()
@@ -50,10 +50,10 @@ namespace Loowoo.LandInst.Web.Controllers
         [HttpPost]
         public ActionResult SignUp(User user, Member member)
         {
-
-            user.UserRole = (int)UserRole.Member;
+            user.Role = UserRole.Member;
             Core.UserManager.AddUser(user);
-            Core.MemberManager.AddMember(user, member);
+            member.ID = user.ID;
+            Core.MemberManager.AddMember(member);
 
             return JsonSuccess();
         }

@@ -12,7 +12,13 @@ namespace Loowoo.LandInst.Model
     [Table("Member")]
     public class Member
     {
+        public Member()
+        {
+            Status = MemberStatus.NewUser;
+        }
+
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int ID { get; set; }
 
         public int InstitutionID { get; set; }
@@ -21,7 +27,7 @@ namespace Loowoo.LandInst.Model
 
         public string RealName { get; set; }
 
-        public string Birthday { get; set; }
+        public DateTime? Birthday { get; set; }
 
         public int Gender { get; set; }
 
@@ -42,7 +48,7 @@ namespace Loowoo.LandInst.Model
     public enum MemberStatus
     {
         [Description("新注册用户")]
-        NewUser,
+        NewUser = 1,
         [Description("通过考试")]
         PassExam,
         [Description("机构从业人员")]

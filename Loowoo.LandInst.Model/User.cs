@@ -14,6 +14,7 @@ namespace Loowoo.LandInst.Model
         public User()
         {
             RegisterTime = DateTime.Now;
+            LastLoginTime = RegisterTime;
         }
 
         [Key]
@@ -24,15 +25,16 @@ namespace Loowoo.LandInst.Model
 
         public string Password { get; set; }
 
-        public string PasswordQuestion { get; set; }
+        public string Question { get; set; }
 
-        public string PasswordAnswer { get; set; }
+        public string Answer { get; set; }
 
         public DateTime RegisterTime { get; set; }
 
         public DateTime LastLoginTime { get; set; }
 
-        public int UserRole { get; set; }
+        [Column(TypeName = "int")]
+        public UserRole Role { get; set; }
 
         public bool Deleted { get; set; }
     }
