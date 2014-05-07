@@ -19,7 +19,7 @@ namespace Loowoo.LandInst.Manager
 
                 if (filter.SignTime.HasValue)
                 {
-                    query = query.Where(e => e.StartSignTime <= filter.SignTime.Value && e.EndSignTime >= filter.SignTime.Value);
+                    query = query.Where(e => filter.SignTime.Value <= e.StartSignTime);
                 }
 
                 return query.ToList();
@@ -28,7 +28,7 @@ namespace Loowoo.LandInst.Manager
 
         public List<MemberExam> GetMemberExams(int userId)
         {
-            return Core.InfoDataManager.GetModel<List<MemberExam>>(userId, InfoType.Exam, InfoStatus.Normal);
+            return Core.InfoDataManager.GetModel<List<MemberExam>>(userId, InfoType.Exam, InfoStatus.Normal) ?? new List<MemberExam>();
         }
 
         public Exam GetExam(int examId)

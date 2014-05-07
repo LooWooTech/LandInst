@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Loowoo.LandInst.Model;
 using Loowoo.LandInst.Model.Filters;
@@ -68,8 +69,9 @@ namespace Loowoo.LandInst.Manager
             return Core.InfoDataManager.GetModel<MemberProfile>(userId, InfoType.MemberProfile, status);
         }
 
-        public void SaveProfile(MemberProfile profile)
+        public void SaveProfile(int memberId, MemberProfile profile)
         {
+            profile.MemberID = memberId;
             Core.InfoDataManager.Update(new InfoData
             {
                 InfoID = profile.MemberID,

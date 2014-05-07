@@ -71,18 +71,28 @@
     </div>
     <div class="form-group">
         <label class="col-sm-2 control-label"></label>
-        <button type="submit" class="btn btn-primary">提交注册</button>
+        <button type="submit" class="btn btn-primary" id="btn-signup">提交注册</button>
     </div>
 </form>
 <script>
     //ajax submit
     $(function () {
         $("#signup-form").submit(function () {
+            var btn = $("#btn-signup");
+            btn.text("正在注册..");
+            btn.attr("disabled", "disabled");
             var data = $(this).serialize();
             $.post("/user/signup", data, function (json) {
                 //成功隐藏注册表单，显示注册成功部分
+                if (json.result) {
+                    alert("注册成功")
+                }
+                else {
+                    btn.removeAttr("disabled");
+                    btn.text("提交注册");
+                }
                 //失败则标记input样式
-            });
+            }, "json");
             return false;
         });
     });

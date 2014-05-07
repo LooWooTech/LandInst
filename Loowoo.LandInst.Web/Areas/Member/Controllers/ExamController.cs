@@ -12,26 +12,44 @@ namespace Loowoo.LandInst.Web.Areas.Member.Controllers
     {
         public ActionResult Index()
         {
-            ViewBag.List = Core.ExamManager.GetMemberExams(Identity.UserID) ?? new List<MemberExam>();
+            var memberExams = Core.ExamManager.GetMemberExams(Identity.UserID);
+            ViewBag.List = memberExams;
             return View();
         }
 
         [HttpGet]
-        public ActionResult SignUp()
+        public ActionResult Signup()
         {
             ViewBag.Profile = Core.MemberManager.GetProfile(Identity.UserID);
-            ViewBag.Exams = Core.ExamManager.GetExams(new ExamFilter
+            var exams = Core.ExamManager.GetExams(new ExamFilter
             {
                 SignTime = DateTime.Now.Date
             });
 
-            return View();
+            var memberExams = Core.ExamManager.GetMemberExams(Identity.UserID);
+            foreach (var item in memberExams)
+            {
+                var index = exams.FindIndex(e => e.ID == item.ExamID);
+                if (index > 0)
+                {
+                    exams.RemoveAt(index);
+                }
+            }
+
+            if (exams.Count == 0)
+            {
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                return View();
+            }
         }
 
         [HttpPost]
-        public ActionResult SingUp(MemberProfile profile, int examId)
+        public ActionResult Signup(int examId, MemberProfile profile)
         {
-            Core.MemberManager.SaveProfile(profile);
+            Core.MemberManager.SaveProfile(Identity.UserID, profile);
             var exam = Core.ExamManager.GetExam(examId);
             if (exam == null)
             {
