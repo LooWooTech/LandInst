@@ -15,16 +15,23 @@ namespace Loowoo.LandInst.Model
         [DatabaseGenerated(System.ComponentModel.DataAnnotations.Schema.DatabaseGeneratedOption.Identity)]
         public int ID { get; set; }
 
+        [Required]
         public DateTime StartSignTime { get; set; }
 
+        [Required]
         public DateTime EndSignTime { get; set; }
 
+        [Required]
         public DateTime StartExamTime { get; set; }
 
+        [Required]
         public DateTime EndExamTime { get; set; }
 
+        [Required]
         public string Name { get; set; }
 
         public string Summary { get; set; }
+
+        public string Address { get; set; }
     }
 }

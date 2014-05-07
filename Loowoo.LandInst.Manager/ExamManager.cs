@@ -33,6 +33,7 @@ namespace Loowoo.LandInst.Manager
 
         public Exam GetExam(int examId)
         {
+            if (examId == 0) return null;
             using (var db = GetDataContext())
             {
                 return db.Exams.FirstOrDefault(e => e.ID == examId);
@@ -43,6 +44,7 @@ namespace Loowoo.LandInst.Manager
         {
             using (var db = GetDataContext())
             {
+                
                 if (exam.ID > 0)
                 {
                     var entity = db.Exams.FirstOrDefault(e => e.ID == exam.ID);
@@ -62,6 +64,18 @@ namespace Loowoo.LandInst.Manager
         public void SaveMemberExam(int userId, MemberExam memberExam)
         {
             Core.InfoDataManager.UpdateListItem(userId, InfoType.Exam, InfoStatus.Normal, memberExam);
+        }
+
+        public void Delete(int id)
+        {
+            if (id == 0) return;
+            using (var db = GetDataContext())
+            {
+                var entity = db.Exams.FirstOrDefault(e => e.ID == id);
+                if (entity == null) return;
+                db.Exams.Remove(entity);
+                db.SaveChanges();
+            }
         }
     }
 }

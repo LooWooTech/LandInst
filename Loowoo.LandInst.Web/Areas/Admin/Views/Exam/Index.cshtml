@@ -1,16 +1,48 @@
-﻿@{
+﻿@using Loowoo.LandInst.Model
+@{
     ViewBag.Title = "考试设置";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    List<Exam> list = ViewBag.List;
 }
 
 <h2>考试设置</h2>
-
+<a href="/admin/exam/edit">添加考试</a>
 <table class="table">
     <tr>
         <th>名称</th>
-        <th>起始时间</th>
-        <th>结束时间</th>
+        <th>报名起始时间</th>
+        <th>报名结束时间</th>
+        <th>考试起始时间</th>
+        <th>考试结束时间</th>
         <th>考试地点</th>
-        <th></th>
+        <th>管理</th>
     </tr>
+    @foreach (var item in list)
+    { 
+        <tr>
+            <td>@(item.Name)</td>
+            <td>@(item.StartSignTime.ToShortDateString())</td>
+            <td>@(item.EndSignTime.ToShortDateString())</td>
+            <td>@(item.StartExamTime.ToShortDateString())</td>
+            <td>@(item.EndExamTime.ToShortDateString())</td>
+            <td>@(item.Address)</td>
+            <td>
+                <a class="btn btn-default" href="/admin/exam/edit?id=@(item.ID)">修改</a>
+                <a class="btn btn-warning btn-delete" href="/admin/exam/delete?id=@(item.ID)">删除</a>
+            </td>
+        </tr>
+    }
 </table>
+<script>
+    $(function () {
+        $("a.btn-delete").click(function () {
+            if (!confirm("确定要删除吗？")) return false;
+
+            var url = $(this).attr("href");
+            $.post(url, function (json) {
+                window.location.href = "/admin/exam/";
+            }, "json");
+            return false;
+        });
+    });
+</script>
