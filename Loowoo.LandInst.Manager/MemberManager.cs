@@ -24,10 +24,7 @@ namespace Loowoo.LandInst.Manager
 
         private void AddProfile(Member member)
         {
-            var profile = new MemberProfile
-            {
-                MemberID = member.ID,
-            };
+            var profile = new MemberProfile(member);
             Core.InfoDataManager.Add(new InfoData
             {
                 InfoID = member.ID,
@@ -69,23 +66,24 @@ namespace Loowoo.LandInst.Manager
             return Core.InfoDataManager.GetModel<MemberProfile>(userId, InfoType.MemberProfile, status);
         }
 
-        public void SaveProfile(int memberId, MemberProfile profile)
+        public void SaveProfile(Member member, MemberProfile profile)
         {
-            profile.MemberID = memberId;
+            profile.SetMemberField(member);
             Core.InfoDataManager.Update(new InfoData
             {
-                InfoID = profile.MemberID,
+                InfoID = profile.ID,
                 InfoType = InfoType.MemberProfile,
                 Data = profile.ToBytes(),
                 Status = InfoStatus.Draft
             });
         }
 
-        public List<Member> GetMembers(MemberFilter filter)
+        public List<VMember> GetMembers(MemberFilter filter)
         {
             using (var db = GetDataContext())
             {
-                var query = db.Members.AsQueryable();
+                var query = db.VMembers.AsQueryable();
+
                 if (filter.InstID.HasValue)
                 {
                     query = query.Where(e => e.InstitutionID == filter.InstID.Value);
@@ -101,7 +99,7 @@ namespace Loowoo.LandInst.Manager
                     query = query.Where(e => e.Status == filter.Status.Value);
                 }
 
-                return query.SetPage(filter).ToList();
+                return query.OrderByDescending(e => e.ID).SetPage(filter).ToList();
             }
         }
     }

@@ -10,7 +10,24 @@ namespace Loowoo.LandInst.Model
     [NotMapped]
     public class MemberProfile : Member
     {
-        public int MemberID { get; set; }
+        public MemberProfile() { }
+
+        public MemberProfile(Member member)
+        {
+            SetMemberField(member);
+        }
+
+        public void SetMemberField(Member member)
+        {
+            ID = member.ID;
+            RealName = member.RealName;
+            InstitutionID = member.InstitutionID;
+            MobilePhone = member.MobilePhone;
+            Status = member.Status;
+            IDNo = member.IDNo;
+            Email = member.Email;
+            Birthday = member.Birthday;
+        }
 
         /// <summary>
         /// 职称

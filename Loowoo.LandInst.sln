@@ -9,6 +9,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Loowoo.LandInst.Manager", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Loowoo.LandInst.Common", "Loowoo.LandInst.Common\Loowoo.LandInst.Common.csproj", "{2B92B3B7-122E-47C6-AE45-97FA663A2D80}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "dbscripts", "dbscripts", "{9A947E1C-E603-46C3-835B-7F7322C1E42D}"
+	ProjectSection(SolutionItems) = preProject
+		dbscripts\landinst.sql = dbscripts\landinst.sql
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

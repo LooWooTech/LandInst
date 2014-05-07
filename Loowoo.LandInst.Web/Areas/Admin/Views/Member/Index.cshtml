@@ -3,7 +3,7 @@
 @{
     ViewBag.Title = "用户管理";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
-    List<Member> list = ViewBag.List;
+    List<VMember> list = ViewBag.List;
 }
 
 <h2>用户管理</h2>
@@ -38,7 +38,7 @@
         <th>所属机构</th>
         <th>详细</th>
     </tr>
-    @foreach (Member item in list)
+    @foreach (var item in list)
     { 
         <tr>
             <td>

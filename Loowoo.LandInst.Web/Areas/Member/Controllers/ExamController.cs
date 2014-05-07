@@ -20,11 +20,22 @@ namespace Loowoo.LandInst.Web.Areas.Member.Controllers
         [HttpGet]
         public ActionResult Signup()
         {
-            ViewBag.Profile = Core.MemberManager.GetProfile(Identity.UserID);
+            var profile = Core.MemberManager.GetProfile(Identity.UserID);
+            ViewBag.Profile = profile;
+            if (profile.Status == MemberStatus.PassExam)
+            {
+                return View();
+            }
             var exams = Core.ExamManager.GetExams(new ExamFilter
             {
                 SignTime = DateTime.Now.Date
             });
+
+            if (exams.Count == 0)
+            {
+                ViewBag.Exams = exams;
+                return View();
+            }
 
             var memberExams = Core.ExamManager.GetMemberExams(Identity.UserID);
             foreach (var item in memberExams)
@@ -49,7 +60,8 @@ namespace Loowoo.LandInst.Web.Areas.Member.Controllers
         [HttpPost]
         public ActionResult Signup(int examId, MemberProfile profile)
         {
-            Core.MemberManager.SaveProfile(Identity.UserID, profile);
+            var member = Core.MemberManager.GetMember(Identity.UserID);
+            Core.MemberManager.SaveProfile(member, profile);
             var exam = Core.ExamManager.GetExam(examId);
             if (exam == null)
             {

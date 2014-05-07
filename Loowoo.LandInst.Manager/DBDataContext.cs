@@ -36,5 +36,9 @@ namespace Loowoo.LandInst.Manager
         public DbSet<Exam> Exams { get; set; }
 
         public DbSet<Approval> Approvals { get; set; }
+
+        public DbSet<VMember> VMembers { get; set; }
+
+        public DbSet<VMemberEducation> VMemberEducations { get; set; }
     }
 }

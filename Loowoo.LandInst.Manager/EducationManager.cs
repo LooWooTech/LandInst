@@ -23,7 +23,7 @@ namespace Loowoo.LandInst.Manager
                 if (filter == null) return query.ToList();
 
 
-                return query.SetPage(filter).ToList();
+                return query.OrderBy(e => e.ID).SetPage(filter).ToList();
             }
         }
 
@@ -56,11 +56,11 @@ namespace Loowoo.LandInst.Manager
             }
         }
 
-        public List<MemberEducation> GetMemberEducations(EducationFilter filter)
+        public List<VMemberEducation> GetMemberEducations(EducationFilter filter)
         {
             using (var db = GetDataContext())
             {
-                var query = db.MemberEducations.AsQueryable();
+                var query = db.VMemberEducations.AsQueryable();
                 if (filter.EducationID.HasValue)
                 {
                     query = query.Where(e => e.EducationID == filter.EducationID.Value);
@@ -70,16 +70,7 @@ namespace Loowoo.LandInst.Manager
                     query = query.Where(e => e.Approval == filter.Approval.Value);
                 }
 
-                return query.Join(db.Members, e => e.MemberID, e => e.ID, (e, m) => new MemberEducation
-                {
-                    MemberID = e.MemberID,
-                    ID = e.ID,
-                    SignupTime = e.SignupTime,
-                    ApprovalTime = e.ApprovalTime,
-                    Approval = e.Approval,
-                    MemberName = m.Username,
-                    EducationID = e.EducationID
-                }).ToList();
+                return query.OrderByDescending(e => e.ID).SetPage(filter).ToList();
             }
 
         }

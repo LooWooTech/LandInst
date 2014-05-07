@@ -37,12 +37,6 @@ namespace Loowoo.LandInst.Model
 
         [Column(TypeName = "int")]
         public MemberStatus Status { get; set; }
-
-        [NotMapped]
-        public string Username { get; set; }
-
-        [NotMapped]
-        public string InstitutionName { get; set; }
     }
 
     public enum MemberStatus

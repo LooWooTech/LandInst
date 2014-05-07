@@ -13,7 +13,8 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
         public ActionResult Index(int businessType = 0, int page = 1)
         {
             var filter = new MemberFilter { PageIndex = page };
-            ViewBag.List = Core.MemberManager.GetMembers(filter);
+            var list = Core.MemberManager.GetMembers(filter);
+            ViewBag.List = list;
             ViewBag.Page = filter;
             return View();
         }
@@ -69,20 +70,20 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
             return JsonSuccess();
         }
 
-        public new ActionResult Profile(int userId)
+        public new ActionResult Profile(int id)
         {
-            if (userId == 0)
+            if (id == 0)
             {
                 return View();
             }
-            var user = Core.UserManager.GetUser(userId);
+            var user = Core.UserManager.GetUser(id);
             if (user == null)
             {
                 throw new ArgumentException("UserId");
             }
-            var member = Core.MemberManager.GetMember(userId);
+            var member = Core.MemberManager.GetMember(id);
 
-            var profile = Core.MemberManager.GetProfile(userId);
+            var profile = Core.MemberManager.GetProfile(id);
 
             ViewBag.User = user;
             ViewBag.Member = member;

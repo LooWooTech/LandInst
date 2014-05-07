@@ -13,6 +13,11 @@
         return;
     }
 }
+@if (profile.Status != MemberStatus.NewUser)
+{
+    <h3>您已经通过了考试</h3>
+    return;
+}
 
 <h2>报名考试</h2>
 <form id="signupexam-form" role="form" class="form-horizontal" method="post">

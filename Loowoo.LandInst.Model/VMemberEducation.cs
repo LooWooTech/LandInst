@@ -1,28 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Loowoo.LandInst.Model
 {
-    [Table("MemberEducation")]
-    public class MemberEducation
+    [Table("VMemberEducation")]
+    public class VMemberEducation
     {
-        [Key]
-        [DatabaseGenerated(System.ComponentModel.DataAnnotations.Schema.DatabaseGeneratedOption.Identity)]
         public int ID { get; set; }
 
         public int MemberID { get; set; }
 
         public int EducationID { get; set; }
 
+        public int InstitutionID { get; set; }
+
         public DateTime SignupTime { get; set; }
 
         public DateTime? ApprovalTime { get; set; }
-        
+
         public bool Approval { get; set; }
+
+        public string RealName { get; set; }
+
+        public string EducationName { get; set; }
     }
 }

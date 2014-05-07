@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Loowoo.LandInst.Model;
 
 namespace Loowoo.LandInst.Web.Areas.Member.Controllers
 {
@@ -10,7 +11,8 @@ namespace Loowoo.LandInst.Web.Areas.Member.Controllers
     {
         public ActionResult Index()
         {
-            ViewBag.Profile = Core.MemberManager.GetProfile(Identity.UserID);
+            ViewBag.Profile = Core.MemberManager.GetProfile(Identity.UserID) 
+                ?? new MemberProfile(Core.MemberManager.GetMember(Identity.UserID));
             return View();
         }
 
