@@ -13,6 +13,12 @@ namespace Loowoo.LandInst.Manager
     {
         public void AddUser(User user)
         {
+            if (user == null) throw new ArgumentNullException("User");
+
+            if (string.IsNullOrEmpty(user.Username)) throw new ArgumentNullException("用户名没有填写");
+
+            if (string.IsNullOrEmpty(user.Password)) throw new ArgumentNullException("密码没有填写");
+
             using (var db = GetDataContext())
             {
                 var entity = db.Users.FirstOrDefault(e => e.Username.ToLower() == user.Username.ToLower());
@@ -41,6 +47,14 @@ namespace Loowoo.LandInst.Manager
             }
 
             return user;
+        }
+
+        public bool Exists(string username)
+        {
+            using (var db = GetDataContext())
+            {
+                return db.Users.Count(e => e.Username.ToLower() == username.ToLower()) > 0;
+            }
         }
 
         public User GetUser(string username)

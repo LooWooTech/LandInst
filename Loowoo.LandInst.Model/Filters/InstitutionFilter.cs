@@ -10,6 +10,12 @@ namespace Loowoo.LandInst.Model.Filters
     {
         public int? InstId { get; set; }
 
-        public string LikeName { get; set; }
+        public string Keyword { get; set; }
+
+        public InstitutionStatus? Status { get; set; }
+
+        public ApprovalType ApprovalType { get; set; }
+
+        public bool? ApprovalResult { get; set; }
     }
 }

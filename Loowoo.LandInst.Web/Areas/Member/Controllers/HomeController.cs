@@ -10,8 +10,7 @@ namespace Loowoo.LandInst.Web.Areas.Member.Controllers
     {
         public ActionResult Index()
         {
-            var member = Core.MemberManager.GetMember(Identity.UserID);
-            ViewBag.Member = member;
+            var member = GetCurrentMember(); 
             if (member.InstitutionID > 0)
             {
                 ViewBag.Institution = Core.InstitutionManager.GetInstitution(member.InstitutionID);

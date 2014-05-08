@@ -14,7 +14,7 @@ namespace Loowoo.LandInst.Model
     {
         public Member()
         {
-            Status = MemberStatus.NewUser;
+            Status = MemberStatus.Register;
         }
 
         [Key]
@@ -42,10 +42,20 @@ namespace Loowoo.LandInst.Model
     public enum MemberStatus
     {
         [Description("新注册用户")]
-        NewUser = 1,
+        Register = 1,
+
+        [Description("报名考试")]
+        SingupExam = 2,
+        
+        [Description("报名通过")]
+        ApprovalExam = 4,
+        
         [Description("通过考试")]
-        PassExam,
+        PassExam = 8,
+                
         [Description("机构从业人员")]
-        Staff
+        Staff = 16
     }
+
+    
 }

@@ -171,6 +171,7 @@
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
     <Content Include="Areas\Member\Views\Shared\_profile_edit_form.cshtml" />
     <Content Include="Areas\Admin\Views\Member\Profile.cshtml" />
+    <Content Include="Areas\Admin\Views\Member\Transfer.cshtml" />
     <None Include="Scripts\jquery-1.9.0.intellisense.js" />
     <Content Include="Scripts\jquery-1.9.0.js" />
     <Content Include="Scripts\jquery-1.9.0.min.js" />

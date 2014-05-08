@@ -19,24 +19,48 @@ namespace Loowoo.LandInst.Manager
             }
         }
 
-        public List<Institution> GetInstitutions(InstitutionFilter filter)
+
+        public List<VApprovalInst> GetApprovalInsts(InstitutionFilter filter)
         {
             using (var db = GetDataContext())
             {
-                var query = db.Institutions.AsQueryable();
-                if (filter.InstId.HasValue && filter.InstId.Value > 0)
+                var query = db.VApprovalInsts.Where(e => e.ApprovalType == filter.ApprovalType);
+                if (!String.IsNullOrEmpty(filter.Keyword))
                 {
-                    query = query.Where(e => e.ID == filter.InstId);
+                    query = query.Where(e => e.FullName.Contains(filter.Keyword) || e.Name.Contains(filter.Keyword));
+                }
+                if (filter.ApprovalResult.HasValue)
+                {
+                    query = query.Where(e => e.ApprovalResult == filter.ApprovalResult.Value);
                 }
 
-                if (!string.IsNullOrEmpty(filter.LikeName))
-                {
-                    query = query.Where(e => e.Name.Contains(filter.LikeName) || e.FullName.Contains(filter.LikeName));
-                }
-
-                return query.SetPage(filter).ToList();
+                return query.OrderByDescending(e => e.CreateTime).SetPage(filter).ToList();
             }
         }
+
+        //public List<Institution> GetInstitutions(InstitutionFilter filter)
+        //{
+        //    using (var db = GetDataContext())
+        //    {
+        //        var query = db.Institutions.AsQueryable();
+        //        if (filter.InstId.HasValue && filter.InstId.Value > 0)
+        //        {
+        //            query = query.Where(e => e.ID == filter.InstId);
+        //        }
+
+        //        if (filter.Status.HasValue)
+        //        {
+        //            query = query.Where(e => e.Status == filter.Status.Value);
+        //        }
+
+        //        if (!string.IsNullOrEmpty(filter.Keyword))
+        //        {
+        //            query = query.Where(e => e.Name.Contains(filter.Keyword) || e.FullName.Contains(filter.Keyword));
+        //        }
+
+        //        return query.OrderByDescending(e => e.ID).SetPage(filter).ToList();
+        //    }
+        //}
 
         public void AddShareholder(int instId, Shareholder shareholder)
         {
@@ -77,32 +101,37 @@ namespace Loowoo.LandInst.Manager
             return Core.InfoDataManager.GetModel<InstitutionProfile>(instId, InfoType.InstitutionProfile, status);
         }
 
-        public void SaveInstitution(Institution inst)
+        public void AddInstitution(Institution model)
         {
             using (var db = GetDataContext())
             {
-                var entity = db.Institutions.FirstOrDefault(e => e.ID == inst.ID);
+                db.Institutions.Add(model);
+                db.SaveChanges();
+            }
+        }
+
+        public void UpdateInstitution(Institution model)
+        {
+            using (var db = GetDataContext())
+            {
+                var entity = db.Institutions.FirstOrDefault(e => e.ID == model.ID);
                 if (entity != null)
                 {
-                    db.Entry(entity).CurrentValues.SetValues(inst);
-                }
-                else if (inst.ID > 0)
-                {
-                    throw new ArgumentException("没找到该机构");
+                    db.Entry(entity).CurrentValues.SetValues(model);
                 }
                 else
                 {
-                    db.Institutions.Add(inst);
+                    throw new ArgumentException("没找到该机构");
                 }
                 db.SaveChanges();
             }
         }
 
-        public void SaveProfile(int instId, InstitutionProfile profile, InfoStatus status = InfoStatus.Draft)
+        public void SaveProfile(InstitutionProfile profile, InfoStatus status = InfoStatus.Draft)
         {
             Core.InfoDataManager.Update(new InfoData
             {
-                InfoID = instId,
+                InfoID = profile.ID,
                 InfoType = InfoType.InstitutionProfile,
                 Status = status,
                 Data = profile.ToBytes(),

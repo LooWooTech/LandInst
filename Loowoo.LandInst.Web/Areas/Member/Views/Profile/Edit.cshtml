@@ -1,16 +1,10 @@
-﻿@{
+﻿@using Loowoo.LandInst.Model
+@{
     Layout = "~/Areas/Member/Views/Shared/_Layout.cshtml";
-    ViewBag.Title = "Edit";
+    ViewBag.Title = "修改资料";
+    MemberProfile model = ViewBag.Profile;
+    var disabled = model.Status == MemberStatus.ApprovalExam;
 }
 
-<h2>Edit</h2>
-<form id="signupexam-form" role="form" class="form-horizontal" method="post">
-    <label class="control-label">姓名</label>
-    <input type="text" name="Realname" class="form-control input-sm" />
-    <label class="control-label">民族</label>
-    <input type="text" name="Nationality" class="form-control input-sm" />
-    <label class="control-label">籍贯</label>
-    <input type="text" name="NativePlace" class="form-control input-sm" />
-    <button type="submit" class="btn btn-primary">提交注册</button>
+<h2>信息变更</h2>
 
-</form>

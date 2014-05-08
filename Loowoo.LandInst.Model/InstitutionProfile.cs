@@ -10,6 +10,23 @@ namespace Loowoo.LandInst.Model
     [NotMapped]
     public class InstitutionProfile : Institution
     {
+        public InstitutionProfile() { }
+
+        public InstitutionProfile(Institution inst)
+        {
+            SetInstField(inst);
+        }
+
+        public void SetInstField(Institution inst)
+        {
+            foreach (var p in inst.GetType().GetProperties())
+            {
+                var val = p.GetValue(inst, null);
+
+                var selfP = this.GetType().GetProperty(p.Name);
+                selfP.SetValue(this, val, null);
+            }
+        }
 
         /// <summary>
         /// 注册资金
@@ -43,6 +60,7 @@ namespace Loowoo.LandInst.Model
         /// 经营期限
         /// </summary>
         public string OperatingPeriod { get; set; }
+
 
     }
 }

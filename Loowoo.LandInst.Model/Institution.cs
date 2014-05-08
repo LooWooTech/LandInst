@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -11,6 +12,11 @@ namespace Loowoo.LandInst.Model
     [Table("Institution")]
     public class Institution
     {
+        public Institution()
+        {
+            CreateTime = DateTime.Now;
+        }
+
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int ID { get; set; }
@@ -54,10 +60,14 @@ namespace Loowoo.LandInst.Model
         土地勘测
     }
 
+    [Flags]
     public enum InstitutionStatus
     {
-        Register,
-        Approval,
-        Logout,
+        [Description("注册登记")]
+        Register = 1,
+        [Description("变更登记")]
+        Change = 2,
+        [Description("注销登记")]
+        Logout = 4,
     }
 }

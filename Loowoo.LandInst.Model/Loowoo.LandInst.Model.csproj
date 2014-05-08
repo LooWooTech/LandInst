@@ -63,6 +63,7 @@
     <Compile Include="Member.cs" />
     <Compile Include="MemberEducation.cs" />
     <Compile Include="MemberProfile.cs" />
+    <Compile Include="VApprovalInst.cs" />
     <Compile Include="VMember.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="MemberExam.cs" />

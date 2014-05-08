@@ -22,7 +22,7 @@ namespace Loowoo.LandInst.Web.Areas.Member.Controllers
         {
             var profile = Core.MemberManager.GetProfile(Identity.UserID);
             ViewBag.Profile = profile;
-            if (profile.Status == MemberStatus.PassExam)
+            if (profile.Status == MemberStatus.ApprovalExam)
             {
                 return View();
             }
@@ -41,7 +41,7 @@ namespace Loowoo.LandInst.Web.Areas.Member.Controllers
             foreach (var item in memberExams)
             {
                 var index = exams.FindIndex(e => e.ID == item.ExamID);
-                if (index > 0)
+                if (index > -1)
                 {
                     exams.RemoveAt(index);
                 }
@@ -53,6 +53,7 @@ namespace Loowoo.LandInst.Web.Areas.Member.Controllers
             }
             else
             {
+                ViewBag.Exams = exams;
                 return View();
             }
         }
@@ -60,14 +61,21 @@ namespace Loowoo.LandInst.Web.Areas.Member.Controllers
         [HttpPost]
         public ActionResult Signup(int examId, MemberProfile profile)
         {
-            var member = Core.MemberManager.GetMember(Identity.UserID);
-            Core.MemberManager.SaveProfile(member, profile);
             var exam = Core.ExamManager.GetExam(examId);
             if (exam == null)
             {
-                throw new ArgumentException("examId");
+                throw new ArgumentException("没有选择正确的考试条目！");
             }
+
+            var member = GetCurrentMember();
+            //用户状态由新注册用户变成报名考试用户
+            member.Status = MemberStatus.SingupExam;
+            Core.MemberManager.UpdateMember(member);
+            //保存用户资料
+            Core.MemberManager.SaveProfile(member, profile);
+            //保存用户的考试记录
             Core.ExamManager.SaveMemberExam(Identity.UserID, new MemberExam { ExamID = examId, ExamName = exam.Name });
+            
             return JsonSuccess();
         }
 

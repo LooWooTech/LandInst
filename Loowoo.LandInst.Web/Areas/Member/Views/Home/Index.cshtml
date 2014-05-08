@@ -15,7 +15,7 @@
 <label>所属机构：</label>@(institution == null ? "无机构" : institution.Name)
 <label>当前状态：</label>@(member.Status.GetDescription())
 
-@if (member.Status == MemberStatus.NewUser)
+@if (member.Status == MemberStatus.Register)
 { 
     <a href="/member/exam/signup">报名参加考试</a>
 }

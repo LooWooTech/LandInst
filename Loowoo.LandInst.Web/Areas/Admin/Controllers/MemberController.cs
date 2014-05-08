@@ -34,11 +34,13 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
             return JsonSuccess();
         }
 
+        [HttpGet]
         public ActionResult Transfer()
         {
             return View();
         }
 
+        [HttpPost]
         public ActionResult Transfer(int userId, int oldInstId, int newInstId)
         {
             var member = Core.MemberManager.GetMember(userId);

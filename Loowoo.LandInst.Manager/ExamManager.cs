@@ -19,7 +19,7 @@ namespace Loowoo.LandInst.Manager
 
                 if (filter.SignTime.HasValue)
                 {
-                    query = query.Where(e => filter.SignTime.Value <= e.StartSignTime);
+                    query = query.Where(e => filter.SignTime.Value >= e.StartSignTime && filter.SignTime.Value <= e.EndSignTime);
                 }
 
                 return query.ToList();
@@ -44,7 +44,7 @@ namespace Loowoo.LandInst.Manager
         {
             using (var db = GetDataContext())
             {
-                
+
                 if (exam.ID > 0)
                 {
                     var entity = db.Exams.FirstOrDefault(e => e.ID == exam.ID);

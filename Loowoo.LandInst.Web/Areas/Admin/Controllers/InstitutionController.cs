@@ -11,25 +11,19 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
 {
     public class InstitutionController : AdminControllerBase
     {
-        public ActionResult Search(string name)
+        public ActionResult Index(string keyword, ApprovalType? type, int page = 1)
         {
-            var list = Core.InstitutionManager.GetInstitutions(new InstitutionFilter
+            if (type.HasValue)
             {
-                LikeName = name
-            });
-            return JsonSuccess(new { list });
-        }
-
-
-        public ActionResult Index(string keyword, int businessType = 0, int page = 1)
-        {
-            var filter = new InstitutionFilter
-            {
-                LikeName = keyword,
-                PageIndex = page
-            };
-            ViewBag.List = Core.InstitutionManager.GetInstitutions(filter);
-            ViewBag.Page = filter;
+                var filter = new InstitutionFilter
+                {
+                    Keyword = keyword,
+                    PageIndex = page,
+                    ApprovalType = type.Value
+                };
+                ViewBag.List = Core.InstitutionManager.GetApprovalInsts(filter);
+                ViewBag.Page = filter;
+            }
             return View();
         }
 
@@ -41,25 +35,27 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult Edit(string username, Model.Institution inst, Model.InstitutionProfile profile)
+        public ActionResult Edit(User user, Model.Institution inst)
         {
-            var user = Core.UserManager.GetUser(username);
-            if (user != null)
+            if (Core.UserManager.Exists(user.Username))
             {
                 throw new ArgumentException("用户名已被使用！");
             }
 
-            user = new User
+            var randomPwd = StringHelper.GenerateRandomString(8);
+            if (string.IsNullOrEmpty(user.Password))
             {
-                Username = username,
-                Password = StringHelper.GenerateRandomString(8),
-                Role = UserRole.Institution
-            };
+                user.Password = randomPwd;
+            }
+
+            user.Question = "初始密码是什么";
+            user.Answer = randomPwd;
 
             Core.UserManager.AddUser(user);
-            Core.InstitutionManager.SaveInstitution(inst);
-            Core.InstitutionManager.SaveProfile(inst.ID, profile);
-            return JsonSuccess(new { user });
+            inst.ID = user.ID;
+            Core.InstitutionManager.AddInstitution(inst);
+            Core.InstitutionManager.SaveProfile(new InstitutionProfile(inst));
+            return JsonSuccess(new { password = randomPwd });
         }
 
         public ActionResult Approval(int id)

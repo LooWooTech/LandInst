@@ -40,5 +40,7 @@ namespace Loowoo.LandInst.Manager
         public DbSet<VMember> VMembers { get; set; }
 
         public DbSet<VMemberEducation> VMemberEducations { get; set; }
+
+        public DbSet<VApprovalInst> VApprovalInsts { get; set; }
     }
 }

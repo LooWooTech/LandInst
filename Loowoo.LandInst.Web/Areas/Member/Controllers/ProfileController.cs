@@ -11,14 +11,24 @@ namespace Loowoo.LandInst.Web.Areas.Member.Controllers
     {
         public ActionResult Index()
         {
-            ViewBag.Profile = Core.MemberManager.GetProfile(Identity.UserID) 
-                ?? new MemberProfile(Core.MemberManager.GetMember(Identity.UserID));
+            var profile = Core.MemberManager.GetProfile(Identity.UserID);
+            var member = GetCurrentMember();
+            profile.SetMemberField(member);
+            ViewBag.Profile = profile;
+            ViewBag.Memeber = member;
             return View();
         }
 
+        [HttpGet]
         public ActionResult Edit()
         {
             return View();
+        }
+
+        [HttpPost]
+        public ActionResult Edit(Model.Member member, MemberProfile profile)
+        {
+            return JsonSuccess();
         }
 
         public ActionResult Register()

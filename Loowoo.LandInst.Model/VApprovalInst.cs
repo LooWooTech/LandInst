@@ -1,0 +1,38 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
+using System.Text;
+
+namespace Loowoo.LandInst.Model
+{
+    [Table("VApprovalInst")]
+    public class VApprovalInst
+    {
+        public int ID { get; set; }
+
+        public string FullName { get; set; }
+
+        public string Name { get; set; }
+
+        public InstitutionType Type { get; set; }
+
+        public InstitutionStatus Status { get; set; }
+
+        public DateTime CreateTime { get; set; }
+
+        public string RegistrationNo { get; set; }
+
+        public string City { get; set; }
+
+        public string LegalRepresentative { get; set; }
+
+        public string MobilePhone { get; set; }
+
+        public DateTime? ApprovalTime { get; set; }
+
+        public bool ApprovalResult { get; set; }
+
+        public ApprovalType ApprovalType { get; set; }
+    }
+}
