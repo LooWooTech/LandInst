@@ -29,6 +29,7 @@ namespace Loowoo.LandInst.Manager
 
         public Education GetEducatoin(int eduId)
         {
+            if (eduId == 0) return null;
             using (var db = GetDataContext())
             {
                 return db.Educations.FirstOrDefault(e => e.ID == eduId);
@@ -56,12 +57,21 @@ namespace Loowoo.LandInst.Manager
             }
         }
 
+        public List<VSelfEducation> GetSelfEducations(int memberId)
+        {
+            using (var db = GetDataContext())
+            {
+                var query = db.VSelfEducations.Where(e => e.MemberID == memberId || e.MemberID == null);
+                return query.ToList();
+            }
+        }
+
         public List<VMemberEducation> GetMemberEducations(EducationFilter filter)
         {
             using (var db = GetDataContext())
             {
                 var query = db.VMemberEducations.AsQueryable();
-                if (filter.EducationID.HasValue)
+                if (filter.EducationID.HasValue && filter.EducationID.Value > 0)
                 {
                     query = query.Where(e => e.EducationID == filter.EducationID.Value);
                 }
@@ -82,9 +92,28 @@ namespace Loowoo.LandInst.Manager
                 var entity = db.MemberEducations.FirstOrDefault(e => e.MemberID == memberId && e.EducationID == eduId);
                 if (entity != null)
                 {
+                    entity.ApprovalTime = DateTime.Now;
                     entity.Approval = result;
                 }
                 db.SaveChanges();
+            }
+        }
+
+        public void AddMemberEducation(Member member, Education edu)
+        {
+            using (var db = GetDataContext())
+            {
+                var entity = db.MemberEducations.FirstOrDefault(e => e.MemberID == member.ID && e.EducationID == edu.ID);
+                if (entity == null)
+                {
+                    db.MemberEducations.Add(new MemberEducation
+                    {
+                        EducationID = edu.ID,
+                        MemberID = member.ID,
+                        SignupTime = DateTime.Now,
+                    });
+                    db.SaveChanges();
+                }
             }
         }
     }

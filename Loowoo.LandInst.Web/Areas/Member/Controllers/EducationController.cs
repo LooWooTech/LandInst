@@ -10,12 +10,20 @@ namespace Loowoo.LandInst.Web.Areas.Member.Controllers
     {
         public ActionResult Index()
         {
-            ViewBag.List = Core.EducationManager.GetEducations();
+            ViewBag.List = Core.EducationManager.GetSelfEducations(Identity.UserID);
+
             return View();
         }
 
-        public ActionResult SignUp()
+        public ActionResult SignUp(int id)
         {
+            var edu = Core.EducationManager.GetEducatoin(id);
+            if (edu == null)
+            {
+                throw new ArgumentException("参数错误");
+            }
+
+            Core.EducationManager.AddMemberEducation(GetCurrentMember(), edu);
             return JsonSuccess();
         }
 

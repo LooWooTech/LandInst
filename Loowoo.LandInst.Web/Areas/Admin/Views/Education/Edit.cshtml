@@ -1,30 +1,39 @@
-﻿@{
+﻿@using Loowoo.LandInst.Model
+@{
     ViewBag.Title = "Edit";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    Education model = ViewBag.Model;
 }
 
 <h2>Edit</h2>
 <form id="education-form" role="form" class="form-horizontal">
     <label class="control-label">名称</label>
-    <input type="text" name="Name" class="form-control input-sm" />
+    <input type="text" name="Name" class="form-control input-sm" value="@(model.Name)" />
     <label class="control-label">教育机构</label>
-    <input type="text" name="Agency" class="form-control input-sm" />
+    <input type="text" name="Agency" class="form-control input-sm" value="@(model.Agency)" />
     <label class="control-label">起始时间</label>
-    <input type="text" name="StartDate" class="form-control input-sm" />
+    <input type="text" name="StartDate" class="form-control input-sm datepicker" value="@(model.ID == 0 ? "" : model.StartDate.ToShortDateString())" />
     <label class="control-label">结束时间</label>
-    <input type="text" name="EndDate" class="form-control input-sm" />
+    <input type="text" name="EndDate" class="form-control input-sm datepicker" value="@(model.ID == 0 ? "" : model.EndDate.ToShortDateString())" />
     <label class="control-label">总学时</label>
-    <input type="text" name="Hours" class="form-control input-sm" />
+    <input type="text" name="Hours" class="form-control input-sm" value="@(model.Hours)" />
 
+    <label class="control-label">简介</label>
+    <textarea name="summary" class="form-control input-sm">@(model.Summary)</textarea>
+    
     <button type="submit" class="btn btn-primary">提交注册</button>
 
 </form>
 <script>
     $(function () {
+        $(".datepicker").datepicker();
         $("#education-form").submit(function () {
             var data = $(this).serialize();
-            $.post("/education/edit", data, function (json) {
-
+            $.post("/admin/education/edit", data, function (json) {
+                if (json.result) {
+                    alert("添加成功");
+                    window.location.href = "/admin/education/";
+                }
             }, "json");
             return false;
         });

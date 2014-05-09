@@ -3,6 +3,54 @@
 @{
     Layout = "~/Areas/Member/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "继续教育";
+    List<VSelfEducation> list = ViewBag.List;
 }
 
 <h2>@(ViewBag.Title)</h2>
+
+<table class="table">
+    <tr>
+        <th>名称</th>
+        <th>开始时间</th>
+        <th>结束时间</th>
+        <th>学时</th>
+        <th>教育机构</th>
+        <th>报名时间</th>
+        <th>审核时间</th>
+    </tr>
+    @foreach (var item in list)
+    { 
+        <tr>
+            <td>@(item.Name)</td>
+            <td>@(item.StartDate.ToShortDateString())</td>
+            <td>@(item.EndDate.ToShortDateString())</td>
+            <td>@(item.Hours)小时</td>
+            <td>@(item.Agency)</td>
+            <td>
+                @if (item.SignupTime.HasValue)
+                {
+                    <span>@(item.SignupTime.Value.ToShortDateString())</span> 
+                }else
+                {
+                    <a href="/member/education/signup?id=@(item.ID)" class="btn btn-default btn-signup">报名</a>
+                }
+            </td>
+            <td>@(item.ApprovalTime.HasValue ? item.ApprovalTime.Value.ToShortDateString() : "")
+            </td>
+        </tr>
+    }
+</table>
+<script>
+    $(function () {
+        $(".btn-signup").click(function () {
+            var url = $(this).attr("href");
+            $.post(url, function (json) {
+                if (json.result) {
+                    alert("报名成功");
+                    window.location.href = window.location.href;
+                }
+            },"json");
+            return false;
+        });
+    });
+</script>

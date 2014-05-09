@@ -21,7 +21,7 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
         [HttpGet]
         public ActionResult Edit(int id = 0)
         {
-            ViewBag.Model = Core.EducationManager.GetEducatoin(id);
+            ViewBag.Model = Core.EducationManager.GetEducatoin(id) ?? new Education();
             return View();
         }
 
@@ -32,7 +32,7 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
             return JsonSuccess();
         }
 
-        public ActionResult Approvals(int eduId = 0, int page = 1)
+        public ActionResult Approvals(int? eduId = 0, int page = 1)
         {
             var filter = new EducationFilter
             {

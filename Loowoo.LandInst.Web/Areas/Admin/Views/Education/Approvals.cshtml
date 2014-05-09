@@ -2,7 +2,7 @@
 @{
     ViewBag.Title = "Approvals";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
-    List<MemberEducation> list = ViewBag.List;
+    List<VMemberEducation> list = ViewBag.List;
 }
 
 <h2>继续教育审批</h2>
@@ -19,17 +19,17 @@
         <th>审批时间</th>
         <th>管理</th>
     </tr>
-    @foreach (MemberEducation edu in list)
+    @foreach (var item in list)
     { 
         <tr>
             <td>
-                <input type="checkbox" name="id" value="@(edu.MemberID)|@(edu.EducationID)" />
+                <input type="checkbox" name="id" value="@(item.MemberID)|@(item.EducationID)" />
             </td>
-            <td>@(edu.MemberName)</td>
-            <td>@(edu.EduName)</td>
-            <td>@(edu.CreateTime)</td>
-            <td>@(edu.Approval ? "已通过" : "未通过")</td>
-            <td>@(edu.ApprovalTime)</td>
+            <td>@(item.RealName)</td>
+            <td>@(item.EducationName)</td>
+            <td>@(item.SignupTime)</td>
+            <td>@(item.Approval ? "已通过" : "未通过")</td>
+            <td>@(item.ApprovalTime)</td>
         </tr>
     }
     <tr>
