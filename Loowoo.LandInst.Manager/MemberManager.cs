@@ -35,6 +35,16 @@ namespace Loowoo.LandInst.Manager
             });
         }
 
+        public void UpdateMemberStatus(int memberId, MemberStatus status)
+        {
+            using (var db = GetDataContext())
+            {
+                var entity = db.Members.FirstOrDefault(e => e.ID == memberId);
+                entity.Status = status;
+                db.SaveChanges();
+            }
+        }
+
         public void UpdateMember(Member member)
         {
             using (var db = GetDataContext())
@@ -78,11 +88,11 @@ namespace Loowoo.LandInst.Manager
             });
         }
 
-        public List<VMember> GetMembers(MemberFilter filter)
+        public List<VApprovalMember> GetMembers(MemberFilter filter)
         {
             using (var db = GetDataContext())
             {
-                var query = db.VMembers.AsQueryable();
+                var query = db.VApprovalMembers.AsQueryable();
 
                 if (filter.InstID.HasValue)
                 {

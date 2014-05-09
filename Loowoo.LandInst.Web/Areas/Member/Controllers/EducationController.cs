@@ -10,7 +10,7 @@ namespace Loowoo.LandInst.Web.Areas.Member.Controllers
     {
         public ActionResult Index()
         {
-            ViewBag.List = Core.EducationManager.GetSelfEducations(Identity.UserID);
+            ViewBag.List = Core.EducationManager.GetMemberEducations(Identity.UserID);
 
             return View();
         }
@@ -23,7 +23,7 @@ namespace Loowoo.LandInst.Web.Areas.Member.Controllers
                 throw new ArgumentException("参数错误");
             }
 
-            Core.EducationManager.AddMemberEducation(GetCurrentMember(), edu);
+            Core.EducationManager.SignupEducation(GetCurrentMember(), edu);
             return JsonSuccess();
         }
 

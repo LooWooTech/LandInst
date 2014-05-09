@@ -6,21 +6,17 @@ using System.Text;
 
 namespace Loowoo.LandInst.Model
 {
-    [Table("VMember")]
-    public class VMember
+    [Table("Vapproval_member")]
+    public class VApprovalMember : VApprovalBase
     {
-        public int ID { get; set; }
-
-        public string Username { get; set; }
-
-        public string InstitutionName { get; set; }
-
         public string RealName { get; set; }
 
         public MemberStatus Status { get; set; }
 
-        public int InstitutionID { get; set; }
+        public int Gender { get; set; }
 
         public string MobilePhone { get; set; }
+
+        public int InstitutionID { get; set; }
     }
 }

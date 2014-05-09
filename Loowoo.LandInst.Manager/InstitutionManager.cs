@@ -27,11 +27,11 @@ namespace Loowoo.LandInst.Manager
                 var query = db.VApprovalInsts.Where(e => e.ApprovalType == filter.ApprovalType);
                 if (!String.IsNullOrEmpty(filter.Keyword))
                 {
-                    query = query.Where(e => e.FullName.Contains(filter.Keyword) || e.Name.Contains(filter.Keyword));
+                    query = query.Where(e => e.FullName.Contains(filter.Keyword) || e.InstName.Contains(filter.Keyword));
                 }
                 if (filter.ApprovalResult.HasValue)
                 {
-                    query = query.Where(e => e.ApprovalResult == filter.ApprovalResult.Value);
+                    query = query.Where(e => e.Result == filter.ApprovalResult.Value);
                 }
 
                 return query.OrderByDescending(e => e.CreateTime).SetPage(filter).ToList();

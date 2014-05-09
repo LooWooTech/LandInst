@@ -26,9 +26,20 @@ namespace Loowoo.LandInst.Manager
             }
         }
 
-        public List<MemberExam> GetMemberExams(int userId)
+        public List<VMemberExam> GetMemberExams(int memberId)
         {
-            return Core.InfoDataManager.GetModel<List<MemberExam>>(userId, InfoType.Exam, InfoStatus.Normal) ?? new List<MemberExam>();
+            using (var db = GetDataContext())
+            {
+                return db.VMemberExams.Where(e => e.MemberID == memberId && e.ApprovalType == ApprovalType.Exam).ToList();
+            }
+        }
+
+        public List<VMemberExamResult> GetMemberExamResult(int memberId)
+        {
+            using (var db = GetDataContext())
+            {
+                return db.VMemberExamResults.Where(e => e.MemberID == memberId).ToList();
+            }
         }
 
         public Exam GetExam(int examId)
@@ -61,9 +72,32 @@ namespace Loowoo.LandInst.Manager
             }
         }
 
-        public void SaveMemberExam(int userId, MemberExam memberExam)
+        public void SignupExam(int examId, int memberId)
         {
-            Core.InfoDataManager.UpdateListItem(userId, InfoType.Exam, InfoStatus.Normal, memberExam);
+            using (var db = GetDataContext())
+            {
+                var entity = db.Approvals.FirstOrDefault(e => e.InfoID == examId && e.UserID == memberId && e.ApprovalType == ApprovalType.Education);
+                if (entity.Result.Value)//已经报名 并通过审批
+                {
+                    return;
+                }
+
+                db.Approvals.Add(new Approval
+                {
+                    InfoID = examId,
+                    UserID = memberId,
+                });
+
+                db.ExamResults.Add(new ExamResult
+                {
+                    ExamID = examId,
+                    MemberID = memberId,
+                    Result = false
+                });
+                db.SaveChanges();
+            }
+
+            Core.MemberManager.UpdateMemberStatus(memberId, MemberStatus.SingupExam);
         }
 
         public void Delete(int id)
@@ -75,6 +109,20 @@ namespace Loowoo.LandInst.Manager
                 if (entity == null) return;
                 db.Exams.Remove(entity);
                 db.SaveChanges();
+            }
+        }
+
+        public List<VApprovalExam> GetApprovalExams(ApprovalFilter filter)
+        {
+            using (var db = GetDataContext())
+            {
+                var query = db.VApprovalExams.Where(e => e.ApprovalType == ApprovalType.Education);
+                if (filter.InfoID.HasValue)
+                {
+                    query = query.Where(e => e.ExamID == filter.InfoID.Value);
+                }
+
+                return query.OrderByDescending(e => e.CreateTime).SetPage(filter).ToList();
             }
         }
     }

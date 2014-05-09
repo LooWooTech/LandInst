@@ -3,7 +3,7 @@
 @{
     Layout = "~/Areas/Member/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "继续教育";
-    List<VSelfEducation> list = ViewBag.List;
+    List<VMemberEducation> list = ViewBag.List;
 }
 
 <h2>@(ViewBag.Title)</h2>
@@ -21,21 +21,21 @@
     @foreach (var item in list)
     { 
         <tr>
-            <td>@(item.Name)</td>
+            <td>@(item.EduName)</td>
             <td>@(item.StartDate.ToShortDateString())</td>
             <td>@(item.EndDate.ToShortDateString())</td>
             <td>@(item.Hours)小时</td>
             <td>@(item.Agency)</td>
             <td>
-                @if (item.SignupTime.HasValue)
+                @if (item.CreateTime.HasValue)
                 {
-                    <span>@(item.SignupTime.Value.ToShortDateString())</span> 
+                    <span>@(item.CreateTime.Value.ToShortDateString())</span> 
                 }else
                 {
-                    <a href="/member/education/signup?id=@(item.ID)" class="btn btn-default btn-signup">报名</a>
+                    <a href="/member/education/signup?id=@(item.EduID)" class="btn btn-default btn-signup">报名</a>
                 }
             </td>
-            <td>@(item.ApprovalTime.HasValue ? item.ApprovalTime.Value.ToShortDateString() : "")
+            <td>@(item.ApprovalTime.HasValue ? item.ApprovalTime.Value.ToShortDateString() : "尚未审核")
             </td>
         </tr>
     }

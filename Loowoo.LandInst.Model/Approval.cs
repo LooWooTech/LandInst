@@ -11,27 +11,36 @@ namespace Loowoo.LandInst.Model
     [Table("Approval")]
     public class Approval
     {
+        public Approval()
+        {
+            CreateTime = DateTime.Now;
+        }
+
         [Key]
         [DatabaseGenerated(System.ComponentModel.DataAnnotations.Schema.DatabaseGeneratedOption.Identity)]
         public int ID { get; set; }
 
+        public int UserID { get; set; }
+
         public int InfoID { get; set; }
+
+        public DateTime CreateTime { get; set; }
 
         public DateTime? ApprovalTime { get; set; }
 
-        public bool Result { get; set; }
+        public bool? Result { get; set; }
 
         public string Note { get; set; }
 
         [Column(TypeName = "int")]
-        public ApprovalType Type { get; set; }
+        public ApprovalType ApprovalType { get; set; }
 
         [NotMapped]
         public bool IsLocked
         {
             get
             {
-                return !ApprovalTime.HasValue || Result;
+                return !ApprovalTime.HasValue || Result.HasValue;
             }
         }
     }

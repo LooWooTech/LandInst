@@ -14,15 +14,15 @@ namespace Loowoo.LandInst.Manager
         {
             using (var db = GetDataContext())
             {
-                return db.Approvals.FirstOrDefault(e => e.InfoID == infoId && e.Type == type);
+                return db.Approvals.FirstOrDefault(e => e.InfoID == infoId && e.ApprovalType == type);
             }
         }
 
-        public void UpdateApproval(int infoId, ApprovalType type, bool result)
+        public void UpdateApproval(int approvalId, bool result)
         {
             using (var db = GetDataContext())
             {
-                var entity = db.Approvals.FirstOrDefault(e => e.InfoID == infoId && e.Type == type);
+                var entity = db.Approvals.FirstOrDefault(e => e.ID == approvalId);
                 if (entity == null) return;
                 entity.ApprovalTime = DateTime.Now;
                 entity.Result = result;

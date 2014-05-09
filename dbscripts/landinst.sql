@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50617
 File Encoding         : 65001
 
-Date: 2014-05-07 18:41:17
+Date: 2014-05-09 19:02:29
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -22,12 +22,14 @@ DROP TABLE IF EXISTS `approval`;
 CREATE TABLE `approval` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `InfoID` int(11) NOT NULL,
+  `UserID` int(11) DEFAULT NULL,
+  `ApprovalType` int(11) NOT NULL,
   `ApprovalTime` datetime DEFAULT NULL,
   `Result` bit(1) DEFAULT NULL,
+  `CreateTime` datetime NOT NULL,
   `Note` varchar(1024) DEFAULT NULL,
-  `Type` int(11) DEFAULT NULL,
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for education
@@ -42,7 +44,7 @@ CREATE TABLE `education` (
   `Agency` varchar(255) DEFAULT NULL,
   `Summary` varchar(512) DEFAULT NULL,
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for exam
@@ -58,7 +60,19 @@ CREATE TABLE `exam` (
   `Summary` varchar(1024) DEFAULT NULL,
   `Address` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Table structure for examresult
+-- ----------------------------
+DROP TABLE IF EXISTS `examresult`;
+CREATE TABLE `examresult` (
+  `ID` int(11) NOT NULL,
+  `MemberID` int(11) NOT NULL,
+  `ExamID` int(11) NOT NULL,
+  `Result` bit(1) NOT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for infodata
@@ -71,7 +85,7 @@ CREATE TABLE `infodata` (
   `Status` int(11) NOT NULL,
   `Data` blob,
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for institution
@@ -109,20 +123,6 @@ CREATE TABLE `member` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
--- Table structure for membereducation
--- ----------------------------
-DROP TABLE IF EXISTS `membereducation`;
-CREATE TABLE `membereducation` (
-  `ID` int(11) NOT NULL AUTO_INCREMENT,
-  `MemberID` int(11) NOT NULL,
-  `EducationID` int(11) NOT NULL,
-  `SignUpTime` datetime NOT NULL,
-  `ApprovalTime` datetime DEFAULT NULL,
-  `Approval` bit(1) NOT NULL,
-  PRIMARY KEY (`ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- ----------------------------
 -- Table structure for user
 -- ----------------------------
 DROP TABLE IF EXISTS `user`;
@@ -140,40 +140,142 @@ CREATE TABLE `user` (
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
--- View structure for vmember
+-- View structure for vapproval_education
 -- ----------------------------
-DROP VIEW IF EXISTS `vmember`;
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER  VIEW `vmember` AS SELECT
-member.ID,
-member.RealName,
-member.InstitutionID,
-member.Email,
-member.MobilePhone,
-member.`Status`,
-member.Gender,
-`user`.Username,
-institution.`Name` AS InstitutionName
+DROP VIEW IF EXISTS `vapproval_education`;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER  VIEW `vapproval_education` AS SELECT
+approval.ID,
+approval.InfoID AS EduID,
+approval.UserID,
+approval.ApprovalType,
+approval.ApprovalTime,
+approval.Result,
+approval.CreateTime,
+education.`Name` AS EduName,
+member.RealName
 FROM
-member
-INNER JOIN `user` ON member.ID = `user`.ID
-LEFT JOIN institution ON member.InstitutionID = institution.ID ;
+approval
+INNER JOIN education ON approval.InfoID = education.ID
+INNER JOIN member ON approval.UserID = member.ID ;
 
 -- ----------------------------
--- View structure for vmembereducation
+-- View structure for vapproval_exam
 -- ----------------------------
-DROP VIEW IF EXISTS `vmembereducation`;
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost`  VIEW `vmembereducation` AS SELECT
-me.ID,
-me.MemberID,
-me.EducationID,
-me.SignUpTime,
-me.ApprovalTime,
-me.Approval,
-m.RealName,
-e.Summary,
-e.`Name` AS EducationName,
-m.InstitutionID
+DROP VIEW IF EXISTS `vapproval_exam`;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER  VIEW `vapproval_exam` AS SELECT
+approval.ID,
+approval.InfoID AS ExamID,
+approval.UserID,
+approval.ApprovalType,
+approval.ApprovalTime,
+approval.Result,
+approval.CreateTime,
+approval.Note,
+exam.`Name` AS ExamName,
+member.RealName
 FROM
-membereducation AS me
-INNER JOIN member AS m ON me.MemberID = m.ID
-INNER JOIN education AS e ON me.EducationID = e.ID ;
+approval
+INNER JOIN exam ON approval.InfoID = exam.ID
+INNER JOIN member ON approval.UserID = member.ID ;
+
+-- ----------------------------
+-- View structure for vapproval_inst
+-- ----------------------------
+DROP VIEW IF EXISTS `vapproval_inst`;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER  VIEW `vapproval_inst` AS SELECT
+approval.ID,
+approval.InfoID,
+approval.UserID,
+approval.ApprovalType,
+approval.ApprovalTime,
+approval.Result,
+approval.CreateTime,
+institution.`Name` AS InstName,
+institution.Type,
+institution.`Status`,
+institution.LegalRepresentative,
+institution.MobilePhone,
+institution.City
+FROM
+approval
+INNER JOIN institution ON approval.InfoID = institution.ID ;
+
+-- ----------------------------
+-- View structure for vapproval_member
+-- ----------------------------
+DROP VIEW IF EXISTS `vapproval_member`;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER  VIEW `vapproval_member` AS SELECT
+approval.ID,
+approval.InfoID,
+approval.UserID,
+approval.ApprovalType,
+approval.ApprovalTime,
+approval.Result,
+approval.CreateTime,
+member.RealName,
+member.`Status`,
+member.Gender,
+member.MobilePhone,
+member.InstitutionID
+FROM
+approval
+INNER JOIN member ON approval.InfoID = member.ID ;
+
+-- ----------------------------
+-- View structure for vmember_education
+-- ----------------------------
+DROP VIEW IF EXISTS `vmember_education`;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER  VIEW `vmember_education` AS SELECT
+education.ID AS EduID,
+education.`Name` AS EduName,
+education.StartDate,
+education.EndDate,
+education.Hours,
+education.Agency,
+approval.UserID,
+approval.ApprovalType,
+approval.ApprovalTime,
+approval.Result,
+approval.CreateTime,
+COUNT(approval.ID) as ApprovalCount
+FROM
+education
+LEFT OUTER JOIN approval ON education.ID = approval.InfoID ;
+
+-- ----------------------------
+-- View structure for vmember_exam
+-- ----------------------------
+DROP VIEW IF EXISTS `vmember_exam`;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER  VIEW `vmember_exam` AS SELECT
+exam.ID AS ExamID,
+exam.StartSignTime,
+exam.EndSignTime,
+exam.StartExamTime,
+exam.EndExamTime,
+exam.`Name` AS ExamName,
+exam.Address,
+approval.UserID AS MemberID,
+approval.InfoID,
+approval.ApprovalType,
+approval.ApprovalTime,
+approval.Result,
+approval.CreateTime AS SignTime
+FROM
+exam
+LEFT JOIN approval ON exam.ID = approval.InfoID ;
+
+-- ----------------------------
+-- View structure for vmember_examresult
+-- ----------------------------
+DROP VIEW IF EXISTS `vmember_examresult`;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER  VIEW `vmember_examresult` AS SELECT
+examresult.ID,
+examresult.MemberID,
+examresult.ExamID,
+examresult.Result,
+exam.`Name` AS ExamName,
+exam.StartExamTime,
+exam.EndExamTime
+FROM
+examresult
+INNER JOIN exam ON examresult.ExamID = exam.ID ;

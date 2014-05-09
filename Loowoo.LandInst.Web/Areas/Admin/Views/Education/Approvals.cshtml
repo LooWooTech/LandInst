@@ -2,7 +2,7 @@
 @{
     ViewBag.Title = "Approvals";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
-    List<VMemberEducation> list = ViewBag.List;
+    List<VApprovalEducation> list = ViewBag.List;
 }
 
 <h2>继续教育审批</h2>
@@ -23,13 +23,13 @@
     { 
         <tr>
             <td>
-                <input type="checkbox" name="id" value="@(item.MemberID)|@(item.EducationID)" />
+                <input type="checkbox" name="id" value="@(item.ID)" />
             </td>
             <td>@(item.RealName)</td>
-            <td>@(item.EducationName)</td>
-            <td>@(item.SignupTime)</td>
-            <td>@(item.Approval ? "已通过" : "未通过")</td>
-            <td>@(item.ApprovalTime)</td>
+            <td>@(item.EduName)</td>
+            <td>@(item.CreateTime)</td>
+            <td>@(item.Result.HasValue ? "已通过" : "未通过")</td>
+            <td>@(item.ApprovalTime.HasValue?item.ApprovalTime.Value.ToShortDateString():"尚未审批")</td>
         </tr>
     }
     <tr>

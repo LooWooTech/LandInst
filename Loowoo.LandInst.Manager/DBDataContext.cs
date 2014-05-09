@@ -31,18 +31,27 @@ namespace Loowoo.LandInst.Manager
 
         public DbSet<Education> Educations { get; set; }
 
-        public DbSet<MemberEducation> MemberEducations { get; set; }
 
         public DbSet<Exam> Exams { get; set; }
 
-        public DbSet<Approval> Approvals { get; set; }
+        public DbSet<ExamResult> ExamResults { get; set; }
 
-        public DbSet<VMember> VMembers { get; set; }
+        public DbSet<VMemberExam> VMemberExams { get; set; }
+
+        public DbSet<VMemberExamResult> VMemberExamResults { get; set; }
 
         public DbSet<VMemberEducation> VMemberEducations { get; set; }
 
+        
+        public DbSet<Approval> Approvals { get; set; }
+
+
         public DbSet<VApprovalInst> VApprovalInsts { get; set; }
 
-        public DbSet<VSelfEducation> VSelfEducations { get; set; }
+        public DbSet<VApprovalMember> VApprovalMembers { get; set; }
+
+        public DbSet<VApprovalEducation> VApprovalEducations { get; set; }
+
+        public DbSet<VApprovalExam> VApprovalExams { get; set; }
     }
 }

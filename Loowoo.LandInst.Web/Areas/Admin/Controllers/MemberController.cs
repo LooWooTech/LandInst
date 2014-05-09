@@ -65,9 +65,9 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
             return JsonSuccess();
         }
 
-        public ActionResult Approval(int id, ApprovalType type, bool result = true)
+        public ActionResult Approval(int id, bool result = true)
         {
-            Core.ApprovalManager.UpdateApproval(id, type, result);
+            Core.ApprovalManager.UpdateApproval(id, result);
 
             return JsonSuccess();
         }

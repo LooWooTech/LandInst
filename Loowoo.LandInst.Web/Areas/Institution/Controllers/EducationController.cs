@@ -10,18 +10,18 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
     {
         public ActionResult Index(int page = 1)
         {
-            var filter = new Model.Filters.EducationFilter
+            var filter = new Model.Filters.ApprovalFilter
             {
-                InstitutionID = Identity.UserID,
                 PageIndex = page
             };
-            ViewBag.Educations = Core.EducationManager.GetEducations(filter);
+            ViewBag.Educations = Core.EducationManager.GetApprovalEducations(filter);
             ViewBag.PageFilter = filter;
             return View();
         }
 
-        public ActionResult Apply()
+        public ActionResult Approval(int id, bool result = true)
         {
+            Core.ApprovalManager.UpdateApproval(id, result);
             return JsonSuccess();
         }
 

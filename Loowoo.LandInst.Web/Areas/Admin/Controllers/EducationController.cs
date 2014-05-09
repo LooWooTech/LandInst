@@ -12,9 +12,7 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
     {
         public ActionResult Index(int page = 1)
         {
-            var filter = new EducationFilter { PageIndex = page };
-            ViewBag.List = Core.EducationManager.GetEducations(filter);
-            ViewBag.Page = filter;
+            ViewBag.List = Core.EducationManager.GetEducations();
             return View();
         }
 
@@ -34,31 +32,22 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
 
         public ActionResult Approvals(int? eduId = 0, int page = 1)
         {
-            var filter = new EducationFilter
+            var filter = new ApprovalFilter
             {
                 PageIndex = page,
-                EducationID = eduId,
+                InfoID = eduId
             };
-            ViewBag.List = Core.EducationManager.GetMemberEducations(filter);
+            ViewBag.List = Core.EducationManager.GetApprovalEducations(filter);
             return View();
         }
 
 
-        public ActionResult Approval(string memberId, string eduId, bool result = true)
+        public ActionResult Approval(string id, bool result = true)
         {
-            var memberIds = memberId.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(id => int.Parse(id)).ToArray();
-            var eduIds = eduId.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(id => int.Parse(id)).ToArray();
-
-            for (var i = 0; i < memberIds.Length; i++)
+            var ids = id.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(_id => int.Parse(_id)).ToArray();
+            foreach (var _id in ids)
             {
-                try
-                {
-                    Core.EducationManager.Approval(memberIds[i], eduIds[i], result);
-                }
-                catch
-                {
-
-                }
+                Core.EducationManager.Approval(_id, result);
             }
 
             return JsonSuccess();
