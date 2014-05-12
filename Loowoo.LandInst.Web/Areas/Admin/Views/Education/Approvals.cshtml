@@ -61,15 +61,13 @@
         }
 
         function getData() {
-            var memberId = [];
-            var eduId = [];
+            var ids = [];
             $("input[name='id']:checked").each(function () {
                 var val = $(this).val();
-                memberId.push(val.split('|')[0]);
-                eduId.push(val.split('|')[1]);
+                ids.push(val);
 
             });
-            return { memberId: memberId.join(), eduId: eduId.join() };
+            return { id: ids };
         }
     });
 

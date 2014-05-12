@@ -36,7 +36,5 @@ namespace Loowoo.LandInst.Model
 
         public bool? Result { get; set; }
 
-        public int ApprovalCount { get; set; }
-
     }
 }

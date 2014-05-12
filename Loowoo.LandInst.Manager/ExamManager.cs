@@ -96,8 +96,6 @@ namespace Loowoo.LandInst.Manager
                 });
                 db.SaveChanges();
             }
-
-            Core.MemberManager.UpdateMemberStatus(memberId, MemberStatus.SingupExam);
         }
 
         public void Delete(int id)
@@ -122,7 +120,38 @@ namespace Loowoo.LandInst.Manager
                     query = query.Where(e => e.ExamID == filter.InfoID.Value);
                 }
 
+                if (filter.Result.HasValue)
+                {
+                    query = query.Where(e => e.Result == filter.Result.Value);
+                }
+
+                if (!string.IsNullOrEmpty(filter.Keyword))
+                {
+                    query = query.Where(e => e.RealName.Contains(filter.Keyword));
+                }
                 return query.OrderByDescending(e => e.CreateTime).SetPage(filter).ToList();
+            }
+        }
+
+        public void UpdateExamResult(int examId, int memberId, bool result)
+        {
+            using (var db = GetDataContext())
+            {
+                var entity = db.ExamResults.FirstOrDefault(e => e.ExamID == examId && e.MemberID == memberId);
+                if (entity != null)
+                {
+                    entity.Result = result;
+                }
+                else
+                {
+                    db.ExamResults.Add(new ExamResult
+                    {
+                        ExamID = examId,
+                        MemberID = memberId,
+                        Result = result
+                    });
+                }
+                db.SaveChanges();
             }
         }
     }

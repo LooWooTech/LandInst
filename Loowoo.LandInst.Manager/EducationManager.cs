@@ -57,7 +57,7 @@ namespace Loowoo.LandInst.Manager
         {
             using (var db = GetDataContext())
             {
-                var query = db.VMemberEducations.Where(e => (e.ApprovalType == ApprovalType.Education && e.UserID == memberId) || e.ApprovalCount == 0);
+                var query = db.VMemberEducations.Where(e => (e.ApprovalType == ApprovalType.Education && e.UserID == memberId) || e.UserID == null );
 
                 return query.ToList();
             }

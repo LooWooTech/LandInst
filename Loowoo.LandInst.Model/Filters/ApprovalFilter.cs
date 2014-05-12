@@ -7,6 +7,8 @@ namespace Loowoo.LandInst.Model.Filters
 {
     public class ApprovalFilter : PageFilter
     {
+        public string Keyword { get; set; }
+
         public bool? Result { get; set; }
 
         public ApprovalType Type { get; set; }

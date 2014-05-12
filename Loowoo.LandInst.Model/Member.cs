@@ -37,6 +37,12 @@ namespace Loowoo.LandInst.Model
 
         [Column(TypeName = "int")]
         public MemberStatus Status { get; set; }
+
+        [NotMapped]
+        public bool CanSingup
+        {
+            get { return Status == MemberStatus.Register || Status == MemberStatus.SingupFail; }
+        }
     }
 
     public enum MemberStatus
@@ -45,17 +51,23 @@ namespace Loowoo.LandInst.Model
         Register = 1,
 
         [Description("报名考试")]
-        SingupExam = 2,
-        
-        [Description("报名通过")]
-        ApprovalExam = 4,
-        
+        SingupExam,
+
+        [Description("报名批准")]
+        SingupSuccess,
+
+        [Description("报名未批准")]
+        SingupFail,
+
         [Description("通过考试")]
-        PassExam = 8,
-                
-        [Description("机构从业人员")]
-        Staff = 16
+        ExamSuccess,
+
+        [Description("未通过考试")]
+        ExamFail,
+
+        [Description("从业人员")]
+        Staff
     }
 
-    
+
 }

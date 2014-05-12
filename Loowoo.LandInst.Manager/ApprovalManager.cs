@@ -10,6 +10,14 @@ namespace Loowoo.LandInst.Manager
 {
     public class ApprovalManager : ManagerBase
     {
+        public Approval GetApproval(int approvalId)
+        {
+            using (var db = GetDataContext())
+            {
+                return db.Approvals.FirstOrDefault(e => e.ID == approvalId);
+            }
+        }
+
         public Approval GetApproval(int infoId, ApprovalType type)
         {
             using (var db = GetDataContext())

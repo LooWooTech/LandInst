@@ -41,8 +41,59 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
             return View();
         }
 
-        public ActionResult Approval(int userId, int examId)
+        [HttpPost]
+        public ActionResult Approval(string id, bool result = true)
         {
+            if (string.IsNullOrEmpty(id))
+            {
+                throw new ArgumentException("缺少参数");
+            }
+            var ids = id.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(s => int.Parse(s));
+            foreach (var approvalId in ids)
+            {
+                var app = Core.ApprovalManager.GetApproval(approvalId);
+                if (app != null)
+                {
+                    Core.ApprovalManager.UpdateApproval(approvalId, result);
+                    Core.MemberManager.UpdateMemberStatus(app.UserID, result ? MemberStatus.SingupSuccess : MemberStatus.SingupFail);
+                }
+            }
+            return JsonSuccess();
+        }
+
+        [HttpGet]
+        public ActionResult ExamResult(string name, int examId = 0, int page = 1)
+        {
+            var filter = new ApprovalFilter
+            {
+                Result = true,
+                Keyword = name,
+                InfoID = examId,
+                PageIndex = page
+            };
+            ViewBag.List = Core.ExamManager.GetApprovalExams(filter);
+            ViewBag.Page = filter;
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult ExamResult(string id, bool result = true)
+        {
+            if (string.IsNullOrEmpty(id))
+            {
+                throw new ArgumentException("缺少参数");
+            }
+            var ids = id.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(s => int.Parse(s));
+            foreach (var approvalId in ids)
+            {
+                var app = Core.ApprovalManager.GetApproval(approvalId);
+                if (app != null)
+                {
+                    Core.ExamManager.UpdateExamResult(app.InfoID, app.UserID, result);
+
+                    Core.MemberManager.UpdateMemberStatus(app.UserID, result ? MemberStatus.ExamSuccess : MemberStatus.Register);
+                }
+            }
             return JsonSuccess();
         }
 

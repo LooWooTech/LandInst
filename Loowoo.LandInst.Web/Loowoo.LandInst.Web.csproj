@@ -173,6 +173,7 @@
     <Content Include="Areas\Admin\Views\Member\Profile.cshtml" />
     <Content Include="Areas\Admin\Views\Member\Transfer.cshtml" />
     <Content Include="Areas\Admin\Views\Exam\Approvals.cshtml" />
+    <Content Include="Areas\Admin\Views\Exam\ExamResult.cshtml" />
     <None Include="Scripts\jquery-1.9.0.intellisense.js" />
     <Content Include="Scripts\jquery-1.9.0.js" />
     <Content Include="Scripts\jquery-1.9.0.min.js" />

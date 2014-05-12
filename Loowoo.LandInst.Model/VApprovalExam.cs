@@ -14,5 +14,9 @@ namespace Loowoo.LandInst.Model
         public string ExamName { get; set; }
 
         public string RealName { get; set; }
+
+        public string MobilePhone { get; set; }
+
+        public MemberStatus Status { get; set; }
     }
 }

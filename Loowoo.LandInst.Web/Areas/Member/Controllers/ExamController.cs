@@ -21,8 +21,7 @@ namespace Loowoo.LandInst.Web.Areas.Member.Controllers
         public ActionResult Signup()
         {
             var member = GetCurrentMember();
-            //非注册用户不能再报名考试
-            if (member.Status != MemberStatus.Register)
+            if (!member.CanSingup)
             {
                 return View();
             }
@@ -54,7 +53,9 @@ namespace Loowoo.LandInst.Web.Areas.Member.Controllers
             Core.ExamManager.SignupExam(examId, member.ID);
             //保存用户资料
             Core.MemberManager.SaveProfile(member, profile);
-            
+
+            Core.MemberManager.UpdateMemberStatus(member.ID, MemberStatus.SingupExam);
+
             return JsonSuccess();
         }
 
