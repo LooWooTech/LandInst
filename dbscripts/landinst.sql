@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50617
 File Encoding         : 65001
 
-Date: 2014-05-09 19:02:29
+Date: 2014-05-12 17:34:00
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -85,7 +85,7 @@ CREATE TABLE `infodata` (
   `Status` int(11) NOT NULL,
   `Data` blob,
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for institution
@@ -137,7 +137,7 @@ CREATE TABLE `user` (
   `Role` int(11) NOT NULL,
   `Deleted` bit(1) NOT NULL,
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- View structure for vapproval_education
@@ -172,7 +172,9 @@ approval.Result,
 approval.CreateTime,
 approval.Note,
 exam.`Name` AS ExamName,
-member.RealName
+member.RealName,
+member.`Status`,
+member.MobilePhone
 FROM
 approval
 INNER JOIN exam ON approval.InfoID = exam.ID
@@ -195,7 +197,9 @@ institution.Type,
 institution.`Status`,
 institution.LegalRepresentative,
 institution.MobilePhone,
-institution.City
+institution.City,
+institution.Fullname,
+institution.RegistrationNo
 FROM
 approval
 INNER JOIN institution ON approval.InfoID = institution.ID ;
@@ -236,8 +240,7 @@ approval.UserID,
 approval.ApprovalType,
 approval.ApprovalTime,
 approval.Result,
-approval.CreateTime,
-COUNT(approval.ID) as ApprovalCount
+approval.CreateTime
 FROM
 education
 LEFT OUTER JOIN approval ON education.ID = approval.InfoID ;
