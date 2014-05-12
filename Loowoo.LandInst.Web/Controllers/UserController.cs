@@ -37,6 +37,7 @@ namespace Loowoo.LandInst.Web.Controllers
 
         public ActionResult SignOut()
         {
+            Session.Clear();
             HttpContext.ClearAuth();
             return Redirect("/user/signin");
         }

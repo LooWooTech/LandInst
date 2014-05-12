@@ -1,6 +1,31 @@
 ﻿@{
-    ViewBag.Title = "Logout";
+    ViewBag.Title = "注销登记";
     Layout = "~/Areas/Institution/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Logout</h2>
+<h2>注销登记</h2>
+<form id="logout-form" role="form" class="form-horizontal">
+
+    <label class="control-label">公司全称</label>
+    <input type="text" id="control-fullname" class="form-control input-sm" value="" />
+    <input type="submit" value="确认注销" class="btn btn-warning" />
+</form>
+
+<script>
+
+    $(function () {
+        $("#logout-form").submit(function () {
+            var fullName = $("#control-fullname").val();
+            if (fullName) {
+                if (confirm("确认注销您的机构？")) {
+                    $.post("/institution/profile/logout", { FullName: fullName }, function (json) {
+                        if (json.result) {
+                            alert("注销申请已提交");
+                        }
+                    }, "json");
+                }
+            }
+            return false;
+        });
+    });
+</script>

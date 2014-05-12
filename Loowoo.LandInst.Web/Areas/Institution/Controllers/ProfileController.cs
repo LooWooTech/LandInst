@@ -14,19 +14,31 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
             return View();
         }
 
+        [HttpGet]
         public ActionResult Edit()
         {
-            ViewBag.Profile = Core.InstitutionManager.GetProfile(Identity.UserID);
-            ViewBag.Approval = Core.ApprovalManager.GetApproval(Identity.UserID, ApprovalType.Register);
+            var profile = Core.InstitutionManager.GetProfile(Identity.UserID);
+            ViewBag.Profile = profile;
+            //只要不是注册登记，那么就获取资料变更的审核状态
+            ViewBag.Approval = Core.ApprovalManager.GetApproval(Identity.UserID, profile.Status == InstitutionStatus.Normal ? ApprovalType.Register : ApprovalType.Change);
             return View();
         }
 
-        public ActionResult Submit()
+        [HttpPost]
+        public ActionResult Edit(InstitutionProfile profile, string mode)
         {
-           //注册和变更只有一种存在
-         return JsonSuccess();
+            var currentInst = GetCurrentInst();
+            Core.InstitutionManager.SaveProfile(profile, InfoStatus.Draft);
+            if (mode == "submit")
+            {
+                var approvalType = currentInst.Status == InstitutionStatus.Normal ? ApprovalType.Register : ApprovalType.Change;
+                Core.ApprovalManager.AddApproval(Identity.UserID, Identity.UserID, approvalType);
+            }
+
+            return JsonSuccess();
         }
 
+        [HttpGet]
         public ActionResult Logout()
         {
             return View();
@@ -35,8 +47,13 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
         [HttpPost]
         public ActionResult Logout(string fullName)
         {
-            Core.InstitutionManager.LogoutInstitution(fullName);
-            return JsonSuccess();
+            var currentInst = GetCurrentInst();
+            if (currentInst.FullName == fullName)
+            {
+                Core.InstitutionManager.LogoutInstitution(fullName);
+                return JsonSuccess();
+            }
+            throw new ArgumentException("公司全称输入不正确");
         }
 
         public ActionResult History()

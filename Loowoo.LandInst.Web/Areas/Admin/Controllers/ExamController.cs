@@ -55,7 +55,7 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
                 if (app != null)
                 {
                     Core.ApprovalManager.UpdateApproval(approvalId, result);
-                    Core.MemberManager.UpdateMemberStatus(app.UserID, result ? MemberStatus.SingupSuccess : MemberStatus.SingupFail);
+                    Core.MemberManager.UpdateMemberStatus(app.UserID, result ? MemberStatus.SingupExam : MemberStatus.Register);
                 }
             }
             return JsonSuccess();

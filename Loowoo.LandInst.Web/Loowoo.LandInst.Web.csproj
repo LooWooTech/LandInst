@@ -104,10 +104,12 @@
     <Compile Include="Areas\Admin\Controllers\HomeController.cs" />
     <Compile Include="Areas\Admin\Controllers\InstitutionController.cs" />
     <Compile Include="Areas\Admin\Controllers\MemberController.cs" />
+    <Compile Include="Areas\Institution\Controllers\CertificationController.cs" />
     <Compile Include="Areas\Institution\Controllers\EducationController.cs" />
     <Compile Include="Areas\Institution\Controllers\HomeController.cs" />
     <Compile Include="Areas\Institution\Controllers\MemberController.cs" />
     <Compile Include="Areas\Institution\Controllers\ProfileController.cs" />
+    <Compile Include="Areas\Institution\Controllers\ShareholderController.cs" />
     <Compile Include="Areas\Institution\InstitutionAreaRegistration.cs" />
     <Compile Include="Areas\Institution\InstitutionControllerBase.cs" />
     <Compile Include="Areas\Member\Controllers\EducationController.cs" />
@@ -174,6 +176,9 @@
     <Content Include="Areas\Admin\Views\Member\Transfer.cshtml" />
     <Content Include="Areas\Admin\Views\Exam\Approvals.cshtml" />
     <Content Include="Areas\Admin\Views\Exam\ExamResult.cshtml" />
+    <Content Include="Areas\Institution\Views\Profile\Shareholder.cshtml" />
+    <Content Include="Areas\Institution\Views\Shareholder\Index.cshtml" />
+    <Content Include="Areas\Institution\Views\Certification\Index.cshtml" />
     <None Include="Scripts\jquery-1.9.0.intellisense.js" />
     <Content Include="Scripts\jquery-1.9.0.js" />
     <Content Include="Scripts\jquery-1.9.0.min.js" />

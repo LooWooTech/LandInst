@@ -1,6 +1,10 @@
-﻿@{
+﻿@using Loowoo.LandInst.Model
+@{
     ViewBag.Title = "Index";
     Layout = "~/Areas/Institution/Views/Shared/_Layout.cshtml";
+    Loowoo.LandInst.Model.Institution model = ViewBag.Model;
 }
 
-<h2>Index</h2>
+<h2>欢迎页</h2>
+机构名称：@(model.Name)
+全程：@(model.FullName)

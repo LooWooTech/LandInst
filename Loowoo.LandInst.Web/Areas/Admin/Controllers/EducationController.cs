@@ -30,10 +30,11 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
             return JsonSuccess();
         }
 
-        public ActionResult Approvals(int? eduId = 0, int page = 1)
+        public ActionResult Approvals(string name, int? eduId = 0, int page = 1)
         {
             var filter = new ApprovalFilter
             {
+                Keyword = name,
                 PageIndex = page,
                 InfoID = eduId
             };

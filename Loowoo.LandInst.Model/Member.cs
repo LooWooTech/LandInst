@@ -41,30 +41,33 @@ namespace Loowoo.LandInst.Model
         [NotMapped]
         public bool CanSingup
         {
-            get { return Status == MemberStatus.Register || Status == MemberStatus.SingupFail; }
+            get { return Status == MemberStatus.Register; }
         }
     }
 
     public enum MemberStatus
     {
+        /// <summary>
+        /// 新注册的用户状态
+        /// </summary>
         [Description("新注册用户")]
         Register = 1,
 
+        /// <summary>
+        /// 已批准报名用户状态
+        /// </summary>
         [Description("报名考试")]
         SingupExam,
 
-        [Description("报名批准")]
-        SingupSuccess,
-
-        [Description("报名未批准")]
-        SingupFail,
-
+        /// <summary>
+        /// 已考试通过的用户状态
+        /// </summary>
         [Description("通过考试")]
         ExamSuccess,
 
-        [Description("未通过考试")]
-        ExamFail,
-
+        /// <summary>
+        /// 已批准从业的用户状态
+        /// </summary>
         [Description("从业人员")]
         Staff
     }

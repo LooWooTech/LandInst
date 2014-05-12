@@ -47,10 +47,14 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
             {
                 user.Password = randomPwd;
             }
+            else
+            {
+                randomPwd = user.Password;
+            }
 
             user.Question = "初始密码是什么";
             user.Answer = randomPwd;
-
+            user.Role = UserRole.Institution;
             Core.UserManager.AddUser(user);
             inst.ID = user.ID;
             Core.InstitutionManager.AddInstitution(inst);
@@ -58,8 +62,13 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
             return JsonSuccess(new { password = randomPwd });
         }
 
-        public ActionResult Approval(int id)
+        public ActionResult Approval(string id, bool result = true)
         {
+            var ids = id.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(_id => int.Parse(_id)).ToArray();
+            foreach (var _id in ids)
+            {
+                Core.ApprovalManager.UpdateApproval(_id, result);
+            }
             return JsonSuccess();
         }
 

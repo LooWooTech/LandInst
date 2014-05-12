@@ -102,6 +102,10 @@ namespace Loowoo.LandInst.Manager
                 {
                     query = query.Where(e => e.EduID == filter.InfoID.Value);
                 }
+                if (!string.IsNullOrEmpty(filter.Keyword))
+                {
+                    query = query.Where(e => e.RealName.Contains(filter.Keyword.Trim()));
+                }
                 return query.OrderByDescending(e => e.CreateTime).SetPage(filter).ToList();
             }
         }

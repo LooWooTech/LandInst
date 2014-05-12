@@ -1,6 +1,107 @@
-﻿@{
+﻿@using Loowoo.LandInst.Model
+@{
     ViewBag.Title = "Edit";
     Layout = "~/Areas/Institution/Views/Shared/_Layout.cshtml";
+    Approval approval = ViewBag.Approval;
+    InstitutionProfile model = ViewBag.Profile;
+    //如果已提交还没审核，则不可以修改资
+    var disabled = approval != null && !approval.Result.HasValue;
+    //注册登记可以全部编辑
+    var fullEdit = model.Status == InstitutionStatus.Normal && !disabled;
 }
 
-<h2>Edit</h2>
+<h2>编辑资料</h2>
+<form id="profile-form" role="form" class="form-horizontal">
+    <fieldset style="width: 300px; float: left; overflow: hidden; margin: 10px;">
+        <legend>基本资料</legend>
+
+        <label class="control-label">名称</label>
+        <input type="text" name="Name" class="form-control input-sm" value="@(model.Name)" />
+
+        <label class="control-label">全称</label>
+        <input type="text" name="FullName" class="form-control input-sm" value="@(model.FullName)" />
+
+        <label class="control-label">工商注册号</label>
+        <input type="text" name="RegistrationNo" class="form-control input-sm" value="@(model.RegistrationNo)" />
+
+        <label class="control-label">法人代表</label>
+        <input type="text" name="LegalRepresentative" class="form-control input-sm" value="@(model.LegalRepresentative)" />
+    </fieldset>
+
+    <fieldset style="width: 300px; float: left; overflow: hidden; margin: 10px;">
+        <legend>详细资料</legend>
+        <label class="control-label">经营范围</label>
+        <input type="text" name="BusinessScope" class="form-control input-sm" value="@(model.BusinessScope)" />
+
+        <label class="control-label">注册证书号</label>
+        <input type="text" name="CertificateNo" class="form-control input-sm" value="@(model.CertificateNo)" />
+
+
+        <label class="control-label">注册资金</label>
+        <input type="text" name="RegisteredCapital" class="form-control input-sm" value="@(model.RegisteredCapital)" />
+
+        <label class="control-label">移动电话</label>
+        <input type="text" name="MobilePhone" class="form-control input-sm" value="@(model.MobilePhone)" />
+
+        <label class="control-label">税利总收</label>
+        <input type="text" name="TotalProfits" class="form-control input-sm" value="@(model.TotalProfits)" />
+
+    </fieldset>
+
+    <fieldset style="width: 300px; float: left; overflow: hidden; margin: 10px;">
+        <legend>联系方式</legend>
+
+        <label class="control-label">公司地址</label>
+        <input type="text" name="Address" class="form-control input-sm" value="@(model.Address)" />
+
+        <label class="control-label">所在城市</label>
+        <input type="text" name="City" class="form-control input-sm" value="@(model.City)" />
+
+        <label class="control-label">电子邮箱</label>
+        <input type="text" name="Email" class="form-control input-sm" value="@(model.Email)" />
+
+        <label class="control-label">邮政编码</label>
+        <input type="text" name="Postcode" class="form-control input-sm" value="@(model.Postcode)" />
+
+    </fieldset>
+
+    <div style="clear: both">
+        <input type="hidden" value="" name="submitType" id="submit-mode" />
+        <input id="btn-submit" type="button" value="提交审核" class="btn btn-warning" />
+        <input id="btn-save" type="button" value="保存资料" class="btn btn-primary" />
+    </div>
+</form>
+<script>
+    $(function () {
+        $("#btn-submit").click(function () {
+            $("#submit-mode").val("submit");
+            submitForm();
+        });
+
+        $("#btn-save").click(function () {
+            $("#submit-mode").val("save");
+            submitForm();
+        });
+
+        $("#profile-form").submit(function () {
+            var data = $(this).serialize();
+            var saveMode = $("#submit-mode").val();
+            $.post("/institution/profile/edit?mode=" + saveMode, data, function (json) {
+                if (json.result) {
+                    if (saveMode == "submit") {
+                        alert("资料已提交，请等待审核");
+                    } else {
+                        alert("资料已保存");
+                    }
+                    window.location.href = window.location.href;
+                }
+            }, "json");
+            return false;
+        });
+
+        function submitForm() {
+            $("#profile-form").submit();
+        }
+
+    });
+</script>

@@ -98,7 +98,14 @@ namespace Loowoo.LandInst.Manager
 
         public InstitutionProfile GetProfile(int instId, InfoStatus status = InfoStatus.Normal)
         {
-            return Core.InfoDataManager.GetModel<InstitutionProfile>(instId, InfoType.InstitutionProfile, status);
+            var model = Core.InfoDataManager.GetModel<InstitutionProfile>(instId, InfoType.InstitutionProfile, status);
+            if (model == null)
+            {
+                return null;
+            }
+            var inst = GetInstitution(instId);
+            model.SetInstField(inst);
+            return model;
         }
 
         public void AddInstitution(Institution model)
@@ -136,6 +143,19 @@ namespace Loowoo.LandInst.Manager
                 Status = status,
                 Data = profile.ToBytes(),
             });
+        }
+
+        public void UpdateStatus(int instId,InstitutionStatus status)
+        {
+            using (var db = GetDataContext())
+            {
+                var entity = db.Institutions.FirstOrDefault(e => e.ID == instId);
+                if (entity != null)
+                {
+                    entity.Status = status;
+                    db.SaveChanges();
+                }
+            }
         }
     }
 }
