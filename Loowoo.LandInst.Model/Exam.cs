@@ -16,16 +16,16 @@ namespace Loowoo.LandInst.Model
         public int ID { get; set; }
 
         [Required]
-        public DateTime StartSignTime { get; set; }
+        public DateTime StartSignDate { get; set; }
 
         [Required]
-        public DateTime EndSignTime { get; set; }
+        public DateTime EndSignDate { get; set; }
 
         [Required]
-        public DateTime StartExamTime { get; set; }
+        public DateTime StartExamDate { get; set; }
 
         [Required]
-        public DateTime EndExamTime { get; set; }
+        public DateTime EndExamDate { get; set; }
 
         [Required]
         public string Name { get; set; }

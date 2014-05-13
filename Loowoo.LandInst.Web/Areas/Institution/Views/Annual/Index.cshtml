@@ -1,0 +1,41 @@
+﻿@using Loowoo.LandInst.Model
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Institution/Views/Shared/_Layout.cshtml";
+    List<VInstAnnualCheck> list = ViewBag.List;
+}
+
+<h2>年审申请</h2>
+<table class="table">
+    <tr>
+        <th>年审名称</th>
+        <td>起始时间</td>
+        <th>结束时间</th>
+        <th>审核状态</th>
+        <th>审核时间</th>
+    </tr>
+    @foreach (var item in list)
+    { 
+        <tr>
+            <td>@(item.Name)</td>
+            <td>@(item.StartDate.ToShortDateString())</td>
+            <td>@(item.EndDate.ToShortDateString())</td>
+            <td>@(item.Result.HasValue ? (item.Result.Value ? "已通过" : "未通过") : "未审核")</td>
+            <td>@Html.Raw(item.ApprovalTime.HasValue ? item.ApprovalTime.Value.ToShortDateString() : "<a href=\"/institution/annual/signup\" class=\"btn btn-primary btn-signup\">申请</a>")
+            </td>
+        </tr>
+    }
+</table>
+<script>
+    $(function () {
+        $(".signup").click(function () {
+            var href = $(this).attr("href");
+            $.post(href, function (json) {
+                if (json.result) {
+                    aler("申请成功，请等待审批");
+                    window.location.href = window.location.href;
+                }
+            }, "json");
+        });
+    });
+</script>

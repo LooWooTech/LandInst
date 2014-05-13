@@ -1,0 +1,46 @@
+﻿@using Loowoo.LandInst.Model
+@{
+    ViewBag.Title = "年审设置";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    List<AnnualCheck> list = ViewBag.List;
+}
+
+<h2>年审设置</h2>
+<a href="/admin/annual/edit" class="btn btn-primary">添加年审</a>
+<table class="table">
+    <tr>
+        <th>年审标题</th>
+        <th>起始时间</th>
+        <th>结束时间</th>
+        <th>管理</th>
+    </tr>
+    @foreach (var item in list)
+    { 
+        <tr>
+            <td>@(item.Name)</td>
+            <td>@(item.StartDate.ToShortDateString())</td>
+            <td>@(item.EndDate.ToShortDateString())</td>
+            <td>
+                <a href="/admin/annual/edit?id=@(item.ID)" class="btn btn-primary">编辑</a>
+                <a href="/admin/annual/delete?id=@(item.ID)" class="btn btn-warning btn-delete">删除</a>
+            </td>
+        </tr>
+    }
+</table>
+<script>
+    $(function () {
+            
+        $(".btn-delete").click(function () {
+            if (!confirm("确定要删除吗？")) {
+                return false;
+            }
+            var href = $(this).attr("href");
+            $.post(href, function (json) {
+                if (json.result) {
+                    window.location.href = window.location.href;
+                }
+            }, "json");
+            return false;
+        });
+    });
+</script>

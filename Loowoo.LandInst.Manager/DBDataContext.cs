@@ -31,6 +31,7 @@ namespace Loowoo.LandInst.Manager
 
         public DbSet<Education> Educations { get; set; }
 
+        public DbSet<AnnualCheck> AnnualChecks { get; set; }
 
         public DbSet<Exam> Exams { get; set; }
 
@@ -41,6 +42,10 @@ namespace Loowoo.LandInst.Manager
         public DbSet<VMemberExamResult> VMemberExamResults { get; set; }
 
         public DbSet<VMemberEducation> VMemberEducations { get; set; }
+
+
+        public DbSet<VInstAnnualCheck> VInstAnnualChecks { get; set; }
+
 
         
         public DbSet<Approval> Approvals { get; set; }
@@ -53,5 +58,7 @@ namespace Loowoo.LandInst.Manager
         public DbSet<VApprovalEducation> VApprovalEducations { get; set; }
 
         public DbSet<VApprovalExam> VApprovalExams { get; set; }
+
+        public DbSet<VApprovalAnnualCheck> VApprovalAnnualChecks { get; set; }
     }
 }

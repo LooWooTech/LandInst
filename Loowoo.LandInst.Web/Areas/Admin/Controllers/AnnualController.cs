@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Loowoo.LandInst.Model;
+using Loowoo.LandInst.Model.Filters;
 
 namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
 {
@@ -11,20 +12,33 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
     {
         public ActionResult Index()
         {
-            ViewBag.List = Core.AnnualCheckManager.GetAnnualApprovals();
+            ViewBag.List = Core.AnnualCheckManager.GetAnnualChecks();
             return View();
         }
 
+        //public ActionResult Approvals(string name, int page = 1)
+        //{
+        //    var filter = new ApprovalFilter
+        //    {
+        //        Keyword = name,
+        //        PageIndex = page
+        //    };
+        //    ViewBag.List = Core.AnnualCheckManager.GetApprovalAnnualChecks(filter);
+        //    ViewBag.Page = filter;
+        //    return View();
+        //}
+
         [HttpGet]
-        public ActionResult Edit(int annualCheckId)
+        public ActionResult Edit(int id = 0)
         {
-            ViewBag.AnnualCheck = Core.AnnualCheckManager.GetAnnualApproval(annualCheckId);
+            ViewBag.Model = Core.AnnualCheckManager.GetModel(id) ?? new AnnualCheck();
             return View();
         }
 
         [HttpPost]
-        public ActionResult Edit(AnnualApproval annualCheck)
+        public ActionResult Edit(AnnualCheck annualCheck)
         {
+            Core.AnnualCheckManager.Save(annualCheck);
             return JsonSuccess();
         }
 

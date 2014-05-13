@@ -47,10 +47,10 @@ namespace Loowoo.LandInst.Manager
         }
 
 
-        private AnnualApprovalManager _anualCheckManager;
-        public AnnualApprovalManager AnnualCheckManager
+        private AnnualCheckManager _anualCheckManager;
+        public AnnualCheckManager AnnualCheckManager
         {
-            get { return _anualCheckManager == null ? _anualCheckManager = new AnnualApprovalManager() : _anualCheckManager; }
+            get { return _anualCheckManager == null ? _anualCheckManager = new AnnualCheckManager() : _anualCheckManager; }
         }
 
         private InfoDataManager _infodataManager;

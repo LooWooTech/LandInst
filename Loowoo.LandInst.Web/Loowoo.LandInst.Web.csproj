@@ -104,6 +104,7 @@
     <Compile Include="Areas\Admin\Controllers\HomeController.cs" />
     <Compile Include="Areas\Admin\Controllers\InstitutionController.cs" />
     <Compile Include="Areas\Admin\Controllers\MemberController.cs" />
+    <Compile Include="Areas\Institution\Controllers\AnnualController.cs" />
     <Compile Include="Areas\Institution\Controllers\CertificationController.cs" />
     <Compile Include="Areas\Institution\Controllers\EducationController.cs" />
     <Compile Include="Areas\Institution\Controllers\HomeController.cs" />
@@ -179,6 +180,9 @@
     <Content Include="Areas\Institution\Views\Profile\Shareholder.cshtml" />
     <Content Include="Areas\Institution\Views\Shareholder\Index.cshtml" />
     <Content Include="Areas\Institution\Views\Certification\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\Annual\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\Annual\Edit.cshtml" />
+    <Content Include="Areas\Institution\Views\Annual\Index.cshtml" />
     <None Include="Scripts\jquery-1.9.0.intellisense.js" />
     <Content Include="Scripts\jquery-1.9.0.js" />
     <Content Include="Scripts\jquery-1.9.0.min.js" />

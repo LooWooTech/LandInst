@@ -19,7 +19,7 @@ namespace Loowoo.LandInst.Manager
 
                 if (filter.SignTime.HasValue)
                 {
-                    query = query.Where(e => filter.SignTime.Value >= e.StartSignTime && filter.SignTime.Value <= e.EndSignTime);
+                    query = query.Where(e => filter.SignTime.Value >= e.StartSignDate && filter.SignTime.Value <= e.EndSignDate);
                 }
 
                 return query.ToList();

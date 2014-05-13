@@ -47,7 +47,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AnnualApproval.cs" />
+    <Compile Include="AnnualCheck.cs" />
     <Compile Include="Certification.cs" />
     <Compile Include="Education.cs" />
     <Compile Include="Exam.cs" />
@@ -63,6 +63,7 @@
     <Compile Include="Approval.cs" />
     <Compile Include="Member.cs" />
     <Compile Include="MemberProfile.cs" />
+    <Compile Include="VApprovalAnnualCheck.cs" />
     <Compile Include="VApprovalBase.cs" />
     <Compile Include="VApprovalEducation.cs" />
     <Compile Include="VApprovalExam.cs" />
@@ -72,6 +73,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Shareholder.cs" />
     <Compile Include="User.cs" />
+    <Compile Include="VInstAnnualCheck.cs" />
     <Compile Include="VMemberEducation.cs" />
     <Compile Include="VMemberExam.cs" />
     <Compile Include="VMemberExamResult.cs" />

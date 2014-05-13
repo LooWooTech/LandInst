@@ -57,7 +57,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AnnualApprovalManager.cs" />
+    <Compile Include="AnnualCheckManager.cs" />
     <Compile Include="DBDataContext.cs" />
     <Compile Include="EducationManager.cs" />
     <Compile Include="EFExtensions.cs" />
