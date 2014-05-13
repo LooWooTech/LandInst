@@ -21,7 +21,7 @@
             <td>@(item.StartDate.ToShortDateString())</td>
             <td>@(item.EndDate.ToShortDateString())</td>
             <td>@(item.Result.HasValue ? (item.Result.Value ? "已通过" : "未通过") : "未审核")</td>
-            <td>@Html.Raw(item.ApprovalTime.HasValue ? item.ApprovalTime.Value.ToShortDateString() : "<a href=\"/institution/annual/signup\" class=\"btn btn-primary btn-signup\">申请</a>")
+            <td>@Html.Raw(item.ApprovalTime.HasValue ? item.ApprovalTime.Value.ToShortDateString() : "<a href=\"/institution/annual/signup?id=" + item.ID + "\" class=\"btn btn-primary btn-signup\">申请</a>")
             </td>
         </tr>
     }

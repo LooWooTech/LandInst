@@ -21,12 +21,12 @@ namespace Loowoo.LandInst.Model
 
         public int? UserID { get; set; }
 
-        public ApprovalType ApprovalType { get; set; }
+        public ApprovalType? ApprovalType { get; set; }
 
         public DateTime? ApprovalTime { get; set; }
 
         public bool? Result { get; set; }
 
-        public DateTime CreateTime { get; set; }
+        public DateTime? CreateTime { get; set; }
     }
 }

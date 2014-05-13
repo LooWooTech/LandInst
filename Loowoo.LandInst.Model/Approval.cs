@@ -47,7 +47,7 @@ namespace Loowoo.LandInst.Model
 
     public enum ApprovalType
     {
-        Register,//注册、登记
+        Register = 1,//注册、登记
         Change,//信息变更
         Transfer,//会员转移
         Working,//会员执业

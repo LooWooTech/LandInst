@@ -34,7 +34,8 @@ namespace Loowoo.LandInst.Manager
         {
             using (var db = GetDataContext())
             {
-                return db.VInstAnnualChecks.Where(e => (e.ApprovalType == ApprovalType.Annual && e.UserID == instId) || e.UserID == null).ToList();
+                var query = db.VInstAnnualChecks.Where(e => (e.ApprovalType == ApprovalType.Annual && e.UserID == instId) || e.UserID == null);
+                return query.ToList();
             }
         }
 
@@ -65,11 +66,15 @@ namespace Loowoo.LandInst.Manager
             }
         }
 
-        public AnnualCheck GetModel(int annualCheckId)
+        public AnnualCheck GetModel(int id)
         {
+            if (id == 0)
+            {
+                return null;
+            }
             using (var db = GetDataContext())
             {
-                return db.AnnualChecks.FirstOrDefault(e => e.ID == annualCheckId);
+                return db.AnnualChecks.FirstOrDefault(e => e.ID == id);
             }
         }
     }
