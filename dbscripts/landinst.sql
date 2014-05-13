@@ -10,10 +10,23 @@ Target Server Type    : MYSQL
 Target Server Version : 50617
 File Encoding         : 65001
 
-Date: 2014-05-12 17:34:00
+Date: 2014-05-13 17:28:40
 */
 
 SET FOREIGN_KEY_CHECKS=0;
+
+-- ----------------------------
+-- Table structure for annualcheck
+-- ----------------------------
+DROP TABLE IF EXISTS `annualcheck`;
+CREATE TABLE `annualcheck` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `StartDate` datetime NOT NULL,
+  `EndDate` datetime NOT NULL,
+  `Name` varchar(255) NOT NULL,
+  `Summary` varchar(1024) DEFAULT '0',
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for approval
@@ -52,10 +65,10 @@ CREATE TABLE `education` (
 DROP TABLE IF EXISTS `exam`;
 CREATE TABLE `exam` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
-  `StartSignTime` datetime NOT NULL,
-  `EndSignTime` datetime NOT NULL,
-  `StartExamTime` datetime NOT NULL,
-  `EndExamTime` datetime NOT NULL,
+  `StartSignDate` datetime NOT NULL,
+  `EndSignDate` datetime NOT NULL,
+  `StartExamDate` datetime NOT NULL,
+  `EndExamDate` datetime NOT NULL,
   `Name` varchar(255) NOT NULL,
   `Summary` varchar(1024) DEFAULT NULL,
   `Address` varchar(255) DEFAULT NULL,
@@ -138,6 +151,26 @@ CREATE TABLE `user` (
   `Deleted` bit(1) NOT NULL,
   PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- View structure for vapproval_annualcheck
+-- ----------------------------
+DROP VIEW IF EXISTS `vapproval_annualcheck`;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER  VIEW `vapproval_annualcheck` AS SELECT
+approval.ID,
+approval.InfoID,
+approval.UserID,
+approval.ApprovalType,
+approval.ApprovalTime,
+approval.Result,
+approval.CreateTime,
+annualcheck.`Name`,
+institution.Fullname,
+institution.`Name` AS InstName
+FROM
+approval
+INNER JOIN annualcheck ON approval.InfoID = annualcheck.ID
+INNER JOIN institution ON approval.UserID = institution.ID ;
 
 -- ----------------------------
 -- View structure for vapproval_education
@@ -224,6 +257,26 @@ member.InstitutionID
 FROM
 approval
 INNER JOIN member ON approval.InfoID = member.ID ;
+
+-- ----------------------------
+-- View structure for vinst_annualcheck
+-- ----------------------------
+DROP VIEW IF EXISTS `vinst_annualcheck`;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER  VIEW `vinst_annualcheck` AS SELECT
+annualcheck.ID,
+annualcheck.StartDate,
+annualcheck.EndDate,
+annualcheck.`Name`,
+approval.InfoID,
+approval.UserID,
+approval.ApprovalType,
+approval.ApprovalTime,
+approval.Result,
+approval.CreateTime,
+COUNT(approval.ID) AS ApprovalCount
+FROM
+annualcheck
+LEFT JOIN approval ON annualcheck.ID = approval.InfoID ;
 
 -- ----------------------------
 -- View structure for vmember_education
