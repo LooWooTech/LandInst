@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50617
 File Encoding         : 65001
 
-Date: 2014-05-13 17:28:40
+Date: 2014-05-13 17:46:31
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -166,7 +166,8 @@ approval.Result,
 approval.CreateTime,
 annualcheck.`Name`,
 institution.Fullname,
-institution.`Name` AS InstName
+institution.`Name` AS InstName,
+annualcheck.ID AS AnnualCheckID
 FROM
 approval
 INNER JOIN annualcheck ON approval.InfoID = annualcheck.ID

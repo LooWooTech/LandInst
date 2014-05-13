@@ -10,8 +10,6 @@ namespace Loowoo.LandInst.Model
         public int ID { get; set; }
 
         public int UserID { get; set; }
-
-        public int InfoID { get; set; }
         
         public ApprovalType ApprovalType { get; set; }
 

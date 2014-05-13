@@ -21,10 +21,10 @@
     { 
         <tr>
             <td>@(item.Name)</td>
-            <td>@(item.StartSignTime.ToShortDateString())</td>
-            <td>@(item.EndSignTime.ToShortDateString())</td>
-            <td>@(item.StartExamTime.ToShortDateString())</td>
-            <td>@(item.EndExamTime.ToShortDateString())</td>
+            <td>@(item.StartSignDate.ToShortDateString())</td>
+            <td>@(item.EndSignDate.ToShortDateString())</td>
+            <td>@(item.StartExamDate.ToShortDateString())</td>
+            <td>@(item.EndExamDate.ToShortDateString())</td>
             <td>@(item.Address)</td>
             <td>
                 <a class="btn btn-default" href="/admin/exam/edit?id=@(item.ID)">修改</a>

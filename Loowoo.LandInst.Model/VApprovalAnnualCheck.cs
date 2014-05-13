@@ -13,6 +13,6 @@ namespace Loowoo.LandInst.Model
 
         public string InstName { get; set; }
 
-
+        public int AnnualCheckID { get; set; }
     }
 }

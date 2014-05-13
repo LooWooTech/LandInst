@@ -51,7 +51,7 @@ namespace Loowoo.LandInst.Manager
 
                 if (filter.InfoID.HasValue)
                 {
-                    query = query.Where(e => e.InfoID == filter.InfoID.Value);
+                    query = query.Where(e => e.ID == filter.InfoID.Value);
                 }
 
                 return query.OrderByDescending(e => e.CreateTime).SetPage(filter).ToList();
