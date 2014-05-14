@@ -1,6 +1,81 @@
-﻿@{
-    ViewBag.Title = "Transfer";
+﻿@using Loowoo.LandInst.Model
+@{
+    ViewBag.Title = "会员转移";
     Layout = "~/Areas/Institution/Views/Shared/_Layout.cshtml";
+    var id = Request.QueryString["id"];
+    var mode = Request.QueryString["mode"];
+    List<Member> members = ViewBag.Members;
 }
 
-<h2>Transfer</h2>
+<h2>会员转移</h2>
+<form id="transfer-form" role="form" class="form-horizontal">
+    @if (string.IsNullOrEmpty(id))
+    {
+        <label class="control-label">查询姓名</label>
+        <input type="text" id="control-keyword" class="form-control input-sm" />
+        <input id="btn-search" type="button" value="查询" class="btn btn-primary" /><br />
+    }
+    <label class="control-label">选择会员</label>
+    <select id="control-ids" multiple="multiple" name="id" class="form-control input-sm"
+        style="height: 100px;">
+        @if (members != null)
+        {
+            foreach (var member in members)
+            { 
+            <option value="@(member.ID)" selected="selected">@(member.RealName)</option>
+            }
+        }
+    </select>
+    <input id="control-mode" type="hidden" name="mode" value="@(mode)" />
+    @if (mode == "transfer-in")
+    {
+        <input id="btn-transfer-in" type="submit" value="确认转入" class="btn btn-primary" />
+    }
+    else
+    {
+        <input id="btn-transfer-out" type="submit" value="确认转出" class="btn btn-primary" />
+    }
+</form>
+<script>
+    $(function () {
+        var formId = "#transfer-form";
+
+        $("#btn-search").click(function () {
+            var keyword = $("#control-keyword").val();
+            if (!keyword) {
+                alert("请出入人名");
+                return;
+            }
+
+            $.getJSON("/institution/member/search?keyword=" + keyword, function (json) {
+                var data = json.data;
+                var ids = $("#control-ids");
+                for (var i = 0; i < data.length; i++) {
+                    var m = data[i];
+                    ids.append($("option"), { value: m.ID, text: m.RealName, selected: "selected" });
+                }
+            });
+
+        });
+
+        $("#btn-transfer-in").click(function () {
+            $("#control-mode").val("transfer-in");
+            $(formId).submit();
+
+        });
+
+        $("#btn-transfer-out").click(function () {
+            $("#control-mode").val("transfer-out");
+            $(formId).submit();
+
+        });
+
+        $(formId).submit(function () {
+            var data = $(this).serialize();
+            console.log(data);
+            $.post("/institution/transfer", data, function (json) {
+
+            }, "json");
+        });
+    });
+</script>

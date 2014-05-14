@@ -1,6 +1,91 @@
-﻿@{
+﻿@using Loowoo.LandInst.Model
+@{
     ViewBag.Title = "会员管理";
     Layout = "~/Areas/Institution/Views/Shared/_Layout.cshtml";
+    List<Member> list = ViewBag.List;
+    Loowoo.LandInst.Model.Institution currentInst = ViewBag.CurrentInst;
 }
 
 <h2>会员管理</h2>
+<form>
+    <label>姓名</label>
+    <input type="text" name="keyword" value="@(Request.QueryString["keyword"])" />
+    <input type="submit" value="查询" class="btn btn-default" />
+</form>
+@if (list == null || list.Count == 0)
+{
+    return;
+}
+
+<table class="table">
+    <tr>
+        <th>
+            <input type="checkbox" id="btn-select" /></th>
+        <th>姓名</th>
+        <th>性别</th>
+        <th>电话</th>
+        <th>Email</th>
+        <th>所属单位</th>
+        <th>资料</th>
+    </tr>
+    @foreach (var item in list)
+    { 
+        <tr>
+            <td>
+                <input type="checkbox" name="id" value="@(item.ID)" /></td>
+            <td>@(item.RealName)</td>
+            <td>@(item.Gender == 1 ? "男" : "女")</td>
+            <td>@(item.MobilePhone)</td>
+            <td>@(item.Email)</td>
+            <td>@(item.InstitutionID == currentInst.ID ? currentInst.Name : "-")</td>
+            <td><a href="/institution/member/profile?id=@(item.ID)">详细</a></td>
+        </tr>
+    }
+    <tr>
+        <td colspan="7">@Html.Partial("_pagination", ViewBag.Page as object)</td>
+    </tr>
+</table>
+
+<input type="button" value="转入会员" class="btn btn-primary" data="transfer-in" />
+
+<input type="button" value="转出会员" class="btn btn-primary" data="transfer-out" />
+
+<input type="button" value="执业登记" class="btn btn-primary" data="staff" />
+
+<script>
+    $(function () {
+        $("#btn-select").click(function () {
+            $("input[type='checkbox']").prop('checked', this.checked);
+        });
+
+
+        $(".btn-primary").click(function () {
+            var data = $(this).attr("data");
+            var ids = getSelected();
+            if (!ids) {
+                alert("没有选择会员");
+                return;
+            }
+            switch (data) {
+                case "transfer-in":
+                case "transfer-out":
+                    window.location.href = "/institution/member/transfer?mode=" + data + "&id=" + ids;
+                    break;
+                case "staff":
+                    window.location.href = "/institution/member/staff?id=" + ids;
+                    break;
+            }
+        });
+
+        function getSelected() {
+            var ids = [];
+            $("input[name='id']:checked").each(function () {
+                var val = $(this).val();
+                ids.push(val);
+
+            });
+
+            return ids.join();
+        }
+    });
+</script>

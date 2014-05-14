@@ -13,7 +13,7 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
         public ActionResult Index(int businessType = 0, int page = 1)
         {
             var filter = new MemberFilter { PageIndex = page };
-            var list = Core.MemberManager.GetMembers(filter);
+            var list = Core.MemberManager.GetApprovalMembers(filter);
             ViewBag.List = list;
             ViewBag.Page = filter;
             return View();
@@ -21,9 +21,9 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
 
         public ActionResult Search(string name, string no)
         {
-            var list = Core.MemberManager.GetMembers(new MemberFilter
+            var list = Core.MemberManager.GetApprovalMembers(new MemberFilter
             {
-                LikeName = name
+                Keyword = name
             });
             return JsonSuccess(new { members = list });
         }

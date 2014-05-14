@@ -20,7 +20,7 @@ namespace Loowoo.LandInst.Web.Areas.Institution
             {
                 Session[sessionKey] = Core.InstitutionManager.GetInstitution(Identity.UserID);
             }
-            ViewBag.Model = Session[sessionKey];
+            ViewBag.CurrentInst = Session[sessionKey];
             base.OnActionExecuting(filterContext);
         }
 

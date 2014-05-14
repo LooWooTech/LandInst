@@ -88,7 +88,22 @@ namespace Loowoo.LandInst.Manager
             });
         }
 
-        public List<VApprovalMember> GetMembers(MemberFilter filter)
+
+        public List<Member> GetInstMembers(MemberFilter filter)
+        {
+            using (var db = GetDataContext())
+            {
+                var query = db.Members.Where(e => e.InstitutionID == filter.InstID || e.InstitutionID == 0);
+                if (!string.IsNullOrEmpty(filter.Keyword))
+                {
+                    query = query.Where(e => e.RealName.Contains(filter.Keyword));
+                }
+
+                return query.OrderByDescending(e => e.ID).SetPage(filter).ToList();
+            }
+        }
+
+        public List<VApprovalMember> GetApprovalMembers(MemberFilter filter)
         {
             using (var db = GetDataContext())
             {
@@ -99,9 +114,9 @@ namespace Loowoo.LandInst.Manager
                     query = query.Where(e => e.InstitutionID == filter.InstID.Value);
                 }
 
-                if (!string.IsNullOrEmpty(filter.LikeName))
+                if (!string.IsNullOrEmpty(filter.Keyword))
                 {
-                    query = query.Where(e => e.RealName.Contains(filter.LikeName));
+                    query = query.Where(e => e.RealName.Contains(filter.Keyword));
                 }
 
                 if (filter.Status.HasValue)
