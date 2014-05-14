@@ -12,6 +12,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "dbscripts", "dbscripts", "{9A947E1C-E603-46C3-835B-7F7322C1E42D}"
 	ProjectSection(SolutionItems) = preProject
 		dbscripts\landinst.sql = dbscripts\landinst.sql
+		数据库文档.txt = 数据库文档.txt
 	EndProjectSection
 EndProject
 Global

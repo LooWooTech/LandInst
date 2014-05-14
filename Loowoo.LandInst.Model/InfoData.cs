@@ -30,8 +30,7 @@ namespace Loowoo.LandInst.Model
         MemberProfile = 1,
         InstitutionProfile = 2,
         Shareholder,
-        Certificatoin,
-        Exam
+        Certificatoin
     }
 
     [Flags]
