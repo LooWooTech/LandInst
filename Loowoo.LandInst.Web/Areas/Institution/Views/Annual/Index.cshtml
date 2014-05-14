@@ -2,7 +2,7 @@
 @{
     ViewBag.Title = "Index";
     Layout = "~/Areas/Institution/Views/Shared/_Layout.cshtml";
-    List<VInstAnnualCheck> list = ViewBag.List;
+    List<AnnualCheck> list = ViewBag.List;
 }
 
 <h2>年审申请</h2>
@@ -20,9 +20,18 @@
             <td>@(item.Name)</td>
             <td>@(item.StartDate.ToShortDateString())</td>
             <td>@(item.EndDate.ToShortDateString())</td>
-            <td>@(item.Result.HasValue ? (item.Result.Value ? "已通过" : "未通过") : "未审核")</td>
-            <td>@Html.Raw(item.ApprovalTime.HasValue ? item.ApprovalTime.Value.ToShortDateString() : "<a href=\"/institution/annual/signup?id=" + item.ID + "\" class=\"btn btn-primary btn-signup\">申请</a>")
-            </td>
+            @if (item.Approval == null)
+            { 
+                <td>尚未申请</td>
+                <td><a href="/institution/annual/signup?id=@(item.ID)" class="btn btn-primary btn-signup">申请</a> </td>
+            }
+            else
+            {
+                <td>@(item.Approval.Result.HasValue ? (item.Approval.Result.Value ? "通过" : "未通过"):"未审批" )
+                </td>
+                <td>@(item.Approval.ApprovalTime.HasValue?item.Approval.ApprovalTime.Value.ToShortDateString():" - / - / -")
+                </td>
+            }
         </tr>
     }
 </table>

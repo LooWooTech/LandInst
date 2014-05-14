@@ -18,11 +18,11 @@ namespace Loowoo.LandInst.Manager
             }
         }
 
-        public Approval GetApproval(int infoId, ApprovalType type)
+        public Approval GetApproval(int infoId,int userId, ApprovalType type)
         {
             using (var db = GetDataContext())
             {
-                return db.Approvals.OrderByDescending(e => e.CreateTime).FirstOrDefault(e => e.InfoID == infoId && e.ApprovalType == type);
+                return db.Approvals.OrderByDescending(e => e.CreateTime).FirstOrDefault(e => e.InfoID == infoId && e.UserID == userId && e.ApprovalType == type);
             }
         }
 

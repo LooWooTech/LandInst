@@ -33,6 +33,7 @@ namespace Loowoo.LandInst.Model
 
         public string Agency { get; set; }
 
-
+        [NotMapped]
+        public Approval Approval { get; set; }
     }
 }

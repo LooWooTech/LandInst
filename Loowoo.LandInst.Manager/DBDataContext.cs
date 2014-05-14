@@ -37,14 +37,15 @@ namespace Loowoo.LandInst.Manager
 
         public DbSet<ExamResult> ExamResults { get; set; }
 
-        public DbSet<VMemberExam> VMemberExams { get; set; }
 
         public DbSet<VMemberExamResult> VMemberExamResults { get; set; }
 
-        public DbSet<VMemberEducation> VMemberEducations { get; set; }
+        //public DbSet<VMemberExam> VMemberExams { get; set; }
+
+        //public DbSet<VMemberEducation> VMemberEducations { get; set; }
 
 
-        public DbSet<VInstAnnualCheck> VInstAnnualChecks { get; set; }
+        //public DbSet<VInstAnnualCheck> VInstAnnualChecks { get; set; }
 
 
         

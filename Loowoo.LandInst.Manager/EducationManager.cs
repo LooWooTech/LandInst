@@ -53,13 +53,16 @@ namespace Loowoo.LandInst.Manager
             }
         }
 
-        public List<VMemberEducation> GetMemberEducations(int memberId)
+        public List<Education> GetMemberEducations(int memberId)
         {
             using (var db = GetDataContext())
             {
-                var query = db.VMemberEducations.Where(e => (e.ApprovalType == ApprovalType.Education && e.UserID == memberId) || e.UserID == null );
-
-                return query.ToList();
+                var list = db.Educations.OrderByDescending(e => e.ID).ToList();
+                foreach (var edu in list)
+                {
+                    edu.Approval = Core.ApprovalManager.GetApproval(edu.ID, memberId, ApprovalType.Education);
+                }
+                return list;
             }
 
         }

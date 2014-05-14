@@ -30,13 +30,14 @@ namespace Loowoo.LandInst.Manager
             }
         }
 
-        public List<VInstAnnualCheck> GetInstAnnualChecks(int instId)
+        public List<AnnualCheck> GetInstAnnualChecks(int instId)
         {
-            using (var db = GetDataContext())
+            var list = GetAnnualChecks();
+            foreach (var annual in list)
             {
-                var query = db.VInstAnnualChecks.Where(e => (e.ApprovalType == ApprovalType.Annual && e.UserID == instId) || e.UserID == null);
-                return query.ToList();
+                annual.Approval = Core.ApprovalManager.GetApproval(annual.ID, instId, ApprovalType.Annual);
             }
+            return list;
         }
 
         public List<VApprovalAnnualCheck> GetApprovalAnnualChecks(ApprovalFilter filter)

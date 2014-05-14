@@ -3,7 +3,7 @@
 @{
     Layout = "~/Areas/Member/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "继续教育";
-    List<VMemberEducation> list = ViewBag.List;
+    List<Education> list = ViewBag.List;
 }
 
 <h2>@(ViewBag.Title)</h2>
@@ -21,22 +21,23 @@
     @foreach (var item in list)
     { 
         <tr>
-            <td>@(item.EduName)</td>
+            <td>@(item.Name)</td>
             <td>@(item.StartDate.ToShortDateString())</td>
             <td>@(item.EndDate.ToShortDateString())</td>
             <td>@(item.Hours)小时</td>
             <td>@(item.Agency)</td>
-            <td>
-                @if (item.CreateTime.HasValue)
-                {
-                    <span>@(item.CreateTime.Value.ToShortDateString())</span> 
-                }else
-                {
-                    <a href="/member/education/signup?id=@(item.EduID)" class="btn btn-default btn-signup">报名</a>
-                }
-            </td>
-            <td>@(item.ApprovalTime.HasValue ? item.ApprovalTime.Value.ToShortDateString() : "尚未审核")
-            </td>
+            @if (item.Approval == null)
+            { 
+                <td>未申请</td>
+                <td><a href="/member/education/signup?id=@(item.ID)" class="btn btn-default btn-signup">
+                    报名</a>
+                </td>
+            }
+            else
+            {
+                <td>@(item.Approval.CreateTime.ToShortDateString())</td>
+                <td>@(item.Approval.ApprovalTime.HasValue ? item.Approval.ApprovalTime.Value.ToShortDateString() : "尚未审核")</td>
+            }
         </tr>
     }
 </table>
@@ -49,7 +50,7 @@
                     alert("报名成功");
                     window.location.href = window.location.href;
                 }
-            },"json");
+            }, "json");
             return false;
         });
     });

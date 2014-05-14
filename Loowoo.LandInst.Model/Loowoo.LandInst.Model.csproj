@@ -73,9 +73,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Shareholder.cs" />
     <Compile Include="User.cs" />
-    <Compile Include="VInstAnnualCheck.cs" />
-    <Compile Include="VMemberEducation.cs" />
-    <Compile Include="VMemberExam.cs" />
     <Compile Include="VMemberExamResult.cs" />
   </ItemGroup>
   <ItemGroup>

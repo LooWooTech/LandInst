@@ -26,11 +26,16 @@ namespace Loowoo.LandInst.Manager
             }
         }
 
-        public List<VMemberExam> GetMemberExams(int memberId)
+        public List<Exam> GetMemberExams(int memberId)
         {
             using (var db = GetDataContext())
             {
-                return db.VMemberExams.Where(e => e.MemberID == memberId && e.ApprovalType == ApprovalType.Exam).ToList();
+                var exams = db.Exams.OrderByDescending(e => e.ID).ToList();
+                foreach (var exam in exams)
+                {
+                    exam.Approval = Core.ApprovalManager.GetApproval(exam.ID, memberId, ApprovalType.Exam);
+                }
+                return exams;
             }
         }
 
@@ -38,7 +43,7 @@ namespace Loowoo.LandInst.Manager
         {
             using (var db = GetDataContext())
             {
-                return db.VMemberExamResults.Where(e => e.MemberID == memberId).ToList();
+                return db.VMemberExamResults.Where(e => e.MemberID == memberId).OrderByDescending(e => e.ID).ToList();
             }
         }
 

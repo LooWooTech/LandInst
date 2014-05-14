@@ -20,7 +20,7 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
             var profile = Core.InstitutionManager.GetProfile(Identity.UserID);
             ViewBag.Profile = profile;
             //只要不是注册登记，那么就获取资料变更的审核状态
-            ViewBag.Approval = Core.ApprovalManager.GetApproval(Identity.UserID, profile.Status == InstitutionStatus.Normal ? ApprovalType.Register : ApprovalType.Change);
+            ViewBag.Approval = Core.ApprovalManager.GetApproval(profile.ID, Identity.UserID, profile.Status == InstitutionStatus.Normal ? ApprovalType.Register : ApprovalType.Change);
             return View();
         }
 

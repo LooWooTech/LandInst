@@ -19,5 +19,8 @@ namespace Loowoo.LandInst.Model
         public int MemberID { get; set; }
 
         public bool Result { get; set; }
+
+        [NotMapped]
+        public string ExamName { get; set; }
     }
 }

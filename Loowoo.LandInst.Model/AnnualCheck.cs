@@ -22,5 +22,8 @@ namespace Loowoo.LandInst.Model
         public string Name { get; set; }
 
         public string Summary { get; set; }
+
+        [NotMapped]
+        public Approval Approval { get; set; }
     }
 }
