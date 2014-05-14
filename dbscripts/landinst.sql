@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50617
 File Encoding         : 65001
 
-Date: 2014-05-13 17:46:31
+Date: 2014-05-14 15:03:37
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -42,7 +42,7 @@ CREATE TABLE `approval` (
   `CreateTime` datetime NOT NULL,
   `Note` varchar(1024) DEFAULT NULL,
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for education
@@ -260,68 +260,6 @@ approval
 INNER JOIN member ON approval.InfoID = member.ID ;
 
 -- ----------------------------
--- View structure for vinst_annualcheck
--- ----------------------------
-DROP VIEW IF EXISTS `vinst_annualcheck`;
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER  VIEW `vinst_annualcheck` AS SELECT
-annualcheck.ID,
-annualcheck.StartDate,
-annualcheck.EndDate,
-annualcheck.`Name`,
-approval.InfoID,
-approval.UserID,
-approval.ApprovalType,
-approval.ApprovalTime,
-approval.Result,
-approval.CreateTime,
-COUNT(approval.ID) AS ApprovalCount
-FROM
-annualcheck
-LEFT JOIN approval ON annualcheck.ID = approval.InfoID ;
-
--- ----------------------------
--- View structure for vmember_education
--- ----------------------------
-DROP VIEW IF EXISTS `vmember_education`;
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER  VIEW `vmember_education` AS SELECT
-education.ID AS EduID,
-education.`Name` AS EduName,
-education.StartDate,
-education.EndDate,
-education.Hours,
-education.Agency,
-approval.UserID,
-approval.ApprovalType,
-approval.ApprovalTime,
-approval.Result,
-approval.CreateTime
-FROM
-education
-LEFT OUTER JOIN approval ON education.ID = approval.InfoID ;
-
--- ----------------------------
--- View structure for vmember_exam
--- ----------------------------
-DROP VIEW IF EXISTS `vmember_exam`;
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER  VIEW `vmember_exam` AS SELECT
-exam.ID AS ExamID,
-exam.StartSignTime,
-exam.EndSignTime,
-exam.StartExamTime,
-exam.EndExamTime,
-exam.`Name` AS ExamName,
-exam.Address,
-approval.UserID AS MemberID,
-approval.InfoID,
-approval.ApprovalType,
-approval.ApprovalTime,
-approval.Result,
-approval.CreateTime AS SignTime
-FROM
-exam
-LEFT JOIN approval ON exam.ID = approval.InfoID ;
-
--- ----------------------------
 -- View structure for vmember_examresult
 -- ----------------------------
 DROP VIEW IF EXISTS `vmember_examresult`;
@@ -330,9 +268,7 @@ examresult.ID,
 examresult.MemberID,
 examresult.ExamID,
 examresult.Result,
-exam.`Name` AS ExamName,
-exam.StartExamTime,
-exam.EndExamTime
+exam.`Name` AS ExamName
 FROM
 examresult
 INNER JOIN exam ON examresult.ExamID = exam.ID ;
