@@ -19,10 +19,9 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
             return View();
         }
 
-        public ActionResult Approval(int id, bool result = true)
+        public ActionResult Import()
         {
-            Core.ApprovalManager.UpdateApproval(id, result);
-            return JsonSuccess();
+            return View();
         }
 
     }

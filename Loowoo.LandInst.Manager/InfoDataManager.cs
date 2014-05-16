@@ -9,39 +9,33 @@ namespace Loowoo.LandInst.Manager
 {
     public class InfoDataManager : ManagerBase
     {
-        public void UpdateListItem<T>(int infoId, InfoType infoType, InfoStatus status, T item)
+        public void UpdateListItem<T>(int infoId, InfoType infoType, T item)
         {
-            var model = GetModel(infoId, infoType, status);
+            var model = GetModel(infoId, infoType);
 
             if (model == null)
             {
-                Core.InfoDataManager.Add(new InfoData
-                {
-                    InfoID = infoId,
-                    InfoType = infoType,
-                    Status = status,
-                    Data = new List<T> { item }.ToBytes()
-                });
+                Core.InfoDataManager.Save(infoId, infoType, new List<T> { item });
             }
             else
             {
                 var list = model.Convert<List<T>>() ?? new List<T>();
                 list.Add(item);
-                Core.InfoDataManager.Update(model);
+                Core.InfoDataManager.Save(infoId, infoType, list);
             }
         }
 
-        public void DeleteListItem<TItem, TKey>(int infoId, InfoType infoType, InfoStatus status,TKey keyValue, Func<TItem, TKey> getKey) where TKey : class
+        public void DeleteListItem<TItem, TKey>(int infoId, InfoType infoType, TKey keyValue, Func<TItem, TKey> getKey) where TKey : class
         {
-            var model = GetModel(infoId, infoType, status);
+            var model = GetModel(infoId, infoType);
             if (model == null || model.Data == null) return;
             var list = model.Convert<List<TItem>>();
             var index = list.FindIndex(e => getKey(e) == keyValue);
             list.RemoveAt(index);
-            Update(model);
+            Save(infoId, infoType, list);
         }
 
-        public InfoData GetModel(int infoId, InfoType infoType, InfoStatus status = InfoStatus.Draft)
+        public InfoData GetModel(int infoId, InfoType infoType)
         {
             if (infoId == 0)
             {
@@ -49,53 +43,36 @@ namespace Loowoo.LandInst.Manager
             }
             using (var db = GetDataContext())
             {
-                var list = db.InfoDatas.Where(e => e.InfoID == infoId && e.InfoType == infoType).ToList();
-                var model = list.FirstOrDefault(e => e.Status == status);
-                if (model == null)
-                {
-                    return list.FirstOrDefault();
-                }
-                return model;
+                return db.InfoDatas.FirstOrDefault(e => e.InfoID == infoId && e.InfoType == infoType);
             }
         }
 
-        public T GetModel<T>(int infoId, InfoType infoType, InfoStatus status)
+        public T GetModel<T>(int infoId, InfoType infoType)
         {
-            var model = GetModel(infoId, infoType, status);
+            var model = GetModel(infoId, infoType);
             return model == null ? default(T) : model.Convert<T>();
         }
 
-        public void Update(InfoData model)
+        public void Save<T>(int infoId, InfoType type, T data)
         {
-            if (model == null) return;
-            if (model.Data == null) return;
-            if (model.InfoID == 0) throw new ArgumentNullException("infoId");
+            var model = new InfoData
+            {
+                Data = data.ToBytes(),
+                InfoID = infoId,
+                InfoType = type,
+            };
 
             using (var db = GetDataContext())
             {
-                var infoEntity = db.InfoDatas.FirstOrDefault(e => e.InfoID == model.InfoID && e.InfoType == model.InfoType && e.Status == model.Status);
-                if (infoEntity == null)
+                var entity = db.InfoDatas.FirstOrDefault(e => e.InfoID == model.InfoID && e.InfoType == model.InfoType);
+                if (entity != null)
                 {
-                    Add(model);
-                    return;
+                    db.Entry(entity).CurrentValues.SetValues(model);
                 }
-                infoEntity.Data = model.Data;
-                db.SaveChanges();
-            }
-        }
-
-        public void Add(InfoData model)
-        {
-            using (var db = GetDataContext())
-            {
-                var entity = new InfoData
+                else
                 {
-                    InfoID = model.InfoID,
-                    InfoType = model.InfoType,
-                    Status = model.Status,
-                    Data = model.Data
-                };
-                db.InfoDatas.Add(entity);
+                    db.InfoDatas.Add(model);
+                }
                 db.SaveChanges();
             }
         }

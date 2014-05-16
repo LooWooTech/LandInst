@@ -28,7 +28,7 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
         public ActionResult Edit(InstitutionProfile profile, string mode)
         {
             var currentInst = GetCurrentInst();
-            Core.InstitutionManager.SaveProfile(profile, InfoStatus.Draft);
+            Core.InstitutionManager.SaveProfile(profile);
             if (mode == "submit")
             {
                 var approvalType = currentInst.Status == InstitutionStatus.Normal ? ApprovalType.Register : ApprovalType.Change;

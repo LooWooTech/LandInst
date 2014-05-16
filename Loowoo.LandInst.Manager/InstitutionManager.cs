@@ -38,48 +38,48 @@ namespace Loowoo.LandInst.Manager
             }
         }
 
-        //public List<Institution> GetInstitutions(InstitutionFilter filter)
-        //{
-        //    using (var db = GetDataContext())
-        //    {
-        //        var query = db.Institutions.AsQueryable();
-        //        if (filter.InstId.HasValue && filter.InstId.Value > 0)
-        //        {
-        //            query = query.Where(e => e.ID == filter.InstId);
-        //        }
+        public List<Institution> GetInstitutions(InstitutionFilter filter)
+        {
+            using (var db = GetDataContext())
+            {
+                var query = db.Institutions.AsQueryable();
+                if (filter.InstId.HasValue && filter.InstId.Value > 0)
+                {
+                    query = query.Where(e => e.ID == filter.InstId);
+                }
 
-        //        if (filter.Status.HasValue)
-        //        {
-        //            query = query.Where(e => e.Status == filter.Status.Value);
-        //        }
+                if (filter.Status.HasValue)
+                {
+                    query = query.Where(e => e.Status == filter.Status.Value);
+                }
 
-        //        if (!string.IsNullOrEmpty(filter.Keyword))
-        //        {
-        //            query = query.Where(e => e.Name.Contains(filter.Keyword) || e.FullName.Contains(filter.Keyword));
-        //        }
+                if (!string.IsNullOrEmpty(filter.Keyword))
+                {
+                    query = query.Where(e => e.Name.Contains(filter.Keyword) || e.FullName.Contains(filter.Keyword));
+                }
 
-        //        return query.OrderByDescending(e => e.ID).SetPage(filter).ToList();
-        //    }
-        //}
+                return query.OrderByDescending(e => e.ID).SetPage(filter).ToList();
+            }
+        }
 
         public void AddShareholder(int instId, Shareholder shareholder)
         {
-            Core.InfoDataManager.UpdateListItem(instId, InfoType.Shareholder, InfoStatus.Normal, shareholder);
+            Core.InfoDataManager.UpdateListItem(instId, InfoType.Shareholder, shareholder);
         }
 
         public void DeleteShareholder(int instId, string shareholderId)
         {
-            Core.InfoDataManager.DeleteListItem<Shareholder, string>(instId, InfoType.Shareholder, InfoStatus.Normal, shareholderId, e => e.ID);
+            Core.InfoDataManager.DeleteListItem<Shareholder, string>(instId, InfoType.Shareholder,  shareholderId, e => e.ID);
         }
 
         public void AddCertification(int instId, Certification certification)
         {
-            Core.InfoDataManager.UpdateListItem(instId, InfoType.Certificatoin, InfoStatus.Normal, certification);
+            Core.InfoDataManager.UpdateListItem(instId, InfoType.Certificatoin, certification);
         }
 
         public void DeleteCertification(int instId, string certificationId)
         {
-            Core.InfoDataManager.DeleteListItem<Certification, string>(instId, InfoType.Certificatoin, InfoStatus.Normal, certificationId, e => e.ID);
+            Core.InfoDataManager.DeleteListItem<Certification, string>(instId, InfoType.Certificatoin, certificationId, e => e.ID);
         }
 
         public void LogoutInstitution(string name)
@@ -96,9 +96,9 @@ namespace Loowoo.LandInst.Manager
             }
         }
 
-        public InstitutionProfile GetProfile(int instId, InfoStatus status = InfoStatus.Normal)
+        public InstitutionProfile GetProfile(int instId)
         {
-            var model = Core.InfoDataManager.GetModel<InstitutionProfile>(instId, InfoType.InstitutionProfile, status);
+            var model = Core.InfoDataManager.GetModel<InstitutionProfile>(instId, InfoType.InstitutionProfile);
             if (model == null)
             {
                 return null;
@@ -134,18 +134,12 @@ namespace Loowoo.LandInst.Manager
             }
         }
 
-        public void SaveProfile(InstitutionProfile profile, InfoStatus status = InfoStatus.Draft)
+        public void SaveProfile(InstitutionProfile profile)
         {
-            Core.InfoDataManager.Update(new InfoData
-            {
-                InfoID = profile.ID,
-                InfoType = InfoType.InstitutionProfile,
-                Status = status,
-                Data = profile.ToBytes(),
-            });
+            Core.InfoDataManager.Save(profile.ID, InfoType.InstitutionProfile, profile);
         }
 
-        public void UpdateStatus(int instId,InstitutionStatus status)
+        public void UpdateStatus(int instId, InstitutionStatus status)
         {
             using (var db = GetDataContext())
             {

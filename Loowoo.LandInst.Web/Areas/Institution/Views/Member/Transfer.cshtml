@@ -27,14 +27,8 @@
         }
     </select>
     <input id="control-mode" type="hidden" name="mode" value="@(mode)" />
-    @if (mode == "transfer-in")
-    {
-        <input id="btn-transfer-in" type="submit" value="确认转入" class="btn btn-primary" />
-    }
-    else
-    {
-        <input id="btn-transfer-out" type="submit" value="确认转出" class="btn btn-primary" />
-    }
+    <input id="btn-transfer-in" type="submit" value="转入会员" class="btn btn-primary" />
+    <input id="btn-transfer-out" type="submit" value="转出会员" class="btn btn-warning" />
 </form>
 <script>
     $(function () {
@@ -49,33 +43,33 @@
 
             $.getJSON("/institution/member/search?keyword=" + keyword, function (json) {
                 var data = json.data;
-                var ids = $("#control-ids");
+                var options = "";
                 for (var i = 0; i < data.length; i++) {
                     var m = data[i];
-                    ids.append($("option"), { value: m.ID, text: m.RealName, selected: "selected" });
+                    options += "<option value=" + m.ID + " selected=\"selected\">" + m.RealName + "</option>";
                 }
+                $("#control-ids").html(options);
             });
 
         });
 
         $("#btn-transfer-in").click(function () {
-            $("#control-mode").val("transfer-in");
-            $(formId).submit();
-
+            $("#control-mode").val("in");
         });
 
         $("#btn-transfer-out").click(function () {
-            $("#control-mode").val("transfer-out");
-            $(formId).submit();
-
+            $("#control-mode").val("out");
         });
 
         $(formId).submit(function () {
             var data = $(this).serialize();
-            console.log(data);
-            $.post("/institution/transfer", data, function (json) {
-
+            $.post("/institution/member/transfer", data, function (json) {
+                if (json.result) {
+                    alert("操作成功！");
+                    window.location.href = "/institution/member";
+                }
             }, "json");
+            return false;
         });
     });
 </script>

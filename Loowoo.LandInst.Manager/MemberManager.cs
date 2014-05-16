@@ -25,14 +25,7 @@ namespace Loowoo.LandInst.Manager
         private void AddProfile(Member member)
         {
             var profile = new MemberProfile(member);
-            Core.InfoDataManager.Add(new InfoData
-            {
-                InfoID = member.ID,
-                InfoType = InfoType.MemberProfile,
-                Data = profile.ToBytes(),
-                Status = InfoStatus.Draft,
-
-            });
+            Core.InfoDataManager.Save(profile.ID, InfoType.MemberProfile, profile);
         }
 
         public void UpdateMemberStatus(int memberId, MemberStatus status)
@@ -59,35 +52,72 @@ namespace Loowoo.LandInst.Manager
             }
         }
 
-        public Member GetMember(int userId)
+        public Member GetMember(int memberId)
         {
-            if (userId == 0) return null;
+            if (memberId == 0) return null;
             using (var db = GetDataContext())
             {
-                return db.Members.FirstOrDefault(e => e.ID == userId);
+                return db.Members.FirstOrDefault(e => e.ID == memberId);
             }
         }
 
 
-        public MemberProfile GetProfile(int userId, InfoStatus status = InfoStatus.Normal | InfoStatus.Draft)
+        public MemberProfile GetProfile(int memberId)
         {
-            if (userId == 0) return null;
+            if (memberId == 0) return null;
 
-            return Core.InfoDataManager.GetModel<MemberProfile>(userId, InfoType.MemberProfile, status);
+            return Core.InfoDataManager.GetModel<MemberProfile>(memberId, InfoType.MemberProfile);
         }
 
         public void SaveProfile(Member member, MemberProfile profile)
         {
             profile.SetMemberField(member);
-            Core.InfoDataManager.Update(new InfoData
-            {
-                InfoID = profile.ID,
-                InfoType = InfoType.MemberProfile,
-                Data = profile.ToBytes(),
-                Status = InfoStatus.Draft
-            });
+            Core.InfoDataManager.Save(profile.ID, InfoType.MemberProfile, profile);
         }
 
+
+        public void Transfer(Member member, int targetInstId, TransferMode mode)
+        {
+            var currentInstId = mode == TransferMode.In ? targetInstId : member.InstitutionID;
+            if (mode == TransferMode.In)
+            {
+                if (member.InstitutionID == currentInstId)
+                {
+                    return;
+                }
+            }
+
+            if (mode == TransferMode.Out)
+            {
+                if (targetInstId == currentInstId)
+                {
+                    return;
+                }
+            }
+
+            var approvalId = Core.ApprovalManager.AddApproval(member.ID, currentInstId, Model.ApprovalType.Transfer);
+            var transferData = new TransferData
+            {
+                ApprovalID = approvalId,
+                MemberID = member.ID,
+                InstitutionID = currentInstId,
+                TargetInstitutionID = targetInstId
+            };
+
+            Core.InfoDataManager.Save(transferData.ApprovalID, InfoType.Transfer, transferData);
+        }
+
+        public void ApprovalTrasfer(int approvalId)
+        { 
+            var approval = Core.ApprovalManager.GetApproval(approvalId);
+            var transferData = Core.InfoDataManager.GetModel<TransferData>(approval.ID, InfoType.Transfer);
+            if (approval.Result.HasValue && approval.Result.Value)
+            {
+                var member = Core.MemberManager.GetMember(transferData.MemberID);
+                member.InstitutionID = transferData.TargetInstitutionID;
+                Core.MemberManager.UpdateMember(member);
+            }
+        }
 
         public List<Member> GetInstMembers(MemberFilter filter)
         {

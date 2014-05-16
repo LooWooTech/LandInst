@@ -6,13 +6,11 @@ using System.Threading.Tasks;
 
 namespace Loowoo.LandInst.Model.Filters
 {
-    public class MemberFilter : PageFilter
+    public class MemberFilter : ApprovalFilter
     {
         public int[] MemberIds { get; set; }
 
         public int? InstID { get; set; }
-
-        public string Keyword { get; set; }
 
         public MemberStatus? Status { get; set; }
     }

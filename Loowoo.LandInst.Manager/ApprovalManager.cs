@@ -38,7 +38,7 @@ namespace Loowoo.LandInst.Manager
             }
         }
 
-        public void AddApproval(int infoId, int userId, ApprovalType type)
+        public int AddApproval(int infoId, int userId, ApprovalType type)
         {
             var model = new Approval
             {
@@ -54,11 +54,12 @@ namespace Loowoo.LandInst.Manager
                 {
                     if (entity.ApprovalTime.HasValue)
                     {
-                        return;
+                        return entity.ID;
                     }
                 }
                 db.Approvals.Add(model);
                 db.SaveChanges();
+                return entity.ID;
             }
         }
     }

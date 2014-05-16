@@ -63,6 +63,7 @@
     <Compile Include="Approval.cs" />
     <Compile Include="Member.cs" />
     <Compile Include="MemberProfile.cs" />
+    <Compile Include="TransferData.cs" />
     <Compile Include="VApprovalAnnualCheck.cs" />
     <Compile Include="VApprovalBase.cs" />
     <Compile Include="VApprovalEducation.cs" />

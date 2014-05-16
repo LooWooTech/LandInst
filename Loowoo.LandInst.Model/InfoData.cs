@@ -21,8 +21,6 @@ namespace Loowoo.LandInst.Model
 
         public byte[] Data { get; set; }
 
-        [Column(TypeName = "int")]
-        public InfoStatus Status { get; set; }
     }
 
     public enum InfoType
@@ -30,13 +28,7 @@ namespace Loowoo.LandInst.Model
         MemberProfile = 1,
         InstitutionProfile = 2,
         Shareholder,
-        Certificatoin
-    }
-
-    [Flags]
-    public enum InfoStatus
-    {
-        Normal = 1,
-        Draft = 2,
+        Certificatoin,
+        Transfer
     }
 }

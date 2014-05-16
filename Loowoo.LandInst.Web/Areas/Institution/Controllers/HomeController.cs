@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Loowoo.LandInst.Model.Filters;
 
 namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
 {
@@ -13,5 +14,15 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
             return View();
         }
 
+        public ActionResult Search(string keyword)
+        {
+            var list = Core.InstitutionManager.GetInstitutions(new InstitutionFilter
+            {
+                PageSize = int.MaxValue,
+                Keyword = keyword
+            });
+
+            return JsonSuccess(list);
+        }
     }
 }
