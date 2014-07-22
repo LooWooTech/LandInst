@@ -4,11 +4,26 @@
     ViewBag.Title = "报名考试审批";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
     List<VApprovalExam> list = ViewBag.List;
+    List<Exam> exams = ViewBag.Exams;
 }
 
 <h2>报名考试审批</h2>
-<input id="btn-agree" type="button" class="btn btn-primary" value="通过审批" />
-<input id="btn-disgree" type="button" class="btn btn-danger" value="不通过" />
+
+
+<form method="get">
+    <label>用户姓名：</label>
+    <input type="text" name="name" />
+    <label>考试名称</label>
+    @Html.DropDownList("exams", exams.Select(e => new SelectListItem
+{
+    Text = e.Name,
+    Value = e.ID.ToString(),
+    Selected = Request.QueryString["examId"] == e.ID.ToString()
+}))
+    <input type="submit" class="btn btn-primary" value="查询" />
+    <input id="btn-agree" type="button" class="btn btn-success" value="通过审批" />
+    <input id="btn-disgree" type="button" class="btn btn-danger" value="不通过" />
+</form>
 <table class="table">
     <tr>
         <th>

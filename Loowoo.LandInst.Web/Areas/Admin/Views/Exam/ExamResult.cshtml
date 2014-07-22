@@ -4,6 +4,7 @@
     ViewBag.Title = "ExamResult";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
     List<VApprovalExam> list = ViewBag.List;
+    List<Exam> exams = ViewBag.Exams;
 }
 
 <h2>考试结果管理</h2>
@@ -11,7 +12,12 @@
     <label>用户姓名：</label>
     <input type="text" name="name" />
     <label>考试名称</label>
-    <select></select>
+    @Html.DropDownList("exams", exams.Select(e => new SelectListItem
+{
+    Text = e.Name,
+    Value = e.ID.ToString(),
+    Selected = Request.QueryString["examId"] == e.ID.ToString()
+}))
     <input type="submit" value="查询" />
     <input type="button" id="btn-agree" class="btn btn-primary" value="通过考试" />
     <input type="button" id="btn-disagree" class="btn btn-waning" value="未通过考试" />

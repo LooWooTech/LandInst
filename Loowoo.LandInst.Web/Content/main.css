@@ -1,0 +1,14 @@
+body {
+  padding-top: 50px;
+  padding-bottom: 20px;
+  font-size: 14px;
+}
+a.navbar-brand,
+a.navbar-brand:visited {
+  font-size: 20px;
+  font-family: 'Microsoft YaHei', SimSun;
+  color: #fff;
+}
+a.navbar-brand:hover {
+  color: #eee;
+}

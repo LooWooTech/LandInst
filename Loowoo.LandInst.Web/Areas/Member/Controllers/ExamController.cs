@@ -21,13 +21,15 @@ namespace Loowoo.LandInst.Web.Areas.Member.Controllers
         public ActionResult Signup()
         {
             var member = GetCurrentMember();
-            if (!member.CanSingup)
-            {
-                return View();
-            }
 
             var profile = Core.MemberManager.GetProfile(Identity.UserID);
             ViewBag.Profile = profile;
+
+            if (!member.CanSingup)
+            {
+                ViewBag.CanSignup = member.CanSingup;
+                return View();
+            }
 
             var exams = Core.ExamManager.GetExams(new ExamFilter
             {

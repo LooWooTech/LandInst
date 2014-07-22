@@ -36,6 +36,7 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
             {
                 PageIndex = page
             };
+            ViewBag.Exams = Core.ExamManager.GetExams(null);
             ViewBag.List = Core.ExamManager.GetApprovalExams(filter);
             ViewBag.Page = filter;
             return View();
@@ -72,6 +73,7 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
                 PageIndex = page
             };
             ViewBag.List = Core.ExamManager.GetApprovalExams(filter);
+            ViewBag.Exams = Core.ExamManager.GetExams(null);
             ViewBag.Page = filter;
             return View();
         }

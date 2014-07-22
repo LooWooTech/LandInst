@@ -67,7 +67,7 @@ namespace Loowoo.LandInst.Manager
                 var entity = db.InfoDatas.FirstOrDefault(e => e.InfoID == model.InfoID && e.InfoType == model.InfoType);
                 if (entity != null)
                 {
-                    db.Entry(entity).CurrentValues.SetValues(model);
+                    entity.Data = model.Data;
                 }
                 else
                 {

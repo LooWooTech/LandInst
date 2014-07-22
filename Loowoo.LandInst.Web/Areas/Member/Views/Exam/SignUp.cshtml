@@ -6,13 +6,20 @@
 
     MemberProfile profile = ViewBag.Profile;
     List<Exam> exams = ViewBag.Exams;
+    bool canSignup = ViewBag.CanSignup;
 
-    if (exams.Count == 0)
+    if (exams == null || exams.Count == 0)
     {
     <h2>暂无考试条目，无法报名</h2>
         return;
     }
 }
+@if (!canSignup)
+{
+    <h3>您已经报名了，请等待成绩。</h3>
+    return;
+}
+
 @if (profile.Status != MemberStatus.Register)
 {
     <h3>您已经通过了考试</h3>

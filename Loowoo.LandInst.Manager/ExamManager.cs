@@ -81,8 +81,8 @@ namespace Loowoo.LandInst.Manager
         {
             using (var db = GetDataContext())
             {
-                var entity = db.Approvals.FirstOrDefault(e => e.InfoID == examId && e.UserID == memberId && e.ApprovalType == ApprovalType.Education);
-                if (entity.Result.Value)//已经报名 并通过审批
+                var entity = db.Approvals.FirstOrDefault(e => e.InfoID == examId && e.UserID == memberId && e.ApprovalType == ApprovalType.Exam);
+                if (entity != null)//已经报名 并通过审批
                 {
                     return;
                 }
@@ -91,6 +91,7 @@ namespace Loowoo.LandInst.Manager
                 {
                     InfoID = examId,
                     UserID = memberId,
+                    ApprovalType = ApprovalType.Exam
                 });
 
                 db.ExamResults.Add(new ExamResult

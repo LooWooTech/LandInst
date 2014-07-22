@@ -1,24 +1,23 @@
 ﻿@{
-    ViewBag.Title = "SignIn";
+    ViewBag.Title = "登录";
+    Layout = "_layout.cshtml";
 }
 
-<div class="container">
-    <form id="signin-form" class="form-signin" role="form" method="post">
-        <h2 class="form-signin-heading">Please sign in</h2>
-        <div class="login_form form-default">
-            <p>
-                <label>用户名：</label><input type="text" name="username" class="form-control" placeholder="用户名" />
-            </p>
-            <p>
-                <label>密码：</label><input type="password" name="password" class="form-control" placeholder="密码" />
-            </p>
-            <p>
-                <input type="submit" class="btn btn-lg btn-primary btn-block" value="登录" />
-                <a href="/user/signup" class="btn btn-lg btn-success btn-block">注册</a>
-            </p>
-        </div>
-    </form>
-</div>
+<form id="signin-form" class="form-signin" role="form" method="post">
+    <h2 class="form-signin-heading">Please sign in</h2>
+    <div class="login_form form-default">
+        <p>
+            <label>用户名：</label><input type="text" name="username" class="form-control" placeholder="用户名" />
+        </p>
+        <p>
+            <label>密码：</label><input type="password" name="password" class="form-control" placeholder="密码" />
+        </p>
+        <p>
+            <input type="submit" class="btn btn-lg btn-primary btn-block" value="登录" />
+            <a href="/user/signup" class="btn btn-lg btn-success btn-block">注册</a>
+        </p>
+    </div>
+</form>
 <script>
     $(function () {
         $("#signin-form").submit(function () {
@@ -41,9 +40,9 @@
                     }
                     window.location.href = redirectUrl;
                 } else {
-                    
+
                 }
-            },"json");
+            }, "json");
             return false;
         });
     });
