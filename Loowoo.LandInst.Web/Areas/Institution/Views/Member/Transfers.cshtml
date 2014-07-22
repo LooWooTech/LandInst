@@ -1,0 +1,60 @@
+﻿@using Loowoo.LandInst.Model
+@{
+    ViewBag.Title = "会员转移审核情况列表";
+    Layout = "~/Areas/Institution/Views/Shared/_Layout.cshtml";
+    List<VApprovalMember> list = ViewBag.List;
+    Loowoo.LandInst.Model.Institution currentInst = ViewBag.CurrentInst;
+}
+<h2>会员转移审核情况列表</h2>
+<form>
+    <div class="input-group">
+        <input type="text" name="keyword" class="form-control" />
+        <span class="input-group-btn">
+            <button class="btn btn-default" type="submit">查询用户</button>
+        </span>
+    </div>
+</form>
+<table class="table">
+    <tr>
+        <th>会员姓名
+        </th>
+        <th>手机</th>
+        <th>转移方式
+        </th>
+        <th>申请日期
+        </th>
+        <th>审核状态
+        </th>
+        <th>审核日期
+        </th>
+    </tr>
+    @foreach (var item in list)
+    {
+        var mode = "转入";
+        if (item.Result.HasValue && item.Result.Value)
+        {
+            if (item.InstitutionID != currentInst.ID)
+            {
+                mode = "转出";
+            }
+        }
+        else
+        {
+            if (item.InstitutionID == currentInst.ID)
+            {
+                mode = "转出";
+            }
+        }
+        <tr>
+            <td>@(item.RealName)</td>
+            <td>@(item.MobilePhone)</td>
+            <td>@(mode)</td>
+            <td>@(item.CreateTime.ToShortDateString())</td>
+            <td>@(item.Result.HasValue ? (item.Result.Value ? "已批准" : "未批准") : "未审批")</td>
+            <td>@(item.ApprovalTime.HasValue ? item.ApprovalTime.Value.ToShortDateString() : "- / - / -")
+            </td>
+        </tr>
+    }<tr>
+        <td colspan="6">@Html.Partial("_pagination", ViewBag.Page as object)</td>
+    </tr>
+</table>

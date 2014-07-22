@@ -1,0 +1,46 @@
+﻿@using Loowoo.LandInst.Model
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    Exam model = ViewBag.Model ?? new Exam();
+}
+<h2>考试设置</h2>
+<form id="exam-form" role="form" class="form-horizontal">
+    <label class="control-label">名称</label>
+    <input type="text" name="Name" class="form-control input-sm" value="@(model.Name)" />
+
+    <label class="control-label">报名开始时间</label>
+    <input type="text" name="StartSignDate" class="form-control input-sm datepicker" value="@(model.StartSignDate == DateTime.MinValue ? "" : model.StartSignDate.ToShortDateString())" />
+
+    <label class="control-label">报名结束时间</label>
+    <input type="text" name="EndSignDate" class="form-control input-sm datepicker""  value="@(model.EndSignDate == DateTime.MinValue ? "" :model.EndSignDate.ToShortDateString())" />
+
+    <label class="control-label">考试开始时间</label>
+    <input type="text" name="examStarttime" class="form-control input-sm datepicker""  value="@(model.StartExamDate == DateTime.MinValue ? "" :model.StartExamDate.ToShortDateString())" />
+    <label class="control-label">考试结束时间</label>
+    <input type="text" name="EndExamDate" class="form-control input-sm datepicker""  value="@(model.EndExamDate == DateTime.MinValue ? "" :model.EndExamDate.ToShortDateString())" />
+
+    <label class="control-label">考试地点</label>
+    <input type="text" name="Address" class="form-control input-sm"  value="@(model.Address)" />
+    <label class="control-label">简介</label>
+    <textarea name="summary" class="form-control input-sm">@(model.Summary)</textarea>
+
+    <button type="submit" class="btn btn-primary">保存</button>
+</form>
+<script>
+    $(function () {
+        $(".datepicker").datepicker();
+
+        $("#exam-form").submit(function () {
+            var data = $(this).serialize();
+            $.post("/admin/exam/edit?id=@(model.ID)", data, function (json) {
+                if (json.result) {
+                    alert("保存成功");
+                    window.localtion.href = "/admin/exam/";
+                }
+            }, "json");
+
+            return false;
+        });
+    });
+</script>

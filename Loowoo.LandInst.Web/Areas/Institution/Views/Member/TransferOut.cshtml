@@ -1,0 +1,99 @@
+﻿@{
+    ViewBag.Title = "TransferOut";
+    Layout = "~/Areas/Institution/Views/Shared/_Layout.cshtml";
+}
+
+<h2>会员转出申请</h2>
+<form id="transfer-form" role="form" class="form-horizontal">
+    会员选择
+    <div class="row">
+        <div class="col-lg-4">
+            <div class="input-group">
+                <input type="text" id="control-membername" class="form-control" />
+                <span class="input-group-btn">
+                    <button id="btn-search-member" class="btn btn-default" type="button">查询本机构人员</button>
+                </span>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="input-group">
+                <span class="input-group-addon">选择会员</span>
+                <select id="control-memberid" name="memberId" class="form-control">
+                </select>
+            </div>
+        </div>
+    </div>
+    机构选择
+    <div class="row">
+        <div class="col-lg-4">
+            <div class="input-group">
+                <input type="text" id="control-instname" class="form-control" />
+                <span class="input-group-btn">
+                    <button id="btn-search-inst" class="btn btn-default" type="button">查询机构</button>
+                </span>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="input-group">
+                <span class="input-group-addon">选择目标机构</span>
+                <select id="control-instid" name="instId" class="form-control input-sm">
+                </select>
+            </div>
+        </div>
+    </div>
+    <input type="submit" value="确认转出" class="btn btn-primary" />
+</form>
+<script>
+    $(function () {
+        $("#btn-search-member").click(function () {
+            var keyword = $("#control-membername").val();
+            if (!keyword) {
+                alert("请出入人名");
+                return;
+            }
+
+            $.getJSON("/institution/member/search?instid=" + @(ViewBag.CurrentInst.ID) +"&keyword=" + keyword, function (json) {
+                var data = json.data;
+                var options = "";
+                for (var i = 0; i < data.length; i++) {
+                    var m = data[i];
+                    options += "<option value=" + m.ID + " selected=\"selected\">" + m.RealName + "(" + m.MobilePhone + ")" + "</option>";
+                }
+                $("#control-memberid").html(options);
+            });
+
+        });
+
+        $("#btn-search-inst").click(function () {
+            var keyword = $("#control-instname").val();
+            if (!keyword) {
+                alert("请出入人名");
+                return;
+            }
+
+            $.getJSON("/institution/home/search?keyword=" + keyword, function (json) {
+                var data = json.data;
+                var options = "";
+                for (var i = 0; i < data.length; i++) {
+                    var m = data[i];
+                    options += "<option value=" + m.ID + " selected=\"selected\">" + m.FullName + "</option>";
+                }
+                $("#control-instid").html(options);
+            });
+
+        });
+
+        $("#transfer-form").submit(function () {
+            var data = $(this).serialize();
+            if (confirm("确认提交转出申请？")) {
+                $.post("/institution/member/transferout", data, function (json) {
+                    if (json.result) {
+                        alert("申请已提交，等待管理员审核");
+                        window.location.href = "/institution/member/transfers";
+                    }
+                }, "json");
+            }
+            return false;
+        });
+    });
+</script>
