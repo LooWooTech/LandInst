@@ -1,27 +1,58 @@
 ﻿@using Loowoo.LandInst.Model
 @{
-    ViewBag.Title = "Edit";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
-    Education model = ViewBag.Model;
+    Education model = ViewBag.Model ?? new Education();
+    ViewBag.Title = model.ID > 0 ? "修改继续教育设置" : "添加继续教育";
 }
-
-<h2>Edit</h2>
 <form id="education-form" role="form" class="form-horizontal">
-    <label class="control-label">名称</label>
-    <input type="text" name="Name" class="form-control input-sm" value="@(model.Name)" />
-    <label class="control-label">教育机构</label>
-    <input type="text" name="Agency" class="form-control input-sm" value="@(model.Agency)" />
-    <label class="control-label">起始时间</label>
-    <input type="text" name="StartDate" class="form-control input-sm datepicker" value="@(model.ID == 0 ? "" : model.StartDate.ToShortDateString())" />
-    <label class="control-label">结束时间</label>
-    <input type="text" name="EndDate" class="form-control input-sm datepicker" value="@(model.ID == 0 ? "" : model.EndDate.ToShortDateString())" />
-    <label class="control-label">总学时</label>
-    <input type="text" name="Hours" class="form-control input-sm" value="@(model.Hours)" />
+    <div class="form-group">
+        <label class="control-label col-lg-2">名称</label>
+        <div class="col-sm-3">
+            <input type="text" name="Name" class="form-control input-sm" value="@(model.Name)" />
+        </div>
+    </div>
 
-    <label class="control-label">简介</label>
-    <textarea name="summary" class="form-control input-sm">@(model.Summary)</textarea>
-    
-    <button type="submit" class="btn btn-primary">提交注册</button>
+    <div class="form-group">
+        <label class="control-label col-lg-2">教育机构</label>
+        <div class="col-sm-3">
+            <input type="text" name="Agency" class="form-control input-sm" value="@(model.Agency)" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-lg-2">起始时间</label>
+        <div class="col-sm-3">
+            <input type="text" name="StartDate" class="form-control input-sm datepicker" value="@(model.ID == 0 ? "" : model.StartDate.ToShortDateString())" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-lg-2">结束时间</label>
+        <div class="col-sm-3">
+            <input type="text" name="EndDate" class="form-control input-sm datepicker" value="@(model.ID == 0 ? "" : model.EndDate.ToShortDateString())" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-lg-2">总学时</label>
+        <div class="col-sm-3">
+            <input type="text" name="Hours" class="form-control input-sm" value="@(model.Hours)" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-lg-2">简介</label>
+        <div class="col-sm-3">
+            <textarea name="summary" class="form-control input-sm">@(model.Summary)</textarea>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-lg-2"></label>
+        <div class="col-sm-3">
+            <button type="submit" class="btn btn-primary">保存</button>
+        </div>
+    </div>
 
 </form>
 <script>

@@ -1,0 +1,107 @@
+﻿@using Loowoo.LandInst.Model
+@{
+    ViewBag.Title = "机构详细信息";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    InstitutionProfile profile = ViewBag.Profile;
+    List<Shareholder> shareHolders = ViewBag.ShareHolders;
+    List<Certification> certifications = ViewBag.Certifications;
+}
+<fieldset>
+    <legend>基本资料</legend>
+    <table class="table table-bordered">
+        <tr>
+            <th style="width: 150px;">机构名称</th>
+            <td>@(profile.Name)</td>
+            <th style="width: 150px;">企业类型</th>
+            <td>@(profile.Type.ToString())</td>
+        </tr>
+        <tr>
+            <th>法定代表人</th>
+            <td>@(profile.LegalRepresentative)</td>
+            <th>工商登记机关</th>
+            <td></td>
+        </tr>
+        <tr>
+            <th>工商登记号</th>
+            <td></td>
+            <th>税务登记号</th>
+            <td></td>
+        </tr>
+        <tr>
+            <th>注册资金</th>
+            <td>@(profile.RegisteredCapital)</td>
+            <th>成立时间</th>
+            <td></td>
+        </tr>
+        <tr>
+            <th>营业期限</th>
+            <td>@(profile.OperatingPeriod)</td>
+            <th>企业网址</th>
+            <td>@(profile.Website)</td>
+        </tr>
+        <tr>
+            <th>移动电话</th>
+            <td>@(profile.MobilePhone)</td>
+            <th>企业邮箱</th>
+            <td>@(profile.Email)</td>
+        </tr>
+        <tr>
+            <th>机构所属市</th>
+            <td>@(profile.City)</td>
+            <th>注册证书号</th>
+            <td>@(profile.CertificateNo)</td>
+        </tr>
+        <tr>
+            <th>经营范围</th>
+            <td>@(profile.BusinessScope)</td>
+            <th>利税总额（万元）</th>
+            <td>@(profile.TotalProfits)</td>
+        </tr>
+        <tr>
+            <th>邮编</th>
+            <td>@(profile.Postcode)</td>
+            <th>地址</th>
+            <td>@(profile.BusinessScope)</td>
+        </tr>
+    </table>
+</fieldset>
+<fieldset>
+    <legend>股东</legend>
+    <table class="table table-bordered">
+        <tr>
+            <th>姓名</th>
+            <th>性别</th>
+            <th>生日</th>
+            <th>股份</th>
+            <th>手机</th>
+        </tr>
+        @foreach (var sh in shareHolders)
+        { 
+            <tr>
+                <td>@(sh.Name)</td>
+                <td>@(sh.Gender)</td>
+                <td>@(sh.Birthday)</td>
+                <td>@(sh.Shares)</td>
+                <td>@(sh.Mobile)</td>
+            </tr>
+        }
+    </table>
+</fieldset>
+<fieldset>
+    <legend>资质证书</legend>
+    <table class="table table-bordered">
+        <tr>
+            <th>名称</th>
+            <th>级别</th>
+            <th>编号</th>
+        </tr>
+        @foreach (var cert in certifications)
+        { 
+            <tr>
+                <td>@(cert.Name)</td>
+                <td>@(cert.CertificationLevel)</td>
+                <td>@(cert.CertificationNo)</td>
+            </tr>
+        }
+    </table>
+</fieldset>

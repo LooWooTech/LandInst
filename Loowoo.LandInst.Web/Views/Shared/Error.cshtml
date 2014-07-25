@@ -1,0 +1,22 @@
+﻿@{
+    Exception ex = ViewBag.Exception;
+    var isAjax = Request.Headers.AllKeys.Contains("_ajax_");
+    if (isAjax)
+    {
+        Layout = null;
+        var data = new { result = false, message = ex.Message, stackTrace = ex.StackTrace };
+        Response.Write(Loowoo.LandInst.Common.JsonExtensions.ToJson(data));
+    }
+    else
+    {
+        ViewBag.Title = "程序异常";
+    <div>
+        @(ex.Message)
+    </div>
+    <script>
+        $(function () {
+            $("#main-panel").removeClass("panel-default").addClass("panel-danger");
+        });
+    </script>
+    }
+}

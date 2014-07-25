@@ -11,6 +11,8 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
     {
         public ActionResult Index()
         {
+            var currentInst = GetCurrentInst();
+            ViewBag.Profile = Core.InstitutionManager.GetProfile(currentInst);
             return View();
         }
 

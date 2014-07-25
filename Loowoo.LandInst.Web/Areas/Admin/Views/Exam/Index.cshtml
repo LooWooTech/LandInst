@@ -5,17 +5,20 @@
     List<Exam> list = ViewBag.List;
 }
 
-<h2>考试设置</h2>
-<a href="/admin/exam/edit">添加考试</a>
+<form class="form-inline search-form">
+    <div class="col-lg-8">
+        <a href="/admin/exam/edit" class="btn btn-primary">添加考试</a>
+    </div>
+</form>
 <table class="table">
     <tr>
         <th>名称</th>
-        <th>报名起始时间</th>
-        <th>报名结束时间</th>
-        <th>考试起始时间</th>
-        <th>考试结束时间</th>
-        <th>考试地点</th>
-        <th>管理</th>
+        <th style="width:100px;">报名起始时间</th>
+        <th style="width:100px;">报名结束时间</th>
+        <th style="width:100px;">考试起始时间</th>
+        <th style="width:100px;">考试结束时间</th>
+        <th style="width:100px;">考试地点</th>
+        <th style="width:100px;">管理</th>
     </tr>
     @foreach (var item in list)
     { 
@@ -27,8 +30,8 @@
             <td>@(item.EndExamDate.ToShortDateString())</td>
             <td>@(item.Address)</td>
             <td>
-                <a class="btn btn-default" href="/admin/exam/edit?id=@(item.ID)">修改</a>
-                <a class="btn btn-warning btn-delete" href="/admin/exam/delete?id=@(item.ID)">删除</a>
+                <a class="btn btn-xs btn-primary" href="/admin/exam/edit?id=@(item.ID)">修改</a>
+                <a class="btn btn-xs btn-warning btn-delete" href="/admin/exam/delete?id=@(item.ID)">删除</a>
             </td>
         </tr>
     }

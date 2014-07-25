@@ -1,26 +1,44 @@
 ﻿@using Loowoo.LandInst.Model
 @{
     AnnualCheck model = ViewBag.Model;
-    ViewBag.Title = model.ID > 0 ? "修改年审" : "编辑年审";
+    ViewBag.Title = model.ID > 0 ? "修改年审" : "添加年审";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
-
-<h2>@(ViewBag.Title)</h2>
 <form id="annualcheck-form" role="form" class="form-horizontal">
-    <label class="control-label">名称</label>
-    <input type="text" name="Name" class="form-control input-sm" value="@(model.Name)" />
+    <div class="form-group">
+        <label class="control-label col-lg-2">名称</label>
+        <div class="col-sm-3">
+            <input type="text" name="Name" class="form-control input-sm" value="@(model.Name)" />
+        </div>
+    </div>
 
-    <label class="control-label">起始时间</label>
-    <input type="text" name="StartDate" class="form-control input-sm datepicker" value="@(model.ID == 0 ? "" : model.StartDate.ToShortDateString())" />
+    <div class="form-group">
+        <label class="control-label col-lg-2">起始时间</label>
+        <div class="col-sm-3">
+            <input type="text" name="StartDate" class="form-control input-sm datepicker" value="@(model.ID == 0 ? "" : model.StartDate.ToShortDateString())" />
+        </div>
+    </div>
 
-    <label class="control-label">结束时间</label>
-    <input type="text" name="EndDate" class="form-control input-sm datepicker" value="@(model.ID == 0 ? "" : model.EndDate.ToShortDateString())" />
+    <div class="form-group">
+        <label class="control-label col-lg-2">结束时间</label>
+        <div class="col-sm-3">
+            <input type="text" name="EndDate" class="form-control input-sm datepicker" value="@(model.ID == 0 ? "" : model.EndDate.ToShortDateString())" />
+        </div>
+    </div>
 
-    <label class="control-label">简介</label>
-    <textarea name="summary" class="form-control input-sm">@(model.Summary)</textarea>
+    <div class="form-group">
+        <label class="control-label col-lg-2">简介</label>
+        <div class="col-sm-6">
+            <textarea name="summary" class="form-control input-sm" rows="5">@(model.Summary)</textarea>
+        </div>
+    </div>
 
-    <label class="control-label"></label>
-    <button type="submit" class="btn btn-primary">保存</button>
+    <div class="form-group">
+        <label class="control-label col-lg-2"></label>
+        <div class="col-sm-6">
+            <button type="submit" class="btn btn-primary">保存</button>
+        </div>
+    </div>
 
 </form>
 <script>

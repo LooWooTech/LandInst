@@ -18,7 +18,7 @@ namespace Loowoo.LandInst.Manager
             }
         }
 
-        public Approval GetApproval(int infoId,int userId, ApprovalType type)
+        public Approval GetApproval(int infoId, int userId, ApprovalType type)
         {
             using (var db = GetDataContext())
             {
@@ -40,13 +40,6 @@ namespace Loowoo.LandInst.Manager
 
         public int AddApproval(int infoId, int userId, ApprovalType type)
         {
-            var model = new Approval
-            {
-                InfoID = infoId,
-                UserID = userId,
-                ApprovalType = type,
-                CreateTime = DateTime.Now
-            };
             using (var db = GetDataContext())
             {
                 var entity = db.Approvals.FirstOrDefault(e => e.InfoID == infoId && e.UserID == userId && e.ApprovalType == type);
@@ -57,7 +50,17 @@ namespace Loowoo.LandInst.Manager
                         return entity.ID;
                     }
                 }
-                db.Approvals.Add(model);
+                else
+                {
+                    entity = new Approval
+                    {
+                        InfoID = infoId,
+                        UserID = userId,
+                        ApprovalType = type,
+                        CreateTime = DateTime.Now
+                    };
+                    db.Approvals.Add(entity);
+                }
                 db.SaveChanges();
                 return entity.ID;
             }

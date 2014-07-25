@@ -4,22 +4,20 @@
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
     List<Education> list = ViewBag.List;
 }
+<form class="form-inline search-form">
+    <div class="col-lg-8">
+        <a href="/admin/education/edit" class="btn btn-primary">添加继续教育</a>
+    </div>
+</form>
 
-<h2>继续教育管理</h2>
-<div class="">
-    <a href="/admin/education/edit">添加</a>
-</div>
-<div>
-
-</div>
 <table class="table">
     <tr>
         <th>名称</th>
-        <th>起始时间</th>
-        <th>结束时间</th>
-        <th>学时</th>
-        <th>教育机构</th>
-        <th>管理</th>
+        <th style="width: 100px;">起始时间</th>
+        <th style="width: 100px;">结束时间</th>
+        <th style="width: 100px;">学时</th>
+        <th style="width: 150px;">教育机构</th>
+        <th style="width: 100px;">管理</th>
     </tr>
     @foreach (var edu in list)
     { 
@@ -30,14 +28,27 @@
             <td>@(edu.Hours)小时</td>
             <td>@(edu.Agency)</td>
             <td>
-                <a href="/admin/education/edit?id=@(edu.ID)">编辑</a>
-                <a href="/admin/education/delete?id=@(edu.ID)">删除</a>
+                <a class="btn btn-xs btn-primary" href="/admin/education/edit?id=@(edu.ID)">编辑</a>
+                <a class="btn btn-xs btn-warning btn-delete" href="/admin/education/delete?id=@(edu.ID)">删除</a>
             </td>
         </tr>
     }
     <tr>
         <td colspan="6">
-            @(Html.Partial("_pagination",ViewBag.Page as object))
+            @(Html.Partial("_pagination", ViewBag.Page as object))
         </td>
     </tr>
 </table>
+<script>
+    $(function () {
+        $("a.btn-delete").click(function () {
+            if (!confirm("确定要删除吗？")) return false;
+
+            var url = $(this).attr("href");
+            $.post(url, function (json) {
+                window.location.href = "/admin/education/";
+            }, "json");
+            return false;
+        });
+    });
+</script>

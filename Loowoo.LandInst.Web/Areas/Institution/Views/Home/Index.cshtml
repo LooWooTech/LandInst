@@ -2,9 +2,20 @@
 @{
     ViewBag.Title = "Index";
     Layout = "~/Areas/Institution/Views/Shared/_Layout.cshtml";
-    Loowoo.LandInst.Model.Institution model = ViewBag.CurrentInst;
+    InstitutionProfile profile = ViewBag.Profile;
+    //如果没有提交注册申请，则不能干任何事情，只能提交申请通过后才可以
+    if (profile.CanSubmitRegisterApproval)
+    {
+        ViewBag.Title = "提交注册登记";
+        Html.RenderPartial("_ProfileForm", profile);
+        return;
+    }
+    else if (!profile.HasPassRegisterApproval)
+    {
+        //如果没有通过
+        ViewBag.Title = "提交注册登记-审核中";
+        Html.RenderPartial("_ProfileForm", profile);
+        return;
+    }
+    ViewBag.Title = "欢迎页";
 }
-
-<h2>欢迎页</h2>
-机构名称：@(model.Name)
-全程：@(model.FullName)

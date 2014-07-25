@@ -1,43 +1,62 @@
 ﻿@using Loowoo.LandInst.Model
 @{
     Institution model = ViewBag.Model;
-    ViewBag.Title = model.ID > 0 ? "修改机构" : "添加新机构";
+    ViewBag.Title = model.ID > 0 ? "修改机构" : "添加机构";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
 
-<h2>@(ViewBag.Title)</h2>
 <form id="institution-form" role="form" class="form-horizontal">
-    <label class="control-label">登录用户名</label>
-    <input type="text" name="Username" class="form-control input-sm" @(model.ID > 0 ? "disabled=disabled" : "") />
-
-    <label class="control-label">登录密码</label>
-    <input type="text" name="password" class="form-control input-sm"  value="@(model.ID > 0 ? "" : Loowoo.LandInst.Common.StringHelper.GenerateRandomString(8))" />
-
-    <label class="control-label">机构类别</label>
-    <div class="radio">
-        <label>
-            <input type="radio" name="Type" value="1" @((model.Type == InstitutionType.土地规划 || model.ID == 0) ? "checked=checked" : "") />土地规划机构</label>
+    <div class="form-group">
+        <label class="control-label col-lg-2">登录用户名</label>
+        <div class="col-sm-3">
+            <input type="text" name="Username" class="form-control input-sm" @(model.ID > 0 ? "disabled=disabled" : "") />
+        </div>
     </div>
-    <div class="radio">
-        <label>
-            <input type="radio" name="Type" value="2" @(model.Type == InstitutionType.土地勘测 ? "checked=checked" : "")/>土地勘测机构</label>
+    <div class="form-group">
+        <label class="control-label col-lg-2">登录密码</label>
+        <div class="col-sm-3">
+            <input type="text" name="password" class="form-control input-sm"  value="@(model.ID > 0 ? "" : Loowoo.LandInst.Common.StringHelper.GenerateRandomString(8))" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-lg-2">机构简称</label>
+        <div class="col-sm-3">
+            <input type="text" name="Name" class="form-control input-sm" @(model.ID > 0 ? "disabled=disabled" : "") />
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-lg-2 control-label">机构类别</label>
+        <div class="col-sm-3">
+            <div class="radio">
+                <label>
+                    <input type="radio" name="Type" value="1" @((model.Type == InstitutionType.土地规划 || model.ID == 0) ? "checked=checked" : "") />土地规划机构</label>
+                </label>
+            </div>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="Type" value="2" @(model.Type == InstitutionType.土地勘测 ? "checked=checked" : "")/>土地勘测机构</label>
+                </label>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label">密码提示问题</label>
+        <div class="col-sm-3">
+            <input type="text" name="Question" class="form-control input-sm" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label">密码提示问题答案</label>
+        <div class="col-sm-3">
+            <input type="text" name="Answer" class="form-control input-sm" />
+        </div>
     </div>
 
-    <br />
-    <label class="control-label">机构简称</label>
-    <input type="text" name="Name" class="form-control input-sm" value="@(model.Name)" />
-
-    <label class="control-label">机构全称</label>
-    <input type="text" name="FullName" class="form-control input-sm" />
-
-    <label class="control-label">工商注册号</label>
-    <input type="text" name="RegistrationNo" class="form-control input-sm" />
-
-    <label class="control-label">法人代表</label>
-    <input type="text" name="LegalRepresentative" class="form-control input-sm" />
-
-    <button type="submit" class="btn btn-primary">提交注册</button>
-
+    <div class="form-group">
+        <div class="col-lg-10 col-lg-offset-2">
+            <button type="submit" class="btn btn-primary">提交注册</button>
+        </div>
+    </div>
 </form>
 <script>
     $(function () {

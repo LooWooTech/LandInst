@@ -52,6 +52,25 @@ namespace Loowoo.LandInst.Model
         /// 法人代表
         /// </summary>
         public string LegalRepresentative { get; set; }
+
+
+        [NotMapped]
+        public bool HasPassRegisterApproval { get; set; }
+
+        [NotMapped]
+        public bool CanSubmitRegisterApproval { get; set; }
+
+        [NotMapped]
+        public bool CanSubmitChangeApproval { get; set; }
+
+        //[NotMapped]
+        //public bool HasSubmitRegisterApproval { get; set; }
+
+        //[NotMapped]
+        //public bool HasSubmitChangeApproval { get; set; }
+
+        //[NotMapped]
+        //public bool HasPassChangeApproval { get; set; }
     }
 
     public enum InstitutionType

@@ -96,14 +96,13 @@ namespace Loowoo.LandInst.Manager
             }
         }
 
-        public InstitutionProfile GetProfile(int instId)
+        public InstitutionProfile GetProfile(Institution inst)
         {
-            var model = Core.InfoDataManager.GetModel<InstitutionProfile>(instId, InfoType.InstitutionProfile);
+            var model = Core.InfoDataManager.GetModel<InstitutionProfile>(inst.ID, InfoType.InstitutionProfile);
             if (model == null)
             {
                 return null;
             }
-            var inst = GetInstitution(instId);
             model.SetInstField(inst);
             return model;
         }
@@ -150,6 +149,16 @@ namespace Loowoo.LandInst.Manager
                     db.SaveChanges();
                 }
             }
+        }
+
+        public List<Shareholder> GetShareHolders(int id)
+        {
+            return Core.InfoDataManager.GetModel<List<Shareholder>>(id, InfoType.Shareholder) ?? new List<Shareholder>();
+        }
+
+        public List<Certification> GetCertifications(int id)
+        {
+            return Core.InfoDataManager.GetModel<List<Certification>>(id, InfoType.Certificatoin) ?? new List<Certification>();
         }
     }
 }

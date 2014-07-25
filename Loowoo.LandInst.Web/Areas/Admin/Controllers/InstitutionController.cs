@@ -11,13 +11,13 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
 {
     public class InstitutionController : AdminControllerBase
     {
-        public ActionResult Index(string keyword, ApprovalType? type, int page = 1)
+        public ActionResult Index(string name, ApprovalType? type, int page = 1)
         {
             if (type.HasValue)
             {
                 var filter = new InstitutionFilter
                 {
-                    Keyword = keyword,
+                    Keyword = name,
                     PageIndex = page,
                     ApprovalType = type.Value
                 };
@@ -62,15 +62,29 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
             return JsonSuccess(new { password = randomPwd });
         }
 
-        public ActionResult Approval(string id, bool result = true)
-        {
-            var ids = id.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(_id => int.Parse(_id)).ToArray();
-            foreach (var _id in ids)
-            {
-                Core.ApprovalManager.UpdateApproval(_id, result);
-            }
-            return JsonSuccess();
-        }
+        //public ActionResult Approval(string id, bool result = true)
+        //{
+        //    var ids = id.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(_id => int.Parse(_id)).ToArray();
+        //    foreach (var _id in ids)
+        //    {
+        //        Core.ApprovalManager.UpdateApproval(_id, result);
+        //    }
+        //    return JsonSuccess();
+        //}
 
+        public ActionResult Profile(int id)
+        {
+            var inst = Core.InstitutionManager.GetInstitution(id);
+            if (inst == null)
+            {
+                throw new ArgumentNullException("参数错误，没找到这个机构。");
+            }
+            ViewBag.Profile = Core.InstitutionManager.GetProfile(inst);
+            ViewBag.ShareHolders = Core.InstitutionManager.GetShareHolders(id);
+            ViewBag.Certifications = Core.InstitutionManager.GetCertifications(id);
+
+
+            return View();
+        }
     }
 }

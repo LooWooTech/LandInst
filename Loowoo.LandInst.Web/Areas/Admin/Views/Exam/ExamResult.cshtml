@@ -1,26 +1,33 @@
 ﻿@using Loowoo.LandInst.Common
 @using Loowoo.LandInst.Model
 @{
-    ViewBag.Title = "ExamResult";
+    ViewBag.Title = "考试成绩管理";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
     List<VApprovalExam> list = ViewBag.List;
     List<Exam> exams = ViewBag.Exams;
 }
 
-<h2>考试结果管理</h2>
-<form class="form">
-    <label>用户姓名：</label>
-    <input type="text" name="name" />
-    <label>考试名称</label>
-    @Html.DropDownList("exams", exams.Select(e => new SelectListItem
-{
-    Text = e.Name,
-    Value = e.ID.ToString(),
-    Selected = Request.QueryString["examId"] == e.ID.ToString()
-}))
-    <input type="submit" value="查询" />
-    <input type="button" id="btn-agree" class="btn btn-primary" value="通过考试" />
-    <input type="button" id="btn-disagree" class="btn btn-waning" value="未通过考试" />
+<form class="form-inline search-form">
+    <div class="col-lg-8">
+        <div class="input-group">
+            <span class="input-group-addon">查询会员</span>
+            <input type="text" class="form-control" name="name" placeholder="会员姓名" value="@(Request.QueryString["name"])">
+            <div class="input-group-btn">
+                <select name="examId" class="form-control">
+                    <option value="0">选择考试</option>
+                    @foreach (var exam in exams)
+                    { 
+                        <option value="@(exam.ID)" @(Html.Raw(exam.ID.ToString() == Request.QueryString["examId"] ? " selected=\"selected\"" : null))>@(exam.Name)</option>
+                    }
+                </select>
+            </div>
+            <div class="input-group-btn">
+                <input type="submit" class="btn btn-primary" value="查询" />
+                <input type="button" id="btn-agree" class="btn btn-success" value="批量通过" />
+                <input type="button" id="btn-disagree" class="btn btn-warning" value="批量不通过" />
+            </div>
+        </div>
+    </div>
 </form>
 <table class="table">
     <tr>

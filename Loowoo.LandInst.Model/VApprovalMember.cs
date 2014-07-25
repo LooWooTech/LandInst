@@ -9,6 +9,8 @@ namespace Loowoo.LandInst.Model
     [Table("Vapproval_member")]
     public class VApprovalMember : VApprovalBase
     {
+        public string Username { get; set; }
+
         public string RealName { get; set; }
 
         public MemberStatus Status { get; set; }

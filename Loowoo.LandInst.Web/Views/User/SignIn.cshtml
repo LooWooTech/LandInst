@@ -2,47 +2,52 @@
     ViewBag.Title = "登录";
     Layout = "_layout.cshtml";
 }
-
-<form id="signin-form" class="form-signin" role="form" method="post">
-    <h2 class="form-signin-heading">Please sign in</h2>
-    <div class="login_form form-default">
-        <p>
-            <label>用户名：</label><input type="text" name="username" class="form-control" placeholder="用户名" />
-        </p>
-        <p>
-            <label>密码：</label><input type="password" name="password" class="form-control" placeholder="密码" />
-        </p>
-        <p>
-            <input type="submit" class="btn btn-lg btn-primary btn-block" value="登录" />
-            <a href="/user/signup" class="btn btn-lg btn-success btn-block">注册</a>
-        </p>
+<form id="signin-form" method="post" class="form-horizontal">
+    <div class="form-group">
+        <label for="username" class="col-lg-2 control-label">用户名</label>
+        <div class="col-lg-3">
+            <input type="text" class="form-control" id="username" name="username" placeholder="用户名">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="password" class="col-lg-2 control-label">密码</label>
+        <div class="col-lg-3">
+            <input type="password" class="form-control" id="password" name="password" placeholder="密码">
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-lg-10 col-lg-offset-2">
+            <input type="submit" id="btn-submit" value="登录" class="btn btn-primary" />
+            <a href="/user/ForgetPwd" class="btn btn-link">忘记密码？</a>
+            <a href="/user/signup" class="btn btn-link">注册新用户</a>
+        </div>
     </div>
 </form>
 <script>
     $(function () {
+        var btn = $("#btn-submit");
         $("#signin-form").submit(function () {
+            btn.val("正在登录");
+            btn.attr("disabled", true);
             var data = $(this).serialize();
-            $.post("/user/signin", data, function (json) {
-                if (json.result) {
-                    //不同的人跳转不同的默认页面
-                    console.log(json.data.role);
-                    var redirectUrl = "/member/";
-                    switch (json.data.role) {
-                        case "member":
-                            redirectUrl = "/member/";
-                            break;
-                        case "institution":
-                            redirectUrl = "/institution/";
-                            break;
-                        case "admin":
-                            redirectUrl = "/admin/";
-                            break;
-                    }
-                    window.location.href = redirectUrl;
-                } else {
-
+            $.request("/user/signin", data, function (json) {
+                var redirectUrl = "/member/";
+                switch (json.data.role) {
+                    case "member":
+                        redirectUrl = "/member/";
+                        break;
+                    case "institution":
+                        redirectUrl = "/institution/";
+                        break;
+                    case "admin":
+                        redirectUrl = "/admin/";
+                        break;
                 }
-            }, "json");
+                window.location.href = redirectUrl;
+            }, function () {
+                btn.val("登录");
+                btn.removeAttr("disabled");
+            });
             return false;
         });
     });
