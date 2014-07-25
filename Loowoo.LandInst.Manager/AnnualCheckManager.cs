@@ -35,19 +35,19 @@ namespace Loowoo.LandInst.Manager
             var list = GetAnnualChecks();
             foreach (var annual in list)
             {
-                annual.Approval = Core.ApprovalManager.GetApproval(annual.ID, instId, ApprovalType.Annual);
+                annual.Approval = Core.CheckLogManager.GetCheckLog(annual.ID, instId, CheckType.Annual);
             }
             return list;
         }
 
-        public List<VApprovalAnnualCheck> GetApprovalAnnualChecks(ApprovalFilter filter)
+        public List<VCheckAnnual> GetApprovalAnnualChecks(ApprovalFilter filter)
         {
             using (var db = GetDataContext())
             {
-                var query = db.VApprovalAnnualChecks.Where(e => e.ApprovalType == filter.Type);
+                var query = db.VApprovalAnnualChecks.Where(e => e.CheckType == filter.Type);
                 if (!string.IsNullOrEmpty(filter.Keyword))
                 {
-                    query = query.Where(e => e.Fullname.Contains(filter.Keyword) || e.InstName.Contains(filter.Keyword));
+                    query = query.Where(e => e.InstName.Contains(filter.Keyword));
                 }
 
                 if (filter.InfoID.HasValue)

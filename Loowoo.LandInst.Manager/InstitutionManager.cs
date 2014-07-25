@@ -20,14 +20,14 @@ namespace Loowoo.LandInst.Manager
         }
 
 
-        public List<VApprovalInst> GetApprovalInsts(InstitutionFilter filter)
+        public List<VCheckInst> GetApprovalInsts(InstitutionFilter filter)
         {
             using (var db = GetDataContext())
             {
-                var query = db.VApprovalInsts.Where(e => e.ApprovalType == filter.ApprovalType);
+                var query = db.VApprovalInsts.Where(e => e.CheckType == filter.ApprovalType);
                 if (!String.IsNullOrEmpty(filter.Keyword))
                 {
-                    query = query.Where(e => e.FullName.Contains(filter.Keyword) || e.InstName.Contains(filter.Keyword));
+                    query = query.Where(e => e.InstName.Contains(filter.Keyword));
                 }
                 if (filter.ApprovalResult.HasValue)
                 {
@@ -64,22 +64,22 @@ namespace Loowoo.LandInst.Manager
 
         public void AddShareholder(int instId, Shareholder shareholder)
         {
-            Core.InfoDataManager.UpdateListItem(instId, InfoType.Shareholder, shareholder);
+            //Core.InfoDataManager.UpdateListItem(instId, InfoType.Shareholder, shareholder);
         }
 
         public void DeleteShareholder(int instId, string shareholderId)
         {
-            Core.InfoDataManager.DeleteListItem<Shareholder, string>(instId, InfoType.Shareholder,  shareholderId, e => e.ID);
+            //Core.InfoDataManager.DeleteListItem<Shareholder, string>(instId, InfoType.Shareholder,  shareholderId, e => e.ID);
         }
 
         public void AddCertification(int instId, Certification certification)
         {
-            Core.InfoDataManager.UpdateListItem(instId, InfoType.Certificatoin, certification);
+            //Core.InfoDataManager.UpdateListItem(instId, InfoType.Certificatoin, certification);
         }
 
         public void DeleteCertification(int instId, string certificationId)
         {
-            Core.InfoDataManager.DeleteListItem<Certification, string>(instId, InfoType.Certificatoin, certificationId, e => e.ID);
+            //Core.InfoDataManager.DeleteListItem<Certification, string>(instId, InfoType.Certificatoin, certificationId, e => e.ID);
         }
 
         public void LogoutInstitution(string name)
@@ -94,17 +94,6 @@ namespace Loowoo.LandInst.Manager
                 entity.Status = InstitutionStatus.Logout;
                 db.SaveChanges();
             }
-        }
-
-        public InstitutionProfile GetProfile(Institution inst)
-        {
-            var model = Core.InfoDataManager.GetModel<InstitutionProfile>(inst.ID, InfoType.InstitutionProfile);
-            if (model == null)
-            {
-                return null;
-            }
-            model.SetInstField(inst);
-            return model;
         }
 
         public void AddInstitution(Institution model)
@@ -133,10 +122,30 @@ namespace Loowoo.LandInst.Manager
             }
         }
 
-        public void SaveProfile(InstitutionProfile profile)
+        public InstitutionProfile GetProfile(int instId, bool? checkResult = null)
         {
-            Core.InfoDataManager.Save(profile.ID, InfoType.InstitutionProfile, profile);
+            var approval = Core.CheckLogManager.GetLastLog(instId, CheckType.Profile, checkResult);
+            if (approval == null) return null;
+            return Core.ProfileManager.GetProfile<InstitutionProfile>(approval.InfoID);
         }
+
+
+        public void SubmitProfile(int instId, InstitutionProfile profile)
+        {
+            var approval = Core.CheckLogManager.GetCheckLog(profile.ID, instId, CheckType.Profile);
+            //如果没有提交过资料变更或者资料变更被审核过，则均可以重新提交
+            if (approval == null || approval.Result.HasValue)
+            {
+                var profileId = Core.ProfileManager.AddProfile(instId, profile);
+                Core.CheckLogManager.AddCheckLog(profileId, instId, CheckType.Profile);
+            }
+            else if (approval != null)//如果没被审核，则可以重复覆盖所提交的内容
+            {
+                Core.ProfileManager.UpdateProfile(approval.InfoID, profile);
+            }
+        }
+
+
 
         public void UpdateStatus(int instId, InstitutionStatus status)
         {
@@ -151,14 +160,14 @@ namespace Loowoo.LandInst.Manager
             }
         }
 
-        public List<Shareholder> GetShareHolders(int id)
-        {
-            return Core.InfoDataManager.GetModel<List<Shareholder>>(id, InfoType.Shareholder) ?? new List<Shareholder>();
-        }
+        //public List<Shareholder> GetShareHolders(int id)
+        //{
+        //    return Core.InfoDataManager.GetModel<List<Shareholder>>(id, CheckType.Shareholder) ?? new List<Shareholder>();
+        //}
 
-        public List<Certification> GetCertifications(int id)
-        {
-            return Core.InfoDataManager.GetModel<List<Certification>>(id, InfoType.Certificatoin) ?? new List<Certification>();
-        }
+        //public List<Certification> GetCertifications(int id)
+        //{
+        //    return Core.InfoDataManager.GetModel<List<Certification>>(id, CheckType.Certificatoin) ?? new List<Certification>();
+        //}
     }
 }

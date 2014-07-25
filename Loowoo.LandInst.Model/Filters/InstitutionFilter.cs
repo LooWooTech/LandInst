@@ -14,7 +14,7 @@ namespace Loowoo.LandInst.Model.Filters
 
         public InstitutionStatus? Status { get; set; }
 
-        public ApprovalType ApprovalType { get; set; }
+        public CheckType ApprovalType { get; set; }
 
         public bool? ApprovalResult { get; set; }
     }

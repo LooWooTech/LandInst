@@ -57,19 +57,25 @@
     <Compile Include="Filters\InstitutionFilter.cs" />
     <Compile Include="Filters\MemberFilter.cs" />
     <Compile Include="Filters\PageFilter.cs" />
-    <Compile Include="InfoData.cs" />
     <Compile Include="Institution.cs" />
     <Compile Include="InstitutionProfile.cs" />
-    <Compile Include="Approval.cs" />
+    <Compile Include="CheckLog.cs" />
     <Compile Include="Member.cs" />
     <Compile Include="MemberProfile.cs" />
-    <Compile Include="TransferData.cs" />
-    <Compile Include="VApprovalAnnualCheck.cs" />
-    <Compile Include="VApprovalBase.cs" />
-    <Compile Include="VApprovalEducation.cs" />
-    <Compile Include="VApprovalExam.cs" />
-    <Compile Include="VApprovalInst.cs" />
-    <Compile Include="VApprovalMember.cs" />
+    <Compile Include="Profile.cs" />
+    <Compile Include="Transfer.cs" />
+    <Compile Include="VCheckAnnual.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="VCheckBase.cs" />
+    <Compile Include="VCheckEducation.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="VCheckExam.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="VCheckInst.cs" />
+    <Compile Include="VCheckMember.cs" />
     <Compile Include="VEducation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Shareholder.cs" />

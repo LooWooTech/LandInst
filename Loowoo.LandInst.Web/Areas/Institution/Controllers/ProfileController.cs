@@ -17,10 +17,9 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
         [HttpGet]
         public ActionResult Edit()
         {
-            var profile = Core.InstitutionManager.GetProfile(GetCurrentInst());
-            ViewBag.Profile = profile;
             //只要不是注册登记，那么就获取资料变更的审核状态
-            ViewBag.Approval = Core.ApprovalManager.GetApproval(profile.ID, Identity.UserID, profile.Status == InstitutionStatus.Normal ? ApprovalType.Register : ApprovalType.Change);
+            ViewBag.CheckLog  = Core.CheckLogManager.GetLastLog(Identity.UserID, CheckType.Profile);
+            ViewBag.Profile = Core.InstitutionManager.GetProfile(Identity.UserID);
             return View();
         }
 
@@ -41,27 +40,7 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
         [HttpPost]
         public ActionResult Submit(InstitutionProfile profile, string type)
         {
-            var currentInst = GetCurrentInst();
-
-            if (type == "register")
-            {
-                if (currentInst.CanSubmitRegisterApproval)
-                {
-                    Core.InstitutionManager.SaveProfile(profile);
-                    Core.ApprovalManager.AddApproval(currentInst.ID, Identity.UserID, ApprovalType.Register);
-                }
-            }
-            else if (type == "change")
-            {
-                if (currentInst.CanSubmitChangeApproval)
-                {
-                    Core.InstitutionManager.SaveProfile(profile);
-                    Core.ApprovalManager.AddApproval(currentInst.ID, Identity.UserID, ApprovalType.Change);
-                }
-            }
-            else
-            { 
-            }
+            Core.InstitutionManager.SubmitProfile(Identity.UserID, profile);
             return JsonSuccess();
         }
 

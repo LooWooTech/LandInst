@@ -43,12 +43,12 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
         }
 
 
-        public ActionResult Approval(string id, ApprovalType type, bool result = true)
+        public ActionResult Approval(string id, CheckType type, bool result = true)
         {
             var ids = id.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(_id => int.Parse(_id)).ToArray();
             foreach (var _id in ids)
             {
-                var approval = Core.ApprovalManager.GetApproval(_id);
+                var approval = Core.CheckLogManager.GetCheckLog(_id);
                 
                 Core.EducationManager.Approval(_id, result);
             }

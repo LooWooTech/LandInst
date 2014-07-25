@@ -33,7 +33,7 @@ namespace Loowoo.LandInst.Manager
                 var exams = db.Exams.OrderByDescending(e => e.ID).ToList();
                 foreach (var exam in exams)
                 {
-                    exam.Approval = Core.ApprovalManager.GetApproval(exam.ID, memberId, ApprovalType.Exam);
+                    exam.Approval = Core.CheckLogManager.GetCheckLog(exam.ID, memberId, CheckType.Exam);
                 }
                 return exams;
             }
@@ -81,17 +81,17 @@ namespace Loowoo.LandInst.Manager
         {
             using (var db = GetDataContext())
             {
-                var entity = db.Approvals.FirstOrDefault(e => e.InfoID == examId && e.UserID == memberId && e.ApprovalType == ApprovalType.Exam);
+                var entity = db.CheckLogs.FirstOrDefault(e => e.InfoID == examId && e.UserID == memberId && e.CheckType == CheckType.Exam);
                 if (entity != null)//已经报名 并通过审批
                 {
                     return;
                 }
 
-                db.Approvals.Add(new Approval
+                db.CheckLogs.Add(new CheckLog
                 {
                     InfoID = examId,
                     UserID = memberId,
-                    ApprovalType = ApprovalType.Exam
+                    CheckType = CheckType.Exam
                 });
 
                 db.ExamResults.Add(new ExamResult
@@ -116,11 +116,11 @@ namespace Loowoo.LandInst.Manager
             }
         }
 
-        public List<VApprovalExam> GetApprovalExams(ApprovalFilter filter)
+        public List<VCheckExam> GetApprovalExams(ApprovalFilter filter)
         {
             using (var db = GetDataContext())
             {
-                var query = db.VApprovalExams.Where(e => e.ApprovalType == ApprovalType.Education);
+                var query = db.VApprovalExams.Where(e => e.CheckType == CheckType.Education);
                 if (filter.InfoID.HasValue)
                 {
                     query = query.Where(e => e.ExamID == filter.InfoID.Value);

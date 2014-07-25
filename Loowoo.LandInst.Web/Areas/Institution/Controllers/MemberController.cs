@@ -101,7 +101,7 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
             {
                 Keyword = keyword,
                 PageIndex = page,
-                Type = ApprovalType.Transfer
+                Type = CheckType.Transfer
 
             };
 

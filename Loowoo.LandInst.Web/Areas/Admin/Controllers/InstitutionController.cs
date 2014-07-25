@@ -11,7 +11,7 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
 {
     public class InstitutionController : AdminControllerBase
     {
-        public ActionResult Index(string name, ApprovalType? type, int page = 1)
+        public ActionResult Index(string name, CheckType? type, int page = 1)
         {
             if (type.HasValue)
             {
@@ -52,13 +52,10 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
                 randomPwd = user.Password;
             }
 
-            user.Question = "初始密码是什么";
-            user.Answer = randomPwd;
             user.Role = UserRole.Institution;
             Core.UserManager.AddUser(user);
             inst.ID = user.ID;
             Core.InstitutionManager.AddInstitution(inst);
-            Core.InstitutionManager.SaveProfile(new InstitutionProfile(inst));
             return JsonSuccess(new { password = randomPwd });
         }
 
@@ -79,12 +76,18 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
             {
                 throw new ArgumentNullException("参数错误，没找到这个机构。");
             }
-            ViewBag.Profile = Core.InstitutionManager.GetProfile(inst);
-            ViewBag.ShareHolders = Core.InstitutionManager.GetShareHolders(id);
-            ViewBag.Certifications = Core.InstitutionManager.GetCertifications(id);
 
+            ViewBag.Profile = Core.InstitutionManager.GetProfile(inst.ID);
+
+            ViewBag.Approvals = Core.CheckLogManager.GetList(id);
 
             return View();
+        }
+
+        public ActionResult Approval(int id,bool result)
+        {
+            Core.CheckLogManager.UpdateCheckLog(id, result);
+            return JsonSuccess();
         }
     }
 }

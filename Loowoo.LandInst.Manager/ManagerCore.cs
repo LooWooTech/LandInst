@@ -34,10 +34,10 @@ namespace Loowoo.LandInst.Manager
             get { return _examManager == null ? _examManager = new ExamManager() : _examManager; }
         }
 
-        private ApprovalManager _approvalManager;
-        public ApprovalManager ApprovalManager
+        private CheckLogManager _checkLogManager;
+        public CheckLogManager CheckLogManager
         {
-            get { return _approvalManager == null ? _approvalManager = new ApprovalManager() : _approvalManager; }
+            get { return _checkLogManager == null ? _checkLogManager = new CheckLogManager() : _checkLogManager; }
         }
 
         private EducationManager _educationManager;
@@ -53,10 +53,10 @@ namespace Loowoo.LandInst.Manager
             get { return _anualCheckManager == null ? _anualCheckManager = new AnnualCheckManager() : _anualCheckManager; }
         }
 
-        private InfoDataManager _infodataManager;
-        public InfoDataManager InfoDataManager
+        private ProfileManager _profileManager;
+        public ProfileManager ProfileManager
         {
-            get { return _infodataManager == null ? _infodataManager = new InfoDataManager() : _infodataManager; }
+            get { return _profileManager == null ? _profileManager = new ProfileManager() : _profileManager; }
         }
 
     }

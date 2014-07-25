@@ -60,7 +60,7 @@ namespace Loowoo.LandInst.Manager
                 var list = db.Educations.OrderByDescending(e => e.ID).ToList();
                 foreach (var edu in list)
                 {
-                    edu.Approval = Core.ApprovalManager.GetApproval(edu.ID, memberId, ApprovalType.Education);
+                    edu.Approval = Core.CheckLogManager.GetCheckLog(edu.ID, memberId, CheckType.Education);
                 }
                 return list;
             }
@@ -71,7 +71,7 @@ namespace Loowoo.LandInst.Manager
         {
             using (var db = GetDataContext())
             {
-                var approval = db.Approvals.FirstOrDefault(e => e.ID == approvalId);
+                var approval = db.CheckLogs.FirstOrDefault(e => e.ID == approvalId);
                 approval.Result = result;
                 db.SaveChanges();
             }
@@ -81,22 +81,22 @@ namespace Loowoo.LandInst.Manager
         {
             using (var db = GetDataContext())
             {
-                db.Approvals.Add(new Model.Approval
+                db.CheckLogs.Add(new Model.CheckLog
                 {
                     UserID = member.ID,
                     InfoID = edu.ID,
-                    ApprovalType = ApprovalType.Education,
+                    CheckType = CheckType.Education,
 
                 });
                 db.SaveChanges();
             }
         }
 
-        public List<VApprovalEducation> GetApprovalEducations(ApprovalFilter filter)
+        public List<VCheckEducation> GetApprovalEducations(ApprovalFilter filter)
         {
             using (var db = GetDataContext())
             {
-                var query = db.VApprovalEducations.Where(e => e.ApprovalType == ApprovalType.Education);
+                var query = db.VApprovalEducations.Where(e => e.CheckType == CheckType.Education);
                 if (filter.Result.HasValue)
                 {
                     query = query.Where(e => e.Result == filter.Result.Value);

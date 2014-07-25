@@ -25,7 +25,7 @@ namespace Loowoo.LandInst.Manager
         private void AddProfile(Member member)
         {
             var profile = new MemberProfile(member);
-            Core.InfoDataManager.Save(profile.ID, InfoType.MemberProfile, profile);
+            Core.ProfileManager.AddProfile(member.ID, profile);
         }
 
         public void UpdateMemberStatus(int memberId, MemberStatus status)
@@ -62,17 +62,29 @@ namespace Loowoo.LandInst.Manager
         }
 
 
-        public MemberProfile GetProfile(int memberId)
+        public MemberProfile GetProfile(int memberId,bool? checkResult= null)
         {
             if (memberId == 0) return null;
-
-            return Core.InfoDataManager.GetModel<MemberProfile>(memberId, InfoType.MemberProfile);
+            var checkLog = Core.CheckLogManager.GetLastLog(memberId, CheckType.Profile, checkResult);
+            if (checkLog == null)
+                return null;
+            return Core.ProfileManager.GetProfile<MemberProfile>(checkLog.InfoID);
         }
 
         public void SaveProfile(Member member, MemberProfile profile)
         {
             profile.SetMemberField(member);
-            Core.InfoDataManager.Save(profile.ID, InfoType.MemberProfile, profile);
+            var checkLog = Core.CheckLogManager.GetLastLog(member.ID, CheckType.Profile);
+            if (checkLog == null)
+            {
+                var profileId = Core.ProfileManager.AddProfile(member.ID, profile);
+                Core.CheckLogManager.AddCheckLog(profileId, member.ID, CheckType.Profile);
+            }
+            else
+            {
+                Core.ProfileManager.UpdateProfile(checkLog.InfoID, profile);
+            }
+
         }
 
 
@@ -95,26 +107,48 @@ namespace Loowoo.LandInst.Manager
                 }
             }
 
-            var approvalId = Core.ApprovalManager.AddApproval(member.ID, currentInstId, Model.ApprovalType.Transfer);
-            var transferData = new TransferData
+            var checkLog = Core.CheckLogManager.GetLastLog(member.ID, CheckType.Transfer);
+            if (checkLog == null || checkLog.Checked)
             {
-                ApprovalID = approvalId,
-                MemberID = member.ID,
-                InstitutionID = currentInstId,
-                TargetInstitutionID = targetInstId
-            };
-
-            Core.InfoDataManager.Save(transferData.ApprovalID, InfoType.Transfer, transferData);
+                var transferId = AddTransfer(member.ID, currentInstId, targetInstId);
+                Core.CheckLogManager.AddCheckLog(transferId, member.ID, CheckType.Transfer);
+            }
+            
         }
 
-        public void ApprovalTrasfer(int approvalId)
-        { 
-            var approval = Core.ApprovalManager.GetApproval(approvalId);
-            var transferData = Core.InfoDataManager.GetModel<TransferData>(approval.ID, InfoType.Transfer);
-            if (approval.Result.HasValue && approval.Result.Value)
+        private Transfer GetTransfer(int id)
+        {
+            using (var db = GetDataContext())
             {
-                var member = Core.MemberManager.GetMember(transferData.MemberID);
-                member.InstitutionID = transferData.TargetInstitutionID;
+                return db.Transfers.FirstOrDefault(e => e.ID == id);
+            }
+        }
+
+        private int AddTransfer(int memberId,int currentInstId,int targetInstId)
+        {
+            var entity = new Transfer
+            {
+                MemberID = memberId,
+                CurrentInstID = currentInstId,
+                TargetInstID = targetInstId
+            };
+            using (var db = GetDataContext())
+            {
+                db.Transfers.Add(entity);
+                db.SaveChanges();
+            }
+            return entity.ID;
+        }
+
+        public void ApprovalTrasfer(int checkLogId)
+        {
+            var checkLog = Core.CheckLogManager.GetCheckLog(checkLogId);
+            //已经通过审批
+            if (checkLog.Checked && checkLog.Result.Value)
+            {
+                var transfer = GetTransfer(checkLog.InfoID);
+                var member = GetMember(transfer.MemberID);
+                member.InstitutionID = transfer.TargetInstID;
                 Core.MemberManager.UpdateMember(member);
             }
         }
@@ -133,7 +167,7 @@ namespace Loowoo.LandInst.Manager
             }
         }
 
-        public List<VApprovalMember> GetApprovalMembers(MemberFilter filter)
+        public List<VCheckMember> GetApprovalMembers(MemberFilter filter)
         {
             using (var db = GetDataContext())
             {

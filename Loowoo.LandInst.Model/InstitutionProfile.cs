@@ -10,9 +10,13 @@ namespace Loowoo.LandInst.Model
     [NotMapped]
     public class InstitutionProfile : Institution
     {
-        public InstitutionProfile() { }
+        public InstitutionProfile()
+        {
+            ShareHolders = new List<Shareholder>();
+            Certifications = new List<Certification>();
+        }
 
-        public InstitutionProfile(Institution inst)
+        public InstitutionProfile(Institution inst):this()
         {
             SetInstField(inst);
         }
@@ -61,6 +65,8 @@ namespace Loowoo.LandInst.Model
         /// </summary>
         public string OperatingPeriod { get; set; }
 
+        public List<Shareholder> ShareHolders { get; set; }
 
+        public List<Certification> Certifications { get; set; }
     }
 }

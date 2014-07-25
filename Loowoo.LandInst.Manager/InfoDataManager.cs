@@ -9,31 +9,31 @@ namespace Loowoo.LandInst.Manager
 {
     public class InfoDataManager : ManagerBase
     {
-        public void UpdateListItem<T>(int infoId, InfoType infoType, T item)
-        {
-            var model = GetModel(infoId, infoType);
+        //public void UpdateListItem<T>(int infoId, int userId, InfoType infoType, T item)
+        //{
+        //    var model = GetModel(infoId, infoType);
 
-            if (model == null)
-            {
-                Core.InfoDataManager.Save(infoId, infoType, new List<T> { item });
-            }
-            else
-            {
-                var list = model.Convert<List<T>>() ?? new List<T>();
-                list.Add(item);
-                Core.InfoDataManager.Save(infoId, infoType, list);
-            }
-        }
+        //    if (model == null)
+        //    {
+        //        Core.InfoDataManager.Save(infoId, userId, infoType, new List<T> { item });
+        //    }
+        //    else
+        //    {
+        //        var list = model.Convert<List<T>>() ?? new List<T>();
+        //        list.Add(item);
+        //        Core.InfoDataManager.Save(infoId, userId, infoType, list);
+        //    }
+        //}
 
-        public void DeleteListItem<TItem, TKey>(int infoId, InfoType infoType, TKey keyValue, Func<TItem, TKey> getKey) where TKey : class
-        {
-            var model = GetModel(infoId, infoType);
-            if (model == null || model.Data == null) return;
-            var list = model.Convert<List<TItem>>();
-            var index = list.FindIndex(e => getKey(e) == keyValue);
-            list.RemoveAt(index);
-            Save(infoId, infoType, list);
-        }
+        //public void DeleteListItem<TItem, TKey>(int infoId, int userId, InfoType infoType, TKey keyValue, Func<TItem, TKey> getKey) where TKey : class
+        //{
+        //    var model = GetModel(infoId, infoType);
+        //    if (model == null || model.Data == null) return;
+        //    var list = model.Convert<List<TItem>>();
+        //    var index = list.FindIndex(e => getKey(e) == keyValue);
+        //    list.RemoveAt(index);
+        //    Save(infoId, userId, infoType, list);
+        //}
 
         public InfoData GetModel(int infoId, InfoType infoType)
         {
@@ -53,25 +53,26 @@ namespace Loowoo.LandInst.Manager
             return model == null ? default(T) : model.Convert<T>();
         }
 
-        public void Save<T>(int infoId, InfoType type, T data)
+        public void Save<T>(int infoId, int userId, InfoType type, T data)
         {
-            var model = new InfoData
-            {
-                Data = data.ToBytes(),
-                InfoID = infoId,
-                InfoType = type,
-            };
-
             using (var db = GetDataContext())
             {
-                var entity = db.InfoDatas.FirstOrDefault(e => e.InfoID == model.InfoID && e.InfoType == model.InfoType);
+                var entity = db.InfoDatas.FirstOrDefault(e => e.InfoID == infoId && e.InfoType == type);
                 if (entity != null)
                 {
-                    entity.Data = model.Data;
+                    entity.Data = data.ToBytes();
                 }
                 else
                 {
-                    db.InfoDatas.Add(model);
+                    entity = new InfoData
+                    {
+                        Data = data.ToBytes(),
+                        InfoID = infoId,
+                        InfoType = type,
+                        UserID = userId
+                    };
+
+                    db.InfoDatas.Add(entity);
                 }
                 db.SaveChanges();
             }

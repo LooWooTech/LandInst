@@ -5,15 +5,15 @@ using System.Text;
 
 namespace Loowoo.LandInst.Model
 {
-    public class TransferData
+    public class Transfer
     {
-        public int ApprovalID { get; set; }
+        public int ID { get; set; }
 
         public int MemberID { get; set; }
 
-        public int InstitutionID { get; set; }
+        public int CurrentInstID { get; set; }
 
-        public int TargetInstitutionID { get; set; }
+        public int TargetInstID { get; set; }
 
         public TransferMode Mode { get; set; }
     }

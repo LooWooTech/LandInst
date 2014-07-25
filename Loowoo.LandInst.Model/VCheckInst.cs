@@ -7,11 +7,9 @@ using System.Text;
 namespace Loowoo.LandInst.Model
 {
     [Table("VApproval_Inst")]
-    public class VApprovalInst : VApprovalBase
+    public class VCheckInst : VCheckBase
     {
         public string InstName { get; set; }
-
-        public string FullName { get; set; }
 
         public InstitutionType Type { get; set; }
 

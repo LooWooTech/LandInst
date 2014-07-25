@@ -7,7 +7,7 @@ using System.Text;
 namespace Loowoo.LandInst.Model
 {
     [Table("VApproval_Exam")]
-    public class VApprovalExam : VApprovalBase
+    public class VCheckExam : VCheckBase
     {
         public int ExamID { get; set; }
 

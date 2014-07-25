@@ -10,7 +10,7 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
 {
     public class MemberController : AdminControllerBase
     {
-        public ActionResult Index(ApprovalType type = ApprovalType.Working, int page = 1)
+        public ActionResult Index(CheckType type = CheckType.Working, int page = 1)
         {
             var filter = new MemberFilter { PageIndex = page, Type = type };
             var list = Core.MemberManager.GetApprovalMembers(filter);
@@ -67,7 +67,7 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
 
         public ActionResult Approval(int id, bool result = true)
         {
-            Core.ApprovalManager.UpdateApproval(id, result);
+            Core.CheckLogManager.UpdateCheckLog(id, result);
 
             return JsonSuccess();
         }

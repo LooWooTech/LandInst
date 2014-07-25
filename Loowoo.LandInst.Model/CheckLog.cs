@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -8,10 +9,10 @@ using System.Threading.Tasks;
 
 namespace Loowoo.LandInst.Model
 {
-    [Table("Approval")]
-    public class Approval
+    [Table("CheckLog")]
+    public class CheckLog
     {
-        public Approval()
+        public CheckLog()
         {
             CreateTime = DateTime.Now;
         }
@@ -26,33 +27,32 @@ namespace Loowoo.LandInst.Model
 
         public DateTime CreateTime { get; set; }
 
-        public DateTime? ApprovalTime { get; set; }
+        public DateTime? UpdateTime { get; set; }
 
         public bool? Result { get; set; }
 
         public string Note { get; set; }
 
         [Column(TypeName = "int")]
-        public ApprovalType ApprovalType { get; set; }
+        public CheckType CheckType { get; set; }
 
         [NotMapped]
-        public bool IsLocked
-        {
-            get
-            {
-                return !ApprovalTime.HasValue || Result.HasValue;
-            }
-        }
+        public bool Checked { get { return Result.HasValue; } }
     }
 
-    public enum ApprovalType
+    public enum CheckType
     {
-        Register = 1,//注册、登记
-        Change,//信息变更
-        Transfer,//会员转移
-        Working,//会员执业
-        Annual,//年审
-        Education,//继续教育
-        Exam//报名考试
+        [Description("注册/变更登记")]
+        Profile = 1,
+        [Description("会员转移")]
+        Transfer,
+        [Description("执业登记")]
+        Working,
+        [Description("年检审核")]
+        Annual,
+        [Description("继续教育")]
+        Education,
+        [Description("报名考试")]
+        Exam
     }
 }

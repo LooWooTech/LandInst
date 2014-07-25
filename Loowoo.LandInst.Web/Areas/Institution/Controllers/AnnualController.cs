@@ -26,8 +26,8 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
             {
                 throw new Exception("目前无法申请年检");
             }
-
-            Core.ApprovalManager.AddApproval(id, Identity.UserID, Model.ApprovalType.Annual);
+            //TODO
+            //Core.CheckLogManager.AddApproval(id, Identity.UserID, Model.InfoType.Annual);
             return JsonSuccess();
         }
 

@@ -52,10 +52,10 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
             var ids = id.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(s => int.Parse(s));
             foreach (var approvalId in ids)
             {
-                var app = Core.ApprovalManager.GetApproval(approvalId);
+                var app = Core.CheckLogManager.GetCheckLog(approvalId);
                 if (app != null)
                 {
-                    Core.ApprovalManager.UpdateApproval(approvalId, result);
+                    Core.CheckLogManager.UpdateCheckLog(approvalId, result);
                     Core.MemberManager.UpdateMemberStatus(app.UserID, result ? MemberStatus.SingupExam : MemberStatus.Register);
                 }
             }
@@ -88,7 +88,7 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
             var ids = id.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(s => int.Parse(s));
             foreach (var approvalId in ids)
             {
-                var app = Core.ApprovalManager.GetApproval(approvalId);
+                var app = Core.CheckLogManager.GetCheckLog(approvalId);
                 if (app != null)
                 {
                     Core.ExamManager.UpdateExamResult(app.InfoID, app.UserID, result);

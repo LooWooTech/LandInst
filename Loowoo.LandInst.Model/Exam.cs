@@ -35,6 +35,6 @@ namespace Loowoo.LandInst.Model
         public string Address { get; set; }
 
         [NotMapped]
-        public Approval Approval { get; set; }
+        public CheckLog Approval { get; set; }
     }
 }

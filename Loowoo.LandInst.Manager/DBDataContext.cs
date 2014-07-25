@@ -27,7 +27,7 @@ namespace Loowoo.LandInst.Manager
 
         public DbSet<Institution> Institutions { get; set; }
 
-        public DbSet<InfoData> InfoDatas { get; set; }
+        public DbSet<Profile> Profiles { get; set; }
 
         public DbSet<Education> Educations { get; set; }
 
@@ -35,31 +35,22 @@ namespace Loowoo.LandInst.Manager
 
         public DbSet<Exam> Exams { get; set; }
 
+        public DbSet<Transfer> Transfers { get; set; }
+
         public DbSet<ExamResult> ExamResults { get; set; }
 
-
         public DbSet<VMemberExamResult> VMemberExamResults { get; set; }
-
-        //public DbSet<VMemberExam> VMemberExams { get; set; }
-
-        //public DbSet<VMemberEducation> VMemberEducations { get; set; }
-
-
-        //public DbSet<VInstAnnualCheck> VInstAnnualChecks { get; set; }
-
-
         
-        public DbSet<Approval> Approvals { get; set; }
+        public DbSet<CheckLog> CheckLogs { get; set; }
 
+        public DbSet<VCheckInst> VApprovalInsts { get; set; }
 
-        public DbSet<VApprovalInst> VApprovalInsts { get; set; }
+        public DbSet<VCheckMember> VApprovalMembers { get; set; }
 
-        public DbSet<VApprovalMember> VApprovalMembers { get; set; }
+        public DbSet<VCheckEducation> VApprovalEducations { get; set; }
 
-        public DbSet<VApprovalEducation> VApprovalEducations { get; set; }
+        public DbSet<VCheckExam> VApprovalExams { get; set; }
 
-        public DbSet<VApprovalExam> VApprovalExams { get; set; }
-
-        public DbSet<VApprovalAnnualCheck> VApprovalAnnualChecks { get; set; }
+        public DbSet<VCheckAnnual> VApprovalAnnualChecks { get; set; }
     }
 }

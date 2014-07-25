@@ -13,7 +13,7 @@ namespace Loowoo.LandInst.Web.Areas.Member.Controllers
         {
             var member = GetCurrentMember();
             var profile = Core.MemberManager.GetProfile(member.ID);
-            var approval = Core.ApprovalManager.GetApproval(profile.ID, Identity.UserID, ApprovalType.Change);
+            var approval = Core.CheckLogManager.GetCheckLog(profile.ID, Identity.UserID, CheckType.Profile);
             profile.SetMemberField(member);
             ViewBag.Profile = profile;
             ViewBag.Memeber = member;

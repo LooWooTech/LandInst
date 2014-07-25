@@ -21,6 +21,7 @@ namespace Loowoo.LandInst.Model
 
         public byte[] Data { get; set; }
 
+        public int UserID { get; set; }
     }
 
     public enum InfoType
