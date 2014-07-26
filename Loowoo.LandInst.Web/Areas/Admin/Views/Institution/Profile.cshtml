@@ -4,40 +4,15 @@
     ViewBag.Title = "机构详细信息";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
     InstitutionProfile profile = ViewBag.Profile;
-    List<Shareholder> shareHolders = ViewBag.ShareHolders;
-    List<Certification> certifications = ViewBag.Certifications;
-    //Approval approval = ViewBag.Approval;
-    List<Approval> approvals = ViewBag.Approvals;
+    List<CheckLog> checkLogs = ViewBag.CheckLogs;
+    CheckLog approval = ViewBag.CheckLog;
 }
-@*@if (approval != null)
-{ 
-    <div class="alert alert-dismissable alert-warning">
-        该机构于@(approval.CreateTime.ToShortDateString())申请了 
-        <span class="label label-default">@(approval.ApprovalType.GetDescription())</span>
-        @if (approval.Result.HasValue)
-        {
-            <span>并且与@(approval.ApprovalTime.Value.ToShortDateString())</span>
-            if (approval.Result.Value)
-            {
-            <span class="label label-success">通过审核</span>
-            }
-            else
-            {
-            <span class="label label-warning">未通过审核</span>
-            }
-        }
-        else
-        {
-            <input id="btn-agree" type="button" value="通过审批" class="btn btn-sm btn-success" />
-            <input id="btn-disagree" type="button" value="不通过" class="btn btn-sm btn-warning" />
-        }
-    </div>
-}*@
 <div>
     <ul class="nav nav-tabs">
         <li class="active"><a href="#tab1" data-toggle="tab">基本资料</a></li>
         <li class=""><a href="#tab2" data-toggle="tab">股东</a></li>
         <li class=""><a href="#tab3" data-toggle="tab">资质证书</a></li>
+        <li class=""><a href="#tab4" data-toggle="tab">审批记录</a></li>
     </ul>
 </div>
 <div class="tab-content">
@@ -108,7 +83,7 @@
                 <th>股份</th>
                 <th>手机</th>
             </tr>
-            @foreach (var sh in shareHolders)
+            @foreach (var sh in profile.ShareHolders)
             { 
                 <tr>
                     <td>@(sh.Name)</td>
@@ -127,7 +102,7 @@
                 <th>级别</th>
                 <th>编号</th>
             </tr>
-            @foreach (var cert in certifications)
+            @foreach (var cert in profile.Certifications)
             { 
                 <tr>
                     <td>@(cert.Name)</td>
@@ -137,58 +112,110 @@
             }
         </table>
     </div>
-</div>
-
-<fieldset>
-    <legend>审批记录</legend>
-    <table class="table table-bordered">
-        <tr>
-            <th>审批类型</th>
-            <th>申请时间</th>
-            <th>审批时间</th>
-            <th>审批结果</th>
-        </tr>
-        @foreach (var approval in approvals)
-        { 
+    <div class="tab-pane fade" id="tab4">
+        <table class="table table-bordered">
             <tr>
-                <td>@(approval.ApprovalType.GetDescription())</td>
-                <td>@(approval.CreateTime.ToShortDateString())</td>
-                <td>@(approval.ApprovalTime.HasValue ? approval.ApprovalTime.Value.ToShortDateString() : "-")</td>
-                <td>
-                    @if (approval.Result.HasValue)
-                    {
-                        if (approval.Result.Value)
-                        { 
-                        <span class="label label-success">审批通过</span>
+                <th>审批类型</th>
+                <th>申请时间</th>
+                <th>审批时间</th>
+                <th>审批结果</th>
+            </tr>
+            @foreach (var checkLog in checkLogs)
+            { 
+                <tr>
+                    <td>@(checkLog.CheckType.GetDescription())</td>
+                    <td>@(checkLog.CreateTime.ToShortDateString())</td>
+                    <td>@(checkLog.UpdateTime.HasValue ? checkLog.UpdateTime.Value.ToShortDateString() : "-")</td>
+                    <td>
+                        @if (checkLog.Result.HasValue)
+                        {
+                            if (checkLog.Result.Value)
+                            { 
+                            <span class="label label-success">审批通过</span>
+                            }
+                            else
+                            {
+                            <span class="label label-warning">审批不通过</span>
+                            }
                         }
                         else
                         {
-                        <span class="label label-warning">审批不通过</span>
+                            <span class="label label-default">尚未审批</span>
                         }
-                    }
-                    else
-                    {
-                        <a href="/admin/institution/approval?id=@(approval.ID)&result=true" class="btn btn-xs btn-success btn-approval">通过</a>
-                        <a href="/admin/institution/approval?id=@(approval.ID)&result=false" class="btn btn-xs btn-warning btn-approval">不通过</a>
-                    }
-                </td>
-            </tr>
-        }
-    </table>
-</fieldset>
-<script>
-    $(function () {
-        $(".btn-approval").click(function () {
-            var text = $(this).html();
-            if (confirm("确认" + text + "审批")) {
-                var href = $(this).attr("href");
-                $.request(href, null, function (json) { })
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
+</div>
+
+@if (approval != null)
+{ 
+    <fieldset>
+        <legend>审批</legend>
+        <div class="alert alert-dismissable alert-warning">
+            该机构于@(approval.CreateTime.ToShortDateString())申请了 
+        <span class="label label-default">@(approval.CheckType.GetDescription())</span>，目前
+            @if (approval.Result.HasValue)
+            {
+                <span>并且与@(approval.UpdateTime.Value.ToShortDateString())</span>
+                if (approval.Result.Value)
                 {
-                    alert("操作成功");
-                    window.location.href = windown.location.href;
+                <span class="label label-success">通过审核</span>
+                }
+                else
+                {
+                <span class="label label-warning">未通过审核</span>
                 }
             }
-        });
+            else
+            {
+                <span class="label label-default">尚未审批</span>
+                
+            }
+        </div>
+        @if (!approval.Result.HasValue)
+        { 
+            <div class="well">
+                <form id="approval-form" role="form" class="form-horizontal">
+                    <input id="approval-result" type="hidden" name="Result" value="" />
+                    <div class="form-group">
+                        <label class="control-label col-lg-2">审批意见</label>
+                        <div class="col-sm-3">
+                            <textarea name="Note" rows="4" cols="50"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-lg-2"></label>
+                        <div class="col-sm-3">
+                            <input id="btn-agree" type="submit" value="通过审批" class="btn btn-sm btn-success" />
+                            <input id="btn-disagree" type="submit" value="不通过" class="btn btn-sm btn-warning" />
+                        </div>
+                    </div>
+                </form>
+            </div>
+        }
+    </fieldset>
+    <script>
+        $(function () {
 
-    });
-</script>
+            $("#btn-agree").click(function () {
+                $("#approval-result").val("true");
+            });
+
+            $("#btn-disagree").click(function () {
+                $("#approval-result").val("false");
+            });
+
+            $("#approval-form").submit(function () {
+                var data = $(this).serialize();
+                $.request("/admin/institution/approval?id=@(approval.ID)", data, function () {
+                    alert("审批完成！");
+                    window.location.href = window.localtion.href;
+
+                });
+                return false;
+            });
+        });
+    </script>
+}

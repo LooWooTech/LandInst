@@ -24,14 +24,14 @@ namespace Loowoo.LandInst.Manager
         {
             using (var db = GetDataContext())
             {
-                var query = db.VApprovalInsts.Where(e => e.CheckType == filter.ApprovalType);
+                var query = db.VCheckInsts.Where(e => e.CheckType == filter.CheckType);
                 if (!String.IsNullOrEmpty(filter.Keyword))
                 {
                     query = query.Where(e => e.InstName.Contains(filter.Keyword));
                 }
-                if (filter.ApprovalResult.HasValue)
+                if (filter.Result.HasValue)
                 {
-                    query = query.Where(e => e.Result == filter.ApprovalResult.Value);
+                    query = query.Where(e => e.Result == filter.Result.Value);
                 }
 
                 return query.OrderByDescending(e => e.CreateTime).SetPage(filter).ToList();
@@ -122,26 +122,25 @@ namespace Loowoo.LandInst.Manager
             }
         }
 
-        public InstitutionProfile GetProfile(int instId, bool? checkResult = null)
+        public InstitutionProfile GetProfile(CheckLog checkLog)
         {
-            var approval = Core.CheckLogManager.GetLastLog(instId, CheckType.Profile, checkResult);
-            if (approval == null) return null;
-            return Core.ProfileManager.GetProfile<InstitutionProfile>(approval.InfoID);
+            if (checkLog == null) return null;
+            return Core.ProfileManager.GetProfile<InstitutionProfile>(checkLog.InfoID);
         }
 
 
         public void SubmitProfile(int instId, InstitutionProfile profile)
         {
-            var approval = Core.CheckLogManager.GetCheckLog(profile.ID, instId, CheckType.Profile);
+            var checkLog = Core.CheckLogManager.GetCheckLog(profile.ID, instId, CheckType.Profile);
             //如果没有提交过资料变更或者资料变更被审核过，则均可以重新提交
-            if (approval == null || approval.Result.HasValue)
+            if (checkLog == null || checkLog.Result.HasValue)
             {
                 var profileId = Core.ProfileManager.AddProfile(instId, profile);
                 Core.CheckLogManager.AddCheckLog(profileId, instId, CheckType.Profile);
             }
-            else if (approval != null)//如果没被审核，则可以重复覆盖所提交的内容
+            else if (checkLog != null)//如果没被审核，则可以重复覆盖所提交的内容
             {
-                Core.ProfileManager.UpdateProfile(approval.InfoID, profile);
+                Core.ProfileManager.UpdateProfile(checkLog.InfoID, profile);
             }
         }
 

@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CacheHelper.cs" />
     <Compile Include="EncryptExtensions.cs" />
     <Compile Include="EnumExtensions.cs" />
     <Compile Include="JsonExtensions.cs" />

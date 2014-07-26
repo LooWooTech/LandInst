@@ -39,22 +39,23 @@ namespace Loowoo.LandInst.Manager
             }
         }
 
-        public List<CheckLog> GetList(int infoId)
+        public List<CheckLog> GetList(int userId)
         {
             using (var db = GetDataContext())
             {
-                return db.CheckLogs.Where(e => e.InfoID == infoId).OrderByDescending(e => e.CreateTime).ToList();
+                return db.CheckLogs.Where(e => e.UserID == userId).OrderByDescending(e => e.CreateTime).ToList();
             }
         }
 
-        public void UpdateCheckLog(int approvalId, bool result)
+        public void UpdateCheckLog(CheckLog model)
         {
             using (var db = GetDataContext())
             {
-                var entity = db.CheckLogs.FirstOrDefault(e => e.ID == approvalId);
+                var entity = db.CheckLogs.FirstOrDefault(e => e.ID == model.ID);
                 if (entity == null) return;
                 entity.UpdateTime = DateTime.Now;
-                entity.Result = result;
+                entity.Result = model.Result;
+                entity.Note = model.Note;
                 db.SaveChanges();
             }
         }

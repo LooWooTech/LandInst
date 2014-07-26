@@ -4,7 +4,7 @@ Source Host: localhost
 Source Database: landinst
 Target Host: localhost
 Target Database: landinst
-Date: 2014/7/25 18:38:41
+Date: 2014/7/26 16:43:10
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -120,20 +120,20 @@ CREATE TABLE `member` (
 -- ----------------------------
 DROP TABLE IF EXISTS `profile`;
 CREATE TABLE `profile` (
-  `ID` int(11) NOT NULL,
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
   `UserID` int(11) NOT NULL,
   `CreateTime` datetime NOT NULL,
   `UpdateTime` datetime DEFAULT NULL,
   `Data` blob,
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=gb2312;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=gb2312;
 
 -- ----------------------------
 -- Table structure for transfer
 -- ----------------------------
 DROP TABLE IF EXISTS `transfer`;
 CREATE TABLE `transfer` (
-  `ID` int(11) NOT NULL,
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
   `MemberID` int(11) NOT NULL,
   `CurrentInstID` int(11) NOT NULL,
   `TargetInstID` int(11) NOT NULL,
@@ -158,7 +158,7 @@ CREATE TABLE `user` (
   `Role` int(11) NOT NULL,
   `Deleted` bit(1) NOT NULL,
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- View structure for vcheck_annual
@@ -182,7 +182,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 -- View structure for vcheck_inst
 -- ----------------------------
 DROP VIEW IF EXISTS `vcheck_inst`;
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vcheck_inst` AS select `checklog`.`ID` AS `ID`,`checklog`.`InfoID` AS `InfoID`,`checklog`.`UserID` AS `UserID`,`checklog`.`CheckType` AS `CheckType`,`checklog`.`UpdateTime` AS `UpdateTime`,`checklog`.`Result` AS `Result`,`checklog`.`CreateTime` AS `CreateTime`,`institution`.`Name` AS `InstName`,`institution`.`Type` AS `Type`,`institution`.`Status` AS `Status`,`institution`.`LegalRepresentative` AS `LegalRepresentative`,`institution`.`MobilePhone` AS `MobilePhone`,`institution`.`City` AS `City`,`institution`.`RegistrationNo` AS `RegistrationNo` from (`checklog` join `institution` on((`checklog`.`InfoID` = `institution`.`ID`)));
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vcheck_inst` AS select `checklog`.`ID` AS `ID`,`checklog`.`InfoID` AS `InfoID`,`checklog`.`UserID` AS `UserID`,`checklog`.`CheckType` AS `CheckType`,`checklog`.`UpdateTime` AS `UpdateTime`,`checklog`.`Result` AS `Result`,`checklog`.`CreateTime` AS `CreateTime`,`institution`.`Name` AS `InstName`,`institution`.`Type` AS `Type`,`institution`.`Status` AS `Status`,`institution`.`LegalRepresentative` AS `LegalRepresentative`,`institution`.`MobilePhone` AS `MobilePhone`,`institution`.`City` AS `City`,`institution`.`RegistrationNo` AS `RegistrationNo`,`institution`.`Fullname` AS `Fullname` from (`checklog` join `institution` on((`checklog`.`UserID` = `institution`.`ID`)));
 
 -- ----------------------------
 -- View structure for vcheck_member
@@ -199,7 +199,10 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 -- ----------------------------
 -- Records 
 -- ----------------------------
-INSERT INTO `institution` VALUES ('2', 'Inst1', '1', '0', '2014-07-24 10:56:30', null, null, null, null, null);
-INSERT INTO `member` VALUES ('1', null, '0', null, null, '1', null, null, '1');
+INSERT INTO `annualcheck` VALUES ('2', '2014-07-05 00:00:00', '2014-09-13 00:00:00', '测试年审', '这次年审比较严格， 请各单位保证资料齐备、正确。');
+INSERT INTO `checklog` VALUES ('1', '2', '4', '1', '2014-07-26 15:40:51', '2014-07-26 16:42:16', '', '123');
+INSERT INTO `exam` VALUES ('2', '2014-07-01 00:00:00', '2014-07-31 00:00:00', '2014-09-10 00:00:00', '2014-07-12 00:00:00', 'Test', null, '上海');
+INSERT INTO `institution` VALUES ('4', 'Institution NO1', '1', '1', '2014-07-26 15:38:44', null, null, null, null, null);
+INSERT INTO `profile` VALUES ('2', '4', '2014-07-26 15:40:46', null, 0x7B22526567697374657265644361706974616C223A22313131222C22427573696E65737353636F7065223A22312D3139222C2243657274696669636174654E6F223A22313131222C22546F74616C50726F66697473223A2231222C2241646472657373223A22313233222C22506F7374636F6465223A22313233222C22456D61696C223A22313233222C2257656273697465223A6E756C6C2C224F7065726174696E67506572696F64223A6E756C6C2C225368617265486F6C64657273223A5B5D2C2243657274696669636174696F6E73223A5B5D2C224944223A302C22537461747573223A302C2243726561746554696D65223A22323031342D30372D32365431353A34303A33312E353238323136392B30383A3030222C2254797065223A302C2246756C6C4E616D65223A22496E737469747574696F6E204E4F31222C224E616D65223A22496E737469747574696F6E204E4F31222C22526567697374726174696F6E4E6F223A2231222C2243697479223A22313233222C224D6F62696C6550686F6E65223A22313233222C224C6567616C526570726573656E746174697665223A22E5BCA0E69F90227D);
 INSERT INTO `user` VALUES ('1', 'admin', '21232f297a57a5a743894a0e4a801fc3', '你喜欢的宠物叫什么名字？', null, '2014-07-22 20:43:58', '2014-07-22 20:43:58', '3', '');
-INSERT INTO `user` VALUES ('2', 'inst1', 'e10adc3949ba59abbe56e057f20f883e', '初始密码是什么', '123456', '2014-07-24 10:56:30', '2014-07-24 10:56:30', '2', '');
+INSERT INTO `user` VALUES ('4', 'inst1', 'e10adc3949ba59abbe56e057f20f883e', 'hi', 'hi', '2014-07-26 15:38:44', '2014-07-26 15:38:44', '2', '');

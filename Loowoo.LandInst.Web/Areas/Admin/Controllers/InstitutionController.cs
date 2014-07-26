@@ -11,19 +11,37 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
 {
     public class InstitutionController : AdminControllerBase
     {
-        public ActionResult Index(string name, CheckType? type, int page = 1)
+        public ActionResult Index(string name, string city, int page = 1)
         {
-            if (type.HasValue)
+            return View();
+        }
+
+        public ActionResult CheckAnnual(string name, int annualCheckId = 0, bool? result = null, int page = 1)
+        {
+            var filter = new CheckLogFilter
             {
-                var filter = new InstitutionFilter
-                {
-                    Keyword = name,
-                    PageIndex = page,
-                    ApprovalType = type.Value
-                };
-                ViewBag.List = Core.InstitutionManager.GetApprovalInsts(filter);
-                ViewBag.Page = filter;
-            }
+                InfoID = annualCheckId,
+                Keyword = name,
+                PageIndex = page,
+                Result = result
+            };
+            ViewBag.AnnualChecks = Core.AnnualCheckManager.GetAnnualChecks();
+            ViewBag.List = Core.AnnualCheckManager.GetVCheckAnnual(filter);
+            ViewBag.Page = filter;
+            return View();
+        }
+
+        public ActionResult CheckProfile(string name, bool? result = null, int page = 1)
+        {
+            var filter = new InstitutionFilter
+            {
+                Keyword = name,
+                PageIndex = page,
+                CheckType = CheckType.Profile,
+                Result = result
+            };
+            ViewBag.List = Core.InstitutionManager.GetApprovalInsts(filter);
+            ViewBag.Page = filter;
             return View();
         }
 
@@ -69,24 +87,47 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
         //    return JsonSuccess();
         //}
 
-        public ActionResult Profile(int id)
+        public ActionResult Profile(int id,int checkLogId = 0)
         {
             var inst = Core.InstitutionManager.GetInstitution(id);
             if (inst == null)
             {
                 throw new ArgumentNullException("参数错误，没找到这个机构。");
             }
+            CheckLog checkLog = null;
+            if (checkLogId == 0)
+            {
+                checkLog = Core.CheckLogManager.GetLastLog(id, CheckType.Profile);
+            }
+            else
+            {
+                checkLog = Core.CheckLogManager.GetCheckLog(checkLogId);
+            }
 
-            ViewBag.Profile = Core.InstitutionManager.GetProfile(inst.ID);
+            ViewBag.CheckLog = checkLog;
 
-            ViewBag.Approvals = Core.CheckLogManager.GetList(id);
+            ViewBag.Profile = Core.InstitutionManager.GetProfile(checkLog);
+
+            ViewBag.CheckLogs = Core.CheckLogManager.GetList(id);
 
             return View();
         }
 
-        public ActionResult Approval(int id,bool result)
+        public ActionResult Approval(int id, CheckLog data)
         {
-            Core.CheckLogManager.UpdateCheckLog(id, result);
+            var checkLog = Core.CheckLogManager.GetCheckLog(id);
+            checkLog.Note = data.Note;
+            checkLog.Result = data.Result;
+            Core.CheckLogManager.UpdateCheckLog(checkLog);
+
+            if (checkLog.CheckType == CheckType.Profile)
+            {
+                var inst = Core.InstitutionManager.GetInstitution(checkLog.UserID);
+                if (checkLog.Result == true && inst.Status == InstitutionStatus.Normal)
+                {
+                    Core.InstitutionManager.UpdateStatus(checkLog.UserID, InstitutionStatus.Registered);
+                }
+            }
             return JsonSuccess();
         }
     }

@@ -116,7 +116,7 @@ namespace Loowoo.LandInst.Manager
             }
         }
 
-        public List<VCheckExam> GetApprovalExams(ApprovalFilter filter)
+        public List<VCheckExam> GetApprovalExams(CheckLogFilter filter)
         {
             using (var db = GetDataContext())
             {

@@ -52,7 +52,7 @@
     <Compile Include="Education.cs" />
     <Compile Include="Exam.cs" />
     <Compile Include="ExamResult.cs" />
-    <Compile Include="Filters\ApprovalFilter.cs" />
+    <Compile Include="Filters\CheckLogFilter.cs" />
     <Compile Include="Filters\ExamFilter.cs" />
     <Compile Include="Filters\InstitutionFilter.cs" />
     <Compile Include="Filters\MemberFilter.cs" />

@@ -6,6 +6,7 @@ using System.Web.Mvc;
 
 namespace Loowoo.LandInst.Web.Areas.Institution
 {
+    [UserAuthorize]
     public class InstitutionControllerBase : ControllerBase
     {
         protected Model.Institution GetCurrentInst()

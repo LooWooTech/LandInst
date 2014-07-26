@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Loowoo.LandInst.Model.Filters
 {
-    public class ApprovalFilter : PageFilter
+    public class CheckLogFilter : PageFilter
     {
         public string Keyword { get; set; }
 

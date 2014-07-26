@@ -1,14 +1,19 @@
 ﻿@using Loowoo.LandInst.Model
 @{
-    InstitutionProfile model = Model ?? new InstitutionProfile();
-    var enabled = model.CanSubmitRegisterApproval || (model.CanSubmitChangeApproval);
+    Institution inst = ViewBag.Inst;
+    CheckLog checkLog = ViewBag.CheckLog;
+    InstitutionProfile model = ViewBag.Profile ?? new InstitutionProfile(inst);
+
+    var canSubmitRegisterCheckLog = inst.Status == InstitutionStatus.Normal && (checkLog == null || checkLog.Result == false);
+    var canSubmitChangeCheckLog = inst.Status == InstitutionStatus.Registered && checkLog != null && checkLog.Result.HasValue;
+    var enabled = canSubmitChangeCheckLog || canSubmitRegisterCheckLog;
 }
 <form id="profile-form" role="form" class="form-horizontal" method="post">
     <fieldset style="width: 300px; float: left; overflow: hidden; margin: 10px;">
         <legend>基本资料</legend>
 
         <label class="control-label">名称</label>
-        <input type="text" name="Name" class="form-control input-sm" value="@(model.Name)" @Html.Raw(model.CanSubmitChangeApproval ? " disabled=\"disabled\"" : null) />
+        <input type="text" name="Name" class="form-control input-sm" value="@(model.Name)") />
 
         <label class="control-label">全称</label>
         <input type="text" name="FullName" class="form-control input-sm" value="@(model.FullName)" />
@@ -57,12 +62,12 @@
 
     </fieldset>
     <div style="clear: both">
-        @if (model.CanSubmitRegisterApproval)
+        @if (canSubmitRegisterCheckLog)
         {
             <input type="hidden" name="type" value="register" />
             <input type="submit" value="提交资料注册登记" class="btn btn-warning" />
         }
-        else if (model.CanSubmitChangeApproval)
+        else if (canSubmitChangeCheckLog)
         { 
             <input type="hidden" name="type" value="change" />
             <input type="submit" value="提交资料变更登记" class="btn btn-warning" />
@@ -79,8 +84,8 @@
         $(function () {
             $("#profile-form").submit(function () {
                 var data = $(this).serialize();
-                $.post("/institution/profile/submit?type=" + data.type, data, function (json) {
-
+                $.request("/institution/profile/submit?type=" + data.type, data, function (json) {
+                    window.location.href = window.location.href;
                 });
 
             });

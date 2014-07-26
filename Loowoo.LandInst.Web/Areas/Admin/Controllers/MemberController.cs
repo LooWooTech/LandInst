@@ -67,7 +67,8 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
 
         public ActionResult Approval(int id, bool result = true)
         {
-            Core.CheckLogManager.UpdateCheckLog(id, result);
+            //TODO
+            //Core.CheckLogManager.UpdateCheckLog(id, result);
 
             return JsonSuccess();
         }

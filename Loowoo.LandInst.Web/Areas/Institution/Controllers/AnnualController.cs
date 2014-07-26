@@ -10,7 +10,7 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
     {
         public ActionResult Index()
         {
-            ViewBag.List = Core.AnnualCheckManager.GetInstAnnualChecks(Identity.UserID);
+            //ViewBag.List = Core.AnnualCheckManager.GetInstAnnualChecks(Identity.UserID);
             return View();
         }
 

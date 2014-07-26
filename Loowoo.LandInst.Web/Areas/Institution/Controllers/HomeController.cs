@@ -12,7 +12,15 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
         public ActionResult Index()
         {
             var currentInst = GetCurrentInst();
-            ViewBag.Profile = Core.InstitutionManager.GetProfile(currentInst.ID);
+            ViewBag.Inst = currentInst;
+            //尚未提交注册登记或注册登记尚未被审批通过
+            if (currentInst.Status == Model.InstitutionStatus.Normal)
+            {
+                var checkLog = Core.CheckLogManager.GetLastLog(Identity.UserID, Model.CheckType.Profile);
+                ViewBag.CheckLog = checkLog;
+                ViewBag.Profile = Core.InstitutionManager.GetProfile(checkLog);
+            }
+
             return View();
         }
 

@@ -7,7 +7,7 @@
         Institution inst = ViewBag.CurrentInst;
     }
     <ul class="nav navbar-nav">
-        @if (inst.CanSubmitRegisterApproval)
+        @if (inst.Status == InstitutionStatus.Normal)
         {
         }
         else

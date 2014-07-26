@@ -92,7 +92,7 @@ namespace Loowoo.LandInst.Manager
             }
         }
 
-        public List<VCheckEducation> GetApprovalEducations(ApprovalFilter filter)
+        public List<VCheckEducation> GetApprovalEducations(CheckLogFilter filter)
         {
             using (var db = GetDataContext())
             {

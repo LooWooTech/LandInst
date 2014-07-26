@@ -32,7 +32,7 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
 
         public ActionResult Approvals(int page = 1)
         {
-            var filter = new ApprovalFilter
+            var filter = new CheckLogFilter
             {
                 PageIndex = page
             };
@@ -55,7 +55,8 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
                 var app = Core.CheckLogManager.GetCheckLog(approvalId);
                 if (app != null)
                 {
-                    Core.CheckLogManager.UpdateCheckLog(approvalId, result);
+                    //TODO
+                    //Core.CheckLogManager.UpdateCheckLog(approvalId, result);
                     Core.MemberManager.UpdateMemberStatus(app.UserID, result ? MemberStatus.SingupExam : MemberStatus.Register);
                 }
             }
@@ -65,7 +66,7 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
         [HttpGet]
         public ActionResult ExamResult(string name, int examId = 0, int page = 1)
         {
-            var filter = new ApprovalFilter
+            var filter = new CheckLogFilter
             {
                 Result = true,
                 Keyword = name,

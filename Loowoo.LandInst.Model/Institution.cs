@@ -71,19 +71,13 @@ namespace Loowoo.LandInst.Model
         /// <summary>
         /// 注册登记批准后变更为此状态
         /// </summary>
-        [Description("注册登记")]
-        Register = 1,
-
-        /// <summary>
-        /// 变更登记批准后变更为次状态
-        /// </summary>
-        [Description("变更登记")]
-        Change = 2,
+        [Description("通过认证")]
+        Registered = 1,
 
         /// <summary>
         /// 已注销的机构状态
         /// </summary>
         [Description("注销登记")]
-        Logout = 4,
+        Logout = 2,
     }
 }

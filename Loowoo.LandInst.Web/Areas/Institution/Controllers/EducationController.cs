@@ -10,7 +10,7 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
     {
         public ActionResult Index(int page = 1)
         {
-            var filter = new Model.Filters.ApprovalFilter
+            var filter = new Model.Filters.CheckLogFilter
             {
                 PageIndex = page
             };

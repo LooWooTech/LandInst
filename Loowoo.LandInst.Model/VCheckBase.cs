@@ -9,6 +9,8 @@ namespace Loowoo.LandInst.Model
     {
         public int ID { get; set; }
 
+        public int InfoID { get; set; }
+
         public int UserID { get; set; }
         
         public CheckType CheckType { get; set; }

@@ -171,7 +171,7 @@ namespace Loowoo.LandInst.Manager
         {
             using (var db = GetDataContext())
             {
-                var query = db.VApprovalMembers.AsQueryable();
+                var query = db.VCheckMembers.AsQueryable();
 
                 if (filter.InstID.HasValue)
                 {

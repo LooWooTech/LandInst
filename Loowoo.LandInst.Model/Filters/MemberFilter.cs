@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Loowoo.LandInst.Model.Filters
 {
-    public class MemberFilter : ApprovalFilter
+    public class MemberFilter : CheckLogFilter
     {
         public int[] MemberIds { get; set; }
 
