@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Loowoo.LandInst.Model
 {
-    [Table("Vapproval_member")]
+    [Table("VCheck_member")]
     public class VCheckMember : VCheckBase
     {
         public string Username { get; set; }

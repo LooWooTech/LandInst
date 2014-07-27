@@ -11,7 +11,7 @@ namespace Loowoo.LandInst.Manager
 {
     public class UserManager : ManagerBase
     {
-        public void AddUser(User user)
+        public int AddUser(User user)
         {
             if (user == null) throw new ArgumentNullException("User");
 
@@ -30,6 +30,7 @@ namespace Loowoo.LandInst.Manager
                 user.Password = user.Password.MD5();
                 db.Users.Add(user);
                 db.SaveChanges();
+                return user.ID;
             }
         }
 

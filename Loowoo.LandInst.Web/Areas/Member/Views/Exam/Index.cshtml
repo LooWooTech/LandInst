@@ -2,20 +2,22 @@
 @{
     ViewBag.Title = "成绩查询";
     Layout = "~/Areas/Member/Views/Shared/_Layout.cshtml";
-    List<VMemberExamResult> exams = ViewBag.List;
+    List<ExamResult> list = ViewBag.List;
 }
-
-<h2>成绩查询</h2>
-<table class="table">
+<table class="table table-bordered">
     <tr>
         <th>考试项目</th>
+        <th>报名日期</th>
+        <th>考试时间</th>
         <th>考试结果</th>
     </tr>
-    @foreach (var exam in exams)
+    @foreach (var result in list)
     {
         <tr>
-            <td>@(exam.ExamName)</td>
-            <td>@(exam.Result?"通过":"未通过")</td>
+            <td>@(result.Exam.Name)</td>
+            <td>@(result.CreateTime.ToShortDateString())</td>
+            <td>@(result.Exam.StartExamDate.ToShortDateString()) ~ @(result.Exam.EndExamDate.ToShortDateString())</td>
+            <td>@(result.Result.HasValue ? (result.Result.Value ? "通过" : "未通过") : "未出成绩")</td>
         </tr>
     }
 </table>

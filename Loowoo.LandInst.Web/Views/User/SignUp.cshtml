@@ -43,11 +43,11 @@
         <div class="col-sm-2">
             <div class="radio-inline">
                 <label>
-                    <input type="radio" name="Gender" value="1" checked="checked" />男</label>
+                    <input type="radio" name="Gender" value="男" checked="checked" />男</label>
             </div>
             <div class="radio-inline">
                 <label>
-                    <input type="radio" name="Gender" value="0" />女</label>
+                    <input type="radio" name="Gender" value="女" />女</label>
             </div>
         </div>
     </div>
@@ -82,17 +82,14 @@
             btn.text("正在注册..");
             btn.attr("disabled", "disabled");
             var data = $(this).serialize();
-            $.post("/user/signup", data, function (json) {
-                //成功隐藏注册表单，显示注册成功部分
-                if (json.result) {
-                    alert("注册成功")
-                }
-                else {
-                    btn.removeAttr("disabled");
-                    btn.text("提交注册");
-                }
+            $.request("/user/signup", data, function (json) {
+                alert("注册成功");
+                window.location.href = "/user/signin";
                 //失败则标记input样式
-            }, "json");
+            }, function () {
+                btn.removeAttr("disabled");
+                btn.text("提交注册");
+            });
             return false;
         });
     });

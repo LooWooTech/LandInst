@@ -22,22 +22,28 @@ namespace Loowoo.LandInst.Web.Areas.Member.Controllers
         {
             var member = GetCurrentMember();
 
-            var profile = Core.MemberManager.GetProfile(Identity.UserID);
-            ViewBag.Profile = profile;
-
-            if (!member.CanSingup)
+            var indateExams = Core.ExamManager.GetIndateExams();
+            var canSingupExamTable = indateExams.ToDictionary(e => e.ID, e => e);
+            foreach (var exam in indateExams)
             {
-                ViewBag.CanSignup = member.CanSingup;
-                return View();
+                var checkLog = Core.CheckLogManager.GetCheckLog(exam.ID, member.ID, CheckType.Exam);
+                if (checkLog != null && checkLog.Result != false)
+                {
+                    canSingupExamTable.Remove(exam.ID);
+                }
             }
 
-            var exams = Core.ExamManager.GetExams(new ExamFilter
+            var exams = canSingupExamTable.Select(e => e.Value).ToList();
+            //所有有效的考试都报过名了，跳转到成绩查询
+            if (exams.Count == 0)
             {
-                SignTime = DateTime.Now.Date
-            });
-
-
-            ViewBag.Exams = exams;
+                return Redirect("/member/exam/");
+            }
+            else
+            {
+                ViewBag.Exams = exams;
+                ViewBag.Profile = Core.MemberManager.GetProfile(Identity.UserID) ?? new MemberProfile(member);
+            }
             return View();
         }
 
@@ -56,10 +62,7 @@ namespace Loowoo.LandInst.Web.Areas.Member.Controllers
             //保存用户资料
             Core.MemberManager.SaveProfile(member, profile);
 
-            Core.MemberManager.UpdateMemberStatus(member.ID, MemberStatus.SingupExam);
-
             return JsonSuccess();
         }
-
     }
 }

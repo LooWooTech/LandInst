@@ -3,10 +3,6 @@
     Institution inst = ViewBag.CurrentInst;
     CheckLog checkLog = ViewBag.CheckLog;
     InstitutionProfile model = ViewBag.Profile ?? new InstitutionProfile(inst);
-
-    var canSubmitRegisterCheckLog = inst.Status == InstitutionStatus.Normal && (checkLog == null || checkLog.Result == false);
-    var canSubmitChangeCheckLog = inst.Status == InstitutionStatus.Registered && checkLog != null && checkLog.Result.HasValue;
-    var enabled = canSubmitChangeCheckLog || canSubmitRegisterCheckLog;
 }
 <form id="profile-form" role="form" class="form-horizontal" method="post">
     <fieldset style="width: 300px; float: left; overflow: hidden; margin: 10px;">
@@ -62,43 +58,17 @@
 
     </fieldset>
     <div style="clear: both">
-        @if (canSubmitRegisterCheckLog)
-        {
-            <input type="hidden" name="type" value="register" />
-            <input type="submit" value="提交资料注册登记" class="btn btn-warning" />
-        }
-        else if (canSubmitChangeCheckLog)
-        { 
-            <input type="hidden" name="type" value="change" />
-            <input type="submit" value="提交资料变更登记" class="btn btn-warning" />
-        }
-        else
-        {
-            //disable form
-        }
+        <input type="submit" value="提交资料变更申请" class="btn btn-warning" />
     </div>
 </form>
-@if (enabled)
-{
-    <script>
-        $(function () {
-            $("#profile-form").submit(function () {
-                var data = $(this).serialize();
-                $.request("/institution/profile/submit?type=" + data.type, data, function (json) {
-                    window.location.href = window.location.href;
-                });
+<script>
+    $(function () {
+        $("#profile-form").submit(function () {
+            var data = $(this).serialize();
+            $.request("/institution/profile/submit?type=" + data.type, data, function (json) {
+                window.location.href = window.location.href;
+            });
 
-            });
         });
-    </script>
-}
-else
-{
-    <script>
-        $(function () {
-            $("#profile-form input").each(function () {
-                $(this).attr("disabled", "disabled");
-            });
-        });
-    </script>
-}
+    });
+</script>

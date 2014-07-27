@@ -5,55 +5,52 @@ using System.Text;
 using System.Threading.Tasks;
 using Loowoo.LandInst.Model;
 using Loowoo.LandInst.Model.Filters;
+using Loowoo.LandInst.Common;
 
 namespace Loowoo.LandInst.Manager
 {
     public class ExamManager : ManagerBase
     {
-        public List<Exam> GetExams(ExamFilter filter)
+        private string _cacheKey = "exam_key";
+        private void ClearCache()
         {
-            using (var db = GetDataContext())
-            {
-                var query = db.Exams.AsQueryable();
-                if (filter == null) return query.ToList();
-
-                if (filter.SignTime.HasValue)
-                {
-                    query = query.Where(e => filter.SignTime.Value >= e.StartSignDate && filter.SignTime.Value <= e.EndSignDate);
-                }
-
-                return query.ToList();
-            }
+            CacheHelper.Remove(_cacheKey);
         }
 
-        public List<Exam> GetMemberExams(int memberId)
+        public List<Exam> GetExams()
         {
-            using (var db = GetDataContext())
+            return CacheHelper.GetOrSet(_cacheKey, () =>
             {
-                var exams = db.Exams.OrderByDescending(e => e.ID).ToList();
-                foreach (var exam in exams)
+                using (var db = GetDataContext())
                 {
-                    exam.Approval = Core.CheckLogManager.GetCheckLog(exam.ID, memberId, CheckType.Exam);
+                    return db.Exams.ToList();
                 }
-                return exams;
-            }
+            });
         }
 
-        public List<VMemberExamResult> GetMemberExamResult(int memberId)
+        public List<Exam> GetIndateExams()
+        { 
+            var now =DateTime.Now;
+            return GetExams().Where(e => e.StartSignDate <= now && e.EndSignDate >= now).ToList();
+        }
+
+        public List<ExamResult> GetMemberExamResult(int memberId)
         {
+            var exams = GetExams();
             using (var db = GetDataContext())
             {
-                return db.VMemberExamResults.Where(e => e.MemberID == memberId).OrderByDescending(e => e.ID).ToList();
+                var list = db.ExamResults.Where(e => e.MemberID == memberId).OrderByDescending(e => e.ID).ToList();
+                foreach (var result in list)
+                {
+                    result.Exam = exams.FirstOrDefault(e => e.ID == result.ExamID);
+                }
+                return list;
             }
         }
 
         public Exam GetExam(int examId)
         {
-            if (examId == 0) return null;
-            using (var db = GetDataContext())
-            {
-                return db.Exams.FirstOrDefault(e => e.ID == examId);
-            }
+            return GetExams().FirstOrDefault(e => e.ID == examId);
         }
 
         public void SaveExam(Exam exam)
@@ -74,33 +71,39 @@ namespace Loowoo.LandInst.Manager
                     db.Exams.Add(exam);
                 }
                 db.SaveChanges();
+                ClearCache();
+            }
+        }
+
+        private void AddExamResult(int examId, int memberId)
+        {
+            using (var db = GetDataContext())
+            {
+                var entity = db.ExamResults.FirstOrDefault(e => e.ExamID == examId && e.MemberID == memberId);
+                if (entity == null)
+                {
+                    db.ExamResults.Add(new ExamResult
+                    {
+                        ExamID = examId,
+                        MemberID = memberId,
+                        Result = false
+                    });
+                    db.SaveChanges();
+                }
             }
         }
 
         public void SignupExam(int examId, int memberId)
         {
-            using (var db = GetDataContext())
+            var checkLog = Core.CheckLogManager.GetLastLog(memberId, CheckType.Exam);
+            if (checkLog == null || checkLog.Result == false)
             {
-                var entity = db.CheckLogs.FirstOrDefault(e => e.InfoID == examId && e.UserID == memberId && e.CheckType == CheckType.Exam);
-                if (entity != null)//已经报名 并通过审批
-                {
-                    return;
-                }
-
-                db.CheckLogs.Add(new CheckLog
-                {
-                    InfoID = examId,
-                    UserID = memberId,
-                    CheckType = CheckType.Exam
-                });
-
-                db.ExamResults.Add(new ExamResult
-                {
-                    ExamID = examId,
-                    MemberID = memberId,
-                    Result = false
-                });
-                db.SaveChanges();
+                Core.CheckLogManager.AddCheckLog(examId, memberId, CheckType.Exam);
+                AddExamResult(examId, memberId);
+            }
+            else
+            {
+                AddExamResult(examId, memberId);
             }
         }
 
@@ -113,17 +116,18 @@ namespace Loowoo.LandInst.Manager
                 if (entity == null) return;
                 db.Exams.Remove(entity);
                 db.SaveChanges();
+                ClearCache();
             }
         }
 
-        public List<VCheckExam> GetApprovalExams(CheckLogFilter filter)
+        public List<VCheckExam> GetVCheckExams(CheckLogFilter filter)
         {
             using (var db = GetDataContext())
             {
-                var query = db.VApprovalExams.Where(e => e.CheckType == CheckType.Education);
+                var query = db.VCheckMembers.Where(e => e.CheckType == CheckType.Education);
                 if (filter.InfoID.HasValue)
                 {
-                    query = query.Where(e => e.ExamID == filter.InfoID.Value);
+                    query = query.Where(e => e.InfoID == filter.InfoID.Value);
                 }
 
                 if (filter.Result.HasValue)
@@ -135,7 +139,11 @@ namespace Loowoo.LandInst.Manager
                 {
                     query = query.Where(e => e.RealName.Contains(filter.Keyword));
                 }
-                return query.OrderByDescending(e => e.CreateTime).SetPage(filter).ToList();
+                var vlist = query.OrderByDescending(e => e.CreateTime).SetPage(filter).ToList();
+                return vlist.Select(e => new VCheckExam
+                {
+
+                }).ToList();
             }
         }
 

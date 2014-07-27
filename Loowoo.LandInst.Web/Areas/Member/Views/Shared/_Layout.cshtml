@@ -5,18 +5,14 @@
 }
 @section nav{
     <ul class="nav navbar-nav">
-        <li class="active"><a href="/member/">欢迎页</a></li>
-        <li><a href="/member/profile/">个人资料</a></li>
-        @if (member.Status == MemberStatus.Staff)
-        {
-            <li><a href="/member/profile/edit">信息变更</a></li>
-        }
-        @if (member.Status == MemberStatus.Register)
+        @if(member.Status ==  MemberStatus.Normal)
         {
             <li><a href="/member/exam/signup">报名考试</a></li>
         }
         else
         {
+            <li class="active"><a href="/member/">欢迎页</a></li>
+            <li><a href="/member/profile/edit">个人资料</a></li>
             <li><a href="/member/exam/">成绩查询</a></li>
             <li><a href="/member/education/">继续教育</a></li>
         }

@@ -6,20 +6,25 @@
     Member member = ViewBag.Member;
     Institution institution = ViewBag.Instituion;
     MemberProfile profile = ViewBag.Profile;
+    if (member.Status == MemberStatus.Normal)
+    {
+        bool registeredExam = ViewBag.RegisteredExam == null ? false : ViewBag.RegisteredExam;
+        if (registeredExam)
+        {
+            //已报名，成绩查询
+            Response.Redirect("/member/exam/result");
+            return;
+        }
+        else
+        {
+            //报名考试
+            Response.Redirect("/member/exam/signup");
+        }
+        return;
+    }
 }
-
-<h2>欢迎页</h2>
 
 <label>真实姓名：</label>
 @(member.RealName)
 <label>所属机构：</label>@(institution == null ? "无机构" : institution.Name)
 <label>当前状态：</label>@(member.Status.GetDescription())
-
-@if (member.Status == MemberStatus.Register)
-{ 
-    <a href="/member/exam/signup">报名参加考试</a>
-}
-@if (member.Status == MemberStatus.ExamSuccess)
-{ 
-    <a href="/member/institution/">申请机构</a>
-}

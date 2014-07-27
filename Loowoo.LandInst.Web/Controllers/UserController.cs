@@ -52,8 +52,8 @@ namespace Loowoo.LandInst.Web.Controllers
         public ActionResult SignUp(User user, Member member)
         {
             user.Role = UserRole.Member;
-            Core.UserManager.AddUser(user);
-            member.ID = user.ID;
+            var userId = Core.UserManager.AddUser(user);
+            member.ID = userId;
             Core.MemberManager.AddMember(member);
 
             return JsonSuccess();

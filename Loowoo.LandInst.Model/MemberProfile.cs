@@ -27,6 +27,7 @@ namespace Loowoo.LandInst.Model
             IDNo = member.IDNo;
             Email = member.Email;
             Birthday = member.Birthday;
+            Gender = member.Gender;
         }
 
         /// <summary>

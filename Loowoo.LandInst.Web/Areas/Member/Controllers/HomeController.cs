@@ -15,6 +15,11 @@ namespace Loowoo.LandInst.Web.Areas.Member.Controllers
             {
                 ViewBag.Institution = Core.InstitutionManager.GetInstitution(member.InstitutionID);
             }
+            var checkLog = Core.CheckLogManager.GetLastLog(Identity.UserID, Model.CheckType.Exam);
+            if (checkLog != null)
+            {
+                ViewBag.RegisteredExam = checkLog.Result == null ? false : checkLog.Result.Value;
+            }
             return View();
         }
 

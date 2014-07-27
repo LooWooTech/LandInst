@@ -14,7 +14,7 @@ namespace Loowoo.LandInst.Model
     {
         public Member()
         {
-            Status = MemberStatus.Register;
+            Status = MemberStatus.Registered;
         }
 
         [Key]
@@ -29,7 +29,7 @@ namespace Loowoo.LandInst.Model
 
         public DateTime? Birthday { get; set; }
 
-        public int Gender { get; set; }
+        public string Gender { get; set; }
 
         public string Email { get; set; }
 
@@ -37,38 +37,17 @@ namespace Loowoo.LandInst.Model
 
         [Column(TypeName = "int")]
         public MemberStatus Status { get; set; }
-
-        [NotMapped]
-        public bool CanSingup
-        {
-            get { return Status == MemberStatus.Register; }
-        }
     }
 
     public enum MemberStatus
     {
-        /// <summary>
-        /// 新注册的用户状态
-        /// </summary>
         [Description("新注册用户")]
-        Register = 1,
+        Normal = 0,
 
-        /// <summary>
-        /// 已批准报名用户状态
-        /// </summary>
-        [Description("报名考试")]
-        SingupExam,
+        [Description("已通过考试")]
+        Registered = 1,
 
-        /// <summary>
-        /// 已考试通过的用户状态
-        /// </summary>
-        [Description("通过考试")]
-        ExamSuccess,
-
-        /// <summary>
-        /// 已批准从业的用户状态
-        /// </summary>
-        [Description("从业人员")]
+        [Description("执业人员")]
         Staff
     }
 

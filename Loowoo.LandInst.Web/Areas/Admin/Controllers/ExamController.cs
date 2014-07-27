@@ -12,7 +12,7 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
     {
         public ActionResult Index()
         {
-            ViewBag.List = Core.ExamManager.GetExams(null);
+            ViewBag.List = Core.ExamManager.GetIndateExams();
             return View();
         }
 
@@ -36,8 +36,8 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
             {
                 PageIndex = page
             };
-            ViewBag.Exams = Core.ExamManager.GetExams(null);
-            ViewBag.List = Core.ExamManager.GetApprovalExams(filter);
+            ViewBag.Exams = Core.ExamManager.GetExams();
+            ViewBag.List = Core.ExamManager.GetVCheckExams(filter);
             ViewBag.Page = filter;
             return View();
         }
@@ -57,7 +57,7 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
                 {
                     //TODO
                     //Core.CheckLogManager.UpdateCheckLog(approvalId, result);
-                    Core.MemberManager.UpdateMemberStatus(app.UserID, result ? MemberStatus.SingupExam : MemberStatus.Register);
+                    //Core.MemberManager.UpdateMemberStatus(app.UserID, result ? MemberStatus.SingupExam : MemberStatus.Registered);
                 }
             }
             return JsonSuccess();
@@ -73,8 +73,8 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
                 InfoID = examId,
                 PageIndex = page
             };
-            ViewBag.List = Core.ExamManager.GetApprovalExams(filter);
-            ViewBag.Exams = Core.ExamManager.GetExams(null);
+            ViewBag.List = Core.ExamManager.GetVCheckExams(filter);
+            ViewBag.Exams = Core.ExamManager.GetExams();
             ViewBag.Page = filter;
             return View();
         }
@@ -94,7 +94,7 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
                 {
                     Core.ExamManager.UpdateExamResult(app.InfoID, app.UserID, result);
 
-                    Core.MemberManager.UpdateMemberStatus(app.UserID, result ? MemberStatus.ExamSuccess : MemberStatus.Register);
+                    //Core.MemberManager.UpdateMemberStatus(app.UserID, result ? MemberStatus.ExamSuccess : MemberStatus.Registered);
                 }
             }
             return JsonSuccess();

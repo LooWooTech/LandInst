@@ -19,7 +19,7 @@ namespace Loowoo.LandInst.Manager
                 db.SaveChanges();
             }
 
-            AddProfile(member);
+            //AddProfile(member);
         }
 
         private void AddProfile(Member member)
@@ -62,29 +62,29 @@ namespace Loowoo.LandInst.Manager
         }
 
 
-        public MemberProfile GetProfile(int memberId,bool? checkResult= null)
+        public MemberProfile GetProfile(int memberId)
         {
-            if (memberId == 0) return null;
-            var checkLog = Core.CheckLogManager.GetLastLog(memberId, CheckType.Profile, checkResult);
-            if (checkLog == null)
-                return null;
-            return Core.ProfileManager.GetProfile<MemberProfile>(checkLog.InfoID);
+            return Core.ProfileManager.GetLastProfile<MemberProfile>(memberId);
+            //if (memberId == 0) return null;
+            //var checkLog = Core.CheckLogManager.GetLastLog(memberId, CheckType.Profile, checkResult);
+            //if (checkLog == null)
+            //    return null;
+            //return Core.ProfileManager.GetProfile<MemberProfile>(checkLog.InfoID);
         }
 
         public void SaveProfile(Member member, MemberProfile profile)
         {
             profile.SetMemberField(member);
-            var checkLog = Core.CheckLogManager.GetLastLog(member.ID, CheckType.Profile);
-            if (checkLog == null)
+
+            var entity = Core.ProfileManager.GetLastProfile<MemberProfile>(member.ID);
+            if (entity == null)
             {
-                var profileId = Core.ProfileManager.AddProfile(member.ID, profile);
-                Core.CheckLogManager.AddCheckLog(profileId, member.ID, CheckType.Profile);
+                Core.ProfileManager.AddProfile(member.ID, profile);
             }
             else
             {
-                Core.ProfileManager.UpdateProfile(checkLog.InfoID, profile);
+                Core.ProfileManager.UpdateProfile(entity.ID, profile);
             }
-
         }
 
 
