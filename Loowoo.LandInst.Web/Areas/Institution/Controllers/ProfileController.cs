@@ -18,7 +18,7 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
         public ActionResult Edit()
         {
             //只要不是注册登记，那么就获取资料变更的审核状态
-            var checkLog  = Core.CheckLogManager.GetLastLog(Identity.UserID, CheckType.Profile);
+            var checkLog = Core.CheckLogManager.GetLastLog(Identity.UserID, CheckType.Profile);
             ViewBag.CheckLog = checkLog;
             ViewBag.Profile = Core.InstitutionManager.GetProfile(checkLog);
             return View();
@@ -41,7 +41,8 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
         [HttpPost]
         public ActionResult Submit(InstitutionProfile profile, string type)
         {
-            Core.InstitutionManager.SubmitProfile(Identity.UserID, profile);
+            var checkLog = Core.CheckLogManager.GetLastLog(Identity.UserID, CheckType.Profile);
+            Core.InstitutionManager.SubmitProfile(Identity.UserID, checkLog, profile);
             return JsonSuccess();
         }
 

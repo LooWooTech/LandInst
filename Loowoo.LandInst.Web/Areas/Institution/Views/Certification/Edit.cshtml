@@ -1,0 +1,49 @@
+﻿@using Loowoo.LandInst.Model;
+@{
+    Layout = "~/Areas/Institution/Views/Shared/_Layout.cshtml";
+    var id = Request.QueryString["id"];
+
+    ViewBag.Title = !string.IsNullOrEmpty(id) ? "修改股东信息" : "添加股东";
+    Certification model = ViewBag.Model;
+}
+
+<form id="certification-form" role="form" class="form-horizontal">
+    <input type="hidden" name="ID" value="@(model.ID)" />
+    <div class="form-group">
+        <label class="control-label col-lg-2">证书名称</label>
+        <div class="col-sm-3">
+            <input type="text" name="Name" class="form-control input-sm" value="@(model.Name)" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-lg-2">证书级别</label>
+        <div class="col-sm-3">
+            <input type="text" name="Birthday" class="form-control input-sm" value="@(model.CertificationLevel)" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-lg-2">证书编号</label>
+        <div class="col-sm-3">
+            <input type="text" name="Shares" class="form-control input-sm" value="@(model.CertificationNo)" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-lg-2"></label>
+        <div class="col-sm-3">
+            <button type="submit" class="btn btn-primary">保存</button>
+            <a href="/institution/certification/" class="btn btn-default">返回</a>
+        </div>
+    </div>
+</form>
+<script>
+    $(function () {
+        $("#certification-form").submit(function () {
+            var data = $(this).serialize();
+            $.request("/institution/certification/edit?id=@(id)", data, function () {
+                alert("保存成功！");
+                window.location.href = "/institution/certification";
+            });
+            return false;
+        });
+    });
+</script>

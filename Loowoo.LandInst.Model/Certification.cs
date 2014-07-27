@@ -15,8 +15,6 @@ namespace Loowoo.LandInst.Model
 
         public string ID { get; set; }
 
-        public int InstID { get; set; }
-
         public string Name { get; set; }
 
         public string CertificationNo { get; set; }

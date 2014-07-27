@@ -296,6 +296,12 @@
   <ItemGroup>
     <Content Include="Areas\Admin\Views\Institution\CheckAnnual.cshtml" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\Institution\Views\Shareholder\Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\Institution\Views\Certification\Edit.cshtml" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

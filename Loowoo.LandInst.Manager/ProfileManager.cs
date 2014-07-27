@@ -20,7 +20,7 @@ namespace Loowoo.LandInst.Manager
             }
         }
 
-        public int AddProfile<T>(int userId, T profile)
+        internal int AddProfile<T>(int userId, T profile)
         {
             using (var db = GetDataContext())
             {
@@ -36,7 +36,7 @@ namespace Loowoo.LandInst.Manager
             }
         }
 
-        public void UpdateProfile<T>(int profileId, T profile)
+        internal void UpdateProfile<T>(int profileId, T profile)
         {
             using (var db = GetDataContext())
             {

@@ -129,16 +129,15 @@ namespace Loowoo.LandInst.Manager
         }
 
 
-        public void SubmitProfile(int instId, InstitutionProfile profile)
+        public void SubmitProfile(int instId, CheckLog checkLog, InstitutionProfile profile)
         {
-            var checkLog = Core.CheckLogManager.GetCheckLog(profile.ID, instId, CheckType.Profile);
             //如果没有提交过资料变更或者资料变更被审核过，则均可以重新提交
             if (checkLog == null || checkLog.Result.HasValue)
             {
                 var profileId = Core.ProfileManager.AddProfile(instId, profile);
                 Core.CheckLogManager.AddCheckLog(profileId, instId, CheckType.Profile);
             }
-            else if (checkLog != null)//如果没被审核，则可以重复覆盖所提交的内容
+            else//如果没被审核，则可以重复覆盖所提交的内容
             {
                 Core.ProfileManager.UpdateProfile(checkLog.InfoID, profile);
             }

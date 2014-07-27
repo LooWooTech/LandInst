@@ -127,6 +127,8 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
                 {
                     Core.InstitutionManager.UpdateStatus(checkLog.UserID, InstitutionStatus.Registered);
                 }
+                var profie = Core.InstitutionManager.GetProfile(checkLog);
+                Core.InstitutionManager.UpdateInstitution(profie);
             }
             return JsonSuccess();
         }
