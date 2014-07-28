@@ -36,34 +36,50 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
             {
                 Keyword = name,
                 InfoID = examId,
-                PageIndex = page
+                Page = new Model.Filters.PageFilter { PageIndex = page },
             };
             ViewBag.Exams = Core.ExamManager.GetExams();
             ViewBag.List = Core.ExamManager.GetVCheckExams(filter);
-            ViewBag.Page = filter;
+            ViewBag.Page = filter.Page;
             return View();
         }
 
         [HttpPost]
-        public ActionResult Approval(string id, bool result = true)
+        public ActionResult Approval(int id, bool result)
         {
-            if (string.IsNullOrEmpty(id))
+            var checkLog = Core.CheckLogManager.GetCheckLog(id);
+            if (checkLog == null || checkLog.Result.HasValue)
             {
-                throw new ArgumentException("缺少参数");
+                throw new ArgumentException("参数错误");
             }
-            var ids = id.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(s => int.Parse(s));
-            foreach (var approvalId in ids)
-            {
-                var app = Core.CheckLogManager.GetCheckLog(approvalId);
-                if (app != null)
-                {
-                    //TODO
-                    //Core.CheckLogManager.UpdateCheckLog(approvalId, result);
-                    //Core.MemberManager.UpdateMemberStatus(app.UserID, result ? MemberStatus.SingupExam : MemberStatus.Registered);
-                }
-            }
+
+            checkLog.Result = result;
+            checkLog.UpdateTime = DateTime.Now;
+            Core.CheckLogManager.UpdateCheckLog(checkLog);
+            Core.MemberManager.UpdateMemberStatus(checkLog.UserID, MemberStatus.Registered);
             return JsonSuccess();
         }
+
+        //[HttpPost]
+        //public ActionResult Approval(string id, bool result = true)
+        //{
+        //    if (string.IsNullOrEmpty(id))
+        //    {
+        //        throw new ArgumentException("缺少参数");
+        //    }
+        //    var ids = id.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(s => int.Parse(s));
+        //    foreach (var approvalId in ids)
+        //    {
+        //        var app = Core.CheckLogManager.GetCheckLog(approvalId);
+        //        if (app != null)
+        //        {
+        //            //TODO
+        //            //Core.CheckLogManager.UpdateCheckLog(approvalId, result);
+        //            //Core.MemberManager.UpdateMemberStatus(app.UserID, result ? MemberStatus.SingupExam : MemberStatus.Registered);
+        //        }
+        //    }
+        //    return JsonSuccess();
+        //}
 
         [HttpGet]
         public ActionResult ExamResult(string name, int? examId, int page = 1)
@@ -73,11 +89,11 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
                 Result = true,
                 Keyword = name,
                 InfoID = examId,
-                PageIndex = page
+                Page = new Model.Filters.PageFilter { PageIndex = page },
             };
             ViewBag.List = Core.ExamManager.GetVCheckExams(filter);
             ViewBag.Exams = Core.ExamManager.GetExams();
-            ViewBag.Page = filter;
+            ViewBag.Page = filter.Page;
             return View();
         }
 

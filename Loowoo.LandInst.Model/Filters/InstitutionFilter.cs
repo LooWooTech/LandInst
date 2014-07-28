@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Loowoo.LandInst.Model.Filters
 {
-    public class InstitutionFilter : PageFilter
+    public class InstitutionFilter
     {
         public int? InstId { get; set; }
 
@@ -17,5 +17,7 @@ namespace Loowoo.LandInst.Model.Filters
         public CheckType CheckType { get; set; }
 
         public bool? Result { get; set; }
+
+        public PageFilter Page { get; set; }
     }
 }

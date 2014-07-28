@@ -37,7 +37,7 @@ namespace Loowoo.LandInst.Web.Areas.Member.Controllers
             //所有有效的考试都报过名了，跳转到成绩查询
             if (exams.Count == 0)
             {
-                return Redirect("/member/exam/");
+                return View();
             }
             else
             {

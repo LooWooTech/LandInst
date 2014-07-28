@@ -35,7 +35,7 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
             var filter = new CheckLogFilter
             {
                 Keyword = name,
-                PageIndex = page,
+                Page = new Model.Filters.PageFilter { PageIndex = page },
                 InfoID = eduId
             };
             ViewBag.List = Core.EducationManager.GetApprovalEducations(filter);
@@ -43,18 +43,18 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
         }
 
 
-        public ActionResult Approval(string id, CheckType type, bool result = true)
-        {
-            var ids = id.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(_id => int.Parse(_id)).ToArray();
-            foreach (var _id in ids)
-            {
-                var approval = Core.CheckLogManager.GetCheckLog(_id);
+        //public ActionResult Approval(string id, CheckType type, bool result = true)
+        //{
+        //    var ids = id.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(_id => int.Parse(_id)).ToArray();
+        //    foreach (var _id in ids)
+        //    {
+        //        var approval = Core.CheckLogManager.GetCheckLog(_id);
                 
-                Core.EducationManager.Approval(_id, result);
-            }
+        //        Core.EducationManager.Approval(_id, result);
+        //    }
 
-            return JsonSuccess();
-        }
+        //    return JsonSuccess();
+        //}
 
         private void UpdateMember()
         { 

@@ -10,18 +10,22 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
 {
     public class MemberController : AdminControllerBase
     {
-        public ActionResult Index(CheckType type = CheckType.Working, int page = 1)
+        public ActionResult Index(CheckType type = CheckType.Staff, int page = 1)
         {
-            var filter = new MemberFilter { PageIndex = page, Type = type };
-            var list = Core.MemberManager.GetApprovalMembers(filter);
+            var filter = new MemberFilter
+            {
+                Page = new Model.Filters.PageFilter { PageIndex = page },
+                Type = type
+            };
+            var list = Core.MemberManager.GetVCheckMembers(filter);
             ViewBag.List = list;
-            ViewBag.Page = filter;
+            ViewBag.Page = filter.Page;
             return View();
         }
 
         public ActionResult Search(string name, string no)
         {
-            var list = Core.MemberManager.GetApprovalMembers(new MemberFilter
+            var list = Core.MemberManager.GetVCheckMembers(new MemberFilter
             {
                 Keyword = name
             });
@@ -65,15 +69,37 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
             return JsonSuccess();
         }
 
-        public ActionResult Approval(int id, bool result = true)
+        public ActionResult Approval(int id, CheckLog data)
         {
-            //TODO
-            //Core.CheckLogManager.UpdateCheckLog(id, result);
+            var checkLog = Core.CheckLogManager.GetCheckLog(id);
+            checkLog.Note = data.Note;
+            checkLog.Result = data.Result;
+            Core.CheckLogManager.UpdateCheckLog(checkLog);
+            var member = Core.MemberManager.GetMember(checkLog.UserID);
+            switch (checkLog.CheckType)
+            {
+                case CheckType.Exam:
+                    if (checkLog.Result == true && member.Status == MemberStatus.Normal)
+                    {
+                        Core.MemberManager.UpdateMemberStatus(member.ID, MemberStatus.Registered);
+                    }
+                    break;
+                case CheckType.Education:
+                    break;
+                case CheckType.Transfer:
 
+                    break;
+                case CheckType.Staff:
+                    if (checkLog.Result == true)
+                    {
+                        Core.MemberManager.UpdateMemberStatus(member.ID, MemberStatus.Staff);
+                    }
+                    break;
+            }
             return JsonSuccess();
         }
 
-        public new ActionResult Profile(int id)
+        public new ActionResult Profile(int id, int checkLogId = 0)
         {
             if (id == 0)
             {
@@ -83,14 +109,20 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
             if (user == null)
             {
                 throw new ArgumentException("UserId");
-            }
-            var member = Core.MemberManager.GetMember(id);
 
+            }
+
+            var member = Core.MemberManager.GetMember(id);
             var profile = Core.MemberManager.GetProfile(id);
 
+            profile.SetMemberField(member);
             ViewBag.User = user;
             ViewBag.Member = member;
             ViewBag.Profile = profile;
+            ViewBag.ExamResults = Core.ExamManager.GetMemberExamResult(id);
+            ViewBag.Educations = Core.EducationManager.GetMemberEducations(id);
+            //TODO 执业信息
+            ViewBag.CheckLog = Core.CheckLogManager.GetCheckLog(checkLogId);
 
             return View();
         }

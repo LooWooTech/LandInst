@@ -33,7 +33,7 @@
                     } else {
                         alert("资料已保存");
                     }
-                    window.location.href = window.location.href;
+                    window.location.href = "@Html.Raw(Request.Url.AbsoluteUri)";
                 }
             }, "json");
             return false;

@@ -28,7 +28,6 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
         {
             var list = Core.InstitutionManager.GetInstitutions(new InstitutionFilter
             {
-                PageSize = int.MaxValue,
                 Keyword = keyword
             });
 

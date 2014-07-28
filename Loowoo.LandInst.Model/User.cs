@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -41,9 +42,13 @@ namespace Loowoo.LandInst.Model
 
     public enum UserRole
     {
+        [Description("游客")]
         Everyone,
+        [Description("会员")]
         Member,
+        [Description("机构")]
         Institution,
+        [Description("管理员")]
         Admin
     }
 }

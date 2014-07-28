@@ -170,7 +170,7 @@
     <Content Include="Areas\Institution\Views\Member\Transfer.cshtml" />
     <Content Include="Areas\Institution\Views\Education\Index.cshtml" />
     <Content Include="Areas\Institution\Views\Profile\History.cshtml" />
-    <Content Include="Areas\Member\Views\Shared\_profile_edit_form.cshtml" />
+    <Content Include="Areas\Member\Views\Shared\_ProfileForm.cshtml" />
     <Content Include="Areas\Admin\Views\Member\Profile.cshtml" />
     <Content Include="Areas\Admin\Views\Member\Transfer.cshtml" />
     <Content Include="Areas\Admin\Views\Exam\Approvals.cshtml" />
@@ -301,6 +301,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Areas\Institution\Views\Certification\Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\Admin\Views\Shared\_approvalForm.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

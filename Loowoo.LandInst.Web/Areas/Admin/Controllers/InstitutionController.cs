@@ -22,12 +22,12 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
             {
                 InfoID = annualCheckId,
                 Keyword = name,
-                PageIndex = page,
+                Page = new Model.Filters.PageFilter { PageIndex = page },
                 Result = result
             };
             ViewBag.AnnualChecks = Core.AnnualCheckManager.GetAnnualChecks();
             ViewBag.List = Core.AnnualCheckManager.GetVCheckAnnual(filter);
-            ViewBag.Page = filter;
+            ViewBag.Page = filter.Page;
             return View();
         }
 
@@ -36,12 +36,12 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
             var filter = new InstitutionFilter
             {
                 Keyword = name,
-                PageIndex = page,
+                Page = new PageFilter { PageIndex = page },
                 CheckType = CheckType.Profile,
                 Result = result
             };
             ViewBag.List = Core.InstitutionManager.GetApprovalInsts(filter);
-            ViewBag.Page = filter;
+            ViewBag.Page = filter.Page;
             return View();
         }
 
@@ -87,7 +87,7 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
         //    return JsonSuccess();
         //}
 
-        public ActionResult Profile(int id,int checkLogId = 0)
+        public ActionResult Profile(int id, int checkLogId = 0)
         {
             var inst = Core.InstitutionManager.GetInstitution(id);
             if (inst == null)

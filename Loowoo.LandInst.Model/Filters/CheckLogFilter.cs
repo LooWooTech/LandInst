@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Loowoo.LandInst.Model.Filters
 {
-    public class CheckLogFilter : PageFilter
+    public class CheckLogFilter
     {
         public string Keyword { get; set; }
 
@@ -15,8 +15,12 @@ namespace Loowoo.LandInst.Model.Filters
 
         public int? InfoID { get; set; }
 
+        public int? UserID { get; set; }
+
         public DateTime? BeginTime { get; set; }
 
         public DateTime? EndTime { get; set; }
+
+        public PageFilter Page { get; set; }
     }
 }

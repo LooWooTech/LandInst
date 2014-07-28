@@ -113,7 +113,7 @@ namespace Loowoo.LandInst.Manager
                 var transferId = AddTransfer(member.ID, currentInstId, targetInstId);
                 Core.CheckLogManager.AddCheckLog(transferId, member.ID, CheckType.Transfer);
             }
-            
+
         }
 
         private Transfer GetTransfer(int id)
@@ -124,7 +124,7 @@ namespace Loowoo.LandInst.Manager
             }
         }
 
-        private int AddTransfer(int memberId,int currentInstId,int targetInstId)
+        private int AddTransfer(int memberId, int currentInstId, int targetInstId)
         {
             var entity = new Transfer
             {
@@ -163,33 +163,43 @@ namespace Loowoo.LandInst.Manager
                     query = query.Where(e => e.RealName.Contains(filter.Keyword));
                 }
 
-                return query.OrderByDescending(e => e.ID).SetPage(filter).ToList();
+                return query.OrderByDescending(e => e.ID).SetPage(filter.Page).ToList();
             }
         }
 
-        public List<VCheckMember> GetApprovalMembers(MemberFilter filter)
+        public List<VCheckMember> GetVCheckMembers(MemberFilter filter)
         {
             using (var db = GetDataContext())
             {
-                var query = db.VCheckMembers.AsQueryable();
-
-                if (filter.InstID.HasValue)
-                {
-                    query = query.Where(e => e.InstitutionID == filter.InstID.Value);
-                }
-
-                if (!string.IsNullOrEmpty(filter.Keyword))
-                {
-                    query = query.Where(e => e.RealName.Contains(filter.Keyword));
-                }
-
+                var query = GetVCheckMembers(db.VCheckMembers, filter);
                 if (filter.Status.HasValue)
                 {
                     query = query.Where(e => e.Status == filter.Status.Value);
                 }
-
-                return query.OrderByDescending(e => e.ID).SetPage(filter).ToList();
+                return query.OrderByDescending(e => e.CreateTime).SetPage(filter.Page).ToList();
             }
+        }
+
+        internal IQueryable<VCheckMember> GetVCheckMembers(IQueryable<VCheckMember> query, CheckLogFilter filter)
+        {
+            query = query.Where(e => e.CheckType == filter.Type);
+            if (filter.Result.HasValue)
+            {
+                query = query.Where(e => e.Result == filter.Result.Value);
+            }
+            if (filter.InfoID.HasValue && filter.InfoID.Value > 0)
+            {
+                query = query.Where(e => e.InfoID == filter.InfoID.Value);
+            }
+            if (!string.IsNullOrEmpty(filter.Keyword))
+            {
+                query = query.Where(e => e.RealName.Contains(filter.Keyword.Trim()));
+            }
+            if (filter.UserID.HasValue && filter.UserID.Value > 0)
+            {
+                query = query.Where(e => e.UserID == filter.UserID.Value);
+            }
+            return query;
         }
     }
 }

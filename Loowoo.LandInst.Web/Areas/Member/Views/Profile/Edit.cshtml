@@ -2,9 +2,5 @@
 @{
     Layout = "~/Areas/Member/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "修改资料";
-    MemberProfile model = ViewBag.Profile;
-    Approval approval = ViewBag.Approval;
+    Html.RenderPartial("_ProfileForm");
 }
-
-<h2>信息变更</h2>
-

@@ -11,7 +11,6 @@ namespace Loowoo.LandInst.Web.Areas.Member.Controllers
         public ActionResult Index()
         {
             ViewBag.List = Core.EducationManager.GetMemberEducations(Identity.UserID);
-
             return View();
         }
 
@@ -22,8 +21,8 @@ namespace Loowoo.LandInst.Web.Areas.Member.Controllers
             {
                 throw new ArgumentException("参数错误");
             }
-
-            Core.EducationManager.SignupEducation(GetCurrentMember(), edu);
+            var member = GetCurrentMember();
+            Core.EducationManager.SignupEducation(edu.ID, member.ID);
             return JsonSuccess();
         }
 

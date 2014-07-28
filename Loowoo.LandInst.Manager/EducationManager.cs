@@ -5,31 +5,34 @@ using System.Text;
 using System.Threading.Tasks;
 using Loowoo.LandInst.Model;
 using Loowoo.LandInst.Model.Filters;
+using Loowoo.LandInst.Common;
 
 namespace Loowoo.LandInst.Manager
 {
     public class EducationManager : ManagerBase
     {
-        public void CheckEducation(int memberId)
-        {
 
-        }
+        private string _cacheKey = "educations_cache";
 
         public List<Education> GetEducations()
         {
-            using (var db = GetDataContext())
+            return CacheHelper.GetOrSet(_cacheKey, () =>
             {
-                return db.Educations.OrderByDescending(e => e.ID).ToList();
-            }
+                using (var db = GetDataContext())
+                {
+                    return db.Educations.OrderByDescending(e => e.ID).ToList();
+                }
+            });
+        }
+
+        private void ClearCache()
+        {
+            CacheHelper.Remove(_cacheKey);
         }
 
         public Education GetEducatoin(int eduId)
         {
-            if (eduId == 0) return null;
-            using (var db = GetDataContext())
-            {
-                return db.Educations.FirstOrDefault(e => e.ID == eduId);
-            }
+            return GetEducations().FirstOrDefault(e => e.ID == eduId);
         }
 
         public void SaveEducation(Education edu)
@@ -50,67 +53,63 @@ namespace Loowoo.LandInst.Manager
                     db.Educations.Add(edu);
                 }
                 db.SaveChanges();
+                ClearCache();
             }
+        }
+
+        //public void Approval(int approvalId, bool result)
+        //{
+        //    using (var db = GetDataContext())
+        //    {
+        //        var approval = db.CheckLogs.FirstOrDefault(e => e.ID == approvalId);
+        //        approval.Result = result;
+        //        db.SaveChanges();
+        //    }
+        //}
+
+        public void SignupEducation(int eduId, int memberId)
+        {
+            var checkLog = Core.CheckLogManager.GetLastLog(memberId, CheckType.Education);
+            if (checkLog == null || checkLog.Result.HasValue)
+            {
+                Core.CheckLogManager.AddCheckLog(eduId, memberId, CheckType.Education);
+            }
+        }
+
+        private string GetEduName(int eduId)
+        {
+            var edu = GetEducatoin(eduId);
+            return edu == null ? null : edu.Name;
         }
 
         public List<Education> GetMemberEducations(int memberId)
         {
-            using (var db = GetDataContext())
+            var list = GetEducations();
+            foreach (var edu in list)
             {
-                var list = db.Educations.OrderByDescending(e => e.ID).ToList();
-                foreach (var edu in list)
-                {
-                    edu.Approval = Core.CheckLogManager.GetCheckLog(edu.ID, memberId, CheckType.Education);
-                }
-                return list;
+                edu.Approval = Core.CheckLogManager.GetCheckLog(edu.ID, memberId, CheckType.Education);
             }
-
-        }
-
-        public void Approval(int approvalId, bool result)
-        {
-            using (var db = GetDataContext())
-            {
-                var approval = db.CheckLogs.FirstOrDefault(e => e.ID == approvalId);
-                approval.Result = result;
-                db.SaveChanges();
-            }
-        }
-
-        public void SignupEducation(Member member, Education edu)
-        {
-            using (var db = GetDataContext())
-            {
-                db.CheckLogs.Add(new Model.CheckLog
-                {
-                    UserID = member.ID,
-                    InfoID = edu.ID,
-                    CheckType = CheckType.Education,
-
-                });
-                db.SaveChanges();
-            }
+            return list;
         }
 
         public List<VCheckEducation> GetApprovalEducations(CheckLogFilter filter)
         {
             using (var db = GetDataContext())
             {
-                var query = db.VApprovalEducations.Where(e => e.CheckType == CheckType.Education);
-                if (filter.Result.HasValue)
+                filter.Type = CheckType.Education;
+
+                var query = Core.MemberManager.GetVCheckMembers(db.VCheckMembers, filter);
+
+                var vlist = query.OrderByDescending(e => e.CreateTime).SetPage(filter.Page).ToList();
+
+                return vlist.Select(e => new VCheckEducation
                 {
-                    query = query.Where(e => e.Result == filter.Result.Value);
-                }
-                if (filter.InfoID.HasValue)
-                {
-                    query = query.Where(e => e.EduID == filter.InfoID.Value);
-                }
-                if (!string.IsNullOrEmpty(filter.Keyword))
-                {
-                    query = query.Where(e => e.RealName.Contains(filter.Keyword.Trim()));
-                }
-                return query.OrderByDescending(e => e.CreateTime).SetPage(filter).ToList();
+                    EduID = e.InfoID,
+                    EduName = GetEduName(e.InfoID),
+                    Member = e
+                }).ToList();
             }
         }
+
     }
 }

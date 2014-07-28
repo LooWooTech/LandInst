@@ -34,7 +34,7 @@ namespace Loowoo.LandInst.Manager
                     query = query.Where(e => e.Result == filter.Result.Value);
                 }
 
-                return query.OrderByDescending(e => e.CreateTime).SetPage(filter).ToList();
+                return query.OrderByDescending(e => e.CreateTime).SetPage(filter.Page).ToList();
             }
         }
 
@@ -58,28 +58,8 @@ namespace Loowoo.LandInst.Manager
                     query = query.Where(e => e.Name.Contains(filter.Keyword) || e.FullName.Contains(filter.Keyword));
                 }
 
-                return query.OrderByDescending(e => e.ID).SetPage(filter).ToList();
+                return query.OrderByDescending(e => e.ID).SetPage(filter.Page).ToList();
             }
-        }
-
-        public void AddShareholder(int instId, Shareholder shareholder)
-        {
-            //Core.InfoDataManager.UpdateListItem(instId, InfoType.Shareholder, shareholder);
-        }
-
-        public void DeleteShareholder(int instId, string shareholderId)
-        {
-            //Core.InfoDataManager.DeleteListItem<Shareholder, string>(instId, InfoType.Shareholder,  shareholderId, e => e.ID);
-        }
-
-        public void AddCertification(int instId, Certification certification)
-        {
-            //Core.InfoDataManager.UpdateListItem(instId, InfoType.Certificatoin, certification);
-        }
-
-        public void DeleteCertification(int instId, string certificationId)
-        {
-            //Core.InfoDataManager.DeleteListItem<Certification, string>(instId, InfoType.Certificatoin, certificationId, e => e.ID);
         }
 
         public void LogoutInstitution(string name)

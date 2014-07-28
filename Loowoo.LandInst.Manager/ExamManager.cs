@@ -130,22 +130,9 @@ namespace Loowoo.LandInst.Manager
         {
             using (var db = GetDataContext())
             {
-                var query = db.VCheckMembers.Where(e => e.CheckType == CheckType.Exam);
-                if (filter.InfoID.HasValue)
-                {
-                    query = query.Where(e => e.InfoID == filter.InfoID.Value);
-                }
-
-                if (filter.Result.HasValue)
-                {
-                    query = query.Where(e => e.Result == filter.Result.Value);
-                }
-
-                if (!string.IsNullOrEmpty(filter.Keyword))
-                {
-                    query = query.Where(e => e.RealName.Contains(filter.Keyword));
-                }
-                var vlist = query.OrderByDescending(e => e.CreateTime).SetPage(filter).ToList();
+                filter.Type = CheckType.Exam;
+                var query = Core.MemberManager.GetVCheckMembers(db.VCheckMembers, filter);
+                var vlist = query.OrderByDescending(e => e.CreateTime).SetPage(filter.Page).ToList();
                 return vlist.Select(e => new VCheckExam
                 {
                     ExamID = e.InfoID,

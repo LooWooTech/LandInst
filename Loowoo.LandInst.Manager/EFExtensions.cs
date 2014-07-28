@@ -10,7 +10,7 @@ namespace Loowoo.LandInst.Manager
     {
         public static IQueryable<T> SetPage<T>(this IQueryable<T> query, PageFilter page)
         {
-            if (page == null) return query;
+            if (page == null || page.PageSize == int.MaxValue) return query;
 
             if (page.RecordCount == 0)
             {

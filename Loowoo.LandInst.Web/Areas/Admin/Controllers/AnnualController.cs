@@ -24,7 +24,7 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
         //        PageIndex = page
         //    };
         //    ViewBag.List = Core.AnnualCheckManager.GetApprovalAnnualChecks(filter);
-        //    ViewBag.Page = filter;
+        //    ViewBag.Page = filter.Page;
         //    return View();
         //}
 

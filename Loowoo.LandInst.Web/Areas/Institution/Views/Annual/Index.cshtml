@@ -41,7 +41,7 @@
             $.post(href, function (json) {
                 if (json.result) {
                     aler("申请成功，请等待审批");
-                    window.location.href = window.location.href;
+                    window.location.href = "@Html.Raw(Request.Url.AbsoluteUri)";
                 }
             }, "json");
         });

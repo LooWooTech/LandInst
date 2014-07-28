@@ -11,37 +11,25 @@ namespace Loowoo.LandInst.Web.Areas.Member.Controllers
     {
         public ActionResult Index()
         {
-            var member = GetCurrentMember();
-            var profile = Core.MemberManager.GetProfile(member.ID);
-            var approval = Core.CheckLogManager.GetCheckLog(profile.ID, Identity.UserID, CheckType.Profile);
-            profile.SetMemberField(member);
-            ViewBag.Profile = profile;
-            ViewBag.Memeber = member;
-            ViewBag.Approval = approval;
-            return View();
+            return RedirectToAction("Edit");
         }
 
         [HttpGet]
         public ActionResult Edit()
         {
+            var member = GetCurrentMember();
+            var profile = Core.MemberManager.GetProfile(member.ID);
+            profile.SetMemberField(member);
+            ViewBag.Profile = profile;
             return View();
         }
 
         [HttpPost]
-        public ActionResult Edit(Model.Member member, MemberProfile profile)
+        public ActionResult Edit(MemberProfile profile)
         {
+            var member = GetCurrentMember();
+            Core.MemberManager.SaveProfile(member, profile);
             return JsonSuccess();
         }
-
-        public ActionResult Register()
-        {
-            return JsonSuccess();
-        }
-
-        public ActionResult Change()
-        {
-            return JsonSuccess();
-        }
-
     }
 }

@@ -38,8 +38,6 @@ namespace Loowoo.LandInst.Manager
         public DbSet<Transfer> Transfers { get; set; }
 
         public DbSet<ExamResult> ExamResults { get; set; }
-
-        //public DbSet<VMemberExamResult> VMemberExamResults { get; set; }
         
         public DbSet<CheckLog> CheckLogs { get; set; }
 
@@ -47,10 +45,5 @@ namespace Loowoo.LandInst.Manager
 
         public DbSet<VCheckMember> VCheckMembers { get; set; }
 
-        public DbSet<VCheckEducation> VApprovalEducations { get; set; }
-
-        //public DbSet<VCheckExam> VApprovalExams { get; set; }
-
-        //public DbSet<VCheckAnnual> VApprovalAnnualChecks { get; set; }
     }
 }

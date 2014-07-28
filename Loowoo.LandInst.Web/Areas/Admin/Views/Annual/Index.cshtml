@@ -44,7 +44,7 @@
             var href = $(this).attr("href");
             $.post(href, function (json) {
                 if (json.result) {
-                    window.location.href = window.location.href;
+                    window.location.href = "@Html.Raw(Request.Url.AbsoluteUri)";
                 }
             }, "json");
             return false;

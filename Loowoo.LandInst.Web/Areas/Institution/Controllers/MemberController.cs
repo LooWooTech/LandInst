@@ -22,7 +22,7 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
                 {
                     InstID = Identity.UserID,
                     Keyword = keyword,
-                    PageIndex = page
+                    Page = new Model.Filters.PageFilter { PageIndex = page },
                 };
                 ViewBag.List = Core.MemberManager.GetInstMembers(filter);
             }
@@ -42,7 +42,6 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
             }
             var filter = new MemberFilter
             {
-                PageSize = int.MaxValue,
                 InstID = Identity.UserID,
                 Keyword = keyword,
             };
@@ -100,13 +99,13 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
             var filter = new MemberFilter
             {
                 Keyword = keyword,
-                PageIndex = page,
+                Page = new Model.Filters.PageFilter { PageIndex = page },
                 Type = CheckType.Transfer
 
             };
 
-            ViewBag.List = Core.MemberManager.GetApprovalMembers(filter);
-            ViewBag.Page = filter;
+            ViewBag.List = Core.MemberManager.GetVCheckMembers(filter);
+            ViewBag.Page = filter.Page;
             return View();
         }
 
@@ -124,7 +123,7 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
                     throw new ArgumentException("没有选择转移的用户");
                 }
                 var ids = id.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(s => int.Parse(s)).ToArray();
-                var members = Core.MemberManager.GetInstMembers(new MemberFilter { MemberIds = ids, InstID = Identity.UserID, PageSize = int.MaxValue });
+                var members = Core.MemberManager.GetInstMembers(new MemberFilter { MemberIds = ids, InstID = Identity.UserID});
                 foreach (var member in members)
                 {
                     if (member.InstitutionID != 0 && member.InstitutionID != Identity.UserID)

@@ -6,13 +6,12 @@ using System.Text;
 
 namespace Loowoo.LandInst.Model
 {
-    [Table("VApproval_Education")]
-    public class VCheckEducation : VCheckBase
+    public class VCheckEducation
     {
         public int EduID { get; set; }
 
         public string EduName { get; set; }
 
-        public string RealName { get; set; }
+        public VCheckMember Member { get; set; }
     }
 }

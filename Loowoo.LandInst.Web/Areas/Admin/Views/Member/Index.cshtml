@@ -81,7 +81,7 @@
             $.post("/admin/member/approval?result=" + result, data, function (json) {
                 if (json.result) {
                     alert("操作成功");
-                    window.location.href = window.location.href;
+                    window.location.href = "@Html.Raw(Request.Url.AbsoluteUri)";
                 }
             }, "json");
         }

@@ -60,12 +60,10 @@
         $(".datepicker").datepicker();
         $("#education-form").submit(function () {
             var data = $(this).serialize();
-            $.post("/admin/education/edit", data, function (json) {
-                if (json.result) {
-                    alert("添加成功");
-                    window.location.href = "/admin/education/";
-                }
-            }, "json");
+            $.request("/admin/education/edit", data, function (json) {
+                alert("添加成功");
+                window.location.href = "/admin/education/";
+            });
             return false;
         });
     });

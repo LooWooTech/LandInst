@@ -2,7 +2,7 @@
 @{
     ViewBag.Title = "继续教育审批";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
-    List<VApprovalEducation> list = ViewBag.List;
+    List<VCheckEducation> list = ViewBag.List;
 }
 <form class="form-inline search-form">
     <div class="col-lg-8">
@@ -11,36 +11,48 @@
             <input type="text" class="form-control" name="name" placeholder="会员姓名" value="@(Request.QueryString["name"])">
             <div class="input-group-btn">
                 <input type="submit" class="btn btn-primary" value="查询" />
-
-                <input type="button" id="btn-agree" class="btn btn-success" value="批量通过" />
-                <input type="button" id="btn-disagree" class="btn btn-warning" value="批量不通过" />
             </div>
         </div>
     </div>
 </form>
-<table class="table">
+<table class="table table-bordered">
     <tr>
-        <th>
-            <input id="btn-select" type="checkbox" /></th>
+        <th style="width:120px;">用户名</th>
         <th>会员姓名</th>
         <th>继续教育名称</th>
-        <th>申请时间</th>
-        <th>审批状态</th>
-        <th>审批时间</th>
-        <th>管理</th>
+        <th style="width:120px;">申请时间</th>
+        <th style="width:120px;">审批状态</th>
+        <th style="width:120px;">审批时间</th>
     </tr>
     @foreach (var item in list)
     { 
         <tr>
-            <td>
+            @*            <td>
                 <input type="checkbox" name="id" value="@(item.ID)" />
-            </td>
-            <td>@(item.RealName)</td>
+            </td>*@
+            <td><a href="/admin/member/profile?id=@(item.Member.UserID)&checkLogId=@(item.Member.ID)">@(item.Member.Username)</a></td>
+            <td>@(item.Member.RealName)</td>
             <td>@(item.EduName)</td>
-            <td>@(item.CreateTime)</td>
-            <td>@(item.Result.HasValue ? "已通过" : "未通过")</td>
-            <td>@(item.ApprovalTime.HasValue ? item.ApprovalTime.Value.ToShortDateString() : "尚未审批")
+            <td>@(item.Member.CreateTime.ToShortDateString())</td>
+            <td>
+                @if (item.Member.Result.HasValue)
+                {
+                    if (item.Member.Result.Value)
+                    { 
+                    <span class="label label-success">已通过</span>
+                    }
+                    else
+                    {
+                    <span class="label label-warning">未通过</span>
+                    }
+                }
+                else
+                {
+                    <span class="label label-default">尚未审批</span>
+                }
+
             </td>
+            <td>@(item.Member.UpdateTime.HasValue ? item.Member.UpdateTime.Value.ToShortDateString() : null)</td>
         </tr>
     }
     <tr>
@@ -50,7 +62,7 @@
     </tr>
 </table>
 
-<script>
+@*<script>
     $(function () {
         $("#btn-select").click(function () {
             $("input[type='checkbox']").prop('checked', this.checked);
@@ -82,4 +94,4 @@
         }
     });
 
-</script>
+</script>*@

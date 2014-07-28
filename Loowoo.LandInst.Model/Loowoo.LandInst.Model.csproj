@@ -68,9 +68,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="VCheckBase.cs" />
-    <Compile Include="VCheckEducation.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="VCheckEducation.cs" />
     <Compile Include="VCheckExam.cs">
       <SubType>Code</SubType>
     </Compile>

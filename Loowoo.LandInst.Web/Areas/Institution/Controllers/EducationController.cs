@@ -12,7 +12,7 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
         {
             var filter = new Model.Filters.CheckLogFilter
             {
-                PageIndex = page
+                Page = new Model.Filters.PageFilter { PageIndex = page }
             };
             ViewBag.Educations = Core.EducationManager.GetApprovalEducations(filter);
             ViewBag.PageFilter = filter;

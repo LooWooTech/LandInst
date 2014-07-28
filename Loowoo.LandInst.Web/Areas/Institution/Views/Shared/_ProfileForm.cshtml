@@ -66,7 +66,7 @@
         $("#profile-form").submit(function () {
             var data = $(this).serialize();
             $.request("/institution/profile/submit?type=" + data.type, data, function (json) {
-                window.location.href = window.location.href;
+                window.location.href = "@Html.Raw(Request.Url.AbsoluteUri)";
             });
 
         });

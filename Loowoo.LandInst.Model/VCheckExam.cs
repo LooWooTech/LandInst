@@ -6,7 +6,6 @@ using System.Text;
 
 namespace Loowoo.LandInst.Model
 {
-
     public class VCheckExam
     {
         public int ExamID { get; set; }
