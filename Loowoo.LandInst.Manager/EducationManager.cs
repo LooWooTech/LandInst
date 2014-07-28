@@ -85,9 +85,13 @@ namespace Loowoo.LandInst.Manager
         public List<Education> GetMemberEducations(int memberId)
         {
             var list = GetEducations();
+            var now = DateTime.Now;
             foreach (var edu in list)
             {
-                edu.Approval = Core.CheckLogManager.GetCheckLog(edu.ID, memberId, CheckType.Education);
+                if (edu.StartDate <= now && edu.EndDate >= now)
+                {
+                    edu.Approval = Core.CheckLogManager.GetCheckLog(edu.ID, memberId, CheckType.Education);
+                }
             }
             return list;
         }

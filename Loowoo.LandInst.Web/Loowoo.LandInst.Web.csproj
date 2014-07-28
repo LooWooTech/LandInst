@@ -104,6 +104,7 @@
     <Compile Include="Areas\Admin\Controllers\HomeController.cs" />
     <Compile Include="Areas\Admin\Controllers\InstitutionController.cs" />
     <Compile Include="Areas\Admin\Controllers\MemberController.cs" />
+    <Compile Include="Areas\Admin\Controllers\TransferController.cs" />
     <Compile Include="Areas\Institution\Controllers\AnnualController.cs" />
     <Compile Include="Areas\Institution\Controllers\CertificationController.cs" />
     <Compile Include="Areas\Institution\Controllers\EducationController.cs" />
@@ -167,7 +168,6 @@
     <Content Include="Areas\Admin\Views\Shared\_Layout.cshtml" />
     <Content Include="Areas\Institution\Views\Profile\Edit.cshtml" />
     <Content Include="Areas\Institution\Views\Profile\Logout.cshtml" />
-    <Content Include="Areas\Institution\Views\Member\Transfer.cshtml" />
     <Content Include="Areas\Institution\Views\Education\Index.cshtml" />
     <Content Include="Areas\Institution\Views\Profile\History.cshtml" />
     <Content Include="Areas\Member\Views\Shared\_ProfileForm.cshtml" />
@@ -304,6 +304,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Areas\Admin\Views\Shared\_approvalForm.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\Admin\Views\Transfer\Approvals.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

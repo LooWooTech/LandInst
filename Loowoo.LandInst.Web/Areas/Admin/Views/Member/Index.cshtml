@@ -3,7 +3,7 @@
 @{
     ViewBag.Title = "用户管理";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
-    List<VApprovalMember> list = ViewBag.List;
+    List<VCheckMember> list = ViewBag.List;
     var type = Request.QueryString["type"] ?? "";
     switch (type)
     {

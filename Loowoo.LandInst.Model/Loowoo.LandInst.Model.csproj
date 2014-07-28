@@ -74,6 +74,7 @@
     </Compile>
     <Compile Include="VCheckInst.cs" />
     <Compile Include="VCheckMember.cs" />
+    <Compile Include="VCheckTransfer.cs" />
     <Compile Include="VEducation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Shareholder.cs" />

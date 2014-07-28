@@ -5,10 +5,10 @@
     List<AnnualCheck> list = ViewBag.List;
 }
 
-    <table class="table">
+    <table class="table table-bordered">
     <tr>
         <th>年审名称</th>
-        <td>起始时间</td>
+        <th>起始时间</th>
         <th>结束时间</th>
         <th>审核状态</th>
         <th>审核时间</th>
@@ -21,29 +21,27 @@
             <td>@(item.EndDate.ToShortDateString())</td>
             @if (item.Approval == null)
             { 
-                <td>尚未申请</td>
-                <td><a href="/institution/annual/signup?id=@(item.ID)" class="btn btn-primary btn-signup">申请</a> </td>
+                <td>未申请</td>
+                <td><a href="/member/annual/signup?id=@(item.ID)" class="btn btn-xs btn-primary btn-signup">
+                    申请</a>
+                </td>
             }
             else
             {
-                <td>@(item.Approval.Result.HasValue ? (item.Approval.Result.Value ? "通过" : "未通过"):"未审批" )
-                </td>
-                <td>@(item.Approval.ApprovalTime.HasValue?item.Approval.ApprovalTime.Value.ToShortDateString():" - / - / -")
-                </td>
+                <td>@(item.Approval.CreateTime.ToShortDateString())</td>
+                <td>@(item.Approval.UpdateTime.HasValue ? item.Approval.UpdateTime.Value.ToShortDateString() : "尚未审核")</td>
             }
         </tr>
     }
 </table>
 <script>
     $(function () {
-        $(".signup").click(function () {
+        $(".btn-signup").click(function () {
             var href = $(this).attr("href");
-            $.post(href, function (json) {
-                if (json.result) {
-                    aler("申请成功，请等待审批");
-                    window.location.href = "@Html.Raw(Request.Url.AbsoluteUri)";
-                }
-            }, "json");
+            $.request(href, function (json) {
+                aler("申请成功，请等待审批");
+                window.location.href = "@Html.Raw(Request.Url.AbsoluteUri)";
+            });
         });
     });
 </script>

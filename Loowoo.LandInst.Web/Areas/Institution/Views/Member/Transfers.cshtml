@@ -2,31 +2,28 @@
 @{
     ViewBag.Title = "会员转移审核情况列表";
     Layout = "~/Areas/Institution/Views/Shared/_Layout.cshtml";
-    List<VApprovalMember> list = ViewBag.List;
+    List<VCheckMember> list = ViewBag.List;
     Loowoo.LandInst.Model.Institution currentInst = ViewBag.CurrentInst;
 }
-<h2>会员转移审核情况列表</h2>
-<form>
-    <div class="input-group">
-        <input type="text" name="keyword" class="form-control" />
-        <span class="input-group-btn">
-            <button class="btn btn-default" type="submit">查询用户</button>
-        </span>
+<form class="form-inline search-form">
+    <div class="col-lg-8">
+        <div class="input-group">
+            <span class="input-group-addon">查询会员</span>
+            <input type="text" class="form-control" name="name" placeholder="会员姓名" value="@(Request.QueryString["name"])">
+            <div class="input-group-btn">
+                <input type="submit" class="btn btn-primary" value="查询" />
+            </div>
+        </div>
     </div>
 </form>
-<table class="table">
+<table class="table table-bordered">
     <tr>
-        <th>会员姓名
-        </th>
-        <th>手机</th>
-        <th>转移方式
-        </th>
-        <th>申请日期
-        </th>
-        <th>审核状态
-        </th>
-        <th>审核日期
-        </th>
+        <th>会员姓名</th>
+        <th style="width: 120px;">手机</th>
+        <th style="width: 80px;">转移方式</th>
+        <th style="width: 120px;">申请日期</th>
+        <th style="width: 80px;">审核状态</th>
+        <th style="width: 120px;">审核日期</th>
     </tr>
     @foreach (var item in list)
     {
@@ -46,12 +43,29 @@
             }
         }
         <tr>
-            <td>@(item.RealName)</td>
+            <td><a href="/institution/member/profile?id=@(item.UserID)">@(item.RealName)</a></td>
             <td>@(item.MobilePhone)</td>
             <td>@(mode)</td>
             <td>@(item.CreateTime.ToShortDateString())</td>
-            <td>@(item.Result.HasValue ? (item.Result.Value ? "已批准" : "未批准") : "未审批")</td>
-            <td>@(item.ApprovalTime.HasValue ? item.ApprovalTime.Value.ToShortDateString() : "- / - / -")
+            <td>
+                @if (item.Result.HasValue)
+                {
+                    if (item.Result.Value)
+                    { 
+                    <span class="label label-success">已通过</span>
+                    }
+                    else
+                    {
+                    <span class="label label-warning">未通过</span>
+                    }
+
+                }
+                else
+                {
+                    <span class="label label-default">未审批</span>
+                }
+            </td>
+            <td>@(item.UpdateTime.HasValue ? item.UpdateTime.Value.ToShortDateString() : "- / - / -")
             </td>
         </tr>
     }<tr>

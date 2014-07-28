@@ -10,7 +10,7 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
     {
         public ActionResult Index()
         {
-            //ViewBag.List = Core.AnnualCheckManager.GetInstAnnualChecks(Identity.UserID);
+            ViewBag.List = Core.AnnualCheckManager.GetInstAnnualChecks(Identity.UserID);
             return View();
         }
 
@@ -26,8 +26,13 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
             {
                 throw new Exception("目前无法申请年检");
             }
-            //TODO
-            //Core.CheckLogManager.AddApproval(id, Identity.UserID, Model.InfoType.Annual);
+
+            var checkLog = Core.CheckLogManager.GetLastLog(Identity.UserID, Model.CheckType.Annual);
+            if (checkLog == null || checkLog.Result == false)
+            {
+                Core.CheckLogManager.AddCheckLog(model.ID, Identity.UserID, Model.CheckType.Annual);
+            }
+
             return JsonSuccess();
         }
 

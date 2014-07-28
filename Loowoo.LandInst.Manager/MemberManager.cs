@@ -87,77 +87,17 @@ namespace Loowoo.LandInst.Manager
             }
         }
 
-
-        public void Transfer(Member member, int targetInstId, TransferMode mode)
-        {
-            var currentInstId = mode == TransferMode.In ? targetInstId : member.InstitutionID;
-            if (mode == TransferMode.In)
-            {
-                if (member.InstitutionID == currentInstId)
-                {
-                    return;
-                }
-            }
-
-            if (mode == TransferMode.Out)
-            {
-                if (targetInstId == currentInstId)
-                {
-                    return;
-                }
-            }
-
-            var checkLog = Core.CheckLogManager.GetLastLog(member.ID, CheckType.Transfer);
-            if (checkLog == null || checkLog.Checked)
-            {
-                var transferId = AddTransfer(member.ID, currentInstId, targetInstId);
-                Core.CheckLogManager.AddCheckLog(transferId, member.ID, CheckType.Transfer);
-            }
-
-        }
-
-        private Transfer GetTransfer(int id)
-        {
-            using (var db = GetDataContext())
-            {
-                return db.Transfers.FirstOrDefault(e => e.ID == id);
-            }
-        }
-
-        private int AddTransfer(int memberId, int currentInstId, int targetInstId)
-        {
-            var entity = new Transfer
-            {
-                MemberID = memberId,
-                CurrentInstID = currentInstId,
-                TargetInstID = targetInstId
-            };
-            using (var db = GetDataContext())
-            {
-                db.Transfers.Add(entity);
-                db.SaveChanges();
-            }
-            return entity.ID;
-        }
-
-        public void ApprovalTrasfer(int checkLogId)
-        {
-            var checkLog = Core.CheckLogManager.GetCheckLog(checkLogId);
-            //已经通过审批
-            if (checkLog.Checked && checkLog.Result.Value)
-            {
-                var transfer = GetTransfer(checkLog.InfoID);
-                var member = GetMember(transfer.MemberID);
-                member.InstitutionID = transfer.TargetInstID;
-                Core.MemberManager.UpdateMember(member);
-            }
-        }
-
         public List<Member> GetInstMembers(MemberFilter filter)
         {
             using (var db = GetDataContext())
             {
-                var query = db.Members.Where(e => e.InstitutionID == filter.InstID || e.InstitutionID == 0);
+                var query = db.Members.AsQueryable();
+
+                if (filter.InstID.HasValue && filter.InstID.Value > 0)
+                {
+                    query = query.Where(e => e.InstitutionID == filter.InstID);
+                }
+
                 if (!string.IsNullOrEmpty(filter.Keyword))
                 {
                     query = query.Where(e => e.RealName.Contains(filter.Keyword));
@@ -175,6 +115,10 @@ namespace Loowoo.LandInst.Manager
                 if (filter.Status.HasValue)
                 {
                     query = query.Where(e => e.Status == filter.Status.Value);
+                }
+                if (filter.InstID.HasValue && filter.InstID.Value > 0)
+                {
+                    query = query.Where(e => e.InfoID == filter.InstID.Value);
                 }
                 return query.OrderByDescending(e => e.CreateTime).SetPage(filter.Page).ToList();
             }
@@ -199,6 +143,7 @@ namespace Loowoo.LandInst.Manager
             {
                 query = query.Where(e => e.UserID == filter.UserID.Value);
             }
+
             return query;
         }
     }

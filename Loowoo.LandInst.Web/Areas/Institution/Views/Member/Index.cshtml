@@ -3,42 +3,51 @@
     ViewBag.Title = "会员管理";
     Layout = "~/Areas/Institution/Views/Shared/_Layout.cshtml";
     List<Member> list = ViewBag.List;
-    Loowoo.LandInst.Model.Institution currentInst = ViewBag.CurrentInst;
+    Institution currentInst = ViewBag.CurrentInst;
 }
 
-<h2>会员管理</h2>
-<form>
-    <label>姓名</label>
-    <input type="text" name="keyword" value="@(Request.QueryString["keyword"])" />
-    <input type="submit" value="查询" class="btn btn-default" />
+<form class="form-inline search-form">
+    <div class="col-lg-8">
+        <div class="input-group">
+            <span class="input-group-addon">查询会员</span>
+            <input type="text" class="form-control" name="name" placeholder="会员姓名" value="@(Request.QueryString["name"])">
+            <div class="input-group-btn">
+                <input type="submit" class="btn btn-primary" value="查询" />
+            </div>
+        </div>
+    </div>
 </form>
-@if (list == null || list.Count == 0)
-{
-    return;
-}
 
-<table class="table">
+<table class="table table-bordered">
     <tr>
-        <th>
-            <input type="checkbox" id="btn-select" /></th>
-        <th>姓名</th>
-        <th>性别</th>
-        <th>电话</th>
-        <th>Email</th>
+        <th style="width: 80px;">姓名</th>
+        <th style="width: 50px;">性别</th>
+        <th style="width: 120px;">出生年月</th>
+        <th style="width: 150px;">电话</th>
+        <th style="width: 150px;">Email</th>
         <th>所属单位</th>
-        <th>资料</th>
+        <th style="width: 100px;">管理</th>
     </tr>
     @foreach (var item in list)
     { 
         <tr>
-            <td>
-                <input type="checkbox" name="id" value="@(item.ID)" /></td>
-            <td>@(item.RealName)</td>
-            <td>@(item.Gender == 1 ? "男" : "女")</td>
+            <td><a href="/institution/member/profile?id=@(item.ID)">@(item.RealName)</a></td>
+            <td>@(item.Gender)</td>
+            <td>@(item.Birthday.HasValue ? item.Birthday.Value.ToShortDateString() : null)</td>
             <td>@(item.MobilePhone)</td>
             <td>@(item.Email)</td>
             <td>@(item.InstitutionID == currentInst.ID ? currentInst.Name : "-")</td>
-            <td><a href="/institution/member/profile?id=@(item.ID)">详细</a></td>
+            <td>
+                <a href="/institution/member/staff?memberId=@(item.ID)" class="btn btn-xs btn-primary">执业</a>
+                @if (item.InstitutionID == 0)
+                {
+                    <a href="/institution/member/transferin?memberId=@(item.ID)" class="btn btn-xs btn-success">转入</a>
+                }
+                else
+                {
+                    <a href="/institution/member/transferout?memberId=@(item.ID)" class="btn btn-xs btn-warning">转出</a>
+                }
+            </td>
         </tr>
     }
     <tr>
@@ -52,7 +61,7 @@
 
 <input type="button" value="执业登记" class="btn btn-primary" data="staff" />*@
 
-<script>
+@*<script>
     $(function () {
         $("#btn-select").click(function () {
             $("input[type='checkbox']").prop('checked', this.checked);
@@ -88,4 +97,4 @@
             return ids.join();
         }
     });
-</script>
+</script>*@

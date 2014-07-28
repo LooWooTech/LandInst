@@ -6,7 +6,9 @@
     ViewBag.Title = !string.IsNullOrEmpty(id) ? "修改股东信息" : "添加股东";
     Shareholder model = ViewBag.Model;
 }
-
+<div class="alert alert-dismissable alert-warning">
+    添加、修改股东信息会自动提交资料变更登记审批请求，重复添加、修改不会重复提交请求。
+</div>
 <form id="shareholder-form" role="form" class="form-horizontal">
     <input type="hidden" name="ID" value="@(model.ID)" />
     <div class="form-group">

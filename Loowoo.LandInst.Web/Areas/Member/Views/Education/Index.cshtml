@@ -25,10 +25,10 @@
             <td>@(item.Agency)</td>
             @if (item.Approval == null)
             { 
-                <td>未申请</td>
+                <td><span class="label label-default">未申请</span></td>@*
                 <td><a href="/member/education/signup?id=@(item.ID)" class="btn btn-xs btn-primary btn-signup">
                     报名</a>
-                </td>
+                </td>*@
             }
             else
             {
@@ -38,7 +38,7 @@
         </tr>
     }
 </table>
-<script>
+@*<script>
     $(function () {
         $(".btn-signup").click(function () {
             var url = $(this).attr("href");
@@ -49,4 +49,4 @@
             return false;
         });
     });
-</script>
+</script>*@

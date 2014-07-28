@@ -59,5 +59,11 @@ namespace Loowoo.LandInst.Manager
             get { return _profileManager == null ? _profileManager = new ProfileManager() : _profileManager; }
         }
 
+
+        private TransferManager _transferManager;
+        public TransferManager TransferManager
+        {
+            get { return _transferManager == null ? _transferManager = new TransferManager() : _transferManager; }
+        }
     }
 }

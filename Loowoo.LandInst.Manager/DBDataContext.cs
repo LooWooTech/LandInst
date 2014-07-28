@@ -45,5 +45,6 @@ namespace Loowoo.LandInst.Manager
 
         public DbSet<VCheckMember> VCheckMembers { get; set; }
 
+        public DbSet<VCheckTransfer> VCheckTransfer { get; set; }
     }
 }

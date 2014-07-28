@@ -10,12 +10,12 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
 {
     public class MemberController : AdminControllerBase
     {
-        public ActionResult Index(CheckType type = CheckType.Staff, int page = 1)
+        public ActionResult Index(string name,int page = 1)
         {
             var filter = new MemberFilter
             {
                 Page = new Model.Filters.PageFilter { PageIndex = page },
-                Type = type
+                
             };
             var list = Core.MemberManager.GetVCheckMembers(filter);
             ViewBag.List = list;
@@ -38,36 +38,36 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
             return JsonSuccess();
         }
 
-        [HttpGet]
-        public ActionResult Transfer()
-        {
-            return View();
-        }
+        //[HttpGet]
+        //public ActionResult Transfer()
+        //{
+        //    return View();
+        //}
 
-        [HttpPost]
-        public ActionResult Transfer(int userId, int oldInstId, int newInstId)
-        {
-            var member = Core.MemberManager.GetMember(userId);
-            if (member == null)
-            {
-                throw new ArgumentException("UserId");
-            }
+        //[HttpPost]
+        //public ActionResult Transfer(int userId, int oldInstId, int newInstId)
+        //{
+        //    var member = Core.MemberManager.GetMember(userId);
+        //    if (member == null)
+        //    {
+        //        throw new ArgumentException("UserId");
+        //    }
 
-            if (member.InstitutionID != oldInstId)
-            {
-                throw new ArgumentException("oldInstId");
-            }
+        //    if (member.InstitutionID != oldInstId)
+        //    {
+        //        throw new ArgumentException("oldInstId");
+        //    }
 
-            if (member.InstitutionID == newInstId)
-            {
-                throw new ArgumentException("newInstId");
-            }
+        //    if (member.InstitutionID == newInstId)
+        //    {
+        //        throw new ArgumentException("newInstId");
+        //    }
 
-            member.InstitutionID = newInstId;
-            Core.MemberManager.UpdateMember(member);
+        //    member.InstitutionID = newInstId;
+        //    Core.MemberManager.UpdateMember(member);
 
-            return JsonSuccess();
-        }
+        //    return JsonSuccess();
+        //}
 
         public ActionResult Approval(int id, CheckLog data)
         {
@@ -87,7 +87,7 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
                 case CheckType.Education:
                     break;
                 case CheckType.Transfer:
-
+                    Core.TransferManager.TransferMember(checkLog.InfoID,member);
                     break;
                 case CheckType.Staff:
                     if (checkLog.Result == true)

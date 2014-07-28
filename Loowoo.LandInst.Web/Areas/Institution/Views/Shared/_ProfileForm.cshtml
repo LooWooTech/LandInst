@@ -2,8 +2,14 @@
 @{
     Institution inst = ViewBag.CurrentInst;
     CheckLog checkLog = ViewBag.CheckLog;
+    CheckLog annualCheckLog = ViewBag.AnnualCheckLog;
+    var canSubmit = annualCheckLog == null || annualCheckLog.Result.HasValue;
     InstitutionProfile model = ViewBag.Profile ?? new InstitutionProfile(inst);
 }
+<div class="alert alert-dismissable alert-warning">
+    1、机构资料的提交会自动提交资料变更登记审批请求，重复提交不会重复提交请求。<br />
+    2、年度审批期间（提交年检申请后）无法修改基本资料，但可修改股东、证书信息。
+</div>
 <form id="profile-form" role="form" class="form-horizontal" method="post">
     <fieldset style="width: 300px; float: left; overflow: hidden; margin: 10px;">
         <legend>基本资料</legend>
@@ -57,18 +63,32 @@
         <input type="text" name="Postcode" class="form-control input-sm" value="@(model.Postcode)" />
 
     </fieldset>
-    <div style="clear: both">
+    <div style="clear: both" id="btn-group">
         <input type="submit" value="提交资料变更申请" class="btn btn-warning" />
     </div>
 </form>
 <script>
     $(function () {
+    @if (canSubmit)
+    {
+        <text>
         $("#profile-form").submit(function () {
             var data = $(this).serialize();
             $.request("/institution/profile/submit?type=" + data.type, data, function (json) {
                 window.location.href = "@Html.Raw(Request.Url.AbsoluteUri)";
             });
 
+        });</text>
+    }
+    else
+    {
+        <text>
+        $("#btn-group").hide();
+        $("#profile-form input").each(function(){
+            $(this).attr("disabled", "disabled");
         });
+        </text>
+    }
     });
+
 </script>

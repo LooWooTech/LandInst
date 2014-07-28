@@ -10,22 +10,16 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
 {
     public class MemberController : InstitutionControllerBase
     {
-        public ActionResult Index(string keyword, int page = 1)
+        public ActionResult Index(string name, int page = 1)
         {
-            if (string.IsNullOrEmpty(keyword))
+            var filter = new MemberFilter
             {
-                ViewBag.List = null;
-            }
-            else
-            {
-                var filter = new MemberFilter
-                {
-                    InstID = Identity.UserID,
-                    Keyword = keyword,
-                    Page = new Model.Filters.PageFilter { PageIndex = page },
-                };
-                ViewBag.List = Core.MemberManager.GetInstMembers(filter);
-            }
+                InstID = string.IsNullOrEmpty(name) ? Identity.UserID : 0,
+                Keyword = name,
+                Page = new Model.Filters.PageFilter { PageIndex = page },
+            };
+            ViewBag.List = Core.MemberManager.GetInstMembers(filter);
+            ViewBag.Page = filter.Page;
             return View();
         }
 
@@ -34,7 +28,7 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
             return View();
         }
 
-        public ActionResult Search(string keyword)
+        public ActionResult Search(string keyword, int instId = 0)
         {
             if (string.IsNullOrEmpty(keyword))
             {
@@ -42,20 +36,30 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
             }
             var filter = new MemberFilter
             {
-                InstID = Identity.UserID,
+                InstID = instId,
                 Keyword = keyword,
             };
             return JsonSuccess(Core.MemberManager.GetInstMembers(filter));
         }
 
+
         [HttpGet]
-        public ActionResult TransferIn()
+        public ActionResult TransferIn(int memberId = 0)
         {
+            ViewBag.Member = Core.MemberManager.GetMember(memberId);
             return View();
         }
 
+        [HttpGet]
+        public ActionResult TransferOut(int memberId = 0)
+        {
+            ViewBag.Member = Core.MemberManager.GetMember(memberId);
+            return View();
+        }
+
+
         [HttpPost]
-        public ActionResult TransferIn(int memberId)
+        public ActionResult Transfer(int memberId, TransferMode mode, int instId = 0)
         {
             var member = Core.MemberManager.GetMember(memberId);
             if (member == null)
@@ -63,42 +67,28 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
                 throw new ArgumentException("没有选择有效用户");
             }
 
-            Core.MemberManager.Transfer(member, Identity.UserID, TransferMode.In);
+            if (mode == TransferMode.Out)
+            {
+                if (member.InstitutionID != Identity.UserID)
+                {
+                    throw new ArgumentException("你没有权限转移此用户");
+                }
+                Core.TransferManager.Submit(member, instId, mode);
+            }
+            else
+            {
+                Core.TransferManager.Submit(member, Identity.UserID, mode);
+            }
+
 
             return JsonSuccess();
         }
 
-
-        [HttpGet]
-        public ActionResult TransferOut()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        public ActionResult TransferOut(int memberId, int instId)
-        {
-            var member = Core.MemberManager.GetMember(memberId);
-            if (member == null)
-            {
-                throw new ArgumentException("没有选择有效用户");
-            }
-
-            if (member.InstitutionID != Identity.UserID)
-            {
-                throw new ArgumentException("你没有权限转移此用户");
-            }
-
-            Core.MemberManager.Transfer(member,instId, TransferMode.Out);
-
-            return JsonSuccess();
-        }
-
-        public ActionResult Transfers(string keyword, int page = 1)
+        public ActionResult Transfers(string name, int page = 1)
         {
             var filter = new MemberFilter
             {
-                Keyword = keyword,
+                Keyword = name,
                 Page = new Model.Filters.PageFilter { PageIndex = page },
                 Type = CheckType.Transfer
 
@@ -109,33 +99,33 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
             return View();
         }
 
-        public ActionResult Transfer(string mode = "in")
-        {
-            if (Request.HttpMethod == "GET")
-            {
-                return View();
-            }
-            else
-            {
-                var id = Request.QueryString["id"];
-                if (string.IsNullOrEmpty(id))
-                {
-                    throw new ArgumentException("没有选择转移的用户");
-                }
-                var ids = id.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(s => int.Parse(s)).ToArray();
-                var members = Core.MemberManager.GetInstMembers(new MemberFilter { MemberIds = ids, InstID = Identity.UserID});
-                foreach (var member in members)
-                {
-                    if (member.InstitutionID != 0 && member.InstitutionID != Identity.UserID)
-                    {
-                        continue;
-                    }
-                    member.InstitutionID = mode == "transfer-in" ? Identity.UserID : 0;
-                    Core.MemberManager.UpdateMember(member);
-                }
-                return JsonSuccess();
-            }
-        }
+        //public ActionResult Transfer(string mode = "in")
+        //{
+        //    if (Request.HttpMethod == "GET")
+        //    {
+        //        return View();
+        //    }
+        //    else
+        //    {
+        //        var id = Request.QueryString["id"];
+        //        if (string.IsNullOrEmpty(id))
+        //        {
+        //            throw new ArgumentException("没有选择转移的用户");
+        //        }
+        //        var ids = id.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(s => int.Parse(s)).ToArray();
+        //        var members = Core.MemberManager.GetInstMembers(new MemberFilter { MemberIds = ids, InstID = Identity.UserID });
+        //        foreach (var member in members)
+        //        {
+        //            if (member.InstitutionID != 0 && member.InstitutionID != Identity.UserID)
+        //            {
+        //                continue;
+        //            }
+        //            member.InstitutionID = mode == "transfer-in" ? Identity.UserID : 0;
+        //            Core.MemberManager.UpdateMember(member);
+        //        }
+        //        return JsonSuccess();
+        //    }
+        //}
 
         public ActionResult Staff(int memberId = 0)
         {

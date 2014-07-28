@@ -78,5 +78,25 @@ namespace Loowoo.LandInst.Manager
                 }).ToList();
             }
         }
+
+        public AnnualCheck GetIndateModel()
+        {
+            var now =DateTime.Now;
+            return GetAnnualChecks().FirstOrDefault(e => e.StartDate <= now && e.EndDate >= now);
+        }
+
+        public List<AnnualCheck> GetInstAnnualChecks(int instId)
+        {
+            var list = GetAnnualChecks();
+            var now = DateTime.Now;
+            foreach (var item in list)
+            {
+                if (item.StartDate <= now && item.EndDate >= now)
+                {
+                    item.Approval = Core.CheckLogManager.GetCheckLog(item.ID, instId, CheckType.Annual);
+                }
+            }
+            return list;
+        }
     }
 }

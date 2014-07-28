@@ -5,11 +5,34 @@ using System.Text;
 using System.Threading.Tasks;
 using Loowoo.LandInst.Model;
 using Loowoo.LandInst.Model.Filters;
+using Loowoo.LandInst.Common;
 
 namespace Loowoo.LandInst.Manager
 {
     public class InstitutionManager : ManagerBase
     {
+        private string _cacheKey = "InstNames";
+        private Dictionary<int, string> GetInstNames()
+        {
+            return CacheHelper.GetOrSet(_cacheKey, () =>
+            {
+                using (var db = GetDataContext())
+                {
+                    return db.Institutions.Select(e => new { e.ID, e.Name }).ToDictionary(e => e.ID, e => e.Name);
+                }
+            });
+        }
+
+        internal string GetInstName(int instId)
+        {
+            var names = GetInstNames();
+            return names.ContainsKey(instId) ? names[instId] : null;
+        }
+
+        private void ClearCache()
+        {
+            CacheHelper.Remove(_cacheKey);
+        }
 
         public Institution GetInstitution(int id)
         {
@@ -82,6 +105,7 @@ namespace Loowoo.LandInst.Manager
             {
                 db.Institutions.Add(model);
                 db.SaveChanges();
+                ClearCache();
             }
         }
 
@@ -99,6 +123,7 @@ namespace Loowoo.LandInst.Manager
                     throw new ArgumentException("没找到该机构");
                 }
                 db.SaveChanges();
+                ClearCache();
             }
         }
 

@@ -19,6 +19,8 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
         {
             //只要不是注册登记，那么就获取资料变更的审核状态
             var checkLog = Core.CheckLogManager.GetLastLog(Identity.UserID, CheckType.Profile);
+
+            ViewBag.AnnualCheckLog = Core.CheckLogManager.GetLastLog(Identity.UserID, CheckType.Annual);
             ViewBag.CheckLog = checkLog;
             ViewBag.Profile = Core.InstitutionManager.GetProfile(checkLog);
             return View();
