@@ -29,8 +29,8 @@ namespace Loowoo.LandInst.Manager
         }
 
         public List<Exam> GetIndateExams()
-        { 
-            var now =DateTime.Now;
+        {
+            var now = DateTime.Now;
             return GetExams().Where(e => e.StartSignDate <= now && e.EndSignDate >= now).ToList();
         }
 
@@ -120,11 +120,17 @@ namespace Loowoo.LandInst.Manager
             }
         }
 
+        private string GetExamName(int examId)
+        {
+            var exam = GetExam(examId);
+            return exam == null ? null : exam.Name;
+        }
+
         public List<VCheckExam> GetVCheckExams(CheckLogFilter filter)
         {
             using (var db = GetDataContext())
             {
-                var query = db.VCheckMembers.Where(e => e.CheckType == CheckType.Education);
+                var query = db.VCheckMembers.Where(e => e.CheckType == CheckType.Exam);
                 if (filter.InfoID.HasValue)
                 {
                     query = query.Where(e => e.InfoID == filter.InfoID.Value);
@@ -142,7 +148,9 @@ namespace Loowoo.LandInst.Manager
                 var vlist = query.OrderByDescending(e => e.CreateTime).SetPage(filter).ToList();
                 return vlist.Select(e => new VCheckExam
                 {
-
+                    ExamID = e.InfoID,
+                    ExamName = GetExamName(e.InfoID),
+                    Member = e
                 }).ToList();
             }
         }

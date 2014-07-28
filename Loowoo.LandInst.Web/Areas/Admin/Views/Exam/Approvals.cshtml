@@ -30,16 +30,16 @@
         </div>
     </div>
 </form>
-<table class="table">
+<table class="table table-bordered">
     <tr>
-        <th>
+        <th style="width:30px;">
             <input id="btn-select" type="checkbox" /></th>
         <th>姓名</th>
         <th>考试名称</th>
-        <th>报名日期</th>
-        <th>审核日期</th>
-        <th>用户状态</th>
-        <th>资料</th>
+        <th style="width:120px;">报名日期</th>
+        <th style="width:120px;">审核日期</th>
+        <th style="width:100px;">用户状态</th>
+        <th style="width:80px;">资料</th>
     </tr>
     @foreach (var item in list)
     { 
@@ -57,7 +57,7 @@
         </tr>
     }
     <tr>
-        <td colspan="6">@Html.Partial("_pagination", ViewBag.Page as object)</td>
+        <td colspan="10">@Html.Partial("_pagination", ViewBag.Page as object)</td>
     </tr>
 </table>
 <script>

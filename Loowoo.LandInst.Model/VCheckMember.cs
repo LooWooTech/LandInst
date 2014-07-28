@@ -15,7 +15,7 @@ namespace Loowoo.LandInst.Model
 
         public MemberStatus Status { get; set; }
 
-        public int Gender { get; set; }
+        public string Gender { get; set; }
 
         public string MobilePhone { get; set; }
 

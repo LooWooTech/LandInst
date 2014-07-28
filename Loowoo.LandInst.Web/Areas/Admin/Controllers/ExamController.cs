@@ -30,10 +30,12 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
             return JsonSuccess();
         }
 
-        public ActionResult Approvals(int page = 1)
+        public ActionResult Approvals(string name, int? examId, int page = 1)
         {
             var filter = new CheckLogFilter
             {
+                Keyword = name,
+                InfoID = examId,
                 PageIndex = page
             };
             ViewBag.Exams = Core.ExamManager.GetExams();
@@ -64,7 +66,7 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
         }
 
         [HttpGet]
-        public ActionResult ExamResult(string name, int examId = 0, int page = 1)
+        public ActionResult ExamResult(string name, int? examId, int page = 1)
         {
             var filter = new CheckLogFilter
             {
