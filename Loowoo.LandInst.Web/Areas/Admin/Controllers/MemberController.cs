@@ -89,10 +89,10 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
                 case CheckType.Transfer:
                     Core.TransferManager.TransferMember(checkLog.InfoID,member);
                     break;
-                case CheckType.Staff:
+                case CheckType.Practice:
                     if (checkLog.Result == true)
                     {
-                        Core.MemberManager.UpdateMemberStatus(member.ID, MemberStatus.Staff);
+                        Core.MemberManager.UpdateMemberStatus(member.ID, MemberStatus.Practice);
                     }
                     break;
             }

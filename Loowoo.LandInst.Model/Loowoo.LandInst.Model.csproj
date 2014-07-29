@@ -62,6 +62,7 @@
     <Compile Include="CheckLog.cs" />
     <Compile Include="Member.cs" />
     <Compile Include="MemberProfile.cs" />
+    <Compile Include="Practice.cs" />
     <Compile Include="Profile.cs" />
     <Compile Include="Transfer.cs" />
     <Compile Include="VCheckAnnual.cs">
@@ -74,6 +75,7 @@
     </Compile>
     <Compile Include="VCheckInst.cs" />
     <Compile Include="VCheckMember.cs" />
+    <Compile Include="VCheckPractice.cs" />
     <Compile Include="VCheckTransfer.cs" />
     <Compile Include="VEducation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

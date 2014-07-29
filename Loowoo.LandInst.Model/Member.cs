@@ -48,7 +48,7 @@ namespace Loowoo.LandInst.Model
         Registered = 1,
 
         [Description("执业人员")]
-        Staff
+        Practice
     }
 
 

@@ -107,6 +107,30 @@ namespace Loowoo.LandInst.Manager
             }
         }
 
+        public List<VCheckPractice> GetVCheckParctices(MemberFilter filter)
+        {
+            using (var db = GetDataContext())
+            {
+                var query = db.VCheckPractices.AsQueryable();
+
+                if (!string.IsNullOrEmpty(filter.Keyword))
+                {
+                    query = query.Where(e => e.RealName.Contains(filter.Keyword));
+                }
+
+                if (filter.Status.HasValue)
+                {
+                    query = query.Where(e => e.Status == filter.Status.Value);
+                }
+
+                if (filter.InstID.HasValue && filter.InstID.Value > 0)
+                {
+                    query = query.Where(e => e.UserID == filter.InstID);
+                }
+                return query.OrderByDescending(e => e.CreateTime).SetPage(filter.Page).ToList();
+            }
+        }
+
         public List<VCheckMember> GetVCheckMembers(MemberFilter filter)
         {
             using (var db = GetDataContext())

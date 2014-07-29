@@ -127,13 +127,76 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
         //    }
         //}
 
-        public ActionResult Staff(int memberId = 0)
+        public ActionResult Practices(string name, bool? result, int page = 1)
+        {
+            var currentInst = GetCurrentInst();
+            var filter = new MemberFilter
+            {
+                InstID = currentInst.ID,
+                Keyword = name,
+                Result = result,
+                Type = CheckType.Practice,
+                Page = new PageFilter { PageIndex = page }
+            };
+            ViewBag.List = Core.MemberManager.GetVCheckParctices(filter);
+            ViewBag.Page = filter.Page;
+            return View();
+        }
+
+        [HttpGet]
+        public ActionResult Practice(int memberId = 0)
         {
             if (memberId > 0)
             {
+                var currentInst = GetCurrentInst();
                 ViewBag.Member = Core.MemberManager.GetMember(memberId);
+                var checkLog = Core.CheckLogManager.GetCheckLog(memberId, currentInst.ID, CheckType.Practice);
+                if (checkLog != null && checkLog.Result != false)
+                {
+                    ViewBag.CheckLog = checkLog;
+                    ViewBag.Practice = Core.PracticeManager.GetPracticeInfo(memberId);
+                }
             }
             return View();
+        }
+
+
+        [HttpPost]
+        public ActionResult Practice(int memberId, PracticeInfo data)
+        {
+            var currentInst = GetCurrentInst();
+            var member = Core.MemberManager.GetMember(memberId);
+            if (member.InstitutionID != currentInst.ID)
+            {
+                throw new HttpException(401, "你不能为此会员申请执业登记");
+            }
+            var checkLog = Core.CheckLogManager.GetCheckLog(memberId, currentInst.ID, CheckType.Practice);
+            if (checkLog == null || checkLog.Result == false)
+            {
+                try
+                {
+                    var certNames = Request.Form["Cert.Name"].Split(',');
+                    var certNos = Request.Form["Cert.No"].Split(',');
+                    var certLevel = Request.Form["Cert.Level"].Split(',');
+                    for (var i = 0; i < certNames.Length; i++)
+                    {
+                        data.Certifications.Add(new Certification
+                        {
+                            Name = certNames[i],
+                            CertificationNo = certNos[i],
+                            CertificationLevel = certLevel[i]
+                        });
+                    }
+                }
+                catch { }
+
+                Core.PracticeManager.SavePracticeInfo(memberId, data);
+                //执业登记信息的UserID是机构ID
+                Core.CheckLogManager.AddCheckLog(memberId, currentInst.ID, CheckType.Practice);
+            }
+
+
+            return JsonSuccess();
         }
 
     }

@@ -1,0 +1,192 @@
+﻿@using Loowoo.LandInst.Model
+@{
+    ViewBag.Title = "人员执业登记";
+    Layout = "~/Areas/Institution/Views/Shared/_Layout.cshtml";
+    Member member = ViewBag.Member;
+    CheckLog approval = ViewBag.CheckLog;
+    PracticeInfo model = ViewBag.Practice ?? new PracticeInfo();
+    var canSubmit = approval == null || approval.Result == false;
+    if (canSubmit)
+    {
+        model.Certifications.Add(new Certification { });
+    }
+}
+@if (member == null)
+{
+    <form id="practice-form" role="form" class="form-horizontal" method="post">
+        @Html.Partial("_SearchMember", member)
+        <div class="form-group">
+            <label class="control-label col-lg-2"></label>
+            <div class="col-sm-3">
+                <input type="submit" value="确认选择" class="btn btn-primary" />
+            </div>
+        </div>
+    </form>
+    <script>
+        $(function () {
+            $("#practice-form").submit(function () {
+                var memberId = $("#memberId").val();
+                if (memberId) {
+                    window.location.href = "/institution/member/practice?memberId=" + memberId;
+                }
+                else {
+                    alert("请选择一个会员");
+                }
+                return false;
+            });
+        });
+    </script>
+    return;
+}
+
+<form id="practice-form" role="form" class="form-horizontal" method="post">
+    @if (approval != null)
+    { 
+        <div class="alert alert-warning">
+            @(member.RealName)的执业登记信息已于<span class="label label-default">@(approval.CreateTime.ToShortDateString())</span>提交申请，
+            @if (approval.Result.HasValue)
+            { 
+                @:与@(approval.UpdateTime.Value.ToShortDateString()) 
+                if (approval.Result.Value)
+                {
+                <span class="label label-success">审批通过</span>
+                }
+                else
+                {
+                <span class="label label-warning">没通过审批</span>
+                }
+            }else
+            {
+                @:目前<span class="label label-default">尚未审批</span>，请等待管理员审批。
+            }
+        </div>
+    }
+    <legend>会员信息</legend>
+    @Html.Partial("_SearchMember", member)
+    <legend>执业信息</legend>
+    <div class="form-group">
+        <label class="control-label col-lg-2">人事档案编号</label>
+        <div class="col-sm-3">
+            <input type="text" name="PersonalRecordsNO" class="form-control input-sm" value="@(model.PersonalRecordsNO)" />
+        </div>
+        <label class="control-label col-lg-2">人事档案存放机构</label>
+        <div class="col-sm-3">
+            <input type="text" name="PersonalRecordsInstitution" class="form-control input-sm" value="@(model.PersonalRecordsInstitution)" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-lg-2">个人社会保险编号</label>
+        <div class="col-sm-3">
+            <input type="text" name="SocialSecurityNO" class="form-control input-sm" value="@(model.SocialSecurityNO)" />
+        </div>
+        <label class="control-label col-lg-2">个人社会保险存放机构</label>
+        <div class="col-sm-3">
+            <input type="text" name="SocialSecurityInstitution" class="form-control input-sm" value="@(model.SocialSecurityInstitution)" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-lg-2">职业登记号</label>
+        <div class="col-sm-3">
+            <input type="text" name="PracticeRegistrationNO" class="form-control input-sm" value="@(model.PracticeRegistrationNO)" />
+        </div>
+        <label class="control-label col-lg-2">资格证书号</label>
+        <div class="col-sm-3">
+            <input type="text" name="CertificationNO" class="form-control input-sm" value="@(model.CertificationNO)" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-lg-2">起始从业时间</label>
+        <div class="col-sm-3">
+            <input type="text" name="BeginWorkingDate" class="form-control input-sm" value="@(model.BeginWorkingDate == DateTime.MinValue ? null : model.BeginWorkingDate.ToShortDateString())" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-lg-2">
+            其他资格证书
+        </label>
+        <div class="col-sm-8">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>证书名称</th>
+                        <th>证书编号</th>
+                        <th>证书级别</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="list-cert">
+                    @foreach (var item in model.Certifications)
+                    { 
+                        <tr>
+                            <td>
+                                <input type="text" name="Cert.Name"  value="@(item.Name)" class="form-control input-sm"/>
+                            </td>
+                            <td>
+                                <input type="text" name="Cert.No"  value="@(item.CertificationNo)" class="form-control input-sm"/>
+                            </td>
+                            <td>
+                                <input type="text" name="Cert.Level"  value="@(item.CertificationLevel)" class="form-control input-sm"/>
+                            </td>
+                            <td>
+                                <a class="btn btn-sm btn-warning btn-delete">删除</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="10">
+                            <button id="btn-add-cert" class="btn btn-sm btn-default">新增证书</button>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+    @if (canSubmit)
+    {
+        <div class="form-group">
+            <label class="control-label col-lg-2"></label>
+            <div class="col-sm-3">
+                <input type="submit" value="提交执业登记申请" class="btn btn-warning" />
+            </div>
+        </div>
+    }
+</form>
+<script>
+    $(function () {
+        @if (canSubmit)
+        {
+        <text>
+        var list = $("#list-cert");
+        var certificationTemp = "<tr>" + $("tr", list).last().html() + "</tr>";
+        $("#btn-add-cert").bind("click", function () {
+            list.append(certificationTemp);
+            $(".btn-delete").unbind("click").bind("click", function () {
+                var tr = $(this).parent().parent();
+                tr.remove();
+            });
+            return false;
+        });
+        $("#practice-form").submit(function () {
+            var data = $(this).serialize();
+            $.request("/institution/member/practice?memberid=@(Request.QueryString["memberId"])", data, function () {
+                alert("提交成功");
+                window.location.href = "@Html.Raw(Request.Url.AbsoluteUri)";
+            });
+            return false;
+        });
+        </text>
+        }
+        else
+        {
+        <text>
+        $("#practice-form input").each(function () {
+            $(this).attr("disabled", "disabled");
+        });
+        $("#btn-add-cert").hide();
+        $(".btn-delete").hide();
+        </text>
+        }
+    });
+</script>

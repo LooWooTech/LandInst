@@ -16,7 +16,7 @@ namespace Loowoo.LandInst.Manager
                 var entity = db.Profiles.FirstOrDefault(e => e.ID == profileId);
                 if (entity == null)
                     return default(T);
-                return entity.Convert<T>();
+                return entity.Data.Convert<T>();
             }
         }
 
@@ -27,7 +27,7 @@ namespace Loowoo.LandInst.Manager
                 var entity = db.Profiles.FirstOrDefault(e => e.UserID == userId);
                 if (entity == null)
                     return default(T);
-                return entity.Convert<T>();
+                return entity.Data.Convert<T>();
             }
         }
 
@@ -64,17 +64,24 @@ namespace Loowoo.LandInst.Manager
 
     public static class ProfileExtension
     {
-        public static T Convert<T>(this Profile model)
+        //public static T Convert<T>(this Profile model)
+        //{
+        //    if (model != null && model.Data != null)
+        //    {
+        //        return Encoding.UTF8.GetString(model.Data).ToObject<T>();
+        //    }
+        //    return default(T);
+        //}
+
+        public static T Convert<T>(this byte[] data)
         {
-            if (model != null && model.Data != null)
-            {
-                return Encoding.UTF8.GetString(model.Data).ToObject<T>();
-            }
-            return default(T);
+            if (data == null) return default(T);
+            return Encoding.UTF8.GetString(data).ToObject<T>();
         }
 
         public static byte[] ToBytes<T>(this T data)
         {
+            if (data == null) return null;
             return Encoding.UTF8.GetBytes(data.ToJson());
         }
     }

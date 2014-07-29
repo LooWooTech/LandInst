@@ -67,6 +67,7 @@
     <Compile Include="ManagerCore.cs" />
     <Compile Include="MemberManager.cs" />
     <Compile Include="CheckLogManager.cs" />
+    <Compile Include="PracticeManager.cs" />
     <Compile Include="ProfileManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TransferManager.cs" />

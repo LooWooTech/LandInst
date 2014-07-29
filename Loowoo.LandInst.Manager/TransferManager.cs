@@ -11,27 +11,16 @@ namespace Loowoo.LandInst.Manager
     {
         public void Submit(Member member, int targetInstId, TransferMode mode)
         {
-            var currentInstId = mode == TransferMode.In ? targetInstId : member.InstitutionID;
-            if (mode == TransferMode.In)
-            {
-                if (member.InstitutionID == currentInstId)
-                {
-                    return;
-                }
-            }
-
-            if (mode == TransferMode.Out)
-            {
-                if (targetInstId == currentInstId)
-                {
-                    return;
-                }
-            }
-
             var checkLog = Core.CheckLogManager.GetLastLog(member.ID, CheckType.Transfer);
             if (checkLog == null || checkLog.Checked)
             {
-                var transferId = Core.TransferManager.AddTransfer(member.ID, currentInstId, targetInstId);
+                var transferId = Core.TransferManager.AddTransfer(new Transfer
+                {
+                    MemberID = member.ID,
+                    CurrentInstID = member.InstitutionID,
+                    TargetInstID = targetInstId,
+                    Mode = mode
+                });
                 Core.CheckLogManager.AddCheckLog(transferId, member.ID, CheckType.Transfer);
             }
 
@@ -45,20 +34,15 @@ namespace Loowoo.LandInst.Manager
             }
         }
 
-        public int AddTransfer(int memberId, int currentInstId, int targetInstId)
+        public int AddTransfer(Transfer model)
         {
-            var entity = new Transfer
-            {
-                MemberID = memberId,
-                CurrentInstID = currentInstId,
-                TargetInstID = targetInstId
-            };
             using (var db = GetDataContext())
             {
-                db.Transfers.Add(entity);
+                if (model.ID > 0) return model.ID;
+                db.Transfers.Add(model);
                 db.SaveChanges();
             }
-            return entity.ID;
+            return model.ID;
         }
 
         public void Approval(int checkLogId)
@@ -78,7 +62,7 @@ namespace Loowoo.LandInst.Manager
         {
             using (var db = GetDataContext())
             {
-                var query = db.VCheckTransfer.AsQueryable();
+                var query = db.VCheckTransfers.AsQueryable();
                 if (filter.InfoID.HasValue && filter.InfoID.Value > 0)
                 {
                     query = query.Where(e => e.InfoID == filter.InfoID.Value);

@@ -47,7 +47,7 @@ namespace Loowoo.LandInst.Model
         [Description("会员转移")]
         Transfer,
         [Description("执业登记")]
-        Staff,
+        Practice,
         [Description("年检审核")]
         Annual,
         [Description("继续教育")]

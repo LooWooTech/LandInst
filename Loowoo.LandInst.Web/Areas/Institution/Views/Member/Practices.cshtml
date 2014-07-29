@@ -1,0 +1,61 @@
+﻿@using Loowoo.LandInst.Model
+@{
+    Layout = "~/Areas/Institution/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "执业登记申请记录";
+    List<VCheckPractice> list = ViewBag.List;
+}
+<form class="form-inline search-form">
+    <div class="col-lg-8">
+        <div class="input-group">
+            <span class="input-group-addon">查询会员</span>
+            <input type="text" class="form-control" name="name" placeholder="会员姓名" value="@(Request.QueryString["name"])">
+            <div class="input-group-btn">
+                <input type="submit" class="btn btn-primary" value="查询" />
+            </div>
+        </div>
+    </div>
+</form>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>姓名</th>
+            <th style="width: 150px;">手机</th>
+            <th style="width: 120px;">申请日期</th>
+            <th style="width: 100px;">审批状态</th>
+            <th style="width: 100px;"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in list)
+        { 
+            <tr>
+                <td><a href="/institution/member/profile?id=@(item.ID)">@(item.RealName)</a></td>
+                <td>@item.MobilePhone</td>
+                <td>@(item.UpdateTime.HasValue ? item.UpdateTime.Value.ToShortDateString() : null)</td>
+                <td>
+                    @if (item.Result.HasValue)
+                    {
+                        if (item.Result.Value)
+                        { 
+                        <span class="label label-success">审批通过</span>
+                        }
+                        else
+                        {
+                        <span class="label label-warning">未通过</span>
+                        }
+                    }
+                    else
+                    {
+                        <span class="label label-default">未审批</span>
+                    }
+                </td>
+                <td><a href="/institution/member/practice?memberId=@(item.InfoID)" class="btn btn-xs btn-primary">@((!item.Result.HasValue || item.Result == false) ? "查看资料" : "重新提交")</a></td>
+            </tr>
+        }
+    </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="10">@Html.Partial("_pagination", ViewBag.Page as object)</td>
+        </tr>
+    </tfoot>
+</table>

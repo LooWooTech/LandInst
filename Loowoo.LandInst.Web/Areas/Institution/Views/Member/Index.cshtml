@@ -38,7 +38,7 @@
             <td>@(item.Email)</td>
             <td>@(item.InstitutionID == currentInst.ID ? currentInst.Name : "-")</td>
             <td>
-                <a href="/institution/member/staff?memberId=@(item.ID)" class="btn btn-xs btn-primary">执业</a>
+                <a href="/institution/member/practice?memberId=@(item.ID)" class="btn btn-xs btn-primary">执业</a>
                 @if (item.InstitutionID == 0)
                 {
                     <a href="/institution/member/transferin?memberId=@(item.ID)" class="btn btn-xs btn-success">转入</a>
@@ -59,7 +59,7 @@
 
 <input type="button" value="转出会员" class="btn btn-primary" data="transfer-out" />
 
-<input type="button" value="执业登记" class="btn btn-primary" data="staff" />*@
+<input type="button" value="执业登记" class="btn btn-primary" data="practice" />*@
 
 @*<script>
     $(function () {
@@ -80,8 +80,8 @@
                 case "transfer-out":
                     window.location.href = "/institution/member/transfer?mode=" + data + "&id=" + ids;
                     break;
-                case "staff":
-                    window.location.href = "/institution/member/staff?id=" + ids;
+                case "practice":
+                    window.location.href = "/institution/member/practice?id=" + ids;
                     break;
             }
         });
