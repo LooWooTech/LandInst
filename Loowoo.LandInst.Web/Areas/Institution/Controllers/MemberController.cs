@@ -99,34 +99,6 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
             return View();
         }
 
-        //public ActionResult Transfer(string mode = "in")
-        //{
-        //    if (Request.HttpMethod == "GET")
-        //    {
-        //        return View();
-        //    }
-        //    else
-        //    {
-        //        var id = Request.QueryString["id"];
-        //        if (string.IsNullOrEmpty(id))
-        //        {
-        //            throw new ArgumentException("没有选择转移的用户");
-        //        }
-        //        var ids = id.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(s => int.Parse(s)).ToArray();
-        //        var members = Core.MemberManager.GetInstMembers(new MemberFilter { MemberIds = ids, InstID = Identity.UserID });
-        //        foreach (var member in members)
-        //        {
-        //            if (member.InstitutionID != 0 && member.InstitutionID != Identity.UserID)
-        //            {
-        //                continue;
-        //            }
-        //            member.InstitutionID = mode == "transfer-in" ? Identity.UserID : 0;
-        //            Core.MemberManager.UpdateMember(member);
-        //        }
-        //        return JsonSuccess();
-        //    }
-        //}
-
         public ActionResult Practices(string name, bool? result, int page = 1)
         {
             var currentInst = GetCurrentInst();
@@ -138,7 +110,7 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
                 Type = CheckType.Practice,
                 Page = new PageFilter { PageIndex = page }
             };
-            ViewBag.List = Core.MemberManager.GetVCheckParctices(filter);
+            ViewBag.List = Core.MemberManager.GetVCheckMembers(filter);
             ViewBag.Page = filter.Page;
             return View();
         }
@@ -150,7 +122,7 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
             {
                 var currentInst = GetCurrentInst();
                 ViewBag.Member = Core.MemberManager.GetMember(memberId);
-                var checkLog = Core.CheckLogManager.GetCheckLog(memberId, currentInst.ID, CheckType.Practice);
+                var checkLog = Core.CheckLogManager.GetLastLog(memberId, CheckType.Practice);
                 if (checkLog != null && checkLog.Result != false)
                 {
                     ViewBag.CheckLog = checkLog;
@@ -170,7 +142,7 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
             {
                 throw new HttpException(401, "你不能为此会员申请执业登记");
             }
-            var checkLog = Core.CheckLogManager.GetCheckLog(memberId, currentInst.ID, CheckType.Practice);
+            var checkLog = Core.CheckLogManager.GetLastLog(memberId, CheckType.Practice);
             if (checkLog == null || checkLog.Result == false)
             {
                 try
@@ -191,8 +163,7 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
                 catch { }
 
                 Core.PracticeManager.SavePracticeInfo(memberId, data);
-                //执业登记信息的UserID是机构ID
-                Core.CheckLogManager.AddCheckLog(memberId, currentInst.ID, CheckType.Practice);
+                Core.CheckLogManager.AddCheckLog(memberId, memberId, CheckType.Practice);
             }
 
 

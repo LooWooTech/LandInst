@@ -170,5 +170,14 @@ namespace Loowoo.LandInst.Manager
 
             return query;
         }
+
+        public List<int> GetMemberIds(string[] realNames, int instId)
+        {
+            using (var db = GetDataContext())
+            {
+                var query = db.Members.Where(e => e.InstitutionID == instId && realNames.Contains(e.RealName));
+                return query.Select(e => e.ID).ToList();
+            }
+        }
     }
 }
