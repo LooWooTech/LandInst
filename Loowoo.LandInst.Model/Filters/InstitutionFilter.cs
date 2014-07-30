@@ -18,6 +18,8 @@ namespace Loowoo.LandInst.Model.Filters
 
         public bool? Result { get; set; }
 
+        public string City { get; set; }
+
         public PageFilter Page { get; set; }
     }
 }

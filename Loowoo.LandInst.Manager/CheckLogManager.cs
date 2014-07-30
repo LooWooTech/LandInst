@@ -18,11 +18,15 @@ namespace Loowoo.LandInst.Manager
             }
         }
 
-        public CheckLog GetLastLog(int userId, CheckType type, bool? result = null)
+        public CheckLog GetLastLog(int userId, CheckType? checkType = null, bool? result = null)
         {
             using (var db = GetDataContext())
             {
-                var query = db.CheckLogs.Where(e => e.UserID == userId && e.CheckType == type);
+                var query = db.CheckLogs.Where(e => e.UserID == userId);
+                if (checkType.HasValue)
+                {
+                    query = query.Where(e => e.CheckType == checkType.Value);
+                }
                 if (result.HasValue)
                 {
                     query = query.Where(e => e.Result.Value == result.Value);

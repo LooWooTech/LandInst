@@ -10,11 +10,12 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
     {
         public ActionResult Index(string name, bool? result, int page = 1)
         {
-            var filter = new Model.Filters.CheckLogFilter
+            var filter = new Model.Filters.MemberFilter
             {
+                Type = Model.CheckType.Education,
                 Keyword = name,
                 Result = result,
-                InfoID = Identity.UserID,
+                InstID = Identity.UserID,
                 Page = new Model.Filters.PageFilter { PageIndex = page }
             };
             ViewBag.List = Core.EducationManager.GetApprovalEducations(filter);

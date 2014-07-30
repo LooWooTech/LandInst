@@ -73,5 +73,44 @@ namespace Loowoo.LandInst.Manager
                 return db.Users.FirstOrDefault(e => e.ID == userId);
             }
         }
+
+        public void UpdateLogin(int userId)
+        {
+            using (var db = GetDataContext())
+            {
+                var entity = db.Users.FirstOrDefault(e => e.ID == userId);
+                if (entity != null)
+                {
+                    entity.LastLoginTime = DateTime.Now;
+
+                    db.SaveChanges();
+                }
+            }
+        }
+
+        public void ResetPwd(int userId,string newPwd)
+        {
+            if (string.IsNullOrEmpty(newPwd))
+            {
+                throw new ArgumentNullException("新密码没有填写");
+            }
+
+            if (userId == 0)
+            {
+                throw new ArgumentNullException("没有找到该用户");
+            }
+
+
+            using (var db = GetDataContext())
+            {
+                var entity = db.Users.FirstOrDefault(e => e.ID == userId);
+                if (entity == null)
+                {
+                    throw new ArgumentNullException("没有找到该用户");
+                }
+                entity.Password = newPwd.MD5();
+                db.SaveChanges();
+            }
+        }
     }
 }

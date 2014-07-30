@@ -18,7 +18,7 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
                 Keyword = name,
                 Page = new Model.Filters.PageFilter { PageIndex = page },
             };
-            ViewBag.List = Core.MemberManager.GetInstMembers(filter);
+            ViewBag.List = Core.MemberManager.GetMembers(filter);
             ViewBag.Page = filter.Page;
             return View();
         }
@@ -39,7 +39,7 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
                 InstID = instId,
                 Keyword = keyword,
             };
-            return JsonSuccess(Core.MemberManager.GetInstMembers(filter));
+            return JsonSuccess(Core.MemberManager.GetMembers(filter));
         }
 
 

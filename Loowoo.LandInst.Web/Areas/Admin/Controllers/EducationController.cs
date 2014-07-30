@@ -32,7 +32,7 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
 
         public ActionResult Approvals(string name, int? eduId = 0, int page = 1)
         {
-            var filter = new CheckLogFilter
+            var filter = new MemberFilter
             {
                 Keyword = name,
                 Page = new Model.Filters.PageFilter { PageIndex = page },

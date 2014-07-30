@@ -2,7 +2,7 @@
 @{
     ViewBag.Title = "会员管理";
     Layout = "~/Areas/Institution/Views/Shared/_Layout.cshtml";
-    List<Member> list = ViewBag.List;
+    List<VMember> list = ViewBag.List;
     Institution currentInst = ViewBag.CurrentInst;
 }
 
@@ -20,23 +20,23 @@
 
 <table class="table table-bordered">
     <tr>
+        <th style="width: 80px;">用户名</th>
         <th style="width: 80px;">姓名</th>
         <th style="width: 50px;">性别</th>
         <th style="width: 120px;">出生年月</th>
         <th style="width: 150px;">电话</th>
         <th style="width: 150px;">Email</th>
-        <th>所属单位</th>
         <th style="width: 100px;">管理</th>
     </tr>
     @foreach (var item in list)
     { 
         <tr>
-            <td><a href="/institution/member/profile?id=@(item.ID)">@(item.RealName)</a></td>
+            <td><a href="/institution/member/profile?id=@(item.ID)">@(item.Username)</a></td>
+            <td>@(item.RealName)</td>
             <td>@(item.Gender)</td>
             <td>@(item.Birthday.HasValue ? item.Birthday.Value.ToShortDateString() : null)</td>
             <td>@(item.MobilePhone)</td>
             <td>@(item.Email)</td>
-            <td>@(item.InstitutionID == currentInst.ID ? currentInst.Name : "-")</td>
             <td>
                 <a href="/institution/member/practice?memberId=@(item.ID)" class="btn btn-xs btn-primary">执业</a>
                 @if (item.InstitutionID == 0)

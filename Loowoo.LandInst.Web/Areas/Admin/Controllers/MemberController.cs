@@ -5,31 +5,32 @@ using System.Web;
 using System.Web.Mvc;
 using Loowoo.LandInst.Model;
 using Loowoo.LandInst.Model.Filters;
+using Loowoo.LandInst.Common;
 
 namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
 {
     public class MemberController : AdminControllerBase
     {
-        public ActionResult Index(string name,int page = 1)
+
+        public ActionResult Index(string name, int page = 1)
         {
             var filter = new MemberFilter
             {
                 Page = new Model.Filters.PageFilter { PageIndex = page },
-                
+
             };
-            var list = Core.MemberManager.GetVCheckMembers(filter);
-            ViewBag.List = list;
+            ViewBag.List = Core.MemberManager.GetMembers(filter);
             ViewBag.Page = filter.Page;
             return View();
         }
 
-        public ActionResult Search(string name, string no)
+        public ActionResult Search(string name)
         {
-            var list = Core.MemberManager.GetVCheckMembers(new MemberFilter
+            var list = Core.MemberManager.GetMembers(new MemberFilter
             {
                 Keyword = name
             });
-            return JsonSuccess(new { members = list });
+            return JsonSuccess(list);
         }
 
         [HttpPost]
@@ -87,7 +88,7 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
                 case CheckType.Education:
                     break;
                 case CheckType.Transfer:
-                    Core.TransferManager.TransferMember(checkLog.InfoID,member);
+                    Core.TransferManager.TransferMember(checkLog.InfoID, member);
                     break;
                 case CheckType.Practice:
                     if (checkLog.Result == true)
@@ -122,8 +123,30 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
             ViewBag.ExamResults = Core.ExamManager.GetMemberExamResult(id);
             ViewBag.Educations = Core.EducationManager.GetMemberEducations(id);
             //TODO 执业信息
-            ViewBag.CheckLog = Core.CheckLogManager.GetCheckLog(checkLogId);
+            ViewBag.PracticeInfo = Core.PracticeManager.GetPracticeInfo(id);
+            if (checkLogId > 0)
+            {
+                ViewBag.CheckLog = Core.CheckLogManager.GetCheckLog(checkLogId);
+            }
+            else
+            {
+                ViewBag.CheckLog = Core.CheckLogManager.GetLastLog(id);
+            }
 
+            return View();
+        }
+
+        public ActionResult Practices(string name, bool? result, int page = 1)
+        {
+            var filter = new MemberFilter
+            {
+                Keyword = name,
+                Page = new PageFilter { PageIndex = page },
+                Result = result,
+                Type = CheckType.Practice
+            };
+            ViewBag.List = Core.MemberManager.GetVCheckMembers(filter);
+            ViewBag.Page = filter.Page;
             return View();
         }
 
@@ -134,8 +157,10 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult ResetPwd(string userId)
+        public ActionResult ResetPwd(int memberId, string newPwd)
         {
+            Core.UserManager.ResetPwd(memberId, newPwd);
+
             return JsonSuccess();
         }
     }

@@ -81,6 +81,11 @@ namespace Loowoo.LandInst.Manager
                     query = query.Where(e => e.Name.Contains(filter.Keyword) || e.FullName.Contains(filter.Keyword));
                 }
 
+                if (!string.IsNullOrEmpty(filter.City))
+                {
+                    query = query.Where(e => e.City == filter.City);
+                }
+
                 return query.OrderByDescending(e => e.ID).SetPage(filter.Page).ToList();
             }
         }

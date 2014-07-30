@@ -13,6 +13,16 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
     {
         public ActionResult Index(string name, string city, int page = 1)
         {
+            var filter = new InstitutionFilter
+            {
+                Keyword = name,
+                Page = new PageFilter { PageIndex = page },
+                CheckType = CheckType.Profile,
+                City = city
+            };
+
+            ViewBag.List = Core.InstitutionManager.GetInstitutions(filter);
+            ViewBag.Page = filter.Page;
             return View();
         }
 

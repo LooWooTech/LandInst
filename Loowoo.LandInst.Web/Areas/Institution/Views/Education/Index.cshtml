@@ -20,10 +20,10 @@
     <thead>
         <tr>
             <th>姓名</th>
+            <th>继续教育名称</th>
             <th style="width: 150px;">手机</th>
             <th style="width: 120px;">申请日期</th>
             <th style="width: 100px;">审批状态</th>
-            <th style="width: 100px;"></th>
         </tr>
     </thead>
     <tbody>
@@ -31,6 +31,7 @@
         { 
             <tr>
                 <td><a href="/institution/member/profile?id=@(item.Member.UserID)">@(item.Member.RealName)</a></td>
+                <td>@(item.EduName)</td>
                 <td>@item.Member.MobilePhone</td>
                 <td>@(item.Member.UpdateTime.HasValue ? item.Member.UpdateTime.Value.ToShortDateString() : null)</td>
                 <td>
@@ -50,7 +51,6 @@
                         <span class="label label-default">未审批</span>
                     }
                 </td>
-                <td><a href="/institution/education/submit?eduId=@(item.EduID)&memberId=@(item.Member.UserID)" class="btn btn-xs btn-primary">@((!item.Member.Result.HasValue || item.Member.Result == false) ? "查看资料" : "重新提交")</a></td>
             </tr>
         }
     </tbody>

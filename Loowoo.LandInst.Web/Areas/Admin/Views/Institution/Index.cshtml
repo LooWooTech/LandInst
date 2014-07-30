@@ -1,0 +1,49 @@
+﻿@using Loowoo.LandInst.Model
+@using Loowoo.LandInst.Common
+@{
+    ViewBag.Title = "查询机构";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    List<Institution> list = ViewBag.List;
+}
+<form class="form-inline search-form">
+    <div class="col-lg-10">
+        <div class="input-group">
+            <span class="input-group-addon">查询机构</span>
+            <input type="text" class="form-control" name="name" placeholder="机构名称" value="@(Request.QueryString["name"])">
+            <div class="input-group-btn">
+                <select name="annualcheckId" class="form-control">
+                    <option>选择城市</option>
+                </select>
+            </div>
+            <div class="input-group-btn">
+                <input type="submit" class="btn btn-primary" value="查询" />
+            </div>
+        </div>
+    </div>
+</form>
+<table class="table table-bordered">
+    <tr>
+        <th>机构名称</th>
+        <th style="width:100px;">机构类别</th>
+        <th style="width:120px;">注册时间</th>
+        <th style="width:90px;">当前状态</th>
+        <th style="width:100px;">法人代表</th>
+        <th style="width:120px;">联系电话</th>
+    </tr>
+    @foreach (var item in list)
+    { 
+        <tr>
+            <td><a href="/admin/institution/profile?id=@(item.ID)">@(item.Name)</a></td>
+            <td>@(item.Type.GetDescription())</td>
+            <td>@(item.CreateTime.ToShortDateString())</td>
+            <td>@(item.Status.GetDescription())</td>
+            <td>@(item.LegalRepresentative)</td>
+            <td>@(item.MobilePhone)</td>
+        </tr>
+    }
+    <tr>
+        <td colspan="10">
+                @Html.Partial("_pagination", ViewBag.Page as object)
+        </td>
+    </tr>
+</table>
