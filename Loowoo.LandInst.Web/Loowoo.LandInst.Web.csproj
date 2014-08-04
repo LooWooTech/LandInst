@@ -309,9 +309,6 @@
     <Content Include="Areas\Admin\Views\Transfer\Approvals.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Areas\Institution\Views\Shared\_SearchMember.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Areas\Institution\Views\Member\Practices.cshtml" />
   </ItemGroup>
   <ItemGroup>
@@ -319,6 +316,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Areas\Admin\Views\Institution\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\Institution\Views\Member\Search.cshtml" />
+    <Content Include="Areas\Institution\Views\Shared\_MemberProfile.cshtml" />
+    <None Include="Properties\PublishProfiles\LandInst.pubxml" />
+    <Content Include="Views\User\ForgetPwd.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

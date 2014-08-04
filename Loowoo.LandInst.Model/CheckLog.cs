@@ -45,14 +45,14 @@ namespace Loowoo.LandInst.Model
         [Description("注册/变更登记")]
         Profile = 1,
         [Description("会员转移")]
-        Transfer,
+        Transfer = 2,
         [Description("执业登记")]
-        Practice,
+        Practice = 3,
         [Description("年检审核")]
-        Annual,
+        Annual = 4,
         [Description("继续教育")]
-        Education,
+        Education = 5,
         [Description("报名考试")]
-        Exam
+        Exam = 6
     }
 }

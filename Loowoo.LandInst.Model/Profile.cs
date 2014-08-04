@@ -10,6 +10,7 @@ namespace Loowoo.LandInst.Model
     [Table("Profile")]
     public class Profile
     {
+
         [Key]
         [DatabaseGenerated(System.ComponentModel.DataAnnotations.Schema.DatabaseGeneratedOption.Identity)]
         public int ID { get; set; }
@@ -19,6 +20,8 @@ namespace Loowoo.LandInst.Model
         public DateTime CreateTime { get; set; }
 
         public DateTime? UpdateTime { get; set; }
+
+        //public bool? CheckResult { get; set; }
 
         public byte[] Data { get; set; }
     }

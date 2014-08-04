@@ -20,15 +20,18 @@ namespace Loowoo.LandInst.Manager
             }
         }
 
-        public T GetLastProfile<T>(int userId)
+        public Profile GetLastProfile(int userId)
         {
             using (var db = GetDataContext())
             {
-                var entity = db.Profiles.FirstOrDefault(e => e.UserID == userId);
-                if (entity == null)
-                    return default(T);
-                return entity.Data.Convert<T>();
+                return db.Profiles.OrderBy(e => e.ID).FirstOrDefault(e => e.UserID == userId);
             }
+        }
+
+        public T GetLastProfile<T>(int userId)
+        {
+            var entity = GetLastProfile(userId);
+            return entity == null ? default(T) : entity.Data.Convert<T>();
         }
 
         internal int AddProfile<T>(int userId, T profile)

@@ -17,12 +17,21 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
         [HttpGet]
         public ActionResult Edit()
         {
+            var currentInst = GetCurrentInst();
             //只要不是注册登记，那么就获取资料变更的审核状态
-            var checkLog = Core.CheckLogManager.GetLastLog(Identity.UserID, CheckType.Profile);
-
-            ViewBag.AnnualCheckLog = Core.CheckLogManager.GetLastLog(Identity.UserID, CheckType.Annual);
+            var checkLog = Core.CheckLogManager.GetLastLog(currentInst.ID, CheckType.Profile);
+            var annualCheck = Core.AnnualCheckManager.GetIndateModel();
+            var annualCheckLog = Core.CheckLogManager.GetLastLog(currentInst.ID, CheckType.Annual);
+            if (annualCheckLog != null && annualCheckLog.Result == true)
+            {
+                ViewBag.AnnualCheck = null;
+            }
+            else
+            {
+                ViewBag.AnnualCheck = annualCheck;
+            }
             ViewBag.CheckLog = checkLog;
-            ViewBag.Profile = Core.InstitutionManager.GetProfile(checkLog);
+            ViewBag.Profile = Core.InstitutionManager.GetLastProfile(currentInst.ID);
             return View();
         }
 
@@ -41,10 +50,56 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
         //}
 
         [HttpPost]
-        public ActionResult Submit(InstitutionProfile profile, string type)
+        public ActionResult Submit(InstitutionProfile data, bool isDraft = true)
         {
-            var checkLog = Core.CheckLogManager.GetLastLog(Identity.UserID, CheckType.Profile);
-            Core.InstitutionManager.SubmitProfile(Identity.UserID, checkLog, profile);
+            try
+            {
+                var shNames = Request.Form["SH.Name"].Split(',');
+                var shGenders = Request.Form["SH.Gender"].Split(',');
+                var shBirthdays = Request.Form["SH.Birthday"].Split(',');
+                var shShares = Request.Form["SH.Shares"].Split(',');
+                var shMobiles = Request.Form["SH.Mobile"].Split(',');
+
+                for (var i = 0; i < shNames.Length; i++)
+                {
+                    data.ShareHolders.Add(new Shareholder
+                    {
+                        Name = shNames[i],
+                        Gender = shGenders[i],
+                        Birthday = shBirthdays[i],
+                        Shares = shShares[i],
+                        Mobile = shMobiles[i]
+                    });
+                }
+            }
+            catch
+            {
+            }
+            try
+            {
+                var certNames = Request.Form["Cert.Name"].Split(',');
+                var certNos = Request.Form["Cert.No"].Split(',');
+                var certLevel = Request.Form["Cert.Level"].Split(',');
+                for (var i = 0; i < certNames.Length; i++)
+                {
+                    data.Certifications.Add(new Certification
+                    {
+                        Name = certNames[i],
+                        CertificationNo = certNos[i],
+                        CertificationLevel = certLevel[i]
+                    });
+                }
+            }
+            catch { }
+
+            if (isDraft)
+            {
+                Core.InstitutionManager.SaveProfile(Identity.UserID, data);
+            }
+            else
+            {
+                Core.InstitutionManager.SubmitProfile(Identity.UserID, data);
+            }
             return JsonSuccess();
         }
 
@@ -68,6 +123,7 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
 
         public ActionResult History()
         {
+            ViewBag.List = Core.InstitutionManager.GetProfiles(Identity.UserID);
             return View();
         }
     }

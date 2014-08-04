@@ -28,17 +28,34 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
             return View();
         }
 
-        public ActionResult Search(string keyword, int instId = 0)
+        public ActionResult Search(bool? limit)
+        {
+            ViewBag.InstID = limit == true ? GetCurrentInst().ID : 0;
+            return View();
+        }
+
+        public ActionResult SearchResult(string target, string keyword)
         {
             if (string.IsNullOrEmpty(keyword))
             {
                 return JsonSuccess(null);
             }
+
+
+
             var filter = new MemberFilter
             {
-                InstID = instId,
                 Keyword = keyword,
             };
+
+            switch(target.ToLower())
+            {
+                case "transferout":
+                case "practice":
+                    filter.InstID = GetCurrentInst().ID;
+                    break;
+            }
+
             return JsonSuccess(Core.MemberManager.GetMembers(filter));
         }
 
@@ -46,6 +63,10 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
         [HttpGet]
         public ActionResult TransferIn(int memberId = 0)
         {
+            if (memberId == 0)
+            {
+                return RedirectToAction("Search", new { target = "TransferIn" });
+            }
             ViewBag.Member = Core.MemberManager.GetMember(memberId);
             return View();
         }
@@ -53,6 +74,10 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
         [HttpGet]
         public ActionResult TransferOut(int memberId = 0)
         {
+            if (memberId == 0)
+            {
+                return RedirectToAction("Search", new { target = "TransferOut" });
+            }
             ViewBag.Member = Core.MemberManager.GetMember(memberId);
             return View();
         }
@@ -118,16 +143,18 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
         [HttpGet]
         public ActionResult Practice(int memberId = 0)
         {
-            if (memberId > 0)
+            if (memberId == 0)
             {
-                var currentInst = GetCurrentInst();
-                ViewBag.Member = Core.MemberManager.GetMember(memberId);
-                var checkLog = Core.CheckLogManager.GetLastLog(memberId, CheckType.Practice);
-                if (checkLog != null && checkLog.Result != false)
-                {
-                    ViewBag.CheckLog = checkLog;
-                    ViewBag.Practice = Core.PracticeManager.GetPracticeInfo(memberId);
-                }
+                return RedirectToAction("Search", new { target = "TransferOut" });
+            }
+
+            var currentInst = GetCurrentInst();
+            ViewBag.Member = Core.MemberManager.GetMember(memberId);
+            var checkLog = Core.CheckLogManager.GetLastLog(memberId, CheckType.Practice);
+            if (checkLog != null && checkLog.Result != false)
+            {
+                ViewBag.CheckLog = checkLog;
+                ViewBag.Practice = Core.PracticeManager.GetPracticeInfo(memberId);
             }
             return View();
         }

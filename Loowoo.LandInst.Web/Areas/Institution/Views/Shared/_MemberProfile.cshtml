@@ -1,0 +1,33 @@
+﻿@using Loowoo.LandInst.Model
+@{
+    ViewBag.Title = "_MemberProfile";
+    Member member = Model ?? new Member();
+}
+<div class="form-group">
+    <label class="control-label col-lg-2">会员信息</label>
+    <div class="col-sm-8">
+        <div class="input-group">
+            <input type="hidden" name="memberId"  value="@(member.ID)"/>
+            <table class="table table-bordered">
+                <tr>
+                    <th>姓名</th>
+                    <td>@(member.RealName)</td>
+                    <th>性别</th>
+                    <td>@(member.Gender)</td>
+                </tr>
+                <tr>
+                    <th>出生年月</th>
+                    <td>@(member.Birthday.HasValue ? member.Birthday.Value.ToShortDateString() : null)</td>
+                    <th>身份证</th>
+                    <td>@(member.IDNo)</td>
+                </tr>
+                <tr>
+                    <th>手机</th>
+                    <td>@(member.MobilePhone)</td>
+                    <th>Email</th>
+                    <td>@(member.Email)</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>

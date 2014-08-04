@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Loowoo.LandInst.Model.Filters;
+using Loowoo.LandInst.Model;
 
 namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
 {
@@ -18,7 +19,19 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
             {
                 var checkLog = Core.CheckLogManager.GetLastLog(Identity.UserID, Model.CheckType.Profile);
                 ViewBag.CheckLog = checkLog;
-                ViewBag.Profile = Core.InstitutionManager.GetProfile(checkLog);
+                ViewBag.Profile = Core.InstitutionManager.GetCheckProfile(checkLog);
+            }
+            else
+            {
+                var annualCheck = Core.AnnualCheckManager.GetIndateModel();
+                if (annualCheck != null)
+                {
+                    var checkLog = Core.CheckLogManager.GetLastLog(currentInst.ID, CheckType.Annual);
+                    if (checkLog == null || checkLog.Result == false)
+                    {
+                        ViewBag.AnnualCheck = annualCheck;
+                    }
+                }
             }
 
             return View();

@@ -43,7 +43,6 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
         public ActionResult Edit(string id, Certification data)
         {
             var profile = GetProfile();
-            CheckLog checkLog = ViewBag.CheckLog;
             var model = profile.Certifications.FirstOrDefault(e => e.ID == id);
             if (model == null)
             {
@@ -56,7 +55,7 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
                 model.CertificationNo = data.CertificationNo;
             }
 
-            Core.InstitutionManager.SubmitProfile(Identity.UserID, checkLog, profile);
+            Core.InstitutionManager.SubmitProfile(Identity.UserID, profile);
             return JsonSuccess();
         }
 
@@ -69,7 +68,7 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
             {
                 profile.Certifications.RemoveAt(index);
             }
-            Core.InstitutionManager.SubmitProfile(Identity.UserID, checkLog, profile);
+            Core.InstitutionManager.SubmitProfile(Identity.UserID, profile);
             return JsonSuccess();
         }
 

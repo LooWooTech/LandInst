@@ -8,19 +8,33 @@
     //如果没有提交注册申请，则不能干任何事情，只能提交申请通过后才可以
     if (inst.Status == InstitutionStatus.Normal)
     {
-        if(checkLog == null || checkLog.Result == false)
+        ViewBag.IsRegister = true;
+        if (checkLog == null || checkLog.Result == false)
         {
             ViewBag.Title = "提交注册登记";
             Html.RenderPartial("_ProfileForm");
             return;
         }
-        else if(checkLog != null)
-        {
-            //如果没有通过
-            ViewBag.Title = "提交注册登记-审核中";
-            Html.RenderPartial("_ProfileForm");
-            return;
-        }
+        //else if (checkLog != null)
+        //{
+        //    ViewBag.CanSubmit = false;
+        //    //如果没有通过
+        //    ViewBag.Title = "提交注册登记-审核中";
+        //    Html.RenderPartial("_ProfileForm");
+        //    return;
+        //}
     }
+
+
+    AnnualCheck annualCheck = ViewBag.AnnualCheck;
+
     ViewBag.Title = "欢迎页";
+}
+
+@if (annualCheck != null)
+{ 
+    <div class="alert alert-warning">
+        目前处于年检期间@(annualCheck.StartDate.ToShortDateString()) ~ @(annualCheck.EndDate.ToShortDateString())，
+        贵机构尚未申请年检，请<a href="/Institution/Profile/Edit" class="btn btn-primary">申请年检</a>
+    </div>
 }

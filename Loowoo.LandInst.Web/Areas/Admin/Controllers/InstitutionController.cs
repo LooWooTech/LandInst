@@ -108,6 +108,10 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
             if (checkLogId == 0)
             {
                 checkLog = Core.CheckLogManager.GetLastLog(id, CheckType.Profile);
+                if (checkLog.Result.HasValue)
+                {
+                    checkLog = Core.CheckLogManager.GetLastLog(id, CheckType.Annual);
+                }
             }
             else
             {
@@ -116,7 +120,7 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
 
             ViewBag.CheckLog = checkLog;
 
-            ViewBag.Profile = Core.InstitutionManager.GetProfile(checkLog);
+            ViewBag.Profile = Core.InstitutionManager.GetCheckProfile(checkLog);
 
             ViewBag.CheckLogs = Core.CheckLogManager.GetList(id);
 
@@ -126,18 +130,22 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
         public ActionResult Approval(int id, CheckLog data)
         {
             var checkLog = Core.CheckLogManager.GetCheckLog(id);
+            if (checkLog == null)
+            {
+                throw new ArgumentException("参数错误");
+            }
             checkLog.Note = data.Note;
             checkLog.Result = data.Result;
             Core.CheckLogManager.UpdateCheckLog(checkLog);
 
-            if (checkLog.CheckType == CheckType.Profile)
+            if (checkLog.CheckType == CheckType.Profile || checkLog.CheckType == CheckType.Annual)
             {
                 var inst = Core.InstitutionManager.GetInstitution(checkLog.UserID);
                 if (checkLog.Result == true && inst.Status == InstitutionStatus.Normal)
                 {
                     Core.InstitutionManager.UpdateStatus(checkLog.UserID, InstitutionStatus.Registered);
                 }
-                var profie = Core.InstitutionManager.GetProfile(checkLog);
+                var profie = Core.InstitutionManager.GetCheckProfile(checkLog);
                 Core.InstitutionManager.UpdateInstitution(profie);
             }
             return JsonSuccess();

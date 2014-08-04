@@ -65,7 +65,7 @@ namespace Loowoo.LandInst.Manager
                     query = query.Where(e => e.InstName.Contains(filter.Keyword) || e.FullName.Contains(filter.Keyword));
                 }
 
-                if (filter.InfoID.HasValue)
+                if (filter.InfoID.HasValue && filter.InfoID.Value > 0)
                 {
                     query = query.Where(e => e.ID == filter.InfoID.Value);
                 }
@@ -81,7 +81,7 @@ namespace Loowoo.LandInst.Manager
 
         public AnnualCheck GetIndateModel()
         {
-            var now =DateTime.Now;
+            var now = DateTime.Now;
             return GetAnnualChecks().FirstOrDefault(e => e.StartDate <= now && e.EndDate >= now);
         }
 

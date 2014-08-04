@@ -2,93 +2,283 @@
 @{
     Institution inst = ViewBag.CurrentInst;
     CheckLog checkLog = ViewBag.CheckLog;
-    CheckLog annualCheckLog = ViewBag.AnnualCheckLog;
-    var canSubmit = annualCheckLog == null || annualCheckLog.Result.HasValue;
+    AnnualCheck annualCheck = ViewBag.AnnualCheck;
+    var isAnnualCheck = annualCheck != null;
+    bool isRegister = ViewBag.IsRegister == null ? false : ViewBag.IsRegister;
     InstitutionProfile model = ViewBag.Profile ?? new InstitutionProfile(inst);
+    bool editSharedhoder = ViewBag.EditShareholder == null ? false : ViewBag.EditShareholder;
+    bool editCertification = ViewBag.EditCertification == null ? false : ViewBag.EditCertification;
+    if (editSharedhoder)
+    {
+        model.ShareHolders.Add(new Shareholder());
+    }
+    if (editCertification)
+    {
+        model.Certifications.Add(new Certification());
+    }
 }
 <div class="alert alert-dismissable alert-warning">
-    1、机构资料的提交会自动提交资料变更登记审批请求，重复提交不会重复提交请求。<br />
-    2、年度审批期间（提交年检申请后）无法修改基本资料，但可修改股东、证书信息。
+    @if (annualCheck != null)
+    { 
+        @:现在是年检期间 @(annualCheck.StartDate.ToShortDateString()) ~ @(annualCheck.EndDate.ToShortDateString())，
+        @:无法修改基本资料，但可修改联系方式、股东、证书信息。
+    }
+    else
+    {
+        @:机构资料的提交会自动提交资料变更登记审批请求，重复提交不会重复提交请求。
+    }
 </div>
 <form id="profile-form" role="form" class="form-horizontal" method="post">
-    <fieldset style="width: 300px; float: left; overflow: hidden; margin: 10px;">
+    <input type="hidden" name="type" value="@(isAnnualCheck ? "Annual" : "Profile")" />
+    <div id="profile-basic">
         <legend>基本资料</legend>
+        <div class="form-group">
+            <label class="control-label col-lg-2">机构名称</label>
+            <div class="col-sm-3">
+                <input type="text" name="Name" class="form-control input-sm" value="@(model.Name)") />
+            </div>
+            <label class="control-label col-lg-2">机构全称</label>
+            <div class="col-sm-3">
+                <input type="text" name="FullName" class="form-control input-sm" value="@(model.FullName)" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-lg-2">工商注册号</label>
+            <div class="col-sm-3">
+                <input type="text" name="RegistrationNo" class="form-control input-sm" value="@(model.RegistrationNo)" />
+            </div>
+            <label class="control-label col-lg-2">法人代表</label>
+            <div class="col-sm-3">
+                <input type="text" name="LegalRepresentative" class="form-control input-sm" value="@(model.LegalRepresentative)" />
+            </div>
+        </div>
+    </div>
 
-        <label class="control-label">名称</label>
-        <input type="text" name="Name" class="form-control input-sm" value="@(model.Name)") />
-
-        <label class="control-label">全称</label>
-        <input type="text" name="FullName" class="form-control input-sm" value="@(model.FullName)" />
-
-        <label class="control-label">工商注册号</label>
-        <input type="text" name="RegistrationNo" class="form-control input-sm" value="@(model.RegistrationNo)" />
-
-        <label class="control-label">法人代表</label>
-        <input type="text" name="LegalRepresentative" class="form-control input-sm" value="@(model.LegalRepresentative)" />
-    </fieldset>
-
-    <fieldset style="width: 300px; float: left; overflow: hidden; margin: 10px;">
+    <div id="profile-details">
         <legend>详细资料</legend>
-        <label class="control-label">经营范围</label>
-        <input type="text" name="BusinessScope" class="form-control input-sm" value="@(model.BusinessScope)" />
+        <div class="form-group">
+            <label class="control-label col-lg-2">经营范围</label>
+            <div class="col-sm-3">
+                <input type="text" name="BusinessScope" class="form-control input-sm" value="@(model.BusinessScope)" />
+            </div>
+            <label class="control-label col-lg-2">注册证书号</label>
+            <div class="col-sm-3">
+                <input type="text" name="CertificateNo" class="form-control input-sm" value="@(model.CertificateNo)" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-lg-2">注册资金</label>
+            <div class="col-sm-3">
+                <input type="text" name="RegisteredCapital" class="form-control input-sm" value="@(model.RegisteredCapital)" />
+            </div>
+            <label class="control-label col-lg-2">税利总收</label>
+            <div class="col-sm-3">
+                <input type="text" name="TotalProfits" class="form-control input-sm" value="@(model.TotalProfits)" />
+            </div>
+        </div>
+    </div>
 
-        <label class="control-label">注册证书号</label>
-        <input type="text" name="CertificateNo" class="form-control input-sm" value="@(model.CertificateNo)" />
-
-
-        <label class="control-label">注册资金</label>
-        <input type="text" name="RegisteredCapital" class="form-control input-sm" value="@(model.RegisteredCapital)" />
-
-        <label class="control-label">移动电话</label>
-        <input type="text" name="MobilePhone" class="form-control input-sm" value="@(model.MobilePhone)" />
-
-        <label class="control-label">税利总收</label>
-        <input type="text" name="TotalProfits" class="form-control input-sm" value="@(model.TotalProfits)" />
-
-    </fieldset>
-
-    <fieldset style="width: 300px; float: left; overflow: hidden; margin: 10px;">
+    <div id="profile-contact">
         <legend>联系方式</legend>
+        <div class="form-group">
+            <label class="control-label col-lg-2">公司地址</label>
+            <div class="col-sm-3">
+                <input type="text" name="Address" class="form-control input-sm" value="@(model.Address)" />
+            </div>
+            <label class="control-label col-lg-2">移动电话</label>
+            <div class="col-sm-3">
+                <input type="text" name="MobilePhone" class="form-control input-sm" value="@(model.MobilePhone)" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-lg-2">所在城市</label>
+            <div class="col-sm-3">
+                <input type="text" name="City" class="form-control input-sm" value="@(model.City)" />
+            </div>
+            <label class="control-label col-lg-2">电子邮箱</label>
+            <div class="col-sm-3">
+                <input type="text" name="Email" class="form-control input-sm" value="@(model.Email)" />
+            </div>
+        </div>
 
-        <label class="control-label">公司地址</label>
-        <input type="text" name="Address" class="form-control input-sm" value="@(model.Address)" />
+        <div class="form-group">
+            <label class="control-label col-lg-2">邮政编码</label>
+            <div class="col-sm-3">
+                <input type="text" name="Postcode" class="form-control input-sm" value="@(model.Postcode)" />
+            </div>
+            <label class="control-label col-lg-2">公司网站</label>
+            <div class="col-sm-3">
+                <input type="text" name="Website" class="form-control input-sm" value="@(model.Website)" />
+            </div>
+        </div>
 
-        <label class="control-label">所在城市</label>
-        <input type="text" name="City" class="form-control input-sm" value="@(model.City)" />
-
-        <label class="control-label">电子邮箱</label>
-        <input type="text" name="Email" class="form-control input-sm" value="@(model.Email)" />
-
-        <label class="control-label">邮政编码</label>
-        <input type="text" name="Postcode" class="form-control input-sm" value="@(model.Postcode)" />
-
-    </fieldset>
+    </div>
+    @{
+        if (editSharedhoder)
+        {
+        <legend>股东信息</legend>
+        <div class="col-sm-8">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>姓名</th>
+                        <th>性别</th>
+                        <th>出生年月</th>
+                        <th>股份</th>
+                        <th>手机</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="list-sh">
+                    @foreach (var item in model.ShareHolders)
+                    { 
+                        <tr>
+                            <td>
+                                <input type="text" name="SH.Name"  value="@(item.Name)" class="form-control input-sm"/>
+                            </td>
+                            <td>
+                                <select name="SH.Gender" class="form-control input-sm">
+                                    <option @(item.Gender == "男" ? "selected=selected" : null)>男</option>
+                                    <option @(item.Gender == "女" ? "selected=selected" : null)>女</option>
+                                </select>
+                            </td>
+                            <td>
+                                <input type="text" name="SH.Birthday"  value="@(item.Birthday)" class="form-control input-sm"/>
+                            </td>
+                            <td>
+                                <input type="text" name="SH.Shares"  value="@(item.Shares)" class="form-control input-sm"/>
+                            </td>
+                            <td>
+                                <input type="text" name="SH.Mobile"  value="@(item.Mobile)" class="form-control input-sm"/>
+                            </td>
+                            <td>
+                                <a class="btn btn-sm btn-warning btn-delete">移除</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="10">
+                            <button id="btn-add-sh" class="btn btn-sm btn-default">新增股东</button>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+        }
+        if (editCertification)
+        {
+        <legend>其他资格证书</legend>
+        <div class="col-sm-8">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>证书名称</th>
+                        <th>证书编号</th>
+                        <th>证书级别</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="list-cert">
+                    @foreach (var item in model.Certifications)
+                    { 
+                        <tr>
+                            <td>
+                                <input type="text" name="Cert.Name"  value="@(item.Name)" class="form-control input-sm"/>
+                            </td>
+                            <td>
+                                <input type="text" name="Cert.No"  value="@(item.CertificationNo)" class="form-control input-sm"/>
+                            </td>
+                            <td>
+                                <input type="text" name="Cert.Level"  value="@(item.CertificationLevel)" class="form-control input-sm"/>
+                            </td>
+                            <td>
+                                <a class="btn btn-sm btn-warning btn-delete">删除</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="10">
+                            <button id="btn-add-cert" class="btn btn-sm btn-default">新增证书</button>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+        }
+    }
     <div style="clear: both" id="btn-group">
-        <input type="submit" value="提交资料变更申请" class="btn btn-warning" />
+        <input id="txt-draft" type="hidden" name="isDraft" />
+        <input id="btn-draft" type="button" value="保存为草稿" class="btn btn-primary" />
+        <input id="btn-submit" type="button" value="@(isAnnualCheck ? "提交年检申请" : (isRegister ? "提交注册登记" : "提交资料变更"))" class="btn btn-warning" />
     </div>
 </form>
 <script>
     $(function () {
-    @if (canSubmit)
-    {
-        <text>
-        $("#profile-form").submit(function () {
-            var data = $(this).serialize();
-            $.request("/institution/profile/submit?type=" + data.type, data, function (json) {
-                window.location.href = "@Html.Raw(Request.Url.AbsoluteUri)";
-            });
+        var form = $("#profile-form");
+        $("#btn-draft").click(function () {
+            $("#txt-draft").val("true");
+            form.submit();
+        });
+        $("#btn-submit").click(function () {
+            $("#txt-draft").val("false");
+            form.submit();
+        });
 
-        });</text>
-    }
-    else
-    {
-        <text>
-        $("#btn-group").hide();
-        $("#profile-form input").each(function(){
+        form.submit(function () {
+            var data = $(this).serialize();
+            $.request("submit?submit=" + data.isSubmit + "&type=" + data.type, data, function (json) {
+                //window.location.href = "@Html.Raw(Request.Url.AbsoluteUri)";
+            });
+            return false;
+        });
+
+        @if (isAnnualCheck)
+        {
+         <text>
+        $("#profile-basic input,#profile-details input").each(function () {
             $(this).attr("disabled", "disabled");
         });
         </text>
-    }
+        }
+
+        @if (editSharedhoder)
+        {
+            <text>
+        {
+            var shList = $("#list-sh");
+            var shTemp = "<tr>" + $("tr", shList).last().html() + "</tr>";
+            $("#btn-add-sh").bind("click", function () {
+                shList.append(shTemp);
+                $(".btn-delete").unbind("click").bind("click", function () {
+                    var tr = $(this).parent().parent();
+                    tr.remove();
+                });
+                return false;
+            });
+        }
+        </text>
+        }
+        @if (editCertification)
+        {
+            <text>
+        {
+            var certList = $("#list-cert");
+            var certTemp = "<tr>" + $("tr", certList).last().html() + "</tr>";
+            $("#btn-add-cert").bind("click", function () {
+                certList.append(certTemp);
+                $(".btn-delete").unbind("click").bind("click", function () {
+                    var tr = $(this).parent().parent();
+                    tr.remove();
+                });
+                return false;
+            });
+        }
+        </text>
+        }
     });
 
 </script>

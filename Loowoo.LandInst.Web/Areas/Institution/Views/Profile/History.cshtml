@@ -1,6 +1,44 @@
-﻿@{
-    ViewBag.Title = "History";
+﻿@using Loowoo.LandInst.Model
+@using Loowoo.LandInst.Common
+@{
+    ViewBag.Title = "历史信息";
     Layout = "~/Areas/Institution/Views/Shared/_Layout.cshtml";
+    List<CheckLog> list = ViewBag.List;
 }
-
-<h2>History</h2>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>申请类型</th>
+            <th style="width: 150px;">申请时间</th>
+            <th style="width: 120px;">审批结果</th>
+            <th style="width: 150px;">审批时间</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in list)
+        { 
+            <tr>
+                <td>@(item.CheckType.GetDescription())</td>
+                <td>@(item.CreateTime.ToString())</td>
+                <td>@if (item.Result.HasValue)
+                    {
+                        if (item.Result.Value)
+                        { 
+                    <span class="label label-success">已通过</span>
+                        }
+                        else
+                        {
+                    <span class="label label-warning">没通过</span>
+                        }
+                    }
+                    else
+                    {
+                    <span class="label label-default">未审批</span>
+                    }</td>
+                <td>
+                    @(item.UpdateTime.HasValue ? item.UpdateTime.ToString() : null)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,17 +1,17 @@
 ﻿@using Loowoo.LandInst.Model
 @{
-    ViewBag.Title = "申请年审";
+    ViewBag.Title = "申请年审记录";
     Layout = "~/Areas/Institution/Views/Shared/_Layout.cshtml";
     List<AnnualCheck> list = ViewBag.List;
 }
 
-    <table class="table table-bordered">
+<table class="table table-bordered">
     <tr>
         <th>年审名称</th>
-        <th>起始时间</th>
-        <th>结束时间</th>
-        <th>审核状态</th>
-        <th>审核时间</th>
+        <th style="width: 120px;">起始时间</th>
+        <th style="width: 120px;">结束时间</th>
+        <th style="width: 90px;">审核状态</th>
+        <th style="width: 120px;">审核时间</th>
     </tr>
     @foreach (var item in list)
     { 
@@ -22,9 +22,7 @@
             @if (item.Approval == null)
             { 
                 <td>未申请</td>
-                <td><a href="/member/annual/signup?id=@(item.ID)" class="btn btn-xs btn-primary btn-signup">
-                    申请</a>
-                </td>
+                <td></td>
             }
             else
             {
@@ -34,14 +32,17 @@
         </tr>
     }
 </table>
-<script>
+@*<script>
     $(function () {
         $(".btn-signup").click(function () {
-            var href = $(this).attr("href");
-            $.request(href, function (json) {
-                aler("申请成功，请等待审批");
-                window.location.href = "@Html.Raw(Request.Url.AbsoluteUri)";
-            });
+            if(confirm("提交年检申请后，将不能修改基本资料，你确定提交吗？")){
+                var href = $(this).attr("href");
+                $.request(href, null, function (json) {
+                    aler("申请成功，请等待审批");
+                    window.location.href = "@Html.Raw(Request.Url.AbsoluteUri)";
+                });
+            }
+            return false;
         });
     });
-</script>
+</script>*@

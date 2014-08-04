@@ -8,6 +8,7 @@
     var disabled = approval != null && !approval.Result.HasValue;
     //注册登记可以全部编辑
     var fullEdit = model.Status == InstitutionStatus.Normal && !disabled;
-    
+    ViewBag.EditShareholder = true;
+    ViewBag.EditCertification = true;
     Html.RenderPartial("_ProfileForm", model);
 }

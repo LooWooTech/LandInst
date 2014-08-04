@@ -31,7 +31,7 @@ namespace Loowoo.LandInst.Manager
                 {
                     query = query.Where(e => e.Result.Value == result.Value);
                 }
-                return query.OrderByDescending(e => e.CreateTime).FirstOrDefault();
+                return query.OrderByDescending(e => e.ID).FirstOrDefault();
             }
         }
 
@@ -39,15 +39,20 @@ namespace Loowoo.LandInst.Manager
         {
             using (var db = GetDataContext())
             {
-                return db.CheckLogs.OrderByDescending(e => e.CreateTime).FirstOrDefault(e => e.InfoID == infoId && e.UserID == userId && e.CheckType == type);
+                return db.CheckLogs.OrderByDescending(e => e.ID).FirstOrDefault(e => e.InfoID == infoId && e.UserID == userId && e.CheckType == type);
             }
         }
 
-        public List<CheckLog> GetList(int userId)
+        public List<CheckLog> GetList(int userId, CheckType? type = null)
         {
             using (var db = GetDataContext())
             {
-                return db.CheckLogs.Where(e => e.UserID == userId).OrderByDescending(e => e.CreateTime).ToList();
+                var query = db.CheckLogs.Where(e => e.UserID == userId);
+                if (type.HasValue)
+                {
+                    query = query.Where(e => e.CheckType == type.Value);
+                }
+                return query.OrderByDescending(e => e.ID).ToList();
             }
         }
 

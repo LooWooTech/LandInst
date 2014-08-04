@@ -1,40 +1,16 @@
 ﻿@using Loowoo.LandInst.Model
 @{
-    Member member = Model;
+    Layout = "~/Areas/Institution/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "查询会员";     
+    var target = Request.QueryString["target"];
+    
+    if(string.IsNullOrEmpty(target))
+    {
+        <div>参数错误</div>
+        return;
+    }
 }
-@if (member != null)
-{
-    <div class="form-group">
-        <label class="control-label col-lg-2">会员信息</label>
-        <div class="col-sm-8">
-            <div class="input-group">
-                <input type="hidden" name="memberId"  value="@(member.ID)"/>
-                <table class="table table-bordered">
-                    <tr>
-                        <th>姓名</th>
-                        <td>@(member.RealName)</td>
-                        <th>性别</th>
-                        <td>@(member.Gender)</td>
-                    </tr>
-                    <tr>
-                        <th>出生年月</th>
-                        <td>@(member.Birthday.HasValue ? member.Birthday.Value.ToShortDateString() : null)</td>
-                        <th>身份证</th>
-                        <td>@(member.IDNo)</td>
-                    </tr>
-                    <tr>
-                        <th>手机</th>
-                        <td>@(member.MobilePhone)</td>
-                        <th>Email</th>
-                        <td>@(member.Email)</td>
-                    </tr>
-                </table>
-            </div>
-        </div>
-    </div>
-}
-else
-{ 
+<form id="search-form" role="form" class="form-horizontal" method="post">
     <div class="form-group">
         <label class="control-label col-lg-2">查询会员</label>
         <div class="col-sm-3">
@@ -53,9 +29,26 @@ else
             </select>
         </div>
     </div>
-}
+    <div class="form-group">
+        <label class="control-label col-lg-2"></label>
+        <div class="col-sm-3">
+            <input type="submit" value="确认选择" class="btn btn-primary" />
+        </div>
+    </div>
+</form>
 <script>
     $(function () {
+        $("#search-form").submit(function () {
+            var memberId = $("#memberId").val();
+            if (memberId) {
+                window.location.href = "@(target)?memberId=" + memberId;
+            }
+            else {
+                alert("请选择一个会员");
+            }
+            return false;
+        });
+
         $("#btn-search-member").click(function () {
             var keyword = $("#memberName").val();
             if (!keyword) {
@@ -63,8 +56,15 @@ else
                 return;
             }
 
-            $.getJSON("/institution/member/search?type=in&keyword=" + encodeURI(keyword), function (json) {
+            $.getJSON("searchResult?target=@(target)&keyword=" + encodeURI(keyword), function (json) {
                 var data = json.data;
+                if (data.length == 0)
+                {
+                    alert("没查询到任何会员");
+                    $("#memberId").empty();
+                    $("#memberName").val('');
+                    return;
+                }
                 var options = "";
                 for (var i = 0; i < data.length; i++) {
                     var m = data[i];

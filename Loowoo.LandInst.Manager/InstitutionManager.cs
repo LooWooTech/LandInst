@@ -114,7 +114,7 @@ namespace Loowoo.LandInst.Manager
             }
         }
 
-        public void UpdateInstitution(Institution model)
+        public void UpdateInstitution(InstitutionProfile model)
         {
             using (var db = GetDataContext())
             {
@@ -132,28 +132,92 @@ namespace Loowoo.LandInst.Manager
             }
         }
 
-        public InstitutionProfile GetProfile(CheckLog checkLog)
+        public InstitutionProfile GetLastProfile(int instId)
+        {
+            return Core.ProfileManager.GetLastProfile<InstitutionProfile>(instId);
+        }
+
+        public InstitutionProfile GetCheckProfile(CheckLog checkLog)
         {
             if (checkLog == null) return null;
-            return Core.ProfileManager.GetProfile<InstitutionProfile>(checkLog.InfoID);
+
+            if (checkLog.CheckType == CheckType.Profile)
+            {
+                return Core.ProfileManager.GetProfile<InstitutionProfile>(checkLog.InfoID);
+            }
+            else
+            {
+                return GetLastProfile(checkLog.UserID);
+            }
         }
 
+        //public InstitutionProfile GetProfile(int instId, CheckLog checkLog)
+        //{
+        //    if (checkLog == null) return Core.ProfileManager.GetLastProfile<InstitutionProfile>(instId);
+        //    return Core.ProfileManager.GetProfile<InstitutionProfile>(checkLog.InfoID);
+        //}
 
-        public void SubmitProfile(int instId, CheckLog checkLog, InstitutionProfile profile)
+        public int SaveProfile(int instId, InstitutionProfile profile)
         {
-            //如果没有提交过资料变更或者资料变更被审核过，则均可以重新提交
-            if (checkLog == null || checkLog.Result.HasValue)
-            {
-                var profileId = Core.ProfileManager.AddProfile(instId, profile);
-                Core.CheckLogManager.AddCheckLog(profileId, instId, CheckType.Profile);
-            }
-            else//如果没被审核，则可以重复覆盖所提交的内容
+            return Core.ProfileManager.AddProfile(instId, profile);
+        }
+
+        public void SubmitProfile(int instId, InstitutionProfile profile)
+        {
+            //如果当前已经提交了资料变更申请，则只更新资料
+            var checkLog = Core.CheckLogManager.GetLastLog(instId, CheckType.Profile);
+            if (checkLog != null && !checkLog.Result.HasValue)
             {
                 Core.ProfileManager.UpdateProfile(checkLog.InfoID, profile);
+                return;
+            }
+
+            var inst = GetInstitution(instId);
+            var annualCheck = Core.AnnualCheckManager.GetIndateModel();
+            //不是注册登记 并且 当前处于年检时或当前没有资料变更的提交
+            if (inst.Status != InstitutionStatus.Normal && annualCheck != null)
+            {
+                checkLog = Core.CheckLogManager.GetCheckLog(annualCheck.ID, instId, CheckType.Annual);
+                if (checkLog == null || checkLog.Result == false)
+                {
+                    Core.CheckLogManager.AddCheckLog(annualCheck.ID, instId, CheckType.Annual);
+                }
+                Core.ProfileManager.AddProfile(instId, profile);
+            }
+            else
+            {
+                if (checkLog == null || checkLog.Result.HasValue)
+                {
+                    var profileId = Core.ProfileManager.AddProfile(instId, profile);
+                    Core.CheckLogManager.AddCheckLog(profileId, instId, CheckType.Profile);
+                }
             }
         }
 
+        //public int AddProfile(int instId, InstitutionProfile profile)
+        //{
+        //    var lastProfile = Core.ProfileManager.GetLastProfile(instId);
+        //    if (lastProfile == null)
+        //    {
+        //        return Core.ProfileManager.AddProfile(instId, profile);
+        //    }
 
+        //    var checkLog = Core.CheckLogManager.GetCheckLog(lastProfile.ID, instId, CheckType.Profile);
+        //    if (checkLog != null && !checkLog.Result.HasValue)
+        //    {
+        //        Core.ProfileManager.UpdateProfile(lastProfile.ID, profile);
+        //        return lastProfile.ID;
+        //    }
+        //    else if (checkLog == null)
+        //    {
+        //        Core.ProfileManager.UpdateProfile(lastProfile.ID, profile);
+        //        return lastProfile.ID;
+        //    }
+        //    else
+        //    {
+        //        return Core.ProfileManager.AddProfile(instId, profile);
+        //    }
+        //}
 
         public void UpdateStatus(int instId, InstitutionStatus status)
         {
@@ -177,5 +241,18 @@ namespace Loowoo.LandInst.Manager
         //{
         //    return Core.InfoDataManager.GetModel<List<Certification>>(id, CheckType.Certificatoin) ?? new List<Certification>();
         //}
+
+        public List<Profile> GetProfiles(int instId)
+        {
+            using (var db = GetDataContext())
+            {
+                return db.Profiles.Where(e => e.UserID == instId).OrderByDescending(e => e.ID).Select(e => new Profile
+                {
+                    ID = e.ID,
+                    CreateTime = e.CreateTime,
+                    UpdateTime = e.UpdateTime
+                }).ToList();
+            }
+        }
     }
 }

@@ -7,7 +7,7 @@
 
 <form id="transfer-form" role="form" class="form-horizontal" method="post">
     <input type="hidden" name="mode" value="@((int)TransferMode.Out)" />
-    @Html.Partial("_SearchMember",member)
+    @Html.Partial("_MemberProfile",member)
     <div class="form-group">
         <label class="control-label col-lg-2">查询机构</label>
         <div class="col-sm-3">
@@ -42,7 +42,7 @@
                 return;
             }
 
-            $.getJSON("/institution/home/search?keyword=" + encodeURI(keyword), function (json) {
+            $.getJSON("/institution/home/search?type=out&keyword=" + encodeURI(keyword), function (json) {
                 var data = json.data;
                 var options = "";
                 for (var i = 0; i < data.length; i++) {

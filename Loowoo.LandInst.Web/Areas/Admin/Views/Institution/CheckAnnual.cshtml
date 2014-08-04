@@ -35,15 +35,15 @@
 <table class="table table-bordered">
     <tr>
         <th>机构名称</th>
-        <th>年审名称</th>
-        <th>申请日期</th>
-        <th>机构类别</th>
-        <th>法人代表</th>
+        <th style="width:150px;">年审名称</th>
+        <th style="width:150px;">申请日期</th>
+        <th style="width:120px;">机构类别</th>
+        <th style="width:100px;">法人代表</th>
     </tr>
     @foreach (var item in list)
     { 
         <tr>
-            <td>@(item.VCheckInst.InstName)</td>
+            <td><a href="profile?id=@(item.VCheckInst.UserID)&checklogId=@(item.VCheckInst.ID)">@(item.VCheckInst.InstName)</a></td>
             <td>@(item.AnnualCheckName)</td>
             <td>@(item.VCheckInst.CreateTime.ToShortDateString())</td>
             <td>@(item.VCheckInst.Type.GetDescription())</td>

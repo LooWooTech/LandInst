@@ -58,7 +58,7 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
                 model.Shares = data.Shares;
             }
 
-            Core.InstitutionManager.SubmitProfile(Identity.UserID, checkLog, profile);
+            Core.InstitutionManager.SubmitProfile(Identity.UserID, profile);
             return JsonSuccess();
         }
 
@@ -71,7 +71,7 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
             {
                 profile.ShareHolders.RemoveAt(index);
             }
-            Core.InstitutionManager.SubmitProfile(Identity.UserID, checkLog, profile);
+            Core.InstitutionManager.SubmitProfile(Identity.UserID, profile);
             return JsonSuccess();
         }
     }
