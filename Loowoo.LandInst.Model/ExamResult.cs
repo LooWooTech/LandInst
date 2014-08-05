@@ -22,6 +22,8 @@ namespace Loowoo.LandInst.Model
 
         public DateTime CreateTime { get; set; }
 
+        public DateTime? UpdateTime { get; set; }
+
         public string Note { get; set; }
 
         [NotMapped]

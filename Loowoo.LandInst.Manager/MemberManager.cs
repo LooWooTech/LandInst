@@ -61,6 +61,17 @@ namespace Loowoo.LandInst.Manager
             }
         }
 
+        public Member GetMember(string realName, string IDCardNo)
+        {
+            using (var db = GetDataContext())
+            {
+                var query = db.Members.Where(e => e.RealName == realName);
+                if (query.Count() > 1)
+                    query = query.Where(e => e.IDNo == IDCardNo);
+                return query.FirstOrDefault();
+            }
+        }
+
 
         public MemberProfile GetProfile(int memberId)
         {

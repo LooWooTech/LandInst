@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Loowoo.LandInst.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -6,6 +7,8 @@ using System.Web.Mvc;
 
 namespace Loowoo.LandInst.Web.Areas.Member
 {
+    [UserAuthorize]
+    [UserRole(Role = UserRole.Member)]
     public class MemberControllerBase : ControllerBase
     {
         private string sessionKey = "currentMemeber";
@@ -23,7 +26,7 @@ namespace Loowoo.LandInst.Web.Areas.Member
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
         {
             if (Session[sessionKey] == null)
-            { 
+            {
                 var member = Core.MemberManager.GetMember(Identity.UserID);
                 Session[sessionKey] = member;
             }

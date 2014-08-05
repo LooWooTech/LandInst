@@ -6,7 +6,7 @@
 }
 <form class="form-inline search-form">
     <div class="col-lg-8">
-        <a href="/admin/annual/edit" class="btn btn-primary">添加年审</a>
+        <a href="/admin/annual/edit" class="btn btn-primary"><i class="glyphicon glyphicon-plus"></i> 添加年审</a>
     </div>
 </form>
 
@@ -29,7 +29,7 @@
             <td>@(item.Summary)</td>
             <td>
                 <a href="/admin/annual/edit?id=@(item.ID)" class="btn btn-xs btn-primary">编辑</a>
-                <a href="/admin/annual/delete?id=@(item.ID)" class="btn btn-xs btn-warning btn-delete">删除</a>
+                <a href="/admin/annual/delete?id=@(item.ID)" class="btn btn-xs btn-warning btn-delete"><i class="glyphicon glyphicon-trash"></i> 删除</a>
             </td>
         </tr>
     }

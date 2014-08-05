@@ -42,6 +42,14 @@ namespace Loowoo.LandInst.Manager
             }
         }
 
+        public ExamResult GetExamResult(int examId, int memberId)
+        {
+            using (var db = GetDataContext())
+            {
+                return db.ExamResults.FirstOrDefault(e => e.ExamID == examId && e.MemberID == memberId);
+            }
+        }
+
         public ExamResult GetExamResult(CheckLog checkLog)
         {
             if (checkLog == null)
@@ -172,6 +180,18 @@ namespace Loowoo.LandInst.Manager
             }
         }
 
+        //public void UpdateExamResult(ExamResult model)
+        //{
+        //    using (var db = GetDataContext())
+        //    {
+        //        var entity = db.ExamResults.FirstOrDefault(e => e.ExamID == model.ID);
+        //        entity.Result = model.Result;
+        //        entity.Note = model.Note;
+        //        entity.UpdateTime = DateTime.Now;
+        //        db.SaveChanges();
+        //    }
+        //}
+
         public void UpdateExamResult(CheckLog checkLog, ExamResult model)
         {
             using (var db = GetDataContext())
@@ -179,6 +199,7 @@ namespace Loowoo.LandInst.Manager
                 var entity = db.ExamResults.FirstOrDefault(e => e.ExamID == checkLog.InfoID && e.MemberID == checkLog.UserID);
                 entity.Result = model.Result;
                 entity.Note = model.Note;
+                entity.UpdateTime = DateTime.Now;
 
                 db.SaveChanges();
 

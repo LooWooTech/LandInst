@@ -71,5 +71,11 @@ namespace Loowoo.LandInst.Manager
         {
             get { return _practiceManager == null ? _practiceManager = new PracticeManager() : _practiceManager; }
         }
+
+        private FileManager _fileManager;
+        public FileManager FileManager
+        {
+            get { return _fileManager == null ? _fileManager = new FileManager() : _fileManager; }
+        }
     }
 }

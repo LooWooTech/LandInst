@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Loowoo.LandInst.Common;
 using Loowoo.LandInst.Model;
 using Loowoo.LandInst.Model.Filters;
+using System.IO;
 
 namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
 {
@@ -89,6 +91,69 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
             ViewBag.Exams = Core.ExamManager.GetExams();
             ViewBag.Page = filter.Page;
             return View();
+        }
+
+        [HttpGet]
+        public ActionResult Import()
+        {
+            ViewBag.Exams = Core.ExamManager.GetExams();
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult Import(int examId)
+        {
+            if (examId == 0)
+            {
+                throw new ArgumentException("没有选择哪一次考试");
+            }
+
+            var file = Request.Files[0];
+            if (file == null || string.IsNullOrEmpty(file.FileName))
+            {
+                throw new ArgumentException("没有选择Excel文件");
+            }
+
+            var filePath = Core.FileManager.Upload(HttpContext, file);
+
+            var columns = NOPIHelper.ReadSimpleColumns(filePath);
+            var data = NOPIHelper.ReadExcelData(filePath, 1);
+
+            foreach (var values in data)
+            {
+                var realName = (string)values[0];
+
+                var idNo = (string)values[1];
+                var member = Core.MemberManager.GetMember(realName, idNo);
+                if (member == null)
+                {
+                    continue;
+                }
+
+                var examResult = Core.ExamManager.GetExamResult(examId, member.ID);
+                if (examResult == null)
+                {
+                    continue;
+                }
+
+                examResult.Result = Convert.ToInt32(values[2]) == 1;
+                examResult.Note = null; 
+                if (columns.Count > 3)
+                {
+                    try
+                    {
+                        for (var i = 3; i < columns.Count; i++)
+                        {
+                            examResult.Note += columns[i] + "\t" + values[i] + "\r\n";
+                        }
+                    }
+                    catch { }
+                }
+                var checkLog = Core.CheckLogManager.GetCheckLog(examId, member.ID, CheckType.Exam);
+                Core.ExamManager.UpdateExamResult(checkLog, examResult);
+            }
+
+            return JsonSuccess();
         }
 
         //[HttpPost]

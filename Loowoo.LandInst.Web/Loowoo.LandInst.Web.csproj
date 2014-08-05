@@ -210,6 +210,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="uploadfiles\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config">
@@ -321,6 +322,7 @@
     <Content Include="Areas\Institution\Views\Member\Search.cshtml" />
     <Content Include="Areas\Institution\Views\Shared\_MemberProfile.cshtml" />
     <Content Include="Areas\Admin\Views\Exam\EditResult.cshtml" />
+    <Content Include="Areas\Admin\Views\Exam\Import.cshtml" />
     <None Include="Properties\PublishProfiles\LandInst.pubxml" />
     <Content Include="Views\User\ForgetPwd.cshtml" />
   </ItemGroup>

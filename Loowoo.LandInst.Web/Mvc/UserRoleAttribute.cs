@@ -17,21 +17,25 @@ namespace Loowoo.LandInst.Web
 
         public UserRole Role { get; set; }
 
-        public override void OnResultExecuting(ResultExecutingContext filterContext)
+        public override void OnActionExecuting(ActionExecutingContext filterContext)
         {
-            var currentUser = (UserIdentity)Thread.CurrentPrincipal.Identity;
+
             if (Role == UserRole.Everyone)
             {
                 return;
             }
 
-            if (Role == currentUser.Role)
+            var currentUser = (UserIdentity)Thread.CurrentPrincipal.Identity;
+
+            //if (currentUser == null)
+            //{
+            //    filterContext.HttpContext.Response.Redirect("/", true);
+            //    return;
+            //}
+
+            if (currentUser.Role != Role)
             {
-                return;
-            }
-            else
-            {
-                //throw new HttpException(401, "你没有权限查看此页面");
+                throw new HttpException(401, "你没有权限查看此页面");
             }
 
             return;
