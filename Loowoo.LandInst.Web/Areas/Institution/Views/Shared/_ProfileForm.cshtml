@@ -25,7 +25,35 @@
     }
     else
     {
+        if (inst.Status == InstitutionStatus.Normal)
+        {
+        @:你可以在提交注册登记前重复保存草稿，在审批之前你可以重复提交。
+        }
+        else
+        {
         @:机构资料的提交会自动提交资料变更登记审批请求，重复提交不会重复提交请求。
+        }
+    }
+    @if (checkLog != null)
+    {
+        @:<br />你已于@(checkLog.CreateTime.ToString())提交申请，
+        if (checkLog.Result.HasValue)
+        {
+        @:且与@(checkLog.UpdateTime.ToString()) 
+            if (checkLog.Result.Value)
+            {
+        <span class="label label-success">审批通过</span>
+            }
+            else
+            {
+        <span class="label label-warning">审批通过</span>
+            }
+        }
+        else
+        {
+        @:目前 <span class="label label-default">尚未审批</span>
+
+        }
     }
 </div>
 <form id="profile-form" role="form" class="form-horizontal" method="post">
@@ -59,7 +87,11 @@
         <div class="form-group">
             <label class="control-label col-lg-2">经营范围</label>
             <div class="col-sm-3">
-                <input type="text" name="BusinessScope" class="form-control input-sm" value="@(model.BusinessScope)" />
+                <select name="BusinessScope" class="form-control input-sm">
+                    <option @(model.BusinessScope == "全国范围" ? "select=select" : null)>全国范围</option>
+                    <option @(model.BusinessScope == "省范围" ? "select=select" : null)>省范围</option>
+                    <option @(model.BusinessScope == "市范围" ? "select=select" : null)>市范围</option>
+                </select>
             </div>
             <label class="control-label col-lg-2">注册证书号</label>
             <div class="col-sm-3">
@@ -93,7 +125,20 @@
         <div class="form-group">
             <label class="control-label col-lg-2">所在城市</label>
             <div class="col-sm-3">
-                <input type="text" name="City" class="form-control input-sm" value="@(model.City)" />
+                <select id="City" name="City" class="form-control input-sm">
+                    <option value="">全部</option>
+                    <option>杭州市</option>
+                    <option>宁波市</option>
+                    <option>温州市</option>
+                    <option>嘉兴市</option>
+                    <option>湖州市</option>
+                    <option>绍兴市</option>
+                    <option>金华市</option>
+                    <option>衢州市</option>
+                    <option>舟山市</option>
+                    <option>台州市</option>
+                    <option>丽水市</option>
+                </select>
             </div>
             <label class="control-label col-lg-2">电子邮箱</label>
             <div class="col-sm-3">
@@ -210,27 +255,28 @@
         </div>
         }
     }
-    <div style="clear: both" id="btn-group">
-        <input id="txt-draft" type="hidden" name="isDraft" />
+    <div style="clear: both; margin: 20px; padding-left: 150px;" id="btn-group">
+        <input id="isSubmit" type="hidden" name="isSubmit" />
         <input id="btn-draft" type="button" value="保存为草稿" class="btn btn-primary" />
         <input id="btn-submit" type="button" value="@(isAnnualCheck ? "提交年检申请" : (isRegister ? "提交注册登记" : "提交资料变更"))" class="btn btn-warning" />
     </div>
 </form>
 <script>
     $(function () {
+        $("#City").val("@(model.City)");
         var form = $("#profile-form");
         $("#btn-draft").click(function () {
-            $("#txt-draft").val("true");
+            $("#isSubmit").val("false");
             form.submit();
         });
         $("#btn-submit").click(function () {
-            $("#txt-draft").val("false");
+            $("#isSubmit").val("true");
             form.submit();
         });
 
         form.submit(function () {
             var data = $(this).serialize();
-            $.request("submit?submit=" + data.isSubmit + "&type=" + data.type, data, function (json) {
+            $.request("/institution/profile/submit?isSubmit=" + data.isSubmit + "&type=" + data.type, data, function (json) {
                 //window.location.href = "@Html.Raw(Request.Url.AbsoluteUri)";
             });
             return false;

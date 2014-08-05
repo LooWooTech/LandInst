@@ -20,18 +20,20 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
             var currentInst = GetCurrentInst();
             //只要不是注册登记，那么就获取资料变更的审核状态
             var checkLog = Core.CheckLogManager.GetLastLog(currentInst.ID, CheckType.Profile);
-            var annualCheck = Core.AnnualCheckManager.GetIndateModel();
-            var annualCheckLog = Core.CheckLogManager.GetLastLog(currentInst.ID, CheckType.Annual);
-            if (annualCheckLog != null && annualCheckLog.Result == true)
+            if (checkLog == null || checkLog.Result.HasValue)
             {
-                ViewBag.AnnualCheck = null;
-            }
-            else
-            {
-                ViewBag.AnnualCheck = annualCheck;
+                var annualCheck = Core.AnnualCheckManager.GetIndateModel();
+                if (annualCheck != null)
+                {
+                    var annualCheckLog = Core.CheckLogManager.GetLastLog(currentInst.ID, CheckType.Annual);
+                    if (annualCheckLog == null || annualCheckLog.Result == false)
+                    {
+                        ViewBag.AnnualCheck = annualCheck;
+                    }
+                }
             }
             ViewBag.CheckLog = checkLog;
-            ViewBag.Profile = Core.InstitutionManager.GetLastProfile(currentInst.ID);
+            ViewBag.Profile = Core.InstitutionManager.GetProfile(currentInst.ID);
             return View();
         }
 
@@ -50,7 +52,7 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
         //}
 
         [HttpPost]
-        public ActionResult Submit(InstitutionProfile data, bool isDraft = true)
+        public ActionResult Submit(InstitutionProfile data, bool isSubmit = false)
         {
             try
             {
@@ -75,6 +77,7 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
             catch
             {
             }
+
             try
             {
                 var certNames = Request.Form["Cert.Name"].Split(',');
@@ -92,13 +95,13 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
             }
             catch { }
 
-            if (isDraft)
+            if (isSubmit)
             {
-                Core.InstitutionManager.SaveProfile(Identity.UserID, data);
+                Core.InstitutionManager.SubmitProfile(Identity.UserID, data);
             }
             else
             {
-                Core.InstitutionManager.SubmitProfile(Identity.UserID, data);
+                Core.InstitutionManager.SaveProfile(Identity.UserID, data);
             }
             return JsonSuccess();
         }

@@ -120,7 +120,7 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
 
             ViewBag.CheckLog = checkLog;
 
-            ViewBag.Profile = Core.InstitutionManager.GetCheckProfile(checkLog);
+            ViewBag.Profile = Core.InstitutionManager.GetProfile(checkLog);
 
             ViewBag.CheckLogs = Core.CheckLogManager.GetList(id);
 
@@ -145,8 +145,7 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
                 {
                     Core.InstitutionManager.UpdateStatus(checkLog.UserID, InstitutionStatus.Registered);
                 }
-                var profie = Core.InstitutionManager.GetCheckProfile(checkLog);
-                Core.InstitutionManager.UpdateInstitution(profie);
+                Core.InstitutionManager.ApprovalInst(checkLog);
             }
             return JsonSuccess();
         }

@@ -57,7 +57,7 @@ namespace Loowoo.LandInst.Manager
                     query = query.Where(e => e.Result == filter.Result.Value);
                 }
 
-                return query.OrderByDescending(e => e.CreateTime).SetPage(filter.Page).ToList();
+                return query.OrderByDescending(e => e.ID).SetPage(filter.Page).ToList();
             }
         }
 
@@ -114,7 +114,17 @@ namespace Loowoo.LandInst.Manager
             }
         }
 
-        public void UpdateInstitution(InstitutionProfile model)
+        public void ApprovalInst(CheckLog checkLog)
+        {
+            var profile = Core.ProfileManager.GetLastProfile(checkLog.UserID, null);
+            if (checkLog.Result == true)
+            {
+                UpdateInst(profile.Data.Convert<Institution>());
+            }
+            Core.ProfileManager.UpdateProfileCheckResult(profile.ID, checkLog.Result);
+        }
+
+        public void UpdateInst(Institution model)
         {
             using (var db = GetDataContext())
             {
@@ -132,12 +142,12 @@ namespace Loowoo.LandInst.Manager
             }
         }
 
-        public InstitutionProfile GetLastProfile(int instId)
+        public InstitutionProfile GetProfile(int instId, bool? checkResult = null)
         {
-            return Core.ProfileManager.GetLastProfile<InstitutionProfile>(instId);
+            return Core.ProfileManager.GetLastProfile<InstitutionProfile>(instId, checkResult);
         }
 
-        public InstitutionProfile GetCheckProfile(CheckLog checkLog)
+        public InstitutionProfile GetProfile(CheckLog checkLog)
         {
             if (checkLog == null) return null;
 
@@ -147,19 +157,8 @@ namespace Loowoo.LandInst.Manager
             }
             else
             {
-                return GetLastProfile(checkLog.UserID);
+                return GetProfile(checkLog.UserID);
             }
-        }
-
-        //public InstitutionProfile GetProfile(int instId, CheckLog checkLog)
-        //{
-        //    if (checkLog == null) return Core.ProfileManager.GetLastProfile<InstitutionProfile>(instId);
-        //    return Core.ProfileManager.GetProfile<InstitutionProfile>(checkLog.InfoID);
-        //}
-
-        public int SaveProfile(int instId, InstitutionProfile profile)
-        {
-            return Core.ProfileManager.AddProfile(instId, profile);
         }
 
         public void SubmitProfile(int instId, InstitutionProfile profile)
@@ -178,46 +177,34 @@ namespace Loowoo.LandInst.Manager
             if (inst.Status != InstitutionStatus.Normal && annualCheck != null)
             {
                 checkLog = Core.CheckLogManager.GetCheckLog(annualCheck.ID, instId, CheckType.Annual);
+                //如果没有申请年检或年检没有通过，则重新提交年检
                 if (checkLog == null || checkLog.Result == false)
                 {
                     Core.CheckLogManager.AddCheckLog(annualCheck.ID, instId, CheckType.Annual);
                 }
-                Core.ProfileManager.AddProfile(instId, profile);
+                SaveProfile(instId, profile);
             }
             else
             {
                 if (checkLog == null || checkLog.Result.HasValue)
                 {
-                    var profileId = Core.ProfileManager.AddProfile(instId, profile);
+                    var profileId = SaveProfile(instId, profile);
                     Core.CheckLogManager.AddCheckLog(profileId, instId, CheckType.Profile);
                 }
             }
         }
 
-        //public int AddProfile(int instId, InstitutionProfile profile)
-        //{
-        //    var lastProfile = Core.ProfileManager.GetLastProfile(instId);
-        //    if (lastProfile == null)
-        //    {
-        //        return Core.ProfileManager.AddProfile(instId, profile);
-        //    }
+        public int SaveProfile(int instId, InstitutionProfile profile)
+        {
+            var draftProfile = Core.ProfileManager.GetLastProfile(instId);
+            if (draftProfile == null)
+            {
+                return Core.ProfileManager.AddProfile(instId, profile);
+            }
 
-        //    var checkLog = Core.CheckLogManager.GetCheckLog(lastProfile.ID, instId, CheckType.Profile);
-        //    if (checkLog != null && !checkLog.Result.HasValue)
-        //    {
-        //        Core.ProfileManager.UpdateProfile(lastProfile.ID, profile);
-        //        return lastProfile.ID;
-        //    }
-        //    else if (checkLog == null)
-        //    {
-        //        Core.ProfileManager.UpdateProfile(lastProfile.ID, profile);
-        //        return lastProfile.ID;
-        //    }
-        //    else
-        //    {
-        //        return Core.ProfileManager.AddProfile(instId, profile);
-        //    }
-        //}
+            Core.ProfileManager.UpdateProfile(draftProfile.ID, profile);
+            return draftProfile.ID;
+        }
 
         public void UpdateStatus(int instId, InstitutionStatus status)
         {

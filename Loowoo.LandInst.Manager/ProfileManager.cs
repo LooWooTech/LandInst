@@ -20,17 +20,22 @@ namespace Loowoo.LandInst.Manager
             }
         }
 
-        public Profile GetLastProfile(int userId)
+        public Profile GetLastProfile(int userId, bool? checkResult = null)
         {
             using (var db = GetDataContext())
             {
-                return db.Profiles.OrderBy(e => e.ID).FirstOrDefault(e => e.UserID == userId);
+                var query = db.Profiles.Where(e => e.UserID == userId && e.CheckResult == checkResult);
+                //if (checkResult.HasValue)
+                //{
+                //    query = query.Where(e => e.CheckResult == checkResult.Value);
+                //}
+                return query.OrderByDescending(e => e.ID).FirstOrDefault();
             }
         }
 
-        public T GetLastProfile<T>(int userId)
+        public T GetLastProfile<T>(int userId, bool? checkResult = null)
         {
-            var entity = GetLastProfile(userId);
+            var entity = GetLastProfile(userId, checkResult);
             return entity == null ? default(T) : entity.Data.Convert<T>();
         }
 
@@ -42,7 +47,7 @@ namespace Loowoo.LandInst.Manager
                 {
                     UserID = userId,
                     Data = profile.ToBytes(),
-                    CreateTime = DateTime.Now
+                    CreateTime = DateTime.Now,
                 };
                 db.Profiles.Add(entity);
                 db.SaveChanges();
@@ -58,6 +63,20 @@ namespace Loowoo.LandInst.Manager
                 if (entity != null)
                 {
                     entity.Data = profile.ToBytes();
+                    entity.UpdateTime = DateTime.Now;
+                    db.SaveChanges();
+                }
+            }
+        }
+
+        internal void UpdateProfileCheckResult(int profileId,bool? checkResult)
+        {
+            using (var db = GetDataContext())
+            {
+                var entity = db.Profiles.FirstOrDefault(e => e.ID == profileId);
+                if (entity != null)
+                {
+                    entity.CheckResult = checkResult;
                     entity.UpdateTime = DateTime.Now;
                     db.SaveChanges();
                 }

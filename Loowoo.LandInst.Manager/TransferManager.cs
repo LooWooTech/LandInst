@@ -83,7 +83,7 @@ namespace Loowoo.LandInst.Manager
                     query = query.Where(e => e.CurrentInstID == filter.InstID.Value);
                 }
 
-                var list = query.OrderByDescending(e => e.CreateTime).SetPage(filter.Page).ToList();
+                var list = query.OrderByDescending(e => e.ID).SetPage(filter.Page).ToList();
 
                 foreach (var item in list)
                 {

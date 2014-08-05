@@ -9,12 +9,9 @@
     if (inst.Status == InstitutionStatus.Normal)
     {
         ViewBag.IsRegister = true;
-        if (checkLog == null || checkLog.Result == false)
-        {
-            ViewBag.Title = "提交注册登记";
-            Html.RenderPartial("_ProfileForm");
-            return;
-        }
+        ViewBag.Title = "提交注册登记";
+        Html.RenderPartial("_ProfileForm");
+        return;
         //else if (checkLog != null)
         //{
         //    ViewBag.CanSubmit = false;

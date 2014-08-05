@@ -132,7 +132,7 @@ namespace Loowoo.LandInst.Manager
             {
                 filter.Type = CheckType.Exam;
                 var query = Core.MemberManager.GetVCheckMembers(db.VCheckMembers, filter);
-                var vlist = query.OrderByDescending(e => e.CreateTime).SetPage(filter.Page).ToList();
+                var vlist = query.OrderByDescending(e => e.ID).SetPage(filter.Page).ToList();
                 return vlist.Select(e => new VCheckExam
                 {
                     ExamID = e.InfoID,

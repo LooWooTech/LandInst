@@ -120,7 +120,7 @@ namespace Loowoo.LandInst.Manager
                 {
                     query = query.Where(e => e.InstitutionID == filter.InstID.Value);
                 }
-                return query.OrderByDescending(e => e.CreateTime).SetPage(filter.Page).ToList();
+                return query.OrderByDescending(e => e.ID).SetPage(filter.Page).ToList();
             }
         }
 

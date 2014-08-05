@@ -70,7 +70,7 @@ namespace Loowoo.LandInst.Manager
                     query = query.Where(e => e.ID == filter.InfoID.Value);
                 }
 
-                return query.OrderByDescending(e => e.CreateTime).SetPage(filter.Page).ToList().Select(e => new VCheckAnnual
+                return query.OrderByDescending(e => e.ID).SetPage(filter.Page).ToList().Select(e => new VCheckAnnual
                 {
                     AnnualCheckID = e.InfoID,
                     AnnualCheckName = GetAnnualCheckName(e.InfoID),
