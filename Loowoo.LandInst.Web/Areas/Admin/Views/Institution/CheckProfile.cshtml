@@ -38,7 +38,7 @@
             <th>法人代表</th>
             <th>所在地</th>
             <th>手机号</th>
-            <th>工商注册号</th>
+            <th>工商登记号</th>
             <th>申请日期</th>
             <th>审批状态</th>
         </tr>
@@ -50,7 +50,7 @@
                 <td>@(item.UserID)</td>
                 <td><a href="/admin/institution/profile?id=@(item.UserID)&approvalId=@(item.ID)">@(item.InstName)</a></td>
                 <td>@(item.Type.ToString())</td>
-                <td>@(item.LegalRepresentative)</td>
+                <td>@(item.LegalPerson)</td>
                 <td>@(item.City)</td>
                 <td>@(item.MobilePhone)</td>
                 <td>@(item.RegistrationNo)</td>

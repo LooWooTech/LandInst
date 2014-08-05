@@ -34,6 +34,36 @@ namespace Loowoo.LandInst.Manager
             return GetExams().Where(e => e.StartSignDate <= now && e.EndSignDate >= now).ToList();
         }
 
+        public ExamResult GetExamResult(int examResultId)
+        {
+            using (var db = GetDataContext())
+            {
+                return db.ExamResults.FirstOrDefault(e => e.ID == examResultId);
+            }
+        }
+
+        public ExamResult GetExamResult(CheckLog checkLog)
+        {
+            if (checkLog == null)
+            {
+                throw new ArgumentException("没有申请考试报名");
+            }
+
+            using (var db = GetDataContext())
+            {
+                var entity = db.ExamResults.FirstOrDefault(e => e.ExamID == checkLog.InfoID && e.MemberID == checkLog.UserID);
+                if (entity == null)
+                {
+                    AddExamResult(checkLog.InfoID, checkLog.UserID);
+                    return GetExamResult(checkLog);
+                }
+                else
+                {
+                    return entity;
+                }
+            }
+        }
+
         public List<ExamResult> GetMemberExamResult(int memberId)
         {
             var exams = GetExams();
@@ -142,6 +172,24 @@ namespace Loowoo.LandInst.Manager
             }
         }
 
+        public void UpdateExamResult(CheckLog checkLog, ExamResult model)
+        {
+            using (var db = GetDataContext())
+            {
+                var entity = db.ExamResults.FirstOrDefault(e => e.ExamID == checkLog.InfoID && e.MemberID == checkLog.UserID);
+                entity.Result = model.Result;
+                entity.Note = model.Note;
+
+                db.SaveChanges();
+
+                if (checkLog.Result == null)
+                {
+                    checkLog.Result = entity.Result;
+                    Core.CheckLogManager.UpdateCheckLog(checkLog);
+                }
+            }
+        }
+
         public void UpdateExamResult(int examId, int memberId, bool result)
         {
             using (var db = GetDataContext())
@@ -161,6 +209,23 @@ namespace Loowoo.LandInst.Manager
                     });
                 }
                 db.SaveChanges();
+            }
+        }
+
+        public void Approval(int approvalId, bool result)
+        {
+            var checkLog = Core.CheckLogManager.GetCheckLog(approvalId);
+
+            if (checkLog == null) return;
+
+            if (checkLog.Result.HasValue) return;
+
+            checkLog.Result = result;
+            Core.CheckLogManager.UpdateCheckLog(checkLog);
+
+            if (result)
+            {
+                Core.MemberManager.UpdateMemberStatus(checkLog.UserID, MemberStatus.Registered);
             }
         }
     }

@@ -57,7 +57,7 @@ Insitution		机构表
 	RegistrationNo 注册码
 	City		城市
 	MobilePhone	手机
-	LegalRepresentative 法人代表
+	LegalPerson 法人代表
 	CreateTime	创建时间
 --------------------------------------------------------------------------------------
 Member			会员表

@@ -4,7 +4,7 @@ Source Host: localhost
 Source Database: landinst
 Target Host: localhost
 Target Database: landinst
-Date: 2014/8/5 13:47:55
+Date: 2014/8/5 18:39:48
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -91,6 +91,7 @@ CREATE TABLE `examresult` (
   `ExamID` int(11) NOT NULL,
   `Result` bit(1) DEFAULT NULL,
   `CreateTime` datetime NOT NULL,
+  `Note` varchar(1024) DEFAULT NULL,
   PRIMARY KEY (`ID`),
   KEY `ix_userid` (`MemberID`),
   KEY `ix_examid` (`ExamID`)
@@ -110,7 +111,7 @@ CREATE TABLE `institution` (
   `RegistrationNo` varchar(255) DEFAULT NULL,
   `City` varchar(255) DEFAULT NULL,
   `MobilePhone` varchar(255) DEFAULT NULL,
-  `LegalRepresentative` varchar(255) DEFAULT NULL,
+  `LegalPerson` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`ID`),
   KEY `ix_inst_name` (`Name`),
   KEY `ix_city` (`City`)
@@ -228,12 +229,11 @@ INSERT INTO `checklog` VALUES ('6', '1', '5', '5', '2014-07-28 13:26:15', '2014-
 INSERT INTO `checklog` VALUES ('7', '1', '5', '2', '2014-07-28 18:57:49', '2014-07-29 10:20:39', '', null);
 INSERT INTO `checklog` VALUES ('8', '2', '5', '2', '2014-07-29 10:25:31', '2014-07-29 10:25:51', '', null);
 INSERT INTO `checklog` VALUES ('9', '3', '5', '2', '2014-07-29 10:28:02', '2014-07-29 10:28:35', '', null);
-INSERT INTO `checklog` VALUES ('10', '4', '5', '2', '2014-07-29 10:29:42', null, null, null);
 INSERT INTO `checklog` VALUES ('13', '5', '5', '3', '2014-07-29 15:56:46', null, null, null);
 INSERT INTO `checklog` VALUES ('14', '2', '4', '4', '2014-08-04 12:03:25', null, null, null);
 INSERT INTO `education` VALUES ('1', '测试继续教育1', '2014-07-18 00:00:00', '2014-10-05 00:00:00', '111', '测试机构', null);
 INSERT INTO `exam` VALUES ('2', '2014-07-01 00:00:00', '2014-07-31 00:00:00', '2014-09-10 00:00:00', '2014-07-12 00:00:00', 'Test', null, '上海');
-INSERT INTO `examresult` VALUES ('1', '5', '2', '', '2014-07-27 14:33:00');
+INSERT INTO `examresult` VALUES ('1', '5', '2', '', '2014-07-27 14:33:00', '语文 100分\r\n数学 97分\r\n英语 99分');
 INSERT INTO `institution` VALUES ('4', 'Institution NO1', '1', '1', '2014-07-26 15:38:44', null, null, null, null, null);
 INSERT INTO `institution` VALUES ('6', 'Institution Two', '2', '0', '2014-08-05 13:15:04', null, null, null, null, null);
 INSERT INTO `member` VALUES ('5', '郑良俊', '4', '32032219821027003X', '1982-10-27 00:00:00', '男', '3667144@qq.com', '18121783230', '1');

@@ -108,7 +108,7 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
             if (checkLogId == 0)
             {
                 checkLog = Core.CheckLogManager.GetLastLog(id, CheckType.Profile);
-                if (checkLog.Result.HasValue)
+                if (checkLog == null || checkLog.Result.HasValue)
                 {
                     checkLog = Core.CheckLogManager.GetLastLog(id, CheckType.Annual);
                 }
@@ -120,7 +120,7 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
 
             ViewBag.CheckLog = checkLog;
 
-            ViewBag.Profile = Core.InstitutionManager.GetProfile(checkLog);
+            ViewBag.Profile = Core.InstitutionManager.GetProfile(checkLog) ?? Core.InstitutionManager.GetProfile(inst.ID) ?? new InstitutionProfile(inst);
 
             ViewBag.CheckLogs = Core.CheckLogManager.GetList(id);
 

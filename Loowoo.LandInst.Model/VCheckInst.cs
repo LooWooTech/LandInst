@@ -19,7 +19,7 @@ namespace Loowoo.LandInst.Model
 
         public string City { get; set; }
 
-        public string LegalRepresentative { get; set; }
+        public string LegalPerson { get; set; }
 
         public string MobilePhone { get; set; }
 

@@ -16,8 +16,6 @@
         <div class="col-sm-3">
             <input type="text" name="StartSignDate" class="form-control input-sm datepicker" value="@(model.StartSignDate == DateTime.MinValue ? "" : model.StartSignDate.ToShortDateString())" />
         </div>
-    </div>
-    <div class="form-group">
         <label class="control-label col-lg-2">报名结束时间</label>
         <div class="col-sm-3">
             <input type="text" name="EndSignDate" class="form-control input-sm datepicker""  value="@(model.EndSignDate == DateTime.MinValue ? "" : model.EndSignDate.ToShortDateString())" />
@@ -28,8 +26,6 @@
         <div class="col-sm-3">
             <input type="text" name="StartExamDate" class="form-control input-sm datepicker""  value="@(model.StartExamDate == DateTime.MinValue ? "" : model.StartExamDate.ToShortDateString())" />
         </div>
-    </div>
-    <div class="form-group">
         <label class="control-label col-lg-2">考试结束时间</label>
         <div class="col-sm-3">
             <input type="text" name="EndExamDate" class="form-control input-sm datepicker""  value="@(model.EndExamDate == DateTime.MinValue ? "" : model.EndExamDate.ToShortDateString())" />
@@ -44,7 +40,7 @@
     <div class="form-group">
         <label class="control-label col-lg-2">简介</label>
         <div class="col-sm-3">
-            <textarea name="summary" class="form-control input-sm">@(model.Summary)</textarea>
+            <textarea name="summary" class="form-control input-sm" rows="5" cols="50">@(model.Summary)</textarea>
         </div>
     </div>
 

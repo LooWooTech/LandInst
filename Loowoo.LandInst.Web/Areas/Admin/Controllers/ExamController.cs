@@ -60,26 +60,20 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
             return JsonSuccess();
         }
 
-        //[HttpPost]
-        //public ActionResult Approval(string id, bool result = true)
-        //{
-        //    if (string.IsNullOrEmpty(id))
-        //    {
-        //        throw new ArgumentException("缺少参数");
-        //    }
-        //    var ids = id.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(s => int.Parse(s));
-        //    foreach (var approvalId in ids)
-        //    {
-        //        var app = Core.CheckLogManager.GetCheckLog(approvalId);
-        //        if (app != null)
-        //        {
-        //            //TODO
-        //            //Core.CheckLogManager.UpdateCheckLog(approvalId, result);
-        //            //Core.MemberManager.UpdateMemberStatus(app.UserID, result ? MemberStatus.SingupExam : MemberStatus.Registered);
-        //        }
-        //    }
-        //    return JsonSuccess();
-        //}
+        [HttpPost]
+        public ActionResult Approval(string id, bool result = true)
+        {
+            if (string.IsNullOrEmpty(id))
+            {
+                throw new ArgumentException("缺少参数");
+            }
+            var ids = id.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(s => int.Parse(s));
+            foreach (var approvalId in ids)
+            {
+                Core.ExamManager.Approval(approvalId, result);
+            }
+            return JsonSuccess();
+        }
 
         [HttpGet]
         public ActionResult ExamResult(string name, int? examId, int page = 1)
@@ -97,23 +91,45 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
             return View();
         }
 
-        [HttpPost]
-        public ActionResult ExamResult(string id, bool result = true)
-        {
-            if (string.IsNullOrEmpty(id))
-            {
-                throw new ArgumentException("缺少参数");
-            }
-            var ids = id.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(s => int.Parse(s));
-            foreach (var approvalId in ids)
-            {
-                var app = Core.CheckLogManager.GetCheckLog(approvalId);
-                if (app != null)
-                {
-                    Core.ExamManager.UpdateExamResult(app.InfoID, app.UserID, result);
+        //[HttpPost]
+        //public ActionResult ExamResult(string id, bool result = true)
+        //{
+        //    if (string.IsNullOrEmpty(id))
+        //    {
+        //        throw new ArgumentException("缺少参数");
+        //    }
+        //    var ids = id.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(s => int.Parse(s));
+        //    foreach (var approvalId in ids)
+        //    {
+        //        var app = Core.CheckLogManager.GetCheckLog(approvalId);
+        //        if (app != null)
+        //        {
+        //            Core.ExamManager.UpdateExamResult(app.InfoID, app.UserID, result);
 
-                    //Core.MemberManager.UpdateMemberStatus(app.UserID, result ? MemberStatus.ExamSuccess : MemberStatus.Registered);
-                }
+        //            //Core.MemberManager.UpdateMemberStatus(app.UserID, result ? MemberStatus.ExamSuccess : MemberStatus.Registered);
+        //        }
+        //    }
+        //    return JsonSuccess();
+        //}
+
+        [HttpGet]
+        public ActionResult EditResult(int checkLogId)
+        {
+            var checkLog = Core.CheckLogManager.GetCheckLog(checkLogId);
+            var result = Core.ExamManager.GetExamResult(checkLog);
+            result.Exam = Core.ExamManager.GetExam(result.ExamID);
+            ViewBag.Model = result;
+            ViewBag.CheckLog = checkLog;
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult EditResult(int checkLogId, ExamResult data)
+        {
+            var checkLog = Core.CheckLogManager.GetCheckLog(checkLogId);
+            if (checkLog != null)
+            {
+                Core.ExamManager.UpdateExamResult(checkLog, data);
             }
             return JsonSuccess();
         }

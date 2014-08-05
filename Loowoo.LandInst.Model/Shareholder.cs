@@ -24,5 +24,9 @@ namespace Loowoo.LandInst.Model
         public string Shares { get; set; }
 
         public string Mobile { get; set; }
+
+        public string Title { get; set; }
+
+        public bool Professionals { get; set; }
     }
 }

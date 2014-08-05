@@ -320,6 +320,7 @@
   <ItemGroup>
     <Content Include="Areas\Institution\Views\Member\Search.cshtml" />
     <Content Include="Areas\Institution\Views\Shared\_MemberProfile.cshtml" />
+    <Content Include="Areas\Admin\Views\Exam\EditResult.cshtml" />
     <None Include="Properties\PublishProfiles\LandInst.pubxml" />
     <Content Include="Views\User\ForgetPwd.cshtml" />
   </ItemGroup>

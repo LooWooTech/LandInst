@@ -40,7 +40,7 @@ namespace Loowoo.LandInst.Model
         public string Name { get; set; }
 
         /// <summary>
-        /// 工商注册号
+        /// 工商登记号
         /// </summary>
         public string RegistrationNo { get; set; }
 
@@ -51,7 +51,7 @@ namespace Loowoo.LandInst.Model
         /// <summary>
         /// 法人代表
         /// </summary>
-        public string LegalRepresentative { get; set; }
+        public string LegalPerson { get; set; }
     }
 
     public enum InstitutionType

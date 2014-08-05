@@ -33,6 +33,11 @@ namespace Loowoo.LandInst.Model
         }
 
         /// <summary>
+        /// 工商登记机关
+        /// </summary>
+        public string RegistrationInstitution { get; set; }
+
+        /// <summary>
         /// 注册资金
         /// </summary>
         public string RegisteredCapital { get; set; }
@@ -61,12 +66,69 @@ namespace Loowoo.LandInst.Model
         public string Website { get; set; }
 
         /// <summary>
-        /// 经营期限
+        /// 法人代码
+        /// </summary>
+        public string LegalpersonNo { get; set; }
+
+        /// <summary>
+        /// 传真电话
+        /// </summary>
+        public string Fax { get; set; }
+
+        /// <summary>
+        /// 联系电话
+        /// </summary>
+        public string Tel { get; set; }
+
+        /// <summary>
+        /// 营业期限
         /// </summary>
         public string OperatingPeriod { get; set; }
+
+        /// <summary>
+        /// 是否有测绘许可证书
+        /// </summary>
+        public bool HasExequatur { get; set; }
+
+        /// <summary>
+        /// 证书级别
+        /// </summary>
+        public string ExequaturLevel { get; set; }
+
+        /// <summary>
+        /// 执业注册号
+        /// </summary>
+        public string PracticeRegistrationNo { get; set; }
+
+        /// <summary>
+        /// 团体会员证号
+        /// </summary>
+        public string CorporateMemberNo { get; set; }
+
+        /// <summary>
+        /// 机构总人数
+        /// </summary>
+        public int TotalMembers { get; set; }
+
+        /// <summary>
+        /// 其中专业人员数
+        /// </summary>
+        public int ProMembers { get; set; }
+
+        /// <summary>
+        /// 中级及以上专业人员数
+        /// </summary>
+        public int ExpertMembers { get; set; }
+
+        /// <summary>
+        /// 成立日期
+        /// </summary>
+        public DateTime EstablishedDate { get; set; }
 
         public List<Shareholder> ShareHolders { get; set; }
 
         public List<Certification> Certifications { get; set; }
+
+        public List<Equipment> Equipments { get; set; }
     }
 }

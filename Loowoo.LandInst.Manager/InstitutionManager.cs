@@ -229,16 +229,12 @@ namespace Loowoo.LandInst.Manager
         //    return Core.InfoDataManager.GetModel<List<Certification>>(id, CheckType.Certificatoin) ?? new List<Certification>();
         //}
 
-        public List<Profile> GetProfiles(int instId)
+        public IEnumerable<Profile> GetProfileHistory(int instId)
         {
             using (var db = GetDataContext())
             {
-                return db.Profiles.Where(e => e.UserID == instId).OrderByDescending(e => e.ID).Select(e => new Profile
-                {
-                    ID = e.ID,
-                    CreateTime = e.CreateTime,
-                    UpdateTime = e.UpdateTime
-                }).ToList();
+                return db.Profiles.Where(e => e.UserID == instId ).OrderByDescending(e => e.ID)
+                    .ToList();
             }
         }
     }

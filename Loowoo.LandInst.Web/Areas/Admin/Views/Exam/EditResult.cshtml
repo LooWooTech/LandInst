@@ -1,0 +1,77 @@
+﻿@using Loowoo.LandInst.Model
+@{
+    ViewBag.Title = "会员考试成绩";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    ExamResult model = ViewBag.Model;
+    CheckLog checkLog = ViewBag.CheckLog;
+}
+<form id="exam-form" role="form" class="form-horizontal">
+    <table class="table table-bordered">
+        <tr>
+            <th>考试名称</th>
+            <td>@(model.Exam.Name)</td>
+            <th>考试时间</th>
+            <td>@(model.Exam.StartExamDate.ToShortDateString()) ~ @(model.Exam.EndExamDate.ToShortDateString())</td>
+        </tr>
+        <tr>
+            <th>报名时间</th>
+            <td>@(checkLog.CreateTime.ToString())</td>
+            <th>审批结果</th>
+            <td>@if (checkLog.Result.HasValue)
+                {
+                    if (checkLog.Result.Value)
+                    {
+                <span class="label label-success">审批通过</span>
+                    }
+                    else
+                    {
+                <span class="label label-warning">没通过</span>
+                    }
+                }
+                else
+                {
+                <span class="label label-default">未通过</span>
+                }</td>
+        </tr>
+    </table>
+    <div class="form-group">
+        <label class="control-label col-lg-2">考试结果</label>
+        <div class="col-lg-8">
+            <div class="radio-inline">
+                <label>
+                    <input type="radio" name="Result" value="true" @((model.Result == null || model.Result == true) ? " checked=checked" : null) />通过考试</label>
+            </div>
+            <div class="radio-inline">
+                <label>
+                    <input type="radio" name="Result" value="false" @(model.Result == false ? " checked=checked" : null)  />不通过</label>
+            </div>
+        </div>
+    </div>
+    <input type="hidden" name="ExamID" value="@(model.ExamID)" />
+    <input type="hidden" name="MemberID" value="@(model.MemberID)" />
+    <div class="form-group">
+        <label class="control-label col-lg-2">详细成绩</label>
+        <div class="col-lg-8">
+            <textarea name="Note" class="form-control input-sm" cols="60" rows="10">@(model.Note)</textarea>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-lg-2"></label>
+        <div class="col-lg-8">
+            <input type="submit" value="提交成绩" class="btn btn-primary" />
+            <a href="examResult" class="btn btn-default">返回</a>
+        </div>
+    </div>
+</form>
+<script>
+    $(function () {
+        $("#exam-form").submit(function () {
+            var data = $(this).serialize();
+            $.request("?checkLogId=@(checkLog.ID)", data, function () {
+                alert("设置完成");
+                window.location.href = "ExamResult";
+            });
+            return false;
+        });
+    });
+</script>

@@ -126,7 +126,7 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
 
         public ActionResult History()
         {
-            ViewBag.List = Core.InstitutionManager.GetProfiles(Identity.UserID);
+            ViewBag.List = Core.InstitutionManager.GetProfileHistory(Identity.UserID);
             return View();
         }
     }

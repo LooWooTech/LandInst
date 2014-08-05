@@ -10,6 +10,7 @@
         <th>报名日期</th>
         <th>考试时间</th>
         <th>考试结果</th>
+        <th>考试成绩</th>
     </tr>
     @foreach (var result in list)
     {
@@ -17,7 +18,23 @@
             <td>@(result.Exam.Name)</td>
             <td>@(result.CreateTime.ToShortDateString())</td>
             <td>@(result.Exam.StartExamDate.ToShortDateString()) ~ @(result.Exam.EndExamDate.ToShortDateString())</td>
-            <td>@(result.Result.HasValue ? (result.Result.Value ? "通过" : "未通过") : "未出成绩")</td>
+            <td>
+                @if (result.Result.HasValue)
+                {
+                    if (result.Result.Value)
+                    { 
+                        <span class="label label-success">通过考试</span>
+                    }
+                    else{
+                        <span class="label label-warning">未通过</span>
+                    }
+                }else
+                {
+                    <span class="label label-default">未出成绩</span>
+                }
+
+            </td>
+            <td>@Html.Raw(result.Note.Replace("\r\n","<br />"))</td>
         </tr>
     }
 </table>
