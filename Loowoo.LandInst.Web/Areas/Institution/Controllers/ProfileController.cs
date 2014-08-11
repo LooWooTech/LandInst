@@ -15,25 +15,38 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
         }
 
         [HttpGet]
-        public ActionResult Edit()
+        public ActionResult Edit(int? checkLogId)
         {
-            var currentInst = GetCurrentInst();
-            //只要不是注册登记，那么就获取资料变更的审核状态
-            var checkLog = Core.CheckLogManager.GetLastLog(currentInst.ID, CheckType.Profile);
-            if (checkLog == null || checkLog.Result.HasValue)
+            //查看历史
+            if (checkLogId.HasValue)
             {
-                var annualCheck = Core.AnnualCheckManager.GetIndateModel();
-                if (annualCheck != null)
+                var checkLog = Core.CheckLogManager.GetCheckLog(checkLogId.Value);
+                if (checkLog != null)
                 {
-                    var annualCheckLog = Core.CheckLogManager.GetLastLog(currentInst.ID, CheckType.Annual);
-                    if (annualCheckLog == null || annualCheckLog.Result == false)
-                    {
-                        ViewBag.AnnualCheck = annualCheck;
-                    }
+                    ViewBag.Disabled = true;
+                    ViewBag.Profile = Core.InstitutionManager.GetProfile(checkLog);
                 }
             }
-            ViewBag.CheckLog = checkLog;
-            ViewBag.Profile = Core.InstitutionManager.GetProfile(currentInst.ID);
+            else
+            {
+                var currentInst = GetCurrentInst();
+                //只要不是注册登记，那么就获取资料变更的审核状态
+                var checkLog = Core.CheckLogManager.GetLastLog(currentInst.ID, CheckType.Profile);
+                if (checkLog == null || checkLog.Result.HasValue)
+                {
+                    var annualCheck = Core.AnnualCheckManager.GetIndateModel();
+                    if (annualCheck != null)
+                    {
+                        var annualCheckLog = Core.CheckLogManager.GetLastLog(currentInst.ID, CheckType.Annual);
+                        if (annualCheckLog == null || annualCheckLog.Result == false)
+                        {
+                            ViewBag.AnnualCheck = annualCheck;
+                        }
+                    }
+                }
+                ViewBag.CheckLog = checkLog;
+                ViewBag.Profile = Core.InstitutionManager.GetProfile(currentInst.ID);
+            }
             return View();
         }
 
@@ -80,16 +93,20 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
 
             try
             {
-                var certNames = Request.Form["Cert.Name"].Split(',');
-                var certNos = Request.Form["Cert.No"].Split(',');
-                var certLevel = Request.Form["Cert.Level"].Split(',');
-                for (var i = 0; i < certNames.Length; i++)
+                var equipmentNames = Request.Form["equipment.Name"].Split(',');
+                var equipmentNumbers = Request.Form["equipment.Number"].Split(',');
+                var equipmentModels = Request.Form["equipment.Model"].Split(',');
+                var equipmentManufacturers = Request.Form["equipment.Manufacturer"].Split(',');
+                for (var i = 0; i < equipmentNames.Length; i++)
                 {
-                    data.Certifications.Add(new Certification
+                    var number = 0;
+                    int.TryParse(equipmentNames[i],out number);
+                    data.Equipments.Add(new Equipment
                     {
-                        Name = certNames[i],
-                        CertificationNo = certNos[i],
-                        CertificationLevel = certLevel[i]
+                        Name = equipmentNames[i],
+                        Number = number,
+                        Model = equipmentModels[i],
+                        Manufacturer = equipmentManufacturers[i]
                     });
                 }
             }

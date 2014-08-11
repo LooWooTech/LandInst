@@ -43,6 +43,8 @@ namespace Loowoo.LandInst.Manager
         
         public DbSet<CheckLog> CheckLogs { get; set; }
 
+        public DbSet<CheckProfile> CheckProfiles { get; set; }
+
         public DbSet<VCheckInst> VCheckInsts { get; set; }
 
         public DbSet<VCheckMember> VCheckMembers { get; set; }

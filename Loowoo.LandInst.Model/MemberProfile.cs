@@ -10,9 +10,12 @@ namespace Loowoo.LandInst.Model
     [NotMapped]
     public class MemberProfile : Member
     {
-        public MemberProfile() { }
+        public MemberProfile()
+        {
+            PracticeInfo = new PracticeInfo();
+        }
 
-        public MemberProfile(Member member)
+        public MemberProfile(Member member):this()
         {
             SetMemberField(member);
         }
@@ -79,5 +82,11 @@ namespace Loowoo.LandInst.Model
         /// 通信地址
         /// </summary>
         public string Address { get; set; }
+
+        /// <summary>
+        /// 执业登记信息
+        /// </summary>
+        public PracticeInfo PracticeInfo { get; set; }
+
     }
 }

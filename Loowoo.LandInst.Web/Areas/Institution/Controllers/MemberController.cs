@@ -16,6 +16,7 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
             {
                 InstID = string.IsNullOrEmpty(name) ? Identity.UserID : 0,
                 Keyword = name,
+                InInst = true,
                 Page = new Model.Filters.PageFilter { PageIndex = page },
             };
             ViewBag.List = Core.MemberManager.GetMembers(filter);
@@ -25,6 +26,17 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
 
         public new ActionResult Profile(int id)
         {
+            var inst = GetCurrentInst();
+            var member = Core.MemberManager.GetMember(id);
+            var profile = Core.MemberManager.GetProfile(id);
+            profile.SetMemberField(member);
+            ViewBag.Profile = profile;
+
+            //ViewBag.CheckLog = Core.CheckLogManager.GetLastLog(id, CheckType.Practice);
+            ViewBag.Practice = Core.PracticeManager.GetPracticeInfo(id, inst.ID);
+            ViewBag.ChecLogs = Core.CheckLogManager.GetList(id);
+            ViewBag.ExamResults = Core.ExamManager.GetMemberExamResult(id);
+            ViewBag.Educations = Core.EducationManager.GetMemberEducations(id);
             return View();
         }
 
@@ -46,13 +58,19 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
             var filter = new MemberFilter
             {
                 Keyword = keyword,
+                InstID = GetCurrentInst().ID
             };
 
-            switch(target.ToLower())
+            switch (target.ToLower())
             {
                 case "transferout":
+                    filter.InInst = true;
+                    break;
+                case "transferin":
+                    filter.InInst = false;
+                    break;
                 case "practice":
-                    filter.InstID = GetCurrentInst().ID;
+                    filter.InInst = true;
                     break;
             }
 
@@ -67,7 +85,7 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
             {
                 return RedirectToAction("Search", new { target = "TransferIn" });
             }
-            ViewBag.Member = Core.MemberManager.GetMember(memberId);
+            ViewBag.MemberProfile = Core.MemberManager.GetProfile(memberId);
             return View();
         }
 
@@ -78,7 +96,7 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
             {
                 return RedirectToAction("Search", new { target = "TransferOut" });
             }
-            ViewBag.Member = Core.MemberManager.GetMember(memberId);
+            ViewBag.MemberProfile = Core.MemberManager.GetProfile(memberId);
             return View();
         }
 
@@ -145,17 +163,15 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
         {
             if (memberId == 0)
             {
-                return RedirectToAction("Search", new { target = "TransferOut" });
+                return RedirectToAction("Search", new { target = "Practice" });
             }
 
             var currentInst = GetCurrentInst();
-            ViewBag.Member = Core.MemberManager.GetMember(memberId);
+            ViewBag.MemberProfile = Core.MemberManager.GetProfile(memberId);
             var checkLog = Core.CheckLogManager.GetLastLog(memberId, CheckType.Practice);
-            if (checkLog != null && checkLog.Result != false)
-            {
-                ViewBag.CheckLog = checkLog;
-                ViewBag.Practice = Core.PracticeManager.GetPracticeInfo(memberId);
-            }
+            ViewBag.Institution = currentInst;
+            ViewBag.CheckLog = checkLog;
+            ViewBag.Practice = Core.PracticeManager.GetPracticeInfo(memberId, currentInst.ID);
             return View();
         }
 
@@ -165,32 +181,62 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
         {
             var currentInst = GetCurrentInst();
             var member = Core.MemberManager.GetMember(memberId);
-            if (member.InstitutionID != currentInst.ID)
+            if (member.InstitutionID != currentInst.ID && member.InstitutionID != 0)
             {
                 throw new HttpException(401, "你不能为此会员申请执业登记");
             }
-            var checkLog = Core.CheckLogManager.GetLastLog(memberId, CheckType.Practice);
-            if (checkLog == null || checkLog.Result == false)
+            try
             {
-                try
+                var certNames = Request.Form["Cert.Name"].Split(',');
+                var certNos = Request.Form["Cert.No"].Split(',');
+                var certObtainDates = Request.Form["Cert.ObtainDate"].Split(',');
+                for (var i = 0; i < certNames.Length; i++)
                 {
-                    var certNames = Request.Form["Cert.Name"].Split(',');
-                    var certNos = Request.Form["Cert.No"].Split(',');
-                    var certLevel = Request.Form["Cert.Level"].Split(',');
-                    for (var i = 0; i < certNames.Length; i++)
+                    var obtainDate = DateTime.Now;
+                    DateTime.TryParse(certObtainDates[i], out obtainDate);
+                    data.Certifications.Add(new Certification
                     {
-                        data.Certifications.Add(new Certification
-                        {
-                            Name = certNames[i],
-                            CertificationNo = certNos[i],
-                            CertificationLevel = certLevel[i]
-                        });
-                    }
+                        Name = certNames[i],
+                        CertificationNo = certNos[i],
+                        ObtainDate = obtainDate == DateTime.MinValue ? default(Nullable<DateTime>) : obtainDate
+                    });
                 }
-                catch { }
 
-                Core.PracticeManager.SavePracticeInfo(memberId, data);
-                Core.CheckLogManager.AddCheckLog(memberId, memberId, CheckType.Practice);
+                var startDates = Request.Form["job.StartDate"].Split(',');
+                var endDates = Request.Form["job.StartDate"].Split(',');
+                var insts = Request.Form["job.Institution"].Split(',');
+                var offices = Request.Form["job.Office"].Split(',');
+                var notes = Request.Form["job.Note"].Split(',');
+                for (var i = 0; i < startDates.Length; i++)
+                {
+                    var startDate = DateTime.MinValue;
+                    DateTime.TryParse(startDates[i], out startDate);
+                    var endDate = DateTime.MinValue;
+                    DateTime.TryParse(endDates[i], out endDate);
+
+                    data.Jobs.Add(new Job
+                    {
+                        StartDate = startDate == DateTime.MinValue ? null : startDate.ToShortDateString(),
+                        EndDate = endDate == DateTime.MinValue ? null : endDate.ToShortDateString(),
+                        Institution = insts[i],
+                        Office = offices[i],
+                        Note = notes[i]
+                    });
+                }
+
+            }
+            catch { }
+
+            var checkLog = Core.CheckLogManager.GetLastLog(memberId, CheckType.Practice);
+            if (checkLog == null || checkLog.Result.HasValue)
+            {
+
+                var practiceId = Core.PracticeManager.AddPracticeInfo(memberId, currentInst.ID, data);
+                Core.CheckLogManager.AddCheckLog(practiceId, memberId, CheckType.Practice);
+            }
+            else
+            {
+                Core.PracticeManager.UpdatePracticeInfo(checkLog.ID, data);
             }
 
 

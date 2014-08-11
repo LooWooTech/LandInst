@@ -35,6 +35,11 @@ namespace Loowoo.LandInst.Model
 
         public string MobilePhone { get; set; }
 
+        ///// <summary>
+        ///// 土地规划从业人员职业培训合格证号
+        ///// </summary>
+        //public string CertificationNo { get; set; }
+
         [Column(TypeName = "int")]
         public MemberStatus Status { get; set; }
     }

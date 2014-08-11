@@ -20,8 +20,12 @@ namespace Loowoo.LandInst.Model
     public class Practice
     {
         [Key]
-        [DatabaseGenerated(System.ComponentModel.DataAnnotations.Schema.DatabaseGeneratedOption.None)]
+        [DatabaseGenerated(System.ComponentModel.DataAnnotations.Schema.DatabaseGeneratedOption.Identity)]
+        public int ID { get; set; }
+
         public int MemberID { get; set; }
+
+        public int InstID { get; set; }
 
         public byte[] Data { get; set; }
     }
@@ -31,6 +35,7 @@ namespace Loowoo.LandInst.Model
         public PracticeInfo()
         {
             Certifications = new List<Certification>();
+            Jobs = new List<Job>();
         }
 
         /// <summary>
@@ -64,14 +69,22 @@ namespace Loowoo.LandInst.Model
         public string CertificationNO { get; set; }
 
         /// <summary>
+        /// 职务
+        /// </summary>
+        public string Office { get; set; }
+
+        /// <summary>
         /// 其他资格证书
         /// </summary>
         public List<Certification> Certifications { get; set; }
 
         /// <summary>
-        /// 起始从业时间
+        /// 工作简历
         /// </summary>
-        public DateTime BeginWorkingDate { get; set; }
+        public List<Job> Jobs { get; set; }
+
+
+        public string MobilePhone { get; set; }
     }
 
 }

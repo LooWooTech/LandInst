@@ -98,6 +98,14 @@ namespace Loowoo.LandInst.Manager
             }
         }
 
+        public List<Member> GetInstMembers(int instId)
+        {
+            using (var db = GetDataContext())
+            {
+                return db.Members.Where(e => e.InstitutionID == instId).ToList();
+            }
+        }
+
         public List<VMember> GetMembers(MemberFilter filter)
         {
             using (var db = GetDataContext())
@@ -106,7 +114,14 @@ namespace Loowoo.LandInst.Manager
 
                 if (filter.InstID.HasValue && filter.InstID.Value > 0)
                 {
-                    query = query.Where(e => e.InstitutionID == filter.InstID);
+                    if (filter.InInst)
+                    {
+                        query = query.Where(e => e.InstitutionID == filter.InstID || e.InstitutionID == 0);
+                    }
+                    else
+                    {
+                        query = query.Where(e => e.InstitutionID != filter.InstID);
+                    }
                 }
 
                 if (!string.IsNullOrEmpty(filter.Keyword))

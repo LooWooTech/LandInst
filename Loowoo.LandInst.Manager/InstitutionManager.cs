@@ -151,14 +151,9 @@ namespace Loowoo.LandInst.Manager
         {
             if (checkLog == null) return null;
 
-            if (checkLog.CheckType == CheckType.Profile)
-            {
-                return Core.ProfileManager.GetProfile<InstitutionProfile>(checkLog.InfoID);
-            }
-            else
-            {
-                return GetProfile(checkLog.UserID);
-            }
+            var profileId = Core.ProfileManager.GetProfileId(checkLog.ID);
+
+            return Core.ProfileManager.GetProfile<InstitutionProfile>(profileId);
         }
 
         public void SubmitProfile(int instId, InstitutionProfile profile)
@@ -180,16 +175,22 @@ namespace Loowoo.LandInst.Manager
                 //如果没有申请年检或年检没有通过，则重新提交年检
                 if (checkLog == null || checkLog.Result == false)
                 {
-                    Core.CheckLogManager.AddCheckLog(annualCheck.ID, instId, CheckType.Annual);
+                    var checkLogId = Core.CheckLogManager.AddCheckLog(annualCheck.ID, instId, CheckType.Annual);
+                    var profileId = SaveProfile(instId, profile);
+                    Core.ProfileManager.SaveCheckProfile(checkLogId, profileId);
                 }
-                SaveProfile(instId, profile);
+                else
+                {
+                    SaveProfile(instId, profile);
+                }
             }
             else
             {
                 if (checkLog == null || checkLog.Result.HasValue)
                 {
                     var profileId = SaveProfile(instId, profile);
-                    Core.CheckLogManager.AddCheckLog(profileId, instId, CheckType.Profile);
+                    var checkLogId = Core.CheckLogManager.AddCheckLog(profileId, instId, CheckType.Profile);
+                    Core.ProfileManager.SaveCheckProfile(checkLogId, profileId);
                 }
             }
         }
@@ -229,13 +230,11 @@ namespace Loowoo.LandInst.Manager
         //    return Core.InfoDataManager.GetModel<List<Certification>>(id, CheckType.Certificatoin) ?? new List<Certification>();
         //}
 
-        public IEnumerable<Profile> GetProfileHistory(int instId)
+        public IEnumerable<CheckLog> GetProfileHistory(int instId)
         {
-            using (var db = GetDataContext())
-            {
-                return db.Profiles.Where(e => e.UserID == instId ).OrderByDescending(e => e.ID)
-                    .ToList();
-            }
+            return Core.CheckLogManager.GetList(instId)
+                .Where(e => e.CheckType == CheckType.Profile || e.CheckType == CheckType.Annual)
+                .ToList();
         }
     }
 }

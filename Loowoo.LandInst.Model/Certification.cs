@@ -19,6 +19,11 @@ namespace Loowoo.LandInst.Model
 
         public string CertificationNo { get; set; }
 
+        /// <summary>
+        /// 获取时间
+        /// </summary>
+        public DateTime? ObtainDate { get; set; }
+
         public string CertificationLevel { get; set; }
     }
 }

@@ -124,6 +124,8 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
 
             ViewBag.CheckLogs = Core.CheckLogManager.GetList(id);
 
+            ViewBag.Members = Core.MemberManager.GetInstMembers(inst.ID);
+
             return View();
         }
 

@@ -8,9 +8,16 @@ namespace Loowoo.LandInst.Model.Filters
 {
     public class MemberFilter : CheckLogFilter
     {
+        public MemberFilter()
+        {
+            InInst = true;
+        }
+
         public int[] MemberIds { get; set; }
 
         public int? InstID { get; set; }
+
+        public bool InInst { get; set; }
 
         public MemberStatus? Status { get; set; }
     }

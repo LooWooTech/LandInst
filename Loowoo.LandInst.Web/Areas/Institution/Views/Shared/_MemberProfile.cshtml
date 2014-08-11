@@ -1,7 +1,7 @@
 ﻿@using Loowoo.LandInst.Model
 @{
     ViewBag.Title = "_MemberProfile";
-    Member member = Model ?? new Member();
+    MemberProfile member = Model ?? new MemberProfile();
 }
 <div class="form-group">
     <label class="control-label col-lg-2">会员信息</label>
@@ -14,18 +14,32 @@
                     <td>@(member.RealName)</td>
                     <th>性别</th>
                     <td>@(member.Gender)</td>
-                </tr>
-                <tr>
                     <th>出生年月</th>
                     <td>@(member.Birthday.HasValue ? member.Birthday.Value.ToShortDateString() : null)</td>
-                    <th>身份证</th>
-                    <td>@(member.IDNo)</td>
                 </tr>
                 <tr>
+                    <th>身份证</th>
+                    <td>@(member.IDNo)</td>
                     <th>手机</th>
                     <td>@(member.MobilePhone)</td>
                     <th>Email</th>
                     <td>@(member.Email)</td>
+                </tr>
+                <tr>
+                    <th>毕业院校</th>
+                    <td>@(member.School)</td>
+                    <th>专业</th>
+                    <td>@(member.Major)</td>
+                    <th>学历</th>
+                    <td>@(member.EduRecord)</td>
+                </tr>
+                <tr>
+                    <th>民族</th>
+                    <td>@(member.Nationality)</td>
+                    <th>籍贯</th>
+                    <td>@(member.NativePlace)</td>
+                    <th>职称</th>
+                    <td>@(member.Title)</td>
                 </tr>
             </table>
         </div>

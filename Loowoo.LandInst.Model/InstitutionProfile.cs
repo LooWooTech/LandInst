@@ -13,7 +13,7 @@ namespace Loowoo.LandInst.Model
         public InstitutionProfile()
         {
             ShareHolders = new List<Shareholder>();
-            Certifications = new List<Certification>();
+            Equipments = new List<Equipment>();
         }
 
         public InstitutionProfile(Institution inst):this()
@@ -31,6 +31,11 @@ namespace Loowoo.LandInst.Model
                 selfP.SetValue(this, val, null);
             }
         }
+
+        /// <summary>
+        /// 税务登记号
+        /// </summary>
+        public string TaxRegistryNo { get; set; }
 
         /// <summary>
         /// 工商登记机关
@@ -108,26 +113,26 @@ namespace Loowoo.LandInst.Model
         /// <summary>
         /// 机构总人数
         /// </summary>
-        public int TotalMembers { get; set; }
+        public int? TotalMembers { get; set; }
 
         /// <summary>
         /// 其中专业人员数
         /// </summary>
-        public int ProMembers { get; set; }
+        public int? ProMembers { get; set; }
 
         /// <summary>
         /// 中级及以上专业人员数
         /// </summary>
-        public int ExpertMembers { get; set; }
+        public int? ExpertMembers { get; set; }
 
         /// <summary>
         /// 成立日期
         /// </summary>
-        public DateTime EstablishedDate { get; set; }
+        public DateTime? EstablishedDate { get; set; }
 
         public List<Shareholder> ShareHolders { get; set; }
 
-        public List<Certification> Certifications { get; set; }
+        //public List<Certification> Certifications { get; set; }
 
         public List<Equipment> Equipments { get; set; }
     }

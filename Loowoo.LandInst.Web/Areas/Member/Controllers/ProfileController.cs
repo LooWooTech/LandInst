@@ -31,5 +31,13 @@ namespace Loowoo.LandInst.Web.Areas.Member.Controllers
             Core.MemberManager.SaveProfile(member, profile);
             return JsonSuccess();
         }
+
+        public ActionResult Practice()
+        {
+            var member = GetCurrentMember();
+            ViewBag.CheckLog = Core.CheckLogManager.GetLastLog(member.ID, CheckType.Practice);
+            ViewBag.Practice = Core.PracticeManager.GetPracticeInfo(member.ID, member.InstitutionID);
+            return View();
+        }
     }
 }

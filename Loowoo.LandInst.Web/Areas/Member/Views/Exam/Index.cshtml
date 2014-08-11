@@ -6,10 +6,10 @@
 }
 <table class="table table-bordered">
     <tr>
-        <th>考试项目</th>
-        <th>报名日期</th>
-        <th>考试时间</th>
-        <th>考试结果</th>
+        <th style="width:200px;">考试项目</th>
+        <th style="width:100px;">报名日期</th>
+        <th style="width:200px;">考试时间</th>
+        <th style="width:100px;">考试结果</th>
         <th>考试成绩</th>
     </tr>
     @foreach (var result in list)
@@ -34,7 +34,7 @@
                 }
 
             </td>
-            <td>@Html.Raw(result.Note.Replace("\r\n","<br />"))</td>
+            <td>@Html.Raw(result.Note)</td>
         </tr>
     }
 </table>

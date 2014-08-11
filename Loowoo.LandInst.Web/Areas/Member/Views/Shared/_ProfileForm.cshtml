@@ -1,6 +1,7 @@
 ﻿@using Loowoo.LandInst.Model
 @{
     MemberProfile profile = ViewBag.Profile;
+    Institution inst = ViewBag.Institution ?? new Institution();
     List<Exam> exams = ViewBag.Exams;
 }
 <form id="profile-form" role="form" class="form-horizontal" method="post">
@@ -28,7 +29,7 @@
         <div class="form-group">
             <label class="control-label col-lg-3">出生日期</label>
             <div class="col-sm-5">
-                <input type="text" name="Birthday" class="form-control input-sm" value="@(profile.Birthday)" />
+                <input type="text" name="Birthday" class="form-control input-sm" value="@(profile.Birthday.HasValue ? profile.Birthday.Value.ToShortDateString() : null)" />
             </div>
         </div>
         <div class="form-group">
@@ -95,21 +96,9 @@
             </div>
         </div>
         <div class="form-group">
-            <label class="control-label col-lg-3">学位</label>
-            <div class="col-sm-5">
-                <input type="text" name="EduLevel" class="form-control input-sm" value="@(profile.EduLevel)" />
-            </div>
-        </div>
-        <div class="form-group">
             <label class="control-label col-lg-3">通信地址</label>
             <div class="col-sm-5">
                 <input type="text" name="Address" class="form-control input-sm"  value="@(profile.Address)" />
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="control-label col-lg-3">邮编</label>
-            <div class="col-sm-5">
-                <input type="text" name="Postcode" class="form-control input-sm"  value="@(profile.Postcode)" />
             </div>
         </div>
     </fieldset>
@@ -160,7 +149,7 @@
     {
         <div class="form-group">
             <label class="control-label col-lg-3"></label>
-            <div class="col-sm-5">
+            <div class="col-sm-3">
                 <button type="submit" class="btn btn-primary">保存资料</button>
             </div>
         </div>

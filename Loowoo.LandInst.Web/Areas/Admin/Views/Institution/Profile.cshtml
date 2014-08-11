@@ -6,71 +6,107 @@
     InstitutionProfile profile = ViewBag.Profile;
     List<CheckLog> checkLogs = ViewBag.CheckLogs;
     CheckLog approval = ViewBag.CheckLog;
+    List<Member> members = ViewBag.Members;
 }
 <div>
     <ul class="nav nav-tabs">
         <li class="active"><a href="#tab1" data-toggle="tab">基本资料</a></li>
+        <li class=""><a href="#tab5" data-toggle="tab">机构成员</a></li>
         <li class=""><a href="#tab2" data-toggle="tab">股东</a></li>
-        <li class=""><a href="#tab3" data-toggle="tab">资质证书</a></li>
+        <li class=""><a href="#tab3" data-toggle="tab">仪器设备</a></li>
         <li class=""><a href="#tab4" data-toggle="tab">审批记录</a></li>
     </ul>
 </div>
 <div class="tab-content">
     <div class="tab-pane fade active in" id="tab1">
-        <table class="table table-bordered">
+        <table class="table table-bordered" id="profile-basic">
             <tr>
-                <th style="width: 150px;">机构名称</th>
-                <td>@(profile.Name)</td>
-                <th style="width: 150px;">企业类型</th>
-                <td>@(profile.Type.ToString())</td>
+                <th style="width:100px;">机构简称</th>
+                <td>
+                    @(profile.Name)
+                </td>
+                <th style="width:150px;">机构全称</th>
+                <td colspan="3">
+                    @(profile.FullName)
+                </td>
             </tr>
             <tr>
-                <th>法定代表人</th>
-                <td>@(profile.LegalPerson)</td>
-                <th>工商登记机关</th>
-                <td></td>
+                <th>法人代表</th>
+                <td>
+                    @(profile.LegalPerson)
+                </td>
+                <th>法人代码</th>
+                <td>
+                    @(profile.LegalpersonNo)
+                </td>
+                <th style="width:150px;">机构类型</th>
+                <td>@(profile.Type.GetDescription())</td>
             </tr>
             <tr>
                 <th>工商登记号</th>
-                <td></td>
+                <td>
+                    @(profile.RegistrationNo)
+                </td>
                 <th>税务登记号</th>
-                <td></td>
+                <td>
+                    @(profile.TaxRegistryNo)
+                </td>
+                <th>注册资金（万元）</th>
+                <td>
+                    @(profile.RegisteredCapital)
+                </td>
             </tr>
             <tr>
-                <th>注册资金</th>
-                <td>@(profile.RegisteredCapital)</td>
-                <th>成立时间</th>
-                <td></td>
-            </tr>
-            <tr>
+                <th>成立日期</th>
+                <td>
+                    @(profile.EstablishedDate.HasValue ? profile.EstablishedDate.Value.ToShortDateString() : null)
+                </td>
                 <th>营业期限</th>
-                <td>@(profile.OperatingPeriod)</td>
-                <th>企业网址</th>
-                <td>@(profile.Website)</td>
+                <td>
+                    @(profile.OperatingPeriod)
+                </td>
+                <th>工商登记机关</th>
+                <td>
+                    @(profile.RegistrationInstitution)
+                </td>
             </tr>
             <tr>
-                <th>移动电话</th>
-                <td>@(profile.MobilePhone)</td>
-                <th>企业邮箱</th>
-                <td>@(profile.Email)</td>
+                <th>机构总人数</th>
+                <td>
+                    @(profile.TotalMembers)
+                </td>
+                <th>其中专业人员数</th>
+                <td>
+                    @(profile.ProMembers)
+                </td>
+                <th>中级及以上专业人员数</th>
+                <td>
+                    @(profile.ExpertMembers)
+                </td>
             </tr>
             <tr>
-                <th>机构所属市</th>
-                <td>@(profile.City)</td>
-                <th>注册证书号</th>
-                <td>@(profile.CertificateNo)</td>
+                <th>执业注册号</th>
+                <td>
+                    @(profile.PracticeRegistrationNo)
+                </td>
+                <th>团体会员证号</th>
+                <td>
+                    @(profile.CorporateMemberNo)
+                </td>
             </tr>
             <tr>
+                <th>是否有测绘许可证书</th>
+                <td>
+                    @(profile.HasExequatur ?"是":"否")
+                </td>
+                <th>证书级别</th>
+                <td>
+                    @(profile.ExequaturLevel)
+                </td>
                 <th>经营范围</th>
-                <td>@(profile.BusinessScope)</td>
-                <th>利税总额（万元）</th>
-                <td>@(profile.TotalProfits)</td>
-            </tr>
-            <tr>
-                <th>邮编</th>
-                <td>@(profile.Postcode)</td>
-                <th>地址</th>
-                <td>@(profile.BusinessScope)</td>
+                <td>
+                    @(profile.BusinessScope)
+                </td>
             </tr>
         </table>
     </div>
@@ -99,15 +135,17 @@
         <table class="table table-bordered">
             <tr>
                 <th>名称</th>
-                <th>级别</th>
-                <th>编号</th>
+                <th>数量</th>
+                <th>型号</th>
+                <th>生产厂商</th>
             </tr>
-            @foreach (var cert in profile.Certifications)
+            @foreach (var item in profile.Equipments)
             { 
                 <tr>
-                    <td>@(cert.Name)</td>
-                    <td>@(cert.CertificationLevel)</td>
-                    <td>@(cert.CertificationNo)</td>
+                    <td>@(item.Name)</td>
+                    <td>@(item.Number)</td>
+                    <td>@(item.Model)</td>
+                    <td>@(item.Manufacturer)</td>
                 </tr>
             }
         </table>
@@ -147,5 +185,24 @@
             }
         </table>
     </div>
+    <div class="tab-pane fade" id="tab5">
+        <table class="table table-bordered">
+            <tr>
+                <th>姓名</th>
+                <th>性别</th>
+                <th>出生年月</th>
+                <th>手机</th>
+            </tr>
+            @foreach (var member in members)
+            { 
+                <tr>
+                    <td><a href="../member/profile?id=@(member.ID)">@(member.RealName)</a></td>
+                    <td>@(member.Gender)</td>
+                    <td>@(member.Birthday.HasValue?member.Birthday.Value.ToShortDateString():null)</td>
+                    <td>@(member.MobilePhone)</td>
+                </tr>
+            }
+        </table>
+    </div>
 </div>
-@Html.Partial("_approvalForm",approval)
+@Html.Partial("_approvalForm", approval)

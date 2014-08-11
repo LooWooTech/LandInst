@@ -95,11 +95,11 @@ namespace Loowoo.LandInst.Manager
             }
         }
 
-        public void TransferMember(int id, Member member)
+        public void TransferMember(int transferId, Member member)
         {
             using (var db = GetDataContext())
             {
-                var entity = db.Transfers.FirstOrDefault(e => e.ID == id);
+                var entity = db.Transfers.FirstOrDefault(e => e.ID == transferId);
                 if (entity != null)
                 {
                     entity.UpdateTime = DateTime.Now;

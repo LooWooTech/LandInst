@@ -82,6 +82,32 @@ namespace Loowoo.LandInst.Manager
                 }
             }
         }
+
+        internal void SaveCheckProfile(int checkLogId, int profileId)
+        {
+            using (var db = GetDataContext())
+            {
+                var entity = db.CheckProfiles.FirstOrDefault(e => e.CheckLogID == checkLogId && e.ProfileID == profileId);
+                if (entity == null)
+                {
+                    db.CheckProfiles.Add(new CheckProfile
+                    {
+                        ProfileID = profileId,
+                        CheckLogID = checkLogId,
+                    });
+                    db.SaveChanges();
+                }
+            }
+        }
+
+        internal int GetProfileId(int checkLogId)
+        {
+            using (var db = GetDataContext())
+            {
+                var entity = db.CheckProfiles.FirstOrDefault(e => e.CheckLogID == checkLogId);
+                return entity == null ? 0 : entity.ProfileID;
+            }
+        }
     }
 
     public static class ProfileExtension

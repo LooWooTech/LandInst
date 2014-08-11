@@ -3,7 +3,7 @@
 @{
     ViewBag.Title = "历史信息";
     Layout = "~/Areas/Institution/Views/Shared/_Layout.cshtml";
-    IEnumerable<Profile> list = ViewBag.List;
+    IEnumerable<CheckLog> list = ViewBag.List;
 }
 <table class="table table-bordered">
     <thead>
@@ -18,13 +18,12 @@
     <tbody>
         @foreach (var item in list)
         {
-            var checkLog = Loowoo.LandInst.Manager.ManagerCore.Instance.CheckLogManager.GetCheckLog(item.ID, item.UserID, CheckType.Profile);
             <tr>
-                <td>@(checkLog == null ? "年检审批" : checkLog.CheckType.GetDescription())</td>
+                <td>@(item.CheckType.GetDescription())</td>
                 <td>@(item.CreateTime.ToString())</td>
-                <td>@if (item.CheckResult.HasValue)
+                <td>@if (item.Result.HasValue)
                     {
-                        if (item.CheckResult.Value)
+                        if (item.Result.Value)
                         { 
                     <span class="label label-success">已通过</span>
                         }
@@ -40,7 +39,7 @@
                 <td>
                     @(item.UpdateTime.HasValue ? item.UpdateTime.ToString() : null)
                 </td>
-                <td><a href="edit?id=@(item.ID)" class="btn btn-primary btn-xs">详细</a></td>
+                <td><a href="Edit?checkLogId=@(item.ID)" class="btn btn-primary btn-xs">详细</a></td>
             </tr>
         }
     </tbody>

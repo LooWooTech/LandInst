@@ -3,6 +3,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     Member member = ViewBag.Member;
     var controller = Request.RequestContext.RouteData.Values["controller"].ToString();
+    var action = controller + "." + Request.RequestContext.RouteData.Values["action"].ToString();
 }
 @section nav{
     <ul class="nav navbar-nav">
@@ -13,14 +14,20 @@
         else
         {
             <li @Html.Raw(controller == "home" ? "class=\"active\"" : null)><a href="/member/">欢迎页</a></li>
-            <li @Html.Raw(controller == "profile" ? "class=\"active\"" : null)><a href="/member/profile/edit">个人资料</a></li>
-            <li class="dropdown @Html.Raw(controller == "exam" ? "active" : null)">
+            <li @Html.Raw(action == "profile.edit" ? "class=\"active\"" : null)><a href="/member/profile/edit">个人资料</a></li>
+            //if(member.Status == MemberStatus.Practice)
+            //{
+            <li @Html.Raw(action == "profile.practice" ? "class=\"active\"" : null)><a href="/member/profile/practice">执业登记</a></li>
+            //}
+            <li @Html.Raw(controller == "exam" ? "class=\"active\"" : null)><a href="/member/exam/">考试成绩</a></li>
+            @*
+            <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">报名考试 <b class="caret"></b></a>
                 <ul class="dropdown-menu">
                     <li><a href="/member/exam/signup">报名考试</a></li>
                     <li><a href="/member/exam/">成绩查询</a></li>
                 </ul>
-            </li>
+            </li>*@
             <li @Html.Raw(controller == "education" ? "class=\"active\"" : null)><a href="/member/education/">继续教育</a></li>
         }
     </ul>

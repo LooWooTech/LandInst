@@ -106,12 +106,10 @@
     <Compile Include="Areas\Admin\Controllers\MemberController.cs" />
     <Compile Include="Areas\Admin\Controllers\TransferController.cs" />
     <Compile Include="Areas\Institution\Controllers\AnnualController.cs" />
-    <Compile Include="Areas\Institution\Controllers\CertificationController.cs" />
     <Compile Include="Areas\Institution\Controllers\EducationController.cs" />
     <Compile Include="Areas\Institution\Controllers\HomeController.cs" />
     <Compile Include="Areas\Institution\Controllers\MemberController.cs" />
     <Compile Include="Areas\Institution\Controllers\ProfileController.cs" />
-    <Compile Include="Areas\Institution\Controllers\ShareholderController.cs" />
     <Compile Include="Areas\Institution\InstitutionAreaRegistration.cs" />
     <Compile Include="Areas\Institution\InstitutionControllerBase.cs" />
     <Compile Include="Areas\Member\Controllers\EducationController.cs" />
@@ -323,6 +321,8 @@
     <Content Include="Areas\Institution\Views\Shared\_MemberProfile.cshtml" />
     <Content Include="Areas\Admin\Views\Exam\EditResult.cshtml" />
     <Content Include="Areas\Admin\Views\Exam\Import.cshtml" />
+    <Content Include="Areas\Member\Views\Shared\_PracticeForm.cshtml" />
+    <Content Include="Areas\Member\Views\Profile\Practice.cshtml" />
     <None Include="Properties\PublishProfiles\LandInst.pubxml" />
     <Content Include="Views\User\ForgetPwd.cshtml" />
   </ItemGroup>
