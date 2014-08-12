@@ -7,13 +7,6 @@ namespace Loowoo.LandInst.Model
 {
     public class Equipment
     {
-        public Equipment()
-        {
-            ID = Guid.NewGuid().ToString();
-        }
-
-        public string ID { get; set; }
-
         public string Name { get; set; }
 
         public int? Number { get; set; }
@@ -27,5 +20,9 @@ namespace Loowoo.LandInst.Model
         /// 生产厂商
         /// </summary>
         public string Manufacturer { get; set; }
+
+        public string Performance { get; set; }
+
+        public string Note { get; set; }
     }
 }

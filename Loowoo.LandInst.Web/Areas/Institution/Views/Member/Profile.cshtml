@@ -9,12 +9,31 @@
     ViewBag.Title = profile.RealName + "用户资料";
     Layout = "~/Areas/Institution/Views/Shared/_Layout.cshtml";
 }
-<div>
+<div style="position: relative;">
     <ul class="nav nav-tabs">
         <li class="active"><a href="#tab1" data-toggle="tab">基本资料</a></li>
         <li class=""><a href="#tab2" data-toggle="tab">考试成绩</a></li>
         <li class=""><a href="#tab3" data-toggle="tab">继续教育</a></li>
         <li class=""><a href="#tab4" data-toggle="tab">执业信息</a></li>
+    </ul>
+    <ul style="position: absolute; right: 10px; top: 0px;">
+        @if (profile.Status == MemberStatus.Registered)
+        {
+            <a href="practice?memberid=@(profile.ID)" class="btn btn-primary">申请执业登记</a>
+        }
+        else
+        {
+            <a href="practice?memberid=@(profile.ID)" class="btn btn-primary">修改执业信息</a>
+        }
+
+        @if (profile.InstitutionID != inst.ID)
+        { 
+            <a href="transferIn?memberid=@(profile.ID)" class="btn btn-success">转入本机构</a>
+        }
+        else
+        {
+            <a href="transferOut?memberid=@(profile.ID)" class="btn btn-warning">转出本机构</a>
+        }
     </ul>
 </div>
 <div class="tab-content">
@@ -214,23 +233,4 @@
             </tr>
         </table>
     </div>
-</div>
-<div style="padding: 10px;">
-    @if (profile.Status == MemberStatus.Registered)
-    {
-        <a href="practice?memberid=@(profile.ID)" class="btn btn-primary">申请执业登记</a>
-    }
-    else
-    {
-        <a href="practice?memberid=@(profile.ID)" class="btn btn-primary">修改执业信息</a>
-    }
-
-    @if (profile.InstitutionID == 0)
-    { 
-        <a href="transferIn?memberid=@(profile.ID)" class="btn btn-success">转入本机构</a>
-    }
-    else
-    {
-        <a href="transferOut?memberid=@(profile.ID)" class="btn btn-warning">转出本机构</a>
-    }
 </div>

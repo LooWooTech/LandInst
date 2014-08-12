@@ -19,6 +19,10 @@ namespace Loowoo.LandInst.Model.Filters
 
         public bool InInst { get; set; }
 
+        public bool IncludeNoHaveInstMember { get; set; }
+
         public MemberStatus? Status { get; set; }
+
+        public bool GetInstName { get; set; }
     }
 }

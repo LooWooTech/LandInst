@@ -12,7 +12,7 @@
             <span class="input-group-addon">查询会员</span>
             <input type="text" class="form-control" name="name" placeholder="会员姓名" value="@(Request.QueryString["name"])">
             <div class="input-group-btn">
-                <button type="submit" class="btn btn-primary"><i class="glyphicon glyphicon-search"></i> 查询</button>
+                <button type="submit" class="btn btn-primary"><i class="glyphicon glyphicon-search"></i>查询</button>
             </div>
         </div>
     </div>
@@ -21,7 +21,8 @@
 <table class="table table-bordered">
     <tr>
         <th>姓名</th>
-        <th style="width: 120px;">手机</th>
+        <th style="width: 200px;">专业</th>
+        <th style="width: 200px;">学历</th>
         <th style="width: 120px;">申请日期</th>
         <th style="width: 80px;">审核状态</th>
         <th style="width: 120px;">审核日期</th>
@@ -30,7 +31,8 @@
     {
         <tr>
             <td><a href="/admin/member/profile?id=@(item.UserID)&checklogId=@(item.ID)">@(item.RealName)</a></td>
-            <td>@(item.MobilePhone)</td>
+            <td>@(item.Major == 0 ? "" : item.Major.ToString())</td>
+            <td>@(item.EduRecord == 0 ? "" : item.EduRecord.ToString())</td>
             <td>@(item.CreateTime.ToShortDateString())</td>
             <td>
                 @if (item.Result.HasValue)

@@ -8,13 +8,16 @@
     CheckLog approval = ViewBag.CheckLog;
     List<Member> members = ViewBag.Members;
 }
-<div>
+<div style="position: relative;">
     <ul class="nav nav-tabs">
         <li class="active"><a href="#tab1" data-toggle="tab">基本资料</a></li>
         <li class=""><a href="#tab5" data-toggle="tab">机构成员</a></li>
         <li class=""><a href="#tab2" data-toggle="tab">股东</a></li>
         <li class=""><a href="#tab3" data-toggle="tab">仪器设备</a></li>
         <li class=""><a href="#tab4" data-toggle="tab">审批记录</a></li>
+    </ul>
+    <ul style="position: absolute; right: 10px; top: 0px;">
+        <a href="export?id=@(profile.ID)" class="btn btn-primary"><i class="glyphicon glyphicon-export"></i>导出资料</a>
     </ul>
 </div>
 <div class="tab-content">
@@ -108,6 +111,32 @@
                     @(profile.ExequaturLevel)
                 </td>
             </tr>
+            <tr>
+                <th>手机</th>
+                <td>@(profile.MobilePhone)</td>
+                <th>电话</th>
+                <td>@(profile.Tel)</td>
+                <th>传真</th>
+                <td>@(profile.Fax)</td>
+            </tr>
+            <tr>
+                <th>公司地址</th>
+                <td colspan="3">@(profile.Address)</td>
+                <th>邮编</th>
+                <td>@(profile.Postcode)</td>
+            </tr>
+            <tr>
+                <th>联系地址</th>
+                <td colspan="3">@(profile.Address1)</td>
+                <th>邮编</th>
+                <td>@(profile.Postcode1)</td>
+            </tr>
+            <tr>
+                <th>电子信箱</th>
+                <td colspan="3">@(profile.Email)</td>
+                <th>公司网站</th>
+                <td>@(profile.Website)</td>
+            </tr>
         </table>
     </div>
     <div class="tab-pane fade" id="tab2">
@@ -191,7 +220,8 @@
                 <th>姓名</th>
                 <th>性别</th>
                 <th>出生年月</th>
-                <th>手机</th>
+                <th>专业</th>
+                <th>学历</th>
             </tr>
             @foreach (var member in members)
             { 
@@ -199,7 +229,8 @@
                     <td><a href="../member/profile?id=@(member.ID)">@(member.RealName)</a></td>
                     <td>@(member.Gender)</td>
                     <td>@(member.Birthday.HasValue ? member.Birthday.Value.ToShortDateString() : null)</td>
-                    <td>@(member.MobilePhone)</td>
+                    <td>@(member.Major.ToString())</td>
+                    <td>@(member.EduRecord.ToString())</td>
                 </tr>
             }
         </table>

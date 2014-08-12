@@ -178,29 +178,28 @@
 </table>
 <script>
     $(function () {
-        {
-            var certList = $("#list-cert");
-            var certificationTemp = "<tr>" + $("tr", certList).last().html() + "</tr>";
-            $("#btn-add-cert").bind("click", function () {
-                certList.append(certificationTemp);
+
+        setList("list-cert", "btn-add-cert");
+        setList("list-job", "btn-add-job");
+
+        function setList(listId, btnAddId) {
+            var list = $("#" + listId);
+            var template = "<tr>" + $("tr", list).last().html() + "</tr>";
+            $("tr", list).last().remove();
+            $("#" + btnAddId).bind("click", function () {
+                list.append(template);
+                setBtnDelete();
+                return false;
+            });
+
+            setBtnDelete();
+
+            function setBtnDelete() {
                 $(".btn-delete").unbind("click").bind("click", function () {
                     var tr = $(this).parent().parent();
                     tr.remove();
                 });
-                return false;
-            });
-        }
-        {
-            var jobList = $("#list-job");
-            var jobTemp = "<tr>" + $("tr", jobList).last().html() + "</tr>";
-            $("#btn-add-job").bind("click", function () {
-                jobList.append(jobTemp);
-                $(".btn-delete").unbind("click").bind("click", function () {
-                    var tr = $(this).parent().parent();
-                    tr.remove();
-                });
-                return false;
-            });
+            }
         }
     });
 </script>

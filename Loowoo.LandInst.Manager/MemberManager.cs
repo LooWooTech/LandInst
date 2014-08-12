@@ -95,32 +95,34 @@ namespace Loowoo.LandInst.Manager
             {
                 Core.ProfileManager.UpdateProfile(entity.ID, profile);
             }
-            
+
         }
 
-        public List<Member> GetInstMembers(int instId)
+        public List<Member> GetMembers(MemberFilter filter)
         {
             using (var db = GetDataContext())
             {
-                return db.Members.Where(e => e.InstitutionID == instId).ToList();
-            }
-        }
-
-        public List<VMember> GetMembers(MemberFilter filter)
-        {
-            using (var db = GetDataContext())
-            {
-                var query = db.VMembers.AsQueryable();
+                var query = db.Members.AsQueryable();
 
                 if (filter.InstID.HasValue && filter.InstID.Value > 0)
                 {
                     if (filter.InInst)
                     {
-                        query = query.Where(e => e.InstitutionID == filter.InstID || e.InstitutionID == 0);
+                        if (filter.IncludeNoHaveInstMember)
+                        {
+                            query = query.Where(e => e.InstitutionID == filter.InstID || e.InstitutionID == 0);
+                        }
+                        else
+                        {
+                            query = query.Where(e => e.InstitutionID == filter.InstID);
+                        }
                     }
                     else
                     {
-                        query = query.Where(e => e.InstitutionID != filter.InstID);
+                        if (filter.IncludeNoHaveInstMember)
+                        {
+                            query = query.Where(e => e.InstitutionID != filter.InstID);
+                        }
                     }
                 }
 
@@ -129,7 +131,16 @@ namespace Loowoo.LandInst.Manager
                     query = query.Where(e => e.RealName.Contains(filter.Keyword));
                 }
 
-                return query.OrderByDescending(e => e.ID).SetPage(filter.Page).ToList();
+                var list = query.OrderByDescending(e => e.ID).SetPage(filter.Page).ToList();
+                if (filter.GetInstName)
+                {
+                    foreach (var item in list)
+                    {
+                        if (item.InstitutionID > 0)
+                            item.InstitutionName = Core.InstitutionManager.GetInstName(item.InstitutionID);
+                    }
+                }
+                return list;
             }
         }
 

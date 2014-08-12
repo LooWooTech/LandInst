@@ -8,13 +8,6 @@ namespace Loowoo.LandInst.Model
 {
     public class Shareholder
     {
-        public Shareholder()
-        {
-            ID = Guid.NewGuid().ToString();
-        }
-
-        public string ID { get; set; }
-
         public string Name { get; set; }
 
         public string Gender { get; set; }
@@ -27,6 +20,6 @@ namespace Loowoo.LandInst.Model
 
         public string Title { get; set; }
 
-        public bool Professionals { get; set; }
+        public bool? Professionals { get; set; }
     }
 }

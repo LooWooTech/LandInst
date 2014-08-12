@@ -25,13 +25,18 @@ namespace Loowoo.LandInst.Model
             ID = member.ID;
             RealName = member.RealName;
             InstitutionID = member.InstitutionID;
-            MobilePhone = member.MobilePhone;
             Status = member.Status;
-            IDNo = member.IDNo;
-            Email = member.Email;
             Birthday = member.Birthday;
             Gender = member.Gender;
+            Major = member.Major;
+            EduRecord = member.EduRecord;
+            IDNo = member.IDNo;
         }
+
+
+        public string MobilePhone { get; set; }
+
+        public string Email { get; set; }
 
         /// <summary>
         /// 职称
@@ -44,19 +49,29 @@ namespace Loowoo.LandInst.Model
         public string School { get; set; }
 
         /// <summary>
-        /// 专业
-        /// </summary>
-        public string Major { get; set; }
-
-        /// <summary>
-        /// 学历
-        /// </summary>
-        public string EduRecord { get; set; }
-
-        /// <summary>
         /// 学位
         /// </summary>
         public string EduLevel { get; set; }
+
+        /// <summary>
+        /// 毕业日期
+        /// </summary>
+        public DateTime? GraduationDate { get; set; }
+
+        /// <summary>
+        /// 任职时间
+        /// </summary>
+        public DateTime? StartWorkingDate { get; set; }
+
+        /// <summary>
+        /// 从事土地规划工作年限
+        /// </summary>
+        public int WorkingYears { get; set; }
+
+        /// <summary>
+        /// 现从事的工作
+        /// </summary>
+        public string Job { get; set; }
 
         /// <summary>
         /// 政治面貌

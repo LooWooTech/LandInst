@@ -14,9 +14,10 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
         {
             var filter = new MemberFilter
             {
-                InstID = string.IsNullOrEmpty(name) ? Identity.UserID : 0,
+                InstID =  Identity.UserID,
                 Keyword = name,
                 InInst = true,
+                IncludeNoHaveInstMember = !string.IsNullOrEmpty(name),
                 Page = new Model.Filters.PageFilter { PageIndex = page },
             };
             ViewBag.List = Core.MemberManager.GetMembers(filter);
@@ -31,7 +32,7 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
             var profile = Core.MemberManager.GetProfile(id);
             profile.SetMemberField(member);
             ViewBag.Profile = profile;
-
+            ViewBag.Institution = inst;
             //ViewBag.CheckLog = Core.CheckLogManager.GetLastLog(id, CheckType.Practice);
             ViewBag.Practice = Core.PracticeManager.GetPracticeInfo(id, inst.ID);
             ViewBag.ChecLogs = Core.CheckLogManager.GetList(id);
@@ -58,19 +59,23 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
             var filter = new MemberFilter
             {
                 Keyword = keyword,
-                InstID = GetCurrentInst().ID
+                InstID = GetCurrentInst().ID,
+                GetInstName = true
             };
 
             switch (target.ToLower())
             {
                 case "transferout":
                     filter.InInst = true;
+                    filter.IncludeNoHaveInstMember = false;
                     break;
                 case "transferin":
                     filter.InInst = false;
+                    filter.IncludeNoHaveInstMember = true;
                     break;
                 case "practice":
                     filter.InInst = true;
+                    filter.IncludeNoHaveInstMember = true;
                     break;
             }
 
@@ -85,6 +90,8 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
             {
                 return RedirectToAction("Search", new { target = "TransferIn" });
             }
+
+            ViewBag.CheckLog = Core.CheckLogManager.GetLastLog(memberId, CheckType.Transfer);
             ViewBag.MemberProfile = Core.MemberManager.GetProfile(memberId);
             return View();
         }
@@ -96,6 +103,7 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
             {
                 return RedirectToAction("Search", new { target = "TransferOut" });
             }
+            ViewBag.CheckLog = Core.CheckLogManager.GetLastLog(memberId, CheckType.Transfer);
             ViewBag.MemberProfile = Core.MemberManager.GetProfile(memberId);
             return View();
         }

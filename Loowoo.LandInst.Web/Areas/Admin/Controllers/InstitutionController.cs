@@ -124,7 +124,7 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
 
             ViewBag.CheckLogs = Core.CheckLogManager.GetList(id);
 
-            ViewBag.Members = Core.MemberManager.GetInstMembers(inst.ID);
+            ViewBag.Members = Core.MemberManager.GetMembers(new MemberFilter { InstID = id, InInst = true, IncludeNoHaveInstMember = false });
 
             return View();
         }
@@ -143,11 +143,11 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
             if (checkLog.CheckType == CheckType.Profile || checkLog.CheckType == CheckType.Annual)
             {
                 var inst = Core.InstitutionManager.GetInstitution(checkLog.UserID);
+                Core.InstitutionManager.ApprovalInst(checkLog);
                 if (checkLog.Result == true && inst.Status == InstitutionStatus.Normal)
                 {
                     Core.InstitutionManager.UpdateStatus(checkLog.UserID, InstitutionStatus.Registered);
                 }
-                Core.InstitutionManager.ApprovalInst(checkLog);
             }
             return JsonSuccess();
         }

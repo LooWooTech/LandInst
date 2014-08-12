@@ -8,13 +8,6 @@ namespace Loowoo.LandInst.Model
 {
     public class Certification
     {
-        public Certification()
-        {
-            ID = Guid.NewGuid().ToString();
-        }
-
-        public string ID { get; set; }
-
         public string Name { get; set; }
 
         public string CertificationNo { get; set; }

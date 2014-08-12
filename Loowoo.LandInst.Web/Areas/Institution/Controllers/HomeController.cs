@@ -13,11 +13,15 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
         public ActionResult Index()
         {
             var currentInst = GetCurrentInst();
-            ViewBag.Inst = currentInst;
             //尚未提交注册登记或注册登记尚未被审批通过
             if (currentInst.Status == Model.InstitutionStatus.Normal)
             {
-                ViewBag.CheckLog = Core.CheckLogManager.GetLastLog(Identity.UserID, Model.CheckType.Profile);
+                var checkLog = Core.CheckLogManager.GetLastLog(Identity.UserID, Model.CheckType.Profile);
+                if (checkLog != null && checkLog.Result == true)
+                {
+                    currentInst.Status = InstitutionStatus.Registered;
+                }
+                ViewBag.CheckLog = checkLog;
                 ViewBag.Profile = Core.InstitutionManager.GetProfile(currentInst.ID);
             }
             else
@@ -33,6 +37,7 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
                 }
             }
 
+            ViewBag.Inst = currentInst;
             return View();
         }
 

@@ -3,7 +3,7 @@
 @{
     ViewBag.Title = "用户查询";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
-    List<VMember> list = ViewBag.List;
+    List<Member> list = ViewBag.List;
 }
 <form class="form-inline search-form">
     <div class="col-lg-8">
@@ -11,28 +11,26 @@
             <span class="input-group-addon">查询会员</span>
             <input type="text" class="form-control" name="name" placeholder="会员姓名" value="@(Request.QueryString["name"])">
             <div class="input-group-btn">
-                <button type="submit" class="btn btn-primary"><i class="glyphicon glyphicon-search"></i> 查询</button>
+                <button type="submit" class="btn btn-primary"><i class="glyphicon glyphicon-search"></i>查询</button>
             </div>
         </div>
     </div>
 </form>
 <table class="table table-bordered">
     <tr>
-        <th style="width:150px;">用户名</th>
-        <th style="width:150px;">注册时间</th>
-        <th style="width:150px;">姓名</th>
-        <th style="width:100px;">状态</th>
-        <th style="width:150px;">手机号</th>
+        <th style="width: 150px;">姓名</th>
+        <th style="width: 100px;">状态</th>
+        <th style="width: 200px;">专业</th>
+        <th style="width: 200px;">学历</th>
         <th>所属机构</th>
     </tr>
     @foreach (var item in list)
     { 
         <tr>
-            <td><a href="/admin/member/profile?id=@(item.ID)">@(item.Username)</a></td>
-            <td>@(item.RegisterTime.ToString())</td>
-            <td>@(item.RealName)</td>
+            <td><a href="/admin/member/profile?id=@(item.ID)">@(item.RealName)</a></td>
             <td>@(item.Status.GetDescription())</td>
-            <td>@(item.MobilePhone)</td>
+            <td>@(item.Major == 0 ? "" : item.Major.ToString())</td>
+            <td>@(item.EduRecord == 0 ? "" : item.EduRecord.ToString())</td>
             <td>@(item.InstitutionName)</td>
         </tr>
     }

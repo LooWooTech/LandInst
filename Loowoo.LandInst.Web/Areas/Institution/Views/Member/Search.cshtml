@@ -68,7 +68,7 @@
                 var options = "";
                 for (var i = 0; i < data.length; i++) {
                     var m = data[i];
-                    options += "<option value=" + m.ID + " selected=\"selected\">" + m.RealName + "(" + m.MobilePhone + ")" + "</option>";
+                    options += "<option value=" + m.ID + " selected=\"selected\">" + m.RealName + "(" + m.InstitutionName + ")" + "</option>";
                 }
                 $("#memberId").html(options);
             });

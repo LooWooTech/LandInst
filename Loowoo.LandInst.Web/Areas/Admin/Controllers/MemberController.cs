@@ -17,7 +17,7 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
             var filter = new MemberFilter
             {
                 Page = new Model.Filters.PageFilter { PageIndex = page },
-
+                GetInstName = true,
             };
             ViewBag.List = Core.MemberManager.GetMembers(filter);
             ViewBag.Page = filter.Page;

@@ -9,15 +9,15 @@ namespace Loowoo.LandInst.Model
     [Table("VCheck_member")]
     public class VCheckMember : VCheckBase
     {
-        public string Username { get; set; }
-
         public string RealName { get; set; }
 
         public MemberStatus Status { get; set; }
 
         public string Gender { get; set; }
 
-        public string MobilePhone { get; set; }
+        public Major Major { get; set; }
+
+        public EduRecord EduRecord { get; set; }
 
         public int InstitutionID { get; set; }
     }

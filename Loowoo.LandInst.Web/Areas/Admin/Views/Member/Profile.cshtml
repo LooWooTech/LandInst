@@ -10,12 +10,17 @@
     PracticeInfo practiceInfo = ViewBag.PracticeInfo ?? new PracticeInfo();
     CheckLog checkLog = ViewBag.CheckLog;
 }
-<div>
+<div style="position:relative;">
     <ul class="nav nav-tabs">
         <li class="active"><a href="#tab1" data-toggle="tab">基本资料</a></li>
         <li class=""><a href="#tab2" data-toggle="tab">考试成绩</a></li>
         <li class=""><a href="#tab3" data-toggle="tab">继续教育</a></li>
         <li class=""><a href="#tab4" data-toggle="tab">执业信息</a></li>
+    </ul>
+    <ul style="position:absolute;right:10px;top:0px;">
+        <a href="export?id=@(profile.ID)" class="btn btn-primary"><i class="glyphicon glyphicon-export"></i> 导出资料</a>
+        <a href="transfer?id=@(profile.ID)" class="btn btn-warning"><i class="glyphicon glyphicon-transfer"></i> 机构转移</a>
+
     </ul>
 </div>
 <div class="tab-content">
@@ -154,9 +159,9 @@
     <div class="tab-pane fade" id="tab4">
         <table class="table table-bordered">
             <tr>
-                <th style="width:180px;">人事档案编号</th>
+                <th style="width: 180px;">人事档案编号</th>
                 <td>@(practiceInfo.PersonalRecordsNO)</td>
-                <th style="width:180px;">人事档案存放机构</th>
+                <th style="width: 180px;">人事档案存放机构</th>
                 <td>@(practiceInfo.PersonalRecordsInstitution)</td>
             </tr>
             <tr>
@@ -172,12 +177,8 @@
                 <td>@(practiceInfo.CertificationNO)</td>
             </tr>
             <tr>
-                <th>起始从业时间</th>
-                <td colspan="3">@(practiceInfo.BeginWorkingDate.ToShortDateString())</td>
-            </tr>
-            <tr>
                 <th>其他资格证书</th>
-                <td colspan="3" style="padding:0px;">
+                <td colspan="3" style="padding: 0px;">
                     <table class="table">
                         <tr>
                             <th>编号</th>

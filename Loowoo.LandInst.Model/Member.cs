@@ -23,7 +23,8 @@ namespace Loowoo.LandInst.Model
 
         public int InstitutionID { get; set; }
 
-        public string IDNo { get; set; }
+        [NotMapped]
+        public string InstitutionName { get; set; }
 
         public string RealName { get; set; }
 
@@ -31,10 +32,13 @@ namespace Loowoo.LandInst.Model
 
         public string Gender { get; set; }
 
-        public string Email { get; set; }
+        [Column(TypeName = "int")]
+        public Major Major { get; set; }
 
-        public string MobilePhone { get; set; }
+        [Column(TypeName = "int")]
+        public EduRecord EduRecord { get; set; }
 
+        public string IDNo { get; set; }
         ///// <summary>
         ///// 土地规划从业人员职业培训合格证号
         ///// </summary>

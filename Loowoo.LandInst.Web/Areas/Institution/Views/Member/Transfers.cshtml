@@ -19,7 +19,6 @@
 <table class="table table-bordered">
     <tr>
         <th>会员姓名</th>
-        <th style="width: 120px;">手机</th>
         <th style="width: 80px;">转移方式</th>
         <th style="width: 120px;">申请日期</th>
         <th style="width: 80px;">审核状态</th>
@@ -44,7 +43,6 @@
         }
         <tr>
             <td><a href="/institution/member/profile?id=@(item.UserID)">@(item.RealName)</a></td>
-            <td>@(item.MobilePhone)</td>
             <td>@(mode)</td>
             <td>@(item.CreateTime.ToShortDateString())</td>
             <td>

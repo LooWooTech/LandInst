@@ -17,8 +17,9 @@
                 return;
             }
         }
-        else{
-            @:请耐心等待审批，审批前您可以修改资料。
+        else
+        {
+        @:请耐心等待审批，审批前您可以修改资料。
         }
     }
     else
@@ -62,15 +63,25 @@
             </div>
         </div>
         <div class="form-group">
-            <label class="control-label col-lg-3">联系电话</label>
+            <label class="control-label col-lg-3">专业</label>
             <div class="col-sm-5">
-                <input type="text" name="MobilePhone" class="form-control input-sm"  value="@(profile.MobilePhone)" />
+                @Html.DropDownList("Major", Enum.GetNames(typeof(Major)).Select(name => new SelectListItem
+               {
+                   Selected = (Major)Enum.Parse(typeof(Major), name) == profile.Major,
+                   Value = ((int)Enum.Parse(typeof(Major), name)).ToString(),
+                   Text = name,
+               }), new { @class = "form-control input-sm" })
             </div>
         </div>
         <div class="form-group">
-            <label class="control-label col-lg-3">电子信箱</label>
+            <label class="control-label col-lg-3">学历</label>
             <div class="col-sm-5">
-                <input type="text" name="Email" class="form-control input-sm" value="@(profile.Email)" />
+                @Html.DropDownList("EduRecord", Enum.GetNames(typeof(EduRecord)).Select(name => new SelectListItem
+               {
+                   Selected = (EduRecord)Enum.Parse(typeof(EduRecord), name) == profile.EduRecord,
+                   Value = ((int)Enum.Parse(typeof(EduRecord), name)).ToString(),
+                   Text = name,
+               }), new { @class = "form-control input-sm" })
             </div>
         </div>
     </fieldset>
@@ -107,15 +118,15 @@
             </div>
         </div>
         <div class="form-group">
-            <label class="control-label col-lg-3">专业</label>
+            <label class="control-label col-lg-3">Email</label>
             <div class="col-sm-5">
-                <input type="text" name="Major" class="form-control input-sm" value="@(profile.Major)" />
+                <input type="text" name="Email" class="form-control input-sm" value="@(profile.Email)" />
             </div>
         </div>
         <div class="form-group">
-            <label class="control-label col-lg-3">学历</label>
+            <label class="control-label col-lg-3">手机</label>
             <div class="col-sm-5">
-                <input type="text" name="EduRecord" class="form-control input-sm"  value="@(profile.EduRecord)" />
+                <input type="text" name="MobilePhone" class="form-control input-sm"  value="@(profile.MobilePhone)" />
             </div>
         </div>
         <div class="form-group">

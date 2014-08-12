@@ -2,9 +2,17 @@
 @{
     ViewBag.Title = "会员转入申请";
     Layout = "~/Areas/Institution/Views/Shared/_Layout.cshtml";
-    MemberProfile member = ViewBag.MemberProfile; 
+    MemberProfile member = ViewBag.MemberProfile;
+    CheckLog approval = ViewBag.CheckLog;
 }
-
+@if (approval != null && !approval.Result.HasValue)
+{
+    <div class="alert alert-warning">
+        该会员已于@(approval.CreateTime.ToString())提交转入申请，请耐心等待审核。 <a href="@(Request.UrlReferrer == null?"../member/":Request.UrlReferrer.ToString())" class="btn btn-xs btn-default">返回</a>
+    </div>
+    Html.RenderPartial("_MemberProfile", member);
+    return;
+}
 <form id="transfer-form" role="form" class="form-horizontal" method="post">
     <input type="hidden" name="mode" value="@((int)TransferMode.In)" />
     @Html.Partial("_MemberProfile",member)

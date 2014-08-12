@@ -11,6 +11,7 @@
     {
         model.ShareHolders.Add(new Shareholder());
         model.Equipments.Add(new Equipment());
+        model.Softwares.Add(new Software());
     }
 }
 <div class="alert alert-dismissable alert-warning">
@@ -53,242 +54,312 @@
     }
 </div>
 <form id="profile-form" role="form" class="form-horizontal" method="post">
-    <input id="hid-type" type="hidden" name="type" value="@(isAnnualCheck ? "Annual" : "Profile")" />
-    <legend><i class="glyphicon glyphicon-list-alt"></i>详细资料</legend>
-    <table class="table table-bordered" id="profile-basic">
-        <tr>
-            <th style="width: 120px;">机构全称</th>
-            <td colspan="3">
-                <input type="text" name="Name" class="form-control input-sm" value="@(model.Name)" />
-            </td>
-            <th>所在城市</th>
-            <td>
-                <select name="City" class="form-control input-sm">
-                    <option>全国</option>
-                    @foreach (var city in "杭州市,宁波市,温州市,嘉兴市,湖州市,绍兴市,金华市,衢州市,舟山市,台州市,丽水市".Split(','))
-                    { 
-                        <option @(city == model.City ? "selected=selected" : null)>@(city)</option>
-                    }
-                </select>
-            </td>
-        </tr>
-        <tr>
-            <th>法人代表</th>
-            <td>
-                <input type="text" name="LegalPerson" class="form-control input-sm" value="@(model.LegalPerson)" />
-            </td>
-            <th>法人代码</th>
-            <td>
-                <input type="text" name="LegalpersonNo" class="form-control input-sm" value="@(model.LegalpersonNo)" />
-            </td>
-            <th>企业类型</th>
-            <td>
-                <input type="text" name="CompanyType" class="form-control input-sm" value="@(model.CompanyType)" />
-            </td>
-        </tr>
-        <tr>
-            <th>工商登记号</th>
-            <td>
-                <input type="text" name="RegistrationNo" class="form-control input-sm" value="@(model.RegistrationNo)" />
-            </td>
-            <th>税务登记号</th>
-            <td style="width: 200px;">
-                <input type="text" name="TaxRegistryNo" class="form-control input-sm" value="@(model.TaxRegistryNo)" />
-            </td>
-            <th style="width: 180px;">注册资金（万元）</th>
-            <td>
-                <input type="text" name="RegisteredCapital" class="form-control input-sm" value="@(model.RegisteredCapital)" maxlength="6" />
-            </td>
-        </tr>
-        <tr>
-            <th>成立日期</th>
-            <td>
-                <input type="text" name="EstablishedDate" class="form-control input-sm datepicker" value="@(model.EstablishedDate.HasValue ? model.EstablishedDate.Value.ToShortDateString() : null)" />
-            </td>
-            <th>营业期限</th>
-            <td>
-                <input type="text" name="OperatingPeriod" class="form-control input-sm" value="@(model.OperatingPeriod)" />
-            </td>
-            <th>工商登记机关</th>
-            <td>
-                <input type="text" name="RegistrationInstitution" class="form-control input-sm" value="@(model.RegistrationInstitution)" />
-            </td>
-        </tr>
-        <tr>
-            <th>机构总人数</th>
-            <td>
-                <input type="text" name="TotalMembers" class="form-control input-sm" value="@(model.TotalMembers)" />
-            </td>
-            <th>其中专业人员数</th>
-            <td>
-                <input type="text" name="ProMembers" class="form-control input-sm" value="@(model.ProMembers)" />
-            </td>
-            <th>中级及以上专业人员数</th>
-            <td>
-                <input type="text" name="ExpertMembers" class="form-control input-sm" value="@(model.ExpertMembers)" />
-            </td>
-        </tr>
-        <tr>
-            <th>执业注册号</th>
-            <td>
-                <input type="text" name="PracticeRegistrationNo" class="form-control input-sm" value="@(model.PracticeRegistrationNo)" />
-            </td>
-            <th>团体会员证号</th>
-            <td>
-                <input type="text" name="CorporateMemberNo" class="form-control input-sm" value="@(model.CorporateMemberNo)" />
-            </td>
-            <th>是否有测绘许可证书</th>
-            <td>
-                <label><input type="radio" name="HasExequatur" value="true" @(model.HasExequatur ? "checked=checked" : null) />是</label>&nbsp;&nbsp;&nbsp;&nbsp;
+    <div style="position: relative;">
+        <ul class="nav nav-tabs">
+            <li class="active"><a href="#profile-basic" data-toggle="tab"><i class="glyphicon glyphicon-list-alt"></i>&nbsp;详细资料</a></li>
+            <li class=""><a href="#profile-contact" data-toggle="tab"><i class="glyphicon glyphicon-phone-alt"></i>&nbsp;联系方式</a></li>
+            @if (!isRegister)
+            {
+                <li class=""><a href="#profile-sharehoder" data-toggle="tab"><i class="glyphicon glyphicon-user"></i>&nbsp;股东</a></li>
+                <li class=""><a href="#profile-equipment" data-toggle="tab"><i class="glyphicon glyphicon-cog"></i>&nbsp;仪器设备</a></li>
+                <li class=""><a href="#profile-software" data-toggle="tab"><i class="glyphicon glyphicon-floppy-disk"></i>&nbsp;应用软件</a></li>
+            }
+        </ul>
+        @if(disabled){
+        <ul style="position: absolute; right: 10px; top: 0px;">
+            <a href="export?id=@(inst.ID)" class="btn btn-primary"><i class="glyphicon glyphicon-export"></i>导出资料</a>
+        </ul>
+        }
+    </div>
+    <div class="tab-content">
+        <div class="tab-pane fade active in" id="profile-basic">
+            <table class="table table-bordered">
+                <tr>
+                    <th style="width: 120px;">机构全称</th>
+                    <td colspan="3">
+                        <input type="text" name="Name" class="form-control input-sm" value="@(model.Name)" />
+                    </td>
+                    <th>所在城市</th>
+                    <td>
+                        <select name="City" class="form-control input-sm">
+                            @foreach (var city in Enum.GetNames(typeof(City)))
+                            { 
+                                <option @(city == model.City ? "selected=selected" : null)>@(city)</option>
+                            }
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <th>法人代表</th>
+                    <td>
+                        <input type="text" name="LegalPerson" class="form-control input-sm" value="@(model.LegalPerson)" />
+                    </td>
+                    <th>法人代码</th>
+                    <td>
+                        <input type="text" name="LegalpersonNo" class="form-control input-sm" value="@(model.LegalpersonNo)" />
+                    </td>
+                    <th>机构性质</th>
+                    <td>
+                        <input type="text" name="CompanyType" class="form-control input-sm" value="@(model.CompanyType)" />
+                    </td>
+                </tr>
+                <tr>
+                    <th>工商登记号</th>
+                    <td>
+                        <input type="text" name="RegistrationNo" class="form-control input-sm" value="@(model.RegistrationNo)" />
+                    </td>
+                    <th>税务登记号</th>
+                    <td style="width: 200px;">
+                        <input type="text" name="TaxRegistryNo" class="form-control input-sm" value="@(model.TaxRegistryNo)" />
+                    </td>
+                    <th style="width: 180px;">注册资金（万元）</th>
+                    <td>
+                        <input type="text" name="RegisteredCapital" class="form-control input-sm" value="@(model.RegisteredCapital)" maxlength="6" />
+                    </td>
+                </tr>
+                <tr>
+                    <th>成立日期</th>
+                    <td>
+                        <input type="text" name="EstablishedDate" class="form-control input-sm datepicker" value="@(model.EstablishedDate.HasValue ? model.EstablishedDate.Value.ToShortDateString() : null)" />
+                    </td>
+                    <th>营业期限</th>
+                    <td>
+                        <input type="text" name="OperatingPeriod" class="form-control input-sm" value="@(model.OperatingPeriod)" />
+                    </td>
+                    <th>工商登记机关</th>
+                    <td>
+                        <input type="text" name="RegistrationInstitution" class="form-control input-sm" value="@(model.RegistrationInstitution)" />
+                    </td>
+                </tr>
+                <tr>
+                    <th>机构总人数</th>
+                    <td>
+                        <input type="text" name="TotalMembers" class="form-control input-sm" value="@(model.TotalMembers)" />
+                    </td>
+                    <th>其中专业人员数</th>
+                    <td>
+                        <input type="text" name="ProMembers" class="form-control input-sm" value="@(model.ProMembers)" />
+                    </td>
+                    <th>中级及以上专业人员数</th>
+                    <td>
+                        <input type="text" name="ExpertMembers" class="form-control input-sm" value="@(model.ExpertMembers)" />
+                    </td>
+                </tr>
+                <tr>
+                    <th>执业注册号</th>
+                    <td>
+                        <input type="text" name="PracticeRegistrationNo" class="form-control input-sm" value="@(model.PracticeRegistrationNo)" />
+                    </td>
+                    <th>团体会员证号</th>
+                    <td>
+                        <input type="text" name="CorporateMemberNo" class="form-control input-sm" value="@(model.CorporateMemberNo)" />
+                    </td>
+                    <th>是否有测绘许可证书</th>
+                    <td>
+                        <label><input type="radio" name="HasExequatur" value="true" @(model.HasExequatur ? "checked=checked" : null) />是</label>&nbsp;&nbsp;&nbsp;&nbsp;
                     <label><input type="radio" name="HasExequatur" value="false"  @(!model.HasExequatur ? "checked=checked" : null)/>否</label>
-            </td>
-        </tr>
-        <tr>
-            <th>经营范围</th>
-            <td colspan="3">
-                <input type="text" name="BusinessScope" class="form-control input-sm" value="@(model.BusinessScope)" />
-                @*                <select name="BusinessScope" class="form-control input-sm">
+                    </td>
+                </tr>
+                <tr>
+                    <th>经营范围</th>
+                    <td colspan="3">
+                        <input type="text" name="BusinessScope" class="form-control input-sm" value="@(model.BusinessScope)" />
+                        @*                <select name="BusinessScope" class="form-control input-sm">
                     <option @(model.BusinessScope == "全国范围" ? "select=select" : null)>全国范围</option>
                     <option @(model.BusinessScope == "省范围" ? "select=select" : null)>省范围</option>
                     <option @(model.BusinessScope == "市范围" ? "select=select" : null)>市范围</option>
                 </select>*@
-            </td>
-            <th>证书级别</th>
-            <td>
-                <input type="text" name="ExequaturLevel" class="form-control input-sm" value="@(model.ExequaturLevel)" />
-            </td>
-        </tr>
-    </table>
+                    </td>
+                    <th>证书级别</th>
+                    <td>
+                        <input type="text" name="ExequaturLevel" class="form-control input-sm" value="@(model.ExequaturLevel)" />
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="tab-pane fade" id="profile-contact">
+            <table class="table table-bordered" id="profile-contact">
+                <tr>
+                    <th style="width: 120px;">手机</th>
+                    <td>
+                        <input type="text" name="MobilePhone" class="form-control input-sm" value="@(model.MobilePhone)" />
+                    </td>
+                    <th style="width: 120px;">传真电话</th>
+                    <td>
+                        <input type="text" name="Fax" class="form-control input-sm" value="@(model.Fax)" />
+                    </td>
+                    <th>联系电话</th>
+                    <td>
+                        <input type="text" name="Tel" class="form-control input-sm" value="@(model.Tel)" />
+                    </td>
+                </tr>
+                <tr>
+                    <th>公司地址</th>
+                    <td colspan="3">
+                        <input type="text" name="Address" class="form-control input-sm" value="@(model.Address)" />
+                    </td>
+                    <th>邮政编码</th>
+                    <td>
+                        <input type="text" name="Postcode" class="form-control input-sm" value="@(model.Postcode)" />
+                    </td>
+                </tr>
+                <tr>
+                    <th>联系地址</th>
+                    <td colspan="3">
+                        <input type="text" name="Address1" class="form-control input-sm" value="@(model.Address1)" />
+                    </td>
+                    <th>邮政编码</th>
+                    <td>
+                        <input type="text" name="Postcode1" class="form-control input-sm" value="@(model.Postcode1)" />
+                    </td>
+                </tr>
+                <tr>
+                    <th>电子邮箱</th>
+                    <td colspan="5">
+                        <input type="text" name="Email" class="form-control input-sm" value="@(model.Email)" />
+                    </td>
+                </tr>
+                <tr>
+                    <th>公司网站</th>
+                    <td colspan="5">
+                        <input type="text" name="Website" class="form-control input-sm" value="@(model.Website)" />
+                    </td>
+                </tr>
 
-    <legend><i class="glyphicon glyphicon-phone-alt"></i>联系方式</legend>
-    <table class="table table-bordered" id="profile-contact">
-        <tr>
-            <th style="width: 120px;">手机</th>
-            <td>
-                <input type="text" name="MobilePhone" class="form-control input-sm" value="@(model.MobilePhone)" />
-            </td>
-            <th style="width: 120px;">传真电话</th>
-            <td>
-                <input type="text" name="Fax" class="form-control input-sm" value="@(model.Fax)" />
-            </td>
-            <th>联系电话</th>
-            <td>
-                <input type="text" name="Tel" class="form-control input-sm" value="@(model.Tel)" />
-            </td>
-        </tr>
-        <tr>
-            <th>公司地址</th>
-            <td colspan="3">
-                <input type="text" name="Address" class="form-control input-sm" value="@(model.Address)" />
-            </td>
-            <th>邮政编码</th>
-            <td>
-                <input type="text" name="Postcode" class="form-control input-sm" value="@(model.Postcode)" />
-            </td>
-        </tr>
-
-        <tr>
-            <th>电子邮箱</th>
-            <td colspan="5">
-                <input type="text" name="Email" class="form-control input-sm" value="@(model.Email)" />
-            </td>
-        </tr>
-        <tr>
-            <th>公司网站</th>
-            <td colspan="5">
-                <input type="text" name="Website" class="form-control input-sm" value="@(model.Website)" />
-            </td>
-        </tr>
-
-    </table>
-    @{
-        if (!isRegister)
+            </table>
+        </div>
+        @if (!isRegister)
         {
-        <legend><i class="glyphicon glyphicon-user"></i>股东信息       
-            
-        </legend>
-        <div class="col-sm-8">
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th style="width: 140px;">姓名</th>
-                        <th style="width: 80px;">性别</th>
-                        <th>出生年月</th>
-                        <th>股份</th>
-                        <th>手机</th>
-                        <th><button id="btn-add-sh" class="btn btn-xs btn-primary">添加</button></th>
-                    </tr>
-                </thead>
-                <tbody id="list-sh">
-                    @foreach (var item in model.ShareHolders)
-                    { 
+            <div class="tab-pane fade" id="profile-sharehoder">
+                <table class="table table-bordered">
+                    <thead>
                         <tr>
-                            <td>
-                                <input type="text" name="SH.Name"  value="@(item.Name)" class="form-control input-sm"/>
-                            </td>
-                            <td>
-                                <select name="SH.Gender" class="form-control input-sm">
-                                    <option @(item.Gender == "男" ? "selected=selected" : null)>男</option>
-                                    <option @(item.Gender == "女" ? "selected=selected" : null)>女</option>
-                                </select>
-                            </td>
-                            <td>
-                                <input type="text" name="SH.Birthday"  value="@(item.Birthday)" class="form-control input-sm"/>
-                            </td>
-                            <td>
-                                <input type="text" name="SH.Shares"  value="@(item.Shares)" class="form-control input-sm"/>
-                            </td>
-                            <td>
-                                <input type="text" name="SH.Mobile"  value="@(item.Mobile)" class="form-control input-sm"/>
-                            </td>
-                            <td>
-                                <a class="btn btn-xs btn-warning btn-delete">删除</a>
-                            </td>
+                            <th style="width: 140px;">姓名</th>
+                            <th style="width: 80px;">性别</th>
+                            <th>出生年月</th>
+                            <th style="width: 90px;">股份</th>
+                            <th style="width: 150px;">职务或职称</th>
+                            <th style="width: 150px;">是否专业人员</th>
+                            <th style="width: 70px;">
+                                <button id="btn-add-sh" class="btn btn-xs btn-primary">添加</button></th>
                         </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-        <legend><i class="glyphicon glyphicon-cog"></i>仪器设备配置                           
-            
-        </legend>
-        <div class="col-sm-8">
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th>仪器设备名称</th>
-                        <th style="width: 60px;">数量</th>
-                        <th style="width: 120px;">型号</th>
-                        <th style="width: 200px;">生产厂商</th>
-                        <th style="width: 60px;"><button id="btn-add-equipment" class="btn btn-xs btn-primary">添加</button></th>
-                    </tr>
-                </thead>
-                <tbody id="list-equipment">
-                    @foreach (var item in model.Equipments)
-                    { 
+                    </thead>
+                    <tbody id="list-sh">
+                        @foreach (var item in model.ShareHolders)
+                        { 
+                            <tr>
+                                <td>
+                                    <input type="text" name="SH.Name"  value="@(item.Name)" class="form-control input-sm"/>
+                                </td>
+                                <td>
+                                    <select name="SH.Gender" class="form-control input-sm">
+                                        <option @(item.Gender == "男" ? "selected=selected" : null)>男</option>
+                                        <option @(item.Gender == "女" ? "selected=selected" : null)>女</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <input type="text" name="SH.Birthday"  value="@(item.Birthday)" class="form-control input-sm"/>
+                                </td>
+                                <td>
+                                    <input type="text" name="SH.Shares"  value="@(item.Shares)" class="form-control input-sm"/>
+                                </td>
+                                <td>
+                                    <input type="text" name="SH.Title"  value="@(item.Title)" class="form-control input-sm"/>
+                                </td>
+                                <td>
+                                    <select name="SH.Professionals" class="form-control input-sm">
+                                        <option></option>
+                                        <option value="true" @(item.Professionals == true ? "selected=selected" : null)>是</option>
+                                        <option value="false" @(item.Professionals == false ? "selected=selected" : null)>否</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <a class="btn btn-xs btn-warning btn-delete">删除</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div class="tab-pane fade" id="profile-equipment">
+                <table class="table table-bordered">
+                    <thead>
                         <tr>
-                            <td>
-                                <input type="text" name="equipment.Name"  value="@(item.Name)" class="form-control input-sm"/>
-                            </td>
-                            <td>
-                                <input type="text" name="equipment.Number"  value="@(item.Number.HasValue && item.Number.Value > 0 ? item.Number.Value.ToString() : "")" class="form-control input-sm"/>
-                            </td>
-                            <td>
-                                <input type="text" name="equipment.Model"  value="@(item.Model)" class="form-control input-sm"/>
-                            </td>
-                            <td>
-                                <input type="text" name="equipment.Manufacturer"  value="@(item.Manufacturer)" class="form-control input-sm"/>
-                            </td>
-                            <td>
-                                <a class="btn btn-xs btn-warning btn-delete">删除</a>
-                            </td>
+                            <th>仪器设备名称</th>
+                            <th style="width: 60px;">数量</th>
+                            <th style="width: 120px;">型号/规格</th>
+                            <th style="width: 200px;">生产厂商</th>
+                            <th style="width: 150px;">性能</th>
+                            <th style="width: 70px;">
+                                <button id="btn-add-equipment" class="btn btn-xs btn-primary">添加</button></th>
                         </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
+                    </thead>
+                    <tbody id="list-equipment">
+                        @foreach (var item in model.Equipments)
+                        { 
+                            <tr>
+                                <td>
+                                    <input type="text" name="equipment.Name"  value="@(item.Name)" class="form-control input-sm"/>
+                                </td>
+                                <td>
+                                    <input type="text" name="equipment.Number"  value="@(item.Number.HasValue && item.Number.Value > 0 ? item.Number.Value.ToString() : "")" class="form-control input-sm"/>
+                                </td>
+                                <td>
+                                    <input type="text" name="equipment.Model"  value="@(item.Model)" class="form-control input-sm"/>
+                                </td>
+                                <td>
+                                    <input type="text" name="equipment.Manufacturer"  value="@(item.Manufacturer)" class="form-control input-sm"/>
+                                </td>
+                                <td>
+                                    <input type="text" name="equipment.Performance"  value="@(item.Performance)" class="form-control input-sm"/>
+                                </td>
+                                <td>
+                                    <a class="btn btn-xs btn-warning btn-delete">删除</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div class="tab-pane fade" id="profile-software">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>软件名称</th>
+                            <th style="width: 60px;">数量</th>
+                            <th style="width: 120px;">来源</th>
+                            <th style="width: 200px;">用途</th>
+                            <th style="width: 70px;">
+                                <button id="btn-add-software" class="btn btn-xs btn-primary">添加</button></th>
+                        </tr>
+                    </thead>
+                    <tbody id="list-software">
+                        @foreach (var item in model.Softwares)
+                        { 
+                            <tr>
+                                <td>
+                                    <input type="text" name="software.Name"  value="@(item.Name)" class="form-control input-sm"/>
+                                </td>
+                                <td>
+                                    <input type="text" name="software.Number"  value="@(item.Number.HasValue && item.Number.Value > 0 ? item.Number.Value.ToString() : "")" class="form-control input-sm"/>
+                                </td>
+                                <td>
+                                    <input type="text" name="software.Source"  value="@(item.Source)" class="form-control input-sm"/>
+                                </td>
+                                <td>
+                                    <input type="text" name="software.Purpose"  value="@(item.Purpose)" class="form-control input-sm"/>
+                                </td>
+                                <td>
+                                    <a class="btn btn-xs btn-warning btn-delete">删除</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
         }
-    }
+    </div>
+
     @if (!disabled)
     {
         <div style="clear: both; margin: 20px;" id="btn-group">
@@ -300,6 +371,7 @@
 </form>
 <script>
     $(function () {
+        $(".datepicker").datepicker();
         $("#City").val("@(model.City)");
         var form = $("#profile-form");
 
@@ -361,6 +433,7 @@
             <text>
 
         setList("list-sh", "btn-add-sh");
+        setList("list-software", "btn-add-software");
         setList("list-equipment", "btn-add-equipment");
 
         function setList(listId, btnAddId) {

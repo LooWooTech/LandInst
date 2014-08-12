@@ -14,6 +14,7 @@ namespace Loowoo.LandInst.Model
         {
             ShareHolders = new List<Shareholder>();
             Equipments = new List<Equipment>();
+            Softwares = new List<Software>();
         }
 
         public InstitutionProfile(Institution inst):this()
@@ -66,6 +67,10 @@ namespace Loowoo.LandInst.Model
 
         public string Postcode { get; set; }
 
+        public string Address1 { get; set; }
+
+        public string Postcode1 { get; set; }
+
         public string Email { get; set; }
 
         public string Website { get; set; }
@@ -79,6 +84,21 @@ namespace Loowoo.LandInst.Model
         /// 机构类型
         /// </summary>
         public string CompanyType { get; set; }
+
+        /// <summary>
+        /// 联系人
+        /// </summary>
+        public string ContactPerson { get; set; }
+
+        /// <summary>
+        /// 技术负责人
+        /// </summary>
+        public string TechLeader { get; set; }
+
+        /// <summary>
+        /// 从事土地规划工作办公用房面积
+        /// </summary>
+        public string OfficeArea { get; set; }
 
         /// <summary>
         /// 传真电话
@@ -140,5 +160,7 @@ namespace Loowoo.LandInst.Model
         //public List<Certification> Certifications { get; set; }
 
         public List<Equipment> Equipments { get; set; }
+
+        public List<Software> Softwares { get; set; }
     }
 }
