@@ -30,12 +30,7 @@ namespace Loowoo.LandInst.Model
         public InstitutionType Type { get; set; }
 
         /// <summary>
-        /// 机构全称
-        /// </summary>
-        public string FullName { get; set; }
-
-        /// <summary>
-        /// 机构简称
+        /// 机构名称
         /// </summary>
         public string Name { get; set; }
 

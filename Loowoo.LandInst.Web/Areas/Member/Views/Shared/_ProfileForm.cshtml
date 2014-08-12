@@ -2,8 +2,31 @@
 @{
     MemberProfile profile = ViewBag.Profile;
     Institution inst = ViewBag.Institution ?? new Institution();
-    List<Exam> exams = ViewBag.Exams;
+    CheckLog examCheckLog = ViewBag.CheckLog;
+    Exam indateExam = ViewBag.IndateExam;
 }
+<div class="alert alert-warning">
+    @if (examCheckLog != null && examCheckLog.Result != false)
+    { 
+        @:您已于@(examCheckLog.CreateTime.ToString())申请了考试，
+        if (examCheckLog.Result.HasValue)
+        {
+            if (examCheckLog.Result.Value)
+            {
+                Response.Redirect("/member/exam");
+                return;
+            }
+        }
+        else{
+            @:请耐心等待审批，审批前您可以修改资料。
+        }
+    }
+    else
+    {
+        @:请确保以下资料填写真实、完整，方便顺利通过考试审批。
+    }
+</div>
+
 <form id="profile-form" role="form" class="form-horizontal" method="post">
     <fieldset class="col-lg-6">
         <legend>基本信息</legend>
@@ -102,43 +125,40 @@
             </div>
         </div>
     </fieldset>
-    @if (exams != null)
+    @if (indateExam != null && (examCheckLog == null || examCheckLog.Result == false))
     {
-        <fieldset style="clear: both;">
-            <legend>选择考试</legend>
-            <div class="form-group">
-                <label class="control-label col-lg-2">选择考试</label>
-                <div class="col-sm-3">
-                    <select name="ExamId" class="form-control input-sm">
-                        @foreach (var exam in exams)
-                        { 
-                            <option value="@(exam.ID)">@(exam.Name)</option>
-                        }
-                    </select>
-                </div>
-            </div>
-        </fieldset>
+        <legend>考试信息</legend>
+        <table class="table table-bordered">
+            <tr>
+                <th>考试名称</th>
+                <td>@(indateExam.Name)</td>
+                <th>考试地点</th>
+                <td>@(indateExam.StartExamDate.ToShortDateString()) ~ @(indateExam.EndExamDate.ToShortDateString())</td>
+            </tr>
+            <tr>
+                <th>报名时间</th>
+                <td>@(indateExam.StartSignDate.ToShortDateString()) ~ @(indateExam.EndSignDate.ToShortDateString())</td>
+                <th>考试时间</th>
+                <td>@(indateExam.StartExamDate.ToShortDateString()) ~ @(indateExam.EndExamDate.ToShortDateString())</td>
+            </tr>
+            <tr>
+                <th>简介</th>
+                <td colspan="3">@(indateExam.Summary)</td>
+            </tr>
+        </table>
         <div class="form-group">
             <label class="control-label col-lg-3"></label>
             <div class="col-sm-5">
-                <div>请确保以上资料填写真实、完整</div>
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="control-label col-lg-3"></label>
-            <div class="col-sm-5">
-                <button type="submit" class="btn btn-primary">提交注册</button>
+                <button type="submit" class="btn btn-primary">提交报名注册</button>
             </div>
         </div>
         <script>
             $(function () {
                 $("#profile-form").submit(function () {
                     var data = $(this).serialize();
-                    $.request("/member/exam/signup?examid=" + date.ExamId, data, function (json) {
-                        if (json.result) {
-                            alert("报名成功！");
-                            window.location.href = "/member/";
-                        }
+                    $.request("/member/exam/signup?examId=@(indateExam.ID)", data, function (json) {
+                        alert("报名成功！");
+                        window.location.href = "/member/";
                     });
                     return false;
                 });
@@ -161,6 +181,7 @@
                         alert("保存成功！");
                         window.location.href = "/member/profile/edit";
                     });
+                    return false;
                 });
             });
         </script>

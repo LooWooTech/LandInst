@@ -83,19 +83,19 @@ namespace Loowoo.LandInst.Manager
             //return Core.ProfileManager.GetProfile<MemberProfile>(checkLog.InfoID);
         }
 
-        public void SaveProfile(Member member, MemberProfile profile)
+        public void SaveProfile(int memberId, MemberProfile profile)
         {
-            profile.SetMemberField(member);
-
-            var entity = Core.ProfileManager.GetLastProfile<MemberProfile>(member.ID);
+            Core.MemberManager.UpdateMember(profile);
+            var entity = Core.ProfileManager.GetLastProfile(memberId);
             if (entity == null)
             {
-                Core.ProfileManager.AddProfile(member.ID, profile);
+                Core.ProfileManager.AddProfile(memberId, profile);
             }
             else
             {
                 Core.ProfileManager.UpdateProfile(entity.ID, profile);
             }
+            
         }
 
         public List<Member> GetInstMembers(int instId)

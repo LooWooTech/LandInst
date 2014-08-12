@@ -18,8 +18,7 @@ namespace Loowoo.LandInst.Web.Areas.Member.Controllers
         public ActionResult Edit()
         {
             var member = GetCurrentMember();
-            var profile = Core.MemberManager.GetProfile(member.ID);
-            profile.SetMemberField(member);
+            var profile = Core.MemberManager.GetProfile(member.ID) ?? new MemberProfile(member);
             ViewBag.Profile = profile;
             return View();
         }
@@ -28,7 +27,8 @@ namespace Loowoo.LandInst.Web.Areas.Member.Controllers
         public ActionResult Edit(MemberProfile profile)
         {
             var member = GetCurrentMember();
-            Core.MemberManager.SaveProfile(member, profile);
+            profile.ID = member.ID;
+            Core.MemberManager.SaveProfile(member.ID, profile);
             return JsonSuccess();
         }
 

@@ -24,11 +24,11 @@ namespace Loowoo.LandInst.Manager
         {
             using (var db = GetDataContext())
             {
-                var query = db.Profiles.Where(e => e.UserID == userId && e.CheckResult == checkResult);
-                //if (checkResult.HasValue)
-                //{
-                //    query = query.Where(e => e.CheckResult == checkResult.Value);
-                //}
+                var query = db.Profiles.Where(e => e.UserID == userId);
+                if (checkResult.HasValue)
+                {
+                    query = query.Where(e => e.CheckResult == checkResult.Value);
+                }
                 return query.OrderByDescending(e => e.ID).FirstOrDefault();
             }
         }
@@ -69,7 +69,7 @@ namespace Loowoo.LandInst.Manager
             }
         }
 
-        internal void UpdateProfileCheckResult(int profileId,bool? checkResult)
+        internal void UpdateProfileCheckResult(int profileId, bool? checkResult)
         {
             using (var db = GetDataContext())
             {

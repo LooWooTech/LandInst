@@ -9,7 +9,12 @@
 @if (checkLog != null)
 { 
     <div class="alert alert-warning">
-        贵机构已于@(checkLog.CreateTime.ToShortDateString())为你提交了执业登记申请。
+        贵机构已于@(checkLog.CreateTime.ToShortDateString())为你提交了执业登记申请，
+        @if (checkLog.Result.HasValue) { 
+            @:并且与@(checkLog.UpdateTime.Value.ToShortDateString()) <span class="label label-@(checkLog.Result.Value?"success":"warning")">@(checkLog.Result.Value?"通过审批":"未通过审批")</span>
+        }else{
+            @:目前<span class="label label-default">尚未审批</span>。
+        }
     </div>
 }
 <table class="table table-bordered">

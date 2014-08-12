@@ -28,10 +28,10 @@ namespace Loowoo.LandInst.Manager
             });
         }
 
-        public List<Exam> GetIndateExams()
+        public Exam GetIndateExams()
         {
             var now = DateTime.Now;
-            return GetExams().Where(e => e.StartSignDate <= now && e.EndSignDate >= now).ToList();
+            return GetExams().Where(e => e.StartSignDate <= now && e.EndSignDate >= now).OrderByDescending(e=>e.ID).FirstOrDefault();//.ToList();
         }
 
         public ExamResult GetExamResult(int examResultId)
@@ -124,7 +124,6 @@ namespace Loowoo.LandInst.Manager
                     {
                         ExamID = examId,
                         MemberID = memberId,
-                        Result = false
                     });
                     db.SaveChanges();
                 }

@@ -78,7 +78,7 @@ namespace Loowoo.LandInst.Manager
 
                 if (!string.IsNullOrEmpty(filter.Keyword))
                 {
-                    query = query.Where(e => e.Name.Contains(filter.Keyword) || e.FullName.Contains(filter.Keyword));
+                    query = query.Where(e => e.Name.Contains(filter.Keyword));
                 }
 
                 if (!string.IsNullOrEmpty(filter.City))
@@ -94,7 +94,7 @@ namespace Loowoo.LandInst.Manager
         {
             using (var db = GetDataContext())
             {
-                var entity = db.Institutions.FirstOrDefault(e => e.FullName.ToLower() == name.ToLower());
+                var entity = db.Institutions.FirstOrDefault(e => e.Name.ToLower() == name.ToLower());
                 if (entity == null)
                 {
                     throw new ArgumentException("没找到该全称的公司");
@@ -119,18 +119,19 @@ namespace Loowoo.LandInst.Manager
             var profile = Core.ProfileManager.GetLastProfile(checkLog.UserID, null);
             if (checkLog.Result == true)
             {
-                UpdateInst(profile.Data.Convert<Institution>());
+                UpdateInst(checkLog.UserID, profile.Data.Convert<InstitutionProfile>());
             }
             Core.ProfileManager.UpdateProfileCheckResult(profile.ID, checkLog.Result);
         }
 
-        public void UpdateInst(Institution model)
+        public void UpdateInst(int instId, Institution model)
         {
             using (var db = GetDataContext())
             {
-                var entity = db.Institutions.FirstOrDefault(e => e.ID == model.ID);
+                var entity = db.Institutions.FirstOrDefault(e => e.ID == instId);
                 if (entity != null)
                 {
+                    model.ID = entity.ID;
                     db.Entry(entity).CurrentValues.SetValues(model);
                 }
                 else
@@ -198,7 +199,7 @@ namespace Loowoo.LandInst.Manager
         public int SaveProfile(int instId, InstitutionProfile profile)
         {
             var draftProfile = Core.ProfileManager.GetLastProfile(instId);
-            if (draftProfile == null)
+            if (draftProfile == null || draftProfile.CheckResult.HasValue)
             {
                 return Core.ProfileManager.AddProfile(instId, profile);
             }

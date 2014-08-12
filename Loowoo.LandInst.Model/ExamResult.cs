@@ -10,6 +10,11 @@ namespace Loowoo.LandInst.Model
     [Table("ExamResult")]
     public class ExamResult
     {
+        public ExamResult()
+        {
+            CreateTime = DateTime.Now;
+        }
+
         [Key]
         [DatabaseGenerated(System.ComponentModel.DataAnnotations.Schema.DatabaseGeneratedOption.Identity)]
         public int ID { get; set; }

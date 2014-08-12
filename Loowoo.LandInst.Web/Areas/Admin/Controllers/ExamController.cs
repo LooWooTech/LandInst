@@ -46,21 +46,21 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
             return View();
         }
 
-        [HttpPost]
-        public ActionResult Approval(int id, bool result)
-        {
-            var checkLog = Core.CheckLogManager.GetCheckLog(id);
-            if (checkLog == null || checkLog.Result.HasValue)
-            {
-                throw new ArgumentException("参数错误");
-            }
+        //[HttpPost]
+        //public ActionResult Approval(int id, bool result)
+        //{
+        //    var checkLog = Core.CheckLogManager.GetCheckLog(id);
+        //    if (checkLog == null || checkLog.Result.HasValue)
+        //    {
+        //        throw new ArgumentException("参数错误");
+        //    }
 
-            checkLog.Result = result;
-            checkLog.UpdateTime = DateTime.Now;
-            Core.CheckLogManager.UpdateCheckLog(checkLog);
-            Core.MemberManager.UpdateMemberStatus(checkLog.UserID, MemberStatus.Registered);
-            return JsonSuccess();
-        }
+        //    checkLog.Result = result;
+        //    checkLog.UpdateTime = DateTime.Now;
+        //    Core.CheckLogManager.UpdateCheckLog(checkLog);
+        //    Core.MemberManager.UpdateMemberStatus(checkLog.UserID, MemberStatus.Registered);
+        //    return JsonSuccess();
+        //}
 
         [HttpPost]
         public ActionResult Approval(string id, bool result = true)

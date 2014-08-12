@@ -184,6 +184,7 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
             if (member.InstitutionID != currentInst.ID && member.InstitutionID != 0)
             {
                 throw new HttpException(401, "你不能为此会员申请执业登记");
+                return JsonSuccess();
             }
             try
             {

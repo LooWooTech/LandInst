@@ -14,7 +14,7 @@ namespace Loowoo.LandInst.Model
     {
         public Member()
         {
-            Status = MemberStatus.Registered;
+            Status = MemberStatus.Normal;
         }
 
         [Key]

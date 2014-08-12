@@ -76,6 +76,11 @@ namespace Loowoo.LandInst.Model
         public string LegalpersonNo { get; set; }
 
         /// <summary>
+        /// 机构类型
+        /// </summary>
+        public string CompanyType { get; set; }
+
+        /// <summary>
         /// 传真电话
         /// </summary>
         public string Fax { get; set; }

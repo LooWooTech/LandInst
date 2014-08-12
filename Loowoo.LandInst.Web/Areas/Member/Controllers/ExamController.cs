@@ -22,28 +22,13 @@ namespace Loowoo.LandInst.Web.Areas.Member.Controllers
         {
             var member = GetCurrentMember();
 
-            var indateExams = Core.ExamManager.GetIndateExams();
-            var canSingupExamTable = indateExams.ToDictionary(e => e.ID, e => e);
-            foreach (var exam in indateExams)
-            {
-                var checkLog = Core.CheckLogManager.GetCheckLog(exam.ID, member.ID, CheckType.Exam);
-                if (checkLog != null && checkLog.Result != false)
-                {
-                    canSingupExamTable.Remove(exam.ID);
-                }
-            }
+            var indateExam = Core.ExamManager.GetIndateExams();
+            var checkLog = Core.CheckLogManager.GetCheckLog(indateExam.ID, member.ID, CheckType.Exam);
 
-            var exams = canSingupExamTable.Select(e => e.Value).ToList();
             //所有有效的考试都报过名了，跳转到成绩查询
-            if (exams.Count == 0)
-            {
-                return View();
-            }
-            else
-            {
-                ViewBag.Exams = exams;
-                ViewBag.Profile = Core.MemberManager.GetProfile(Identity.UserID) ?? new MemberProfile(member);
-            }
+            ViewBag.IndateExam = indateExam;
+            ViewBag.CheckLog = checkLog;
+            ViewBag.Profile = Core.MemberManager.GetProfile(Identity.UserID) ?? new MemberProfile(member);
             return View();
         }
 
@@ -60,7 +45,7 @@ namespace Loowoo.LandInst.Web.Areas.Member.Controllers
             //用户状态由新注册用户变成报名考试用户
             Core.ExamManager.SignupExam(examId, member.ID);
             //保存用户资料
-            Core.MemberManager.SaveProfile(member, profile);
+            Core.MemberManager.SaveProfile(member.ID, profile);
 
             return JsonSuccess();
         }

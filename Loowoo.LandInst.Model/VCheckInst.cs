@@ -11,8 +11,6 @@ namespace Loowoo.LandInst.Model
     {
         public string InstName { get; set; }
 
-        public string FullName { get; set; }
-
         public InstitutionType Type { get; set; }
 
         public InstitutionStatus Status { get; set; }

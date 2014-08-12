@@ -62,7 +62,7 @@ namespace Loowoo.LandInst.Manager
 
                 if (!string.IsNullOrEmpty(filter.Keyword))
                 {
-                    query = query.Where(e => e.InstName.Contains(filter.Keyword) || e.FullName.Contains(filter.Keyword));
+                    query = query.Where(e => e.InstName.Contains(filter.Keyword));
                 }
 
                 if (filter.InfoID.HasValue && filter.InfoID.Value > 0)

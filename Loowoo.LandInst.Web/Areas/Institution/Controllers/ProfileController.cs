@@ -133,7 +133,7 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
         public ActionResult Logout(string fullName)
         {
             var currentInst = GetCurrentInst();
-            if (currentInst.FullName == fullName)
+            if (currentInst.Name == fullName)
             {
                 Core.InstitutionManager.LogoutInstitution(fullName);
                 return JsonSuccess();

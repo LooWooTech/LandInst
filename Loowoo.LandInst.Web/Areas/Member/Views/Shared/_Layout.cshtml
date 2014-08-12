@@ -15,10 +15,10 @@
         {
             <li @Html.Raw(controller == "home" ? "class=\"active\"" : null)><a href="/member/">欢迎页</a></li>
             <li @Html.Raw(action == "profile.edit" ? "class=\"active\"" : null)><a href="/member/profile/edit">个人资料</a></li>
-            //if(member.Status == MemberStatus.Practice)
-            //{
+            if(member.Status == MemberStatus.Practice)
+            {
             <li @Html.Raw(action == "profile.practice" ? "class=\"active\"" : null)><a href="/member/profile/practice">执业登记</a></li>
-            //}
+            }
             <li @Html.Raw(controller == "exam" ? "class=\"active\"" : null)><a href="/member/exam/">考试成绩</a></li>
             @*
             <li class="dropdown">
