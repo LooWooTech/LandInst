@@ -53,7 +53,7 @@
         <div class="form-group">
             <label class="control-label col-lg-3">出生日期</label>
             <div class="col-sm-5">
-                <input type="text" name="Birthday" class="form-control input-sm" value="@(profile.Birthday.HasValue ? profile.Birthday.Value.ToShortDateString() : null)" />
+                <input type="text" name="Birthday" class="form-control input-sm datepicker" value="@(profile.Birthday.HasValue ? profile.Birthday.Value.ToShortDateString() : null)" />
             </div>
         </div>
         <div class="form-group">
@@ -198,3 +198,8 @@
         </script>
     }
 </form>
+<script>
+    $(function () {
+        $(".datepicker").datepicker();
+    });
+</script>

@@ -15,7 +15,7 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
         }
 
         [HttpGet]
-        public ActionResult Edit(int? checkLogId)
+        public ActionResult Edit(int? checkLogId, string type)
         {
             //查看历史
             if (checkLogId.HasValue)
@@ -32,7 +32,7 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
                 var currentInst = GetCurrentInst();
                 //只要不是注册登记，那么就获取资料变更的审核状态
                 var checkLog = Core.CheckLogManager.GetLastLog(currentInst.ID, CheckType.Profile);
-                if (checkLog == null || checkLog.Result.HasValue)
+                if (type == "annualcheck")
                 {
                     var annualCheck = Core.AnnualCheckManager.GetIndateModel();
                     if (annualCheck != null)
@@ -50,6 +50,7 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
             return View();
         }
 
+
         //[HttpPost]
         //public ActionResult Edit(InstitutionProfile profile, string mode)
         //{
@@ -65,7 +66,7 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
         //}
 
         [HttpPost]
-        public ActionResult Submit(InstitutionProfile data, bool isSubmit = false)
+        public ActionResult Submit(InstitutionProfile data, string type, bool isSubmit = false)
         {
             var inst = GetCurrentInst();
             try
@@ -87,7 +88,10 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
                         Mobile = shMobiles[i]
                     });
                 }
-
+            }
+            catch { }
+            try
+            {
                 var equipmentNames = Request.Form["equipment.Name"].Split(',');
                 var equipmentNumbers = Request.Form["equipment.Number"].Split(',');
                 var equipmentModels = Request.Form["equipment.Model"].Split(',');
@@ -108,7 +112,10 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
                         Note = equipmentNotes[i]
                     });
                 }
-
+            }
+            catch { }
+            try
+            {
                 var softwareNames = Request.Form["software.Name"].Split(',');
                 var softwareNumbers = Request.Form["software.Number"].Split(',');
                 var softwareSources = Request.Form["software.Model"].Split(',');
@@ -132,7 +139,14 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
 
             if (isSubmit)
             {
-                Core.InstitutionManager.SubmitProfile(inst, data);
+                if (type == "annualcheck")
+                {
+                    Core.InstitutionManager.SubmitAnnaulCheck(inst, data);
+                }
+                else
+                {
+                    Core.InstitutionManager.SubmitProfile(inst, data);
+                }
             }
             else
             {

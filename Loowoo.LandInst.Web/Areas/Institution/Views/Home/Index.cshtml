@@ -1,6 +1,6 @@
 ﻿@using Loowoo.LandInst.Model
+@using Loowoo.LandInst.Common
 @{
-    ViewBag.Title = "Index";
     Layout = "~/Areas/Institution/Views/Shared/_Layout.cshtml";
     Institution inst = ViewBag.Inst;
     CheckLog checkLog = ViewBag.CheckLog;
@@ -22,16 +22,52 @@
         //}
     }
 
-
+    ViewBag.Title = "欢迎 " + inst.Name + " 登录系统。";
     AnnualCheck annualCheck = ViewBag.AnnualCheck;
-
-    ViewBag.Title = "欢迎页";
+    List<CheckLog> history = ViewBag.History;
 }
-
 @if (annualCheck != null)
 { 
-    <div class="alert alert-warning">
-        目前处于年检期间@(annualCheck.StartDate.ToShortDateString()) ~ @(annualCheck.EndDate.ToShortDateString())，
-        贵机构尚未申请年检，请<a href="/Institution/Profile/Edit" class="btn btn-primary">申请年检</a>
-    </div>
+    <legend>年检提醒</legend>
+    <table class="table table-bordered">
+        <tr>
+            <th style="width: 100px;">年度</th>
+            <td>@(annualCheck.Name)</td>
+        </tr>
+        <tr>
+            <th>年检时间</th>
+            <td>@(annualCheck.StartDate.ToShortDateString()) ~ @(annualCheck.EndDate.ToShortDateString())</td>
+        </tr>
+        <tr>
+            <th>简介</th>
+            <td>
+                @(annualCheck.Summary)
+            </td>
+        </tr>
+    </table>
+    <a href="/Institution/Profile/Edit?type=annualcheck" class="btn btn-primary">立即申请年检</a>
 }
+
+<legend>业务处理</legend>
+<div>
+    <blockquote>
+        <h4><i class="glyphicon glyphicon-list-alt"></i>&nbsp;资料变更</h4>
+        修改您的企业资料、机构成员、仪器设备、股东信息、联系方式等。<a href="/Institution/Profile/Edit" class="btn btn-primary btn-xs">立即变更</a>
+    </blockquote>
+    <blockquote>
+        <h4><i class="glyphicon glyphicon-user"></i>&nbsp;用户管理</h4>
+        查询用户后，可以对用户进行转入、转出、执业登记等申请操作。<a href="/institution/member/" class="btn btn-primary btn-xs">立即管理</a>
+    </blockquote>
+    <blockquote>
+        <h4><i class="glyphicon glyphicon glyphicon-book"></i>&nbsp;继续教育</h4>
+        您可以为机构的成员申请继续教育审批。<a href="/institution/education/import" class="btn btn-primary btn-xs">立即申请</a>
+    </blockquote>
+    <blockquote>
+        <h4><i class="glyphicon glyphicon-check"></i>&nbsp;申请年检</h4>
+        每年一度的年检资料审核。<a href="/Institution/Profile/Edit" class="btn btn-primary btn-xs">立即申请</a>
+    </blockquote>
+    <blockquote>
+        <h4><i class="glyphicon glyphicon-time"></i>&nbsp;历史信息</h4>
+        查看机构所提交的申请历史记录和历史版本信息。<a href="/Institution/Profile/Edit" class="btn btn-primary btn-xs">立即查看</a>
+    </blockquote>
+</div>

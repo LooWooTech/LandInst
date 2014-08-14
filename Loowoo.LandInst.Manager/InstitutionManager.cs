@@ -160,41 +160,37 @@ namespace Loowoo.LandInst.Manager
             return Core.ProfileManager.GetProfile<InstitutionProfile>(profileId);
         }
 
+
+        public void SubmitAnnaulCheck(Institution inst, InstitutionProfile profile)
+        {
+            var annualCheck = Core.AnnualCheckManager.GetIndateModel();
+            var checkLog = Core.CheckLogManager.GetCheckLog(annualCheck.ID, inst.ID, CheckType.Annual);
+            if (checkLog == null || checkLog.Result == false)
+            {
+                var checkLogId = Core.CheckLogManager.AddCheckLog(annualCheck.ID, inst.ID, CheckType.Annual);
+                var profileId = SaveProfile(inst, profile);
+                Core.ProfileManager.SaveCheckProfile(checkLogId, profileId);
+            }
+            else
+            {
+                SaveProfile(inst, profile);
+            }
+        }
+
         public void SubmitProfile(Institution inst, InstitutionProfile profile)
         {
             //如果当前已经提交了资料变更申请，则只更新资料
             var checkLog = Core.CheckLogManager.GetLastLog(inst.ID, CheckType.Profile);
-            if (checkLog != null && !checkLog.Result.HasValue)
-            {
-                Core.ProfileManager.UpdateProfile(checkLog.InfoID, profile);
-                return;
-            }
 
-            var annualCheck = Core.AnnualCheckManager.GetIndateModel();
-            //不是注册登记 并且 当前处于年检时或当前没有资料变更的提交
-            if (inst.Status != InstitutionStatus.Normal && annualCheck != null)
+            if (checkLog == null || checkLog.Result.HasValue)
             {
-                checkLog = Core.CheckLogManager.GetCheckLog(annualCheck.ID, inst.ID, CheckType.Annual);
-                //如果没有申请年检或年检没有通过，则重新提交年检
-                if (checkLog == null || checkLog.Result == false)
-                {
-                    var checkLogId = Core.CheckLogManager.AddCheckLog(annualCheck.ID, inst.ID, CheckType.Annual);
-                    var profileId = SaveProfile(inst, profile);
-                    Core.ProfileManager.SaveCheckProfile(checkLogId, profileId);
-                }
-                else
-                {
-                    SaveProfile(inst, profile);
-                }
+                var profileId = SaveProfile(inst, profile);
+                var checkLogId = Core.CheckLogManager.AddCheckLog(profileId, inst.ID, CheckType.Profile);
+                Core.ProfileManager.SaveCheckProfile(checkLogId, profileId);
             }
             else
             {
-                if (checkLog == null || checkLog.Result.HasValue)
-                {
-                    var profileId = SaveProfile(inst, profile);
-                    var checkLogId = Core.CheckLogManager.AddCheckLog(profileId, inst.ID, CheckType.Profile);
-                    Core.ProfileManager.SaveCheckProfile(checkLogId, profileId);
-                }
+                Core.ProfileManager.UpdateProfile(checkLog.InfoID, profile);
             }
         }
 
