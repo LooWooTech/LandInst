@@ -112,5 +112,15 @@ namespace Loowoo.LandInst.Manager
                 db.SaveChanges();
             }
         }
+
+        public void UpdatePassword(int userId, string newPwd)
+        {
+            using (var db = GetDataContext())
+            {
+                var entity = db.Users.FirstOrDefault(e => e.ID == userId);
+                entity.Password = newPwd.MD5();
+                db.SaveChanges();
+            }
+        }
     }
 }
