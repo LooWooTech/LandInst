@@ -22,7 +22,9 @@
             }
         }).fail(function (xhr) {
             var data = eval("(" + xhr.responseText + ")");
-            error(data);
+            if (error) {
+                error(data);
+            }
         });
         //$.post(url, data, success, "json").fail(error);
     };

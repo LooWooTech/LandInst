@@ -115,5 +115,10 @@ namespace Loowoo.LandInst.Manager
             }
         }
 
+
+        public void Delete(int id)
+        {
+            Core.EducationManager.Delete(id);
+        }
     }
 }

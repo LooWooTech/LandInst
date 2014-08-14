@@ -1,4 +1,5 @@
 ﻿@using Loowoo.LandInst.Model
+@using Loowoo.LandInst.Common
 @{
     var type = Request.QueryString["type"];
     Institution inst = ViewBag.CurrentInst;
@@ -18,14 +19,15 @@
     {
         if (annualCheck == null)
         { 
-            @:现在还不能申请年检，如果需要修改资料请申请<a href="?" class="btn btn-primary btn-xs">资料变更</a>
+        @:现在还不能申请年检，如果需要修改资料请申请<a href="?" class="btn btn-primary btn-xs">资料变更</a>
             return;
         }
     }
     @if (annualCheck != null)
-    { 
+    {
+        ViewBag.Title = "申请" + annualCheck.Name + "年检";
         @:现在是<span class="label label-warning">@(annualCheck.Name)</span>期间，
-        @:年检时间段： <span class="label label-warning">@(annualCheck.StartDate.ToShortDateString()) ~ @(annualCheck.EndDate.ToShortDateString())</span>，
+        @:年检时间段：“ @(annualCheck.StartDate.ToShortDateString()) ~ @(annualCheck.EndDate.ToShortDateString())”，
         @:无法修改基本资料，但可修改联系方式、股东、证书信息。
     }
     else
@@ -38,6 +40,27 @@
         {
         @:机构资料的提交会自动提交资料变更登记审批请求，重复提交不会重复提交请求。
         }
+    }
+
+    @if (checkLog != null)
+    { 
+        @:<br />贵机构与“@(checkLog.CreateTime.ToString())”提交了<span class="label label-default">@(checkLog.CheckType.GetDescription())</span>申请，
+        if (checkLog.Result.HasValue)
+        {
+            if (checkLog.Result.Value)
+            {
+        @:于“@(checkLog.UpdateTime.Value.ToString()) ”<span class="label label-success">审批通过</span>
+            }
+            else
+            {
+        @:于“@(checkLog.UpdateTime.Value.ToString()) ”<span class="label label-warning">未通过审批</span>。<br />审批意见：@(checkLog.Note)
+            }
+        }
+        else
+        {
+        @:目前<span class="label label-success">尚未审批</span>，请耐心等待。
+        }
+
     }
 </div>
 <form id="profile-form" role="form" class="form-horizontal" method="post">
@@ -307,7 +330,7 @@
                         <th style="width: 100px;">性别</th>
                         <th style="width: 150px;">出生年月</th>
                         <th style="width: 200px;">执业证书号</th>
-                        <th style="width:150px;">手机号</th>
+                        <th style="width: 150px;">手机号</th>
                         <th style="width: 70px;">
                             <button id="btn-add-member" class="btn btn-xs btn-primary">添加</button></th>
                     </tr>
@@ -365,7 +388,7 @@
         <text>
 
         $("input,select", form).each(function () {
-            $(this).attr("disabled", "disabled");
+            $(this).attr("readonly", "readonly");
         });
 
 
@@ -404,8 +427,8 @@
         {
          <text>
 
-        $("#profile-basic input,#profile-details input").each(function () {
-            $(this).attr("disabled", "disabled");
+        $("#profile-basic input,#profile-basic select").each(function () {
+            $(this).attr("readonly", "readonly");
         });
 
         </text>
