@@ -11,9 +11,8 @@
             <span class="input-group-addon">查询机构</span>
             <input type="text" class="form-control" name="name" placeholder="机构名称" value="@(Request.QueryString["name"])">
             <div class="input-group-btn">
-                <select name="annualcheckId" class="form-control">
-                    <option>选择城市</option>
-                </select>
+                @Html.DropDownList("city", Enum.GetNames(typeof(City)).Select(name => new SelectListItem {Text = name,Selected = Request.QueryString["city"] == name
+           }), new { @class = "form-control" })
             </div>
             <div class="input-group-btn">
                 <button type="submit" class="btn btn-primary"><i class="glyphicon glyphicon-search"></i> 查询</button>
