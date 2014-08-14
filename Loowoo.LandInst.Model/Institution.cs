@@ -14,6 +14,7 @@ namespace Loowoo.LandInst.Model
     {
         public Institution()
         {
+            Type = InstitutionType.土地规划;
             CreateTime = DateTime.Now;
         }
 
@@ -25,6 +26,8 @@ namespace Loowoo.LandInst.Model
         public InstitutionStatus Status { get; set; }
 
         public DateTime CreateTime { get; set; }
+
+        public InstitutionType Type { get; set; }
 
         /// <summary>
         /// 机构名称
@@ -56,6 +59,7 @@ namespace Loowoo.LandInst.Model
         /// <summary>
         /// 新添加机构状态
         /// </summary>
+        [Description("未认证")]
         Normal = 0,
 
         /// <summary>

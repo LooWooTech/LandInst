@@ -18,5 +18,7 @@ namespace Loowoo.LandInst.Model
         public string LegalPerson { get; set; }
 
         public string RegistrationNo { get; set; }
+
+        public InstitutionType Type { get; set; }
     }
 }
