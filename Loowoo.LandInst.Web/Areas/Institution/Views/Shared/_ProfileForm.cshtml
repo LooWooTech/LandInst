@@ -12,6 +12,7 @@
         model.ShareHolders.Add(new Shareholder());
         model.Equipments.Add(new Equipment());
         model.Softwares.Add(new Software());
+        model.Members.Add(new InstMember());
     }
 }
 <div class="alert alert-dismissable alert-warning">
@@ -60,15 +61,15 @@
             <li class=""><a href="#profile-contact" data-toggle="tab"><i class="glyphicon glyphicon-phone-alt"></i>&nbsp;联系方式</a></li>
             @if (!isRegister)
             {
-                <li class=""><a href="#profile-sharehoder" data-toggle="tab"><i class="glyphicon glyphicon-user"></i>&nbsp;股东</a></li>
+                <li class=""><a href="#profile-sharehoder" data-toggle="tab"><i class="glyphicon glyphicon-star"></i>&nbsp;股东</a></li>
+                <li class=""><a href="#profile-member" data-toggle="tab"><i class="glyphicon glyphicon-user"></i>&nbsp;机构成员</a></li>
                 <li class=""><a href="#profile-equipment" data-toggle="tab"><i class="glyphicon glyphicon-cog"></i>&nbsp;仪器设备</a></li>
-                <li class=""><a href="#profile-software" data-toggle="tab"><i class="glyphicon glyphicon-floppy-disk"></i>&nbsp;应用软件</a></li>
             }
         </ul>
         @if(disabled){
-        <ul style="position: absolute; right: 10px; top: 0px;">
-            <a href="export?id=@(inst.ID)" class="btn btn-primary"><i class="glyphicon glyphicon-export"></i>导出资料</a>
-        </ul>
+            <ul style="position: absolute; right: 10px; top: 0px;">
+                <a href="export?id=@(inst.ID)" class="btn btn-primary"><i class="glyphicon glyphicon-export"></i>导出资料</a>
+            </ul>
         }
     </div>
     <div class="tab-content">
@@ -234,9 +235,9 @@
                 <table class="table table-bordered">
                     <thead>
                         <tr>
-                            <th style="width: 140px;">姓名</th>
-                            <th style="width: 80px;">性别</th>
-                            <th>出生年月</th>
+                            <th style="width: 150px;">姓名</th>
+                            <th style="width: 100px;">性别</th>
+                            <th style="width: 150px;">出生年月</th>
                             <th style="width: 90px;">股份</th>
                             <th style="width: 150px;">职务或职称</th>
                             <th style="width: 150px;">是否专业人员</th>
@@ -289,7 +290,6 @@
                             <th style="width: 60px;">数量</th>
                             <th style="width: 120px;">型号/规格</th>
                             <th style="width: 200px;">生产厂商</th>
-                            <th style="width: 150px;">性能</th>
                             <th style="width: 70px;">
                                 <button id="btn-add-equipment" class="btn btn-xs btn-primary">添加</button></th>
                         </tr>
@@ -311,9 +311,6 @@
                                     <input type="text" name="equipment.Manufacturer"  value="@(item.Manufacturer)" class="form-control input-sm"/>
                                 </td>
                                 <td>
-                                    <input type="text" name="equipment.Performance"  value="@(item.Performance)" class="form-control input-sm"/>
-                                </td>
-                                <td>
                                     <a class="btn btn-xs btn-warning btn-delete">删除</a>
                                 </td>
                             </tr>
@@ -321,33 +318,36 @@
                     </tbody>
                 </table>
             </div>
-            <div class="tab-pane fade" id="profile-software">
+            <div class="tab-pane fade" id="profile-member">
                 <table class="table table-bordered">
                     <thead>
                         <tr>
-                            <th>软件名称</th>
-                            <th style="width: 60px;">数量</th>
-                            <th style="width: 120px;">来源</th>
-                            <th style="width: 200px;">用途</th>
+                            <th>姓名</th>
+                            <th style="width: 100px;">性别</th>
+                            <th style="width: 150px;">出生年月</th>
+                            <th style="width: 200px;">执业证书号</th>
                             <th style="width: 70px;">
-                                <button id="btn-add-software" class="btn btn-xs btn-primary">添加</button></th>
+                                <button id="btn-add-member" class="btn btn-xs btn-primary">添加</button></th>
                         </tr>
                     </thead>
-                    <tbody id="list-software">
-                        @foreach (var item in model.Softwares)
+                    <tbody id="list-member">
+                        @foreach (var item in model.Members)
                         { 
                             <tr>
                                 <td>
-                                    <input type="text" name="software.Name"  value="@(item.Name)" class="form-control input-sm"/>
+                                    <input type="text" name="member.Name"  value="@(item.Name)" class="form-control input-sm"/>
                                 </td>
                                 <td>
-                                    <input type="text" name="software.Number"  value="@(item.Number.HasValue && item.Number.Value > 0 ? item.Number.Value.ToString() : "")" class="form-control input-sm"/>
+                                    <select name="member.Gender" class="form-control input-sm">
+                                        <option @(item.Gender == "男" ? "selected=selected" : null)>男</option>
+                                        <option @(item.Gender == "女" ? "selected=selected" : null)>女</option>
+                                    </select>
                                 </td>
                                 <td>
-                                    <input type="text" name="software.Source"  value="@(item.Source)" class="form-control input-sm"/>
+                                    <input type="text" name="member.Birthday"  value="@(item.Birthday)" class="form-control input-sm datepicker"/>
                                 </td>
                                 <td>
-                                    <input type="text" name="software.Purpose"  value="@(item.Purpose)" class="form-control input-sm"/>
+                                    <input type="text" name="member.PracticeNo"  value="@(item.PracticeNo)" class="form-control input-sm"/>
                                 </td>
                                 <td>
                                     <a class="btn btn-xs btn-warning btn-delete">删除</a>
@@ -433,7 +433,7 @@
             <text>
 
         setList("list-sh", "btn-add-sh");
-        setList("list-software", "btn-add-software");
+        setList("list-member", "btn-add-member");
         setList("list-equipment", "btn-add-equipment");
 
         function setList(listId, btnAddId) {

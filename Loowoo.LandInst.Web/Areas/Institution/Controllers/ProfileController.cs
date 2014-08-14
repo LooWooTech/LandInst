@@ -87,13 +87,25 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
                         Mobile = shMobiles[i]
                     });
                 }
-            }
-            catch
-            {
-            }
 
-            try
-            {
+                var memberNames = Request.Form["member.Name"].Split(',');
+                var memberGenders = Request.Form["member.Gender"].Split(',');
+                var memberBirthdays = Request.Form["member.Birthday"].Split(',');
+                var membermemberares = Request.Form["member.memberares"].Split(',');
+                var memberMobiles = Request.Form["member.Mobile"].Split(',');
+
+                for (var i = 0; i < memberNames.Length; i++)
+                {
+                    data.Members.Add(new InstMember
+                    {
+                        Name = memberNames[i],
+                        Gender = memberGenders[i],
+                        Birthday = memberBirthdays[i],
+                        PracticeNo = membermemberares[i],
+                        MobilePhone = memberMobiles[i]
+                    });
+                }
+
                 var equipmentNames = Request.Form["equipment.Name"].Split(',');
                 var equipmentNumbers = Request.Form["equipment.Number"].Split(',');
                 var equipmentModels = Request.Form["equipment.Model"].Split(',');

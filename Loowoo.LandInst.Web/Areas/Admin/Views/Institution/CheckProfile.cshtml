@@ -34,7 +34,6 @@
                 <input id="btn-select" type="checkbox" /></th>*@
             <th>ID</th>
             <th>机构名称</th>
-            <th>机构类别</th>
             <th>法人代表</th>
             <th>所在地</th>
             <th>工商登记号</th>
@@ -47,8 +46,7 @@
                 @*                <td>
                     <input type="checkbox" name="id" value="@(item.ID)" /></td>*@
                 <td>@(item.UserID)</td>
-                <td><a href="/admin/institution/profile?id=@(item.UserID)&approvalId=@(item.ID)">@(item.InstName)</a></td>
-                <td>@(item.Type.ToString())</td>
+                <td><a href="/admin/institution/profile?id=@(item.UserID)&checkLogId=@(item.ID)">@(item.InstName)</a></td>
                 <td>@(item.LegalPerson)</td>
                 <td>@(item.City)</td>
                 <td>@(item.RegistrationNo)</td>

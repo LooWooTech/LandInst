@@ -15,6 +15,7 @@ namespace Loowoo.LandInst.Model
         public Institution()
         {
             CreateTime = DateTime.Now;
+            Type = InstitutionType.土地勘测;
         }
 
         [Key]
@@ -59,6 +60,7 @@ namespace Loowoo.LandInst.Model
         /// <summary>
         /// 新添加机构状态
         /// </summary>
+        [Description("未认证")]
         Normal = 0,
 
         /// <summary>

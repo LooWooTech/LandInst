@@ -62,6 +62,7 @@
     <Compile Include="Institution.cs" />
     <Compile Include="InstitutionProfile.cs" />
     <Compile Include="CheckLog.cs" />
+    <Compile Include="InstMember.cs" />
     <Compile Include="Job.cs" />
     <Compile Include="EnumDatas.cs" />
     <Compile Include="Member.cs" />

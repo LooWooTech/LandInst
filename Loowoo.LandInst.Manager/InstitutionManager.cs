@@ -18,7 +18,7 @@ namespace Loowoo.LandInst.Manager
             {
                 using (var db = GetDataContext())
                 {
-                    return db.Institutions.Select(e => new { e.ID, e.Name }).ToDictionary(e => e.ID, e => e.Name);
+                    return db.Institutions.Where(e => e.Type == InstitutionType.土地勘测).Select(e => new { e.ID, e.Name }).ToDictionary(e => e.ID, e => e.Name);
                 }
             });
         }
@@ -47,7 +47,7 @@ namespace Loowoo.LandInst.Manager
         {
             using (var db = GetDataContext())
             {
-                var query = db.VCheckInsts.Where(e => e.CheckType == filter.CheckType);
+                var query = db.VCheckInsts.Where(e => e.CheckType == filter.CheckType && e.Type == InstitutionType.土地勘测);
                 if (!String.IsNullOrEmpty(filter.Keyword))
                 {
                     query = query.Where(e => e.InstName.Contains(filter.Keyword));
@@ -65,7 +65,7 @@ namespace Loowoo.LandInst.Manager
         {
             using (var db = GetDataContext())
             {
-                var query = db.Institutions.AsQueryable();
+                var query = db.Institutions.Where(e => e.Type == InstitutionType.土地勘测);
                 if (filter.InstId.HasValue && filter.InstId.Value > 0)
                 {
                     query = query.Where(e => e.ID == filter.InstId);
