@@ -1,0 +1,62 @@
+﻿@using Loowoo.LandInst.Model
+@using Loowoo.LandInst.Common
+@{
+    ViewBag.Title = "批量导入机构";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+<form id="import-form" role="form" class="form-horizontal" method="post" enctype="multipart/form-data" action="importresult">
+    <div class="form-group">
+        <label class="control-label col-lg-2">用户名前缀</label>
+        <div class="col-sm-3">
+            <input type="text" name="UsernamePrefix" class="form-control input-sm" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-lg-2">登录密码</label>
+        <div class="col-sm-3">
+            <input type="text" name="password" class="form-control input-sm" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-lg-2 control-label">机构类别</label>
+        <div class="col-sm-3">
+            <div class="radio">
+                <label>
+                    <input type="radio" name="Type" value="1" />土地规划机构</label>
+            </div>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="Type" value="2" />土地勘测机构</label>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-lg-2">选择Excel文件</label>
+        <div class="col-sm-3">
+            <input type="file" name="file" class="form-control" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-lg-2"></label>
+        <div class="col-sm-3">
+            <button type="submit" class="btn btn-primary"><i class="glyphicon glyphicon-upload"></i>上传导入</button>
+        </div>
+    </div>
+</form>
+<iframe id="_uploadframe" name="_uploadframe" width="0" height="0" frameborder="0"></iframe>
+<script>
+    $(function () {
+        $("#_uploadframe").load(function () {
+            var content = $(this).contents().find("body").html();
+            if (content) {
+                var json = eval("(" + content + ")");
+                if (json.result) {
+                    alert("导入完成");
+                    window.location.href = "ExamResult";
+                } else {
+                    alert("导入失败");
+                }
+            }
+        });
+    });
+</script>

@@ -28,7 +28,6 @@
         <th style="width:120px;">注册时间</th>
         <th style="width:90px;">当前状态</th>
         <th style="width:100px;">法人代表</th>
-        <th style="width:120px;">联系电话</th>
     </tr>
     @foreach (var item in list)
     { 
@@ -38,7 +37,6 @@
             <td>@(item.CreateTime.ToShortDateString())</td>
             <td>@(item.Status.GetDescription())</td>
             <td>@(item.LegalPerson)</td>
-            <td>@(item.MobilePhone)</td>
         </tr>
     }
     <tr>

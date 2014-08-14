@@ -129,7 +129,11 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
             ViewBag.ExamResults = Core.ExamManager.GetMemberExamResult(id);
             ViewBag.Educations = Core.EducationManager.GetMemberEducations(id);
             //TODO 执业信息
-            ViewBag.PracticeInfo = Core.PracticeManager.GetPracticeInfo(id);
+            var practiceCheckLog = Core.CheckLogManager.GetLastLog(id, CheckType.Practice);
+            if (practiceCheckLog != null)
+            {
+                ViewBag.PracticeInfo = Core.PracticeManager.GetPracticeInfo(practiceCheckLog.InfoID);
+            }
             if (checkLogId > 0)
             {
                 ViewBag.CheckLog = Core.CheckLogManager.GetCheckLog(checkLogId);

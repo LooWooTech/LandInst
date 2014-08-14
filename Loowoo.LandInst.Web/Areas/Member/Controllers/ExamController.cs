@@ -45,7 +45,7 @@ namespace Loowoo.LandInst.Web.Areas.Member.Controllers
             //用户状态由新注册用户变成报名考试用户
             Core.ExamManager.SignupExam(examId, member.ID);
             //保存用户资料
-            Core.MemberManager.SaveProfile(member.ID, profile);
+            Core.MemberManager.SaveProfile(member, profile);
 
             return JsonSuccess();
         }

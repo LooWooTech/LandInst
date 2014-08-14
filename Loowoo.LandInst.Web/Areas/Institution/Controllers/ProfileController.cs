@@ -67,6 +67,7 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
         [HttpPost]
         public ActionResult Submit(InstitutionProfile data, bool isSubmit = false)
         {
+            var inst = GetCurrentInst();
             try
             {
                 var shNames = Request.Form["SH.Name"].Split(',');
@@ -114,11 +115,11 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
 
             if (isSubmit)
             {
-                Core.InstitutionManager.SubmitProfile(Identity.UserID, data);
+                Core.InstitutionManager.SubmitProfile(inst, data);
             }
             else
             {
-                Core.InstitutionManager.SaveProfile(Identity.UserID, data);
+                Core.InstitutionManager.SaveProfile(inst, data);
             }
             return JsonSuccess();
         }

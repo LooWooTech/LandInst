@@ -151,5 +151,24 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
             }
             return JsonSuccess();
         }
+
+        [HttpGet]
+        public ActionResult Import()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult ImportResult()
+        {
+            if (Request.Files.Count == 0)
+            {
+                throw new ArgumentException("你没有选择上传文件");
+            }
+            var file = Request.Files[0];
+            var filePath = Core.FileManager.Upload(HttpContext, file);
+            var columns = NOPIHelper.ReadSimpleColumns(filePath);
+            return JsonSuccess();
+        }
     }
 }

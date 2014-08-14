@@ -17,12 +17,8 @@ namespace Loowoo.LandInst.Model
             Softwares = new List<Software>();
         }
 
-        public InstitutionProfile(Institution inst):this()
-        {
-            SetInstField(inst);
-        }
-
-        public void SetInstField(Institution inst)
+        public InstitutionProfile(Institution inst)
+            : this()
         {
             foreach (var p in inst.GetType().GetProperties())
             {
@@ -31,6 +27,14 @@ namespace Loowoo.LandInst.Model
                 var selfP = this.GetType().GetProperty(p.Name);
                 selfP.SetValue(this, val, null);
             }
+        }
+
+        public void SetInstField(Institution inst)
+        {
+            Type = inst.Type;
+            Status = inst.Status;
+            ID = inst.ID;
+            CreateTime = inst.CreateTime;
         }
 
         /// <summary>
@@ -100,6 +104,7 @@ namespace Loowoo.LandInst.Model
         /// </summary>
         public string OfficeArea { get; set; }
 
+        public string MobilePhone { get; set; }
         /// <summary>
         /// 传真电话
         /// </summary>

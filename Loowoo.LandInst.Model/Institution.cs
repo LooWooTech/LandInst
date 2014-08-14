@@ -41,8 +41,6 @@ namespace Loowoo.LandInst.Model
 
         public string City { get; set; }
 
-        public string MobilePhone { get; set; }
-
         /// <summary>
         /// 法人代表
         /// </summary>

@@ -323,6 +323,7 @@
     <Content Include="Areas\Admin\Views\Exam\Import.cshtml" />
     <Content Include="Areas\Member\Views\Shared\_PracticeForm.cshtml" />
     <Content Include="Areas\Member\Views\Profile\Practice.cshtml" />
+    <Content Include="Areas\Admin\Views\Institution\Import.cshtml" />
     <None Include="Properties\PublishProfiles\LandInst.pubxml" />
     <Content Include="Views\User\ForgetPwd.cshtml" />
   </ItemGroup>

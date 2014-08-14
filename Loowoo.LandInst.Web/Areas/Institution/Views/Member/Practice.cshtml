@@ -129,7 +129,7 @@
                     <input type="text" name="Cert.No"  value="@(item.CertificationNo)" class="form-control input-sm"/>
                 </td>
                 <td>
-                    <input type="text" name="Cert.ObtainDate"  value="@(item.ObtainDate)" class="form-control input-sm"/>
+                    <input type="text" name="Cert.ObtainDate"  value="@(item.ObtainDate)" class="form-control input-sm datepicker"/>
                 </td>
                 <td>
                     <a class="btn btn-xs btn-warning btn-delete">删除</a>
@@ -155,10 +155,10 @@
         { 
             <tr>
                 <td>
-                    <input type="text" name="job.StartDate"  value="@(item.StartDate)" class="form-control input-sm"/>
+                    <input type="text" name="job.StartDate"  value="@(item.StartDate)" class="form-control input-sm datepicker"/>
                 </td>
                 <td>
-                    <input type="text" name="job.EndDate"  value="@(item.EndDate)" class="form-control input-sm"/>
+                    <input type="text" name="job.EndDate"  value="@(item.EndDate)" class="form-control input-sm datepicker"/>
                 </td>
                 <td>
                     <input type="text" name="job.Institution"  value="@(item.Institution)" class="form-control input-sm"/>
@@ -181,19 +181,19 @@
 
         setList("list-cert", "btn-add-cert");
         setList("list-job", "btn-add-job");
-
         function setList(listId, btnAddId) {
             var list = $("#" + listId);
             var template = "<tr>" + $("tr", list).last().html() + "</tr>";
             $("tr", list).last().remove();
             $("#" + btnAddId).bind("click", function () {
                 list.append(template);
+                $(".datepicker").datepicker();
                 setBtnDelete();
                 return false;
             });
 
+            $(".datepicker").datepicker();
             setBtnDelete();
-
             function setBtnDelete() {
                 $(".btn-delete").unbind("click").bind("click", function () {
                     var tr = $(this).parent().parent();

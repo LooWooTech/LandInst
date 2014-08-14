@@ -13,7 +13,15 @@
         <li class="active"><a href="#tab1" data-toggle="tab">基本资料</a></li>
         <li class=""><a href="#tab5" data-toggle="tab">机构成员</a></li>
         <li class=""><a href="#tab2" data-toggle="tab">股东</a></li>
-        <li class=""><a href="#tab3" data-toggle="tab">仪器设备</a></li>
+        @if (profile.Type == InstitutionType.土地规划)
+        { 
+            <li class=""><a href="#tab3" data-toggle="tab">主要技术装备</a></li>
+            <li class=""><a href="#tab6" data-toggle="tab">应用软件情况</a></li>
+        }
+        else
+        {
+            <li class=""><a href="#tab3" data-toggle="tab">仪器设备</a></li>
+        }
         <li class=""><a href="#tab4" data-toggle="tab">审批记录</a></li>
     </ul>
     <ul style="position: absolute; right: 10px; top: 0px;">
@@ -186,6 +194,7 @@
                 <th>申请时间</th>
                 <th>审批时间</th>
                 <th>审批结果</th>
+                <th>详情</th>
             </tr>
             @foreach (var checkLog in checkLogs)
             { 
@@ -210,6 +219,10 @@
                             <span class="label label-default">尚未审批</span>
                         }
                     </td>
+                    <td>@if (checkLog.CheckType == CheckType.Profile || checkLog.CheckType == CheckType.Annual)
+                        { 
+                        <a href="?id=@(checkLog.UserID)&checkLogId=@(checkLog.ID)" class="btn btn-xs btn-primary">历史资料</a>
+                        }</td>
                 </tr>
             }
         </table>
@@ -231,6 +244,27 @@
                     <td>@(member.Birthday.HasValue ? member.Birthday.Value.ToShortDateString() : null)</td>
                     <td>@(member.Major.ToString())</td>
                     <td>@(member.EduRecord.ToString())</td>
+                </tr>
+            }
+        </table>
+    </div>
+    <div class="tab-pane fade" id="tab6">
+        <table class="table table-bordered">
+            <tr>
+                <th>软件名称</th>
+                <th>来源</th>
+                <th>数量</th>
+                <th>用途</th>
+                <th>备注</th>
+            </tr>
+            @foreach (var software in profile.Softwares)
+            {
+                <tr>
+                    <td>@(software.Name)</td>
+                    <td>@(software.Source)</td>
+                    <td>@(software.Number)</td>
+                    <td>@(software.Purpose)</td>
+                    <td>@(software.Note)</td>
                 </tr>
             }
         </table>

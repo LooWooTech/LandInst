@@ -10,6 +10,24 @@ namespace Loowoo.LandInst.Common
 {
     public class NOPIHelper
     {
+        //public static Dictionary<string, int> ReadColumnNameAndIndex(string filePath, int columnRowIndex = 0, int sheetIndex = 0)
+        //{
+        //    using (var fileStream = new FileStream(filePath, FileMode.Open))
+        //    {
+        //        var workbook = new HSSFWorkbook(fileStream);
+        //        var sheet = workbook.GetSheetAt(sheetIndex);
+        //        var result = new Dictionary<string, int>();
+        //        var row = sheet.GetRow(columnRowIndex);
+        //        foreach (var cell in row.Cells)
+        //        {
+        //            result.Add(cell.CellComment, cell.ColumnIndex);
+        //        }
+
+        //        return result;
+
+        //    }
+        //}
+
         public static List<string> ReadSimpleColumns(string filePath, int columnRowIndex = 0, int sheetIndex = 0)
         {
             using (var fileStream = new FileStream(filePath, FileMode.Open))

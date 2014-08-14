@@ -37,7 +37,6 @@
         <th style="width: 100px;">姓名</th>
         <th>考试项目</th>
         <th style="width: 150px;">报名时间</th>
-        <th style="width: 150px;">手机</th>
         <th style="width: 100px;">用户状态</th>
         <th style="width: 100px;">详细</th>
     </tr>
@@ -50,7 +49,6 @@
             <td>@(item.Member.RealName)</td>
             <td>@(item.ExamName)</td>
             <td>@(item.Member.CreateTime.ToString())</td>
-            <td>@(item.Member.MobilePhone)</td>
             <td>@(item.Member.Status.GetDescription())</td>
             <td><a href="EditResult?checkLogId=@(item.Member.ID)" class="btn btn-primary btn-xs">设置/查看</a></td>
         </tr>

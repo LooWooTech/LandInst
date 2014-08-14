@@ -178,23 +178,44 @@
             </tr>
             <tr>
                 <th>其他资格证书</th>
-                <td colspan="3" style="padding: 0px;">
-                    <table class="table">
+                <td colspan="3" style="padding: 2px;">
+                    <table class="table table-bordered">
                         <tr>
                             <th>编号</th>
                             <th>名称</th>
-                            <th>级别</th>
+                            <th>获取时间</th>
                         </tr>
                         @foreach (var cert in practiceInfo.Certifications)
                         { 
                             <tr>
                                 <td>@(cert.CertificationNo)</td>
                                 <td>@(cert.Name)</td>
-                                <td>@(cert.CertificationLevel)</td>
+                                <td>@(cert.ObtainDate.HasValue?cert.ObtainDate.Value.ToShortDateString():null)</td>
                             </tr>
                         }
                     </table>
                 </td>
+            </tr>
+            <tr>
+                <th>工作简历</th>
+                <td colspan="3" style="padding: 2px;">
+                    <table class="table table-bordered">
+                        <tr>
+                            <th>工作时间</th>
+                            <th>工作单位</th>
+                            <th>职称</th>
+                            <th>备注</th>
+                        </tr>
+                        @foreach (var job in practiceInfo.Jobs)
+                        { 
+                            <tr>
+                                <td>@(job.StartDate) ~ @(job.EndDate)</td>
+                                <td>@(job.Institution)</td>
+                                <td>@(job.Office)</td>
+                                <td>@(job.Note)</td>
+                            </tr>
+                        }
+                    </table></td>
             </tr>
         </table>
     </div>

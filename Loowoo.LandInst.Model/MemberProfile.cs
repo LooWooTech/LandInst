@@ -17,20 +17,20 @@ namespace Loowoo.LandInst.Model
 
         public MemberProfile(Member member):this()
         {
-            SetMemberField(member);
+            foreach (var p in member.GetType().GetProperties())
+            {
+                var val = p.GetValue(member, null);
+
+                var selfP = this.GetType().GetProperty(p.Name);
+                selfP.SetValue(this, val, null);
+            }
         }
 
         public void SetMemberField(Member member)
         {
             ID = member.ID;
-            RealName = member.RealName;
-            InstitutionID = member.InstitutionID;
             Status = member.Status;
-            Birthday = member.Birthday;
-            Gender = member.Gender;
-            Major = member.Major;
-            EduRecord = member.EduRecord;
-            IDNo = member.IDNo;
+            InstitutionID = member.InstitutionID;
         }
 
 
