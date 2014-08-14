@@ -207,6 +207,15 @@ namespace Loowoo.LandInst.Manager
                     checkLog.Result = entity.Result;
                     Core.CheckLogManager.UpdateCheckLog(checkLog);
                 }
+
+                if (model.Result == true)
+                {
+                    Core.MemberManager.UpdateMemberStatus(model.MemberID, MemberStatus.Member);
+                }
+                else
+                {
+                    Core.MemberManager.UpdateMemberStatus(model.MemberID, MemberStatus.Registered);
+                }
             }
         }
 
@@ -245,7 +254,7 @@ namespace Loowoo.LandInst.Manager
 
             if (result)
             {
-                Core.MemberManager.UpdateMemberStatus(checkLog.UserID, MemberStatus.Registered);
+                Core.MemberManager.UpdateMemberStatus(checkLog.UserID, MemberStatus.Member);
             }
         }
     }

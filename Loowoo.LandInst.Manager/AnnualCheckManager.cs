@@ -73,7 +73,19 @@ namespace Loowoo.LandInst.Manager
 
                 if (filter.InfoID.HasValue && filter.InfoID.Value > 0)
                 {
-                    query = query.Where(e => e.ID == filter.InfoID.Value);
+                    query = query.Where(e => e.InfoID == filter.InfoID.Value);
+                }
+
+                if (filter.HasCheck.HasValue)
+                {
+                    if (filter.HasCheck.Value)
+                    {
+                        query = query.Where(e => e.Result.HasValue);
+                    }
+                    else
+                    {
+                        query = query.Where(e => e.Result == null);
+                    }
                 }
 
                 return query.OrderByDescending(e => e.ID).SetPage(filter.Page).ToList().Select(e => new VCheckAnnual

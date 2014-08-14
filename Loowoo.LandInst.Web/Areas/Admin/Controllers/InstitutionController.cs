@@ -26,14 +26,14 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
             return View();
         }
 
-        public ActionResult CheckAnnual(string name, int annualCheckId = 0, bool? result = null, int page = 1)
+        public ActionResult CheckAnnual(string name, bool? hasCheck, int annualCheckId = 0, int page = 1)
         {
             var filter = new CheckLogFilter
             {
                 InfoID = annualCheckId,
                 Keyword = name,
                 Page = new Model.Filters.PageFilter { PageIndex = page },
-                Result = result
+                HasCheck = hasCheck,
             };
             ViewBag.AnnualChecks = Core.AnnualCheckManager.GetAnnualChecks();
             ViewBag.List = Core.AnnualCheckManager.GetVCheckAnnual(filter);
@@ -41,14 +41,14 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
             return View();
         }
 
-        public ActionResult CheckProfile(string name, bool? result = null, int page = 1)
+        public ActionResult CheckProfile(string name, bool? hasCheck, int page = 1)
         {
             var filter = new InstitutionFilter
             {
                 Keyword = name,
                 Page = new PageFilter { PageIndex = page },
                 CheckType = CheckType.Profile,
-                Result = result
+                HasCheck = hasCheck,
             };
             ViewBag.List = Core.InstitutionManager.GetApprovalInsts(filter);
             ViewBag.Page = filter.Page;

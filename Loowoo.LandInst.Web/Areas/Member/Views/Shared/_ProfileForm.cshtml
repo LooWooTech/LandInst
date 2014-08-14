@@ -13,8 +13,7 @@
         {
             if (examCheckLog.Result.Value)
             {
-                Response.Redirect("/member/exam");
-                return;
+                @:并且与@(examCheckLog.UpdateTime.Value.ToString())通过审核。
             }
             else
             {
@@ -28,7 +27,7 @@
     }
     else
     {
-        @:请确保以下资料填写真实、完整，方便顺利通过考试审批。
+        @:请确保以下资料填写真实、完整。
     }
 </div>
 
@@ -91,7 +90,7 @@
         <div class="form-group">
             <label class="control-label col-lg-3">学位</label>
             <div class="col-sm-5">
-                <input type="text" name="Nationality" class="form-control input-sm" value="@(profile.EduLevel)" />
+                <input type="text" name="EduLevel" class="form-control input-sm" value="@(profile.EduLevel)" />
             </div>
         </div>
     </fieldset>
@@ -148,7 +147,7 @@
         <div class="form-group">
             <label class="control-label col-lg-3">邮编</label>
             <div class="col-sm-3">
-                <input type="text" name="Address" class="form-control input-sm"  value="@(profile.Postcode)" />
+                <input type="text" name="Postcode" class="form-control input-sm"  value="@(profile.Postcode)" />
             </div>
         </div>
     </fieldset>

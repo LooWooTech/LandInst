@@ -22,5 +22,7 @@ namespace Loowoo.LandInst.Model.Filters
         public DateTime? EndTime { get; set; }
 
         public PageFilter Page { get; set; }
+
+        public bool? HasCheck { get; set; }
     }
 }

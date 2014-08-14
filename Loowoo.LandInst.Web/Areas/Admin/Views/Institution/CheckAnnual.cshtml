@@ -5,7 +5,7 @@
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
     List<AnnualCheck> annualChecks = ViewBag.AnnualChecks;
     List<VCheckAnnual> list = ViewBag.List;
-    var result = Request.QueryString["result"];
+    var hasCheck = Request.QueryString["hasCheck"];
 }
 <form class="form-inline search-form">
     <div class="col-lg-10">
@@ -20,10 +20,10 @@
                         <option value="@(ac.ID)" @(Request.QueryString["annualcheckid"] == ac.ID.ToString() ? "selected=selected" : null)>@(ac.Name)</option>
                     }
                 </select>
-                <select name="result" class="form-control">
-                    <option value="" @(string.IsNullOrEmpty(result) ? "selected=selected" : "")>全部</option>
-                    <option value="false" @(result == "false" ? "selected=selected" : "")>未审批</option>
-                    <option value="true" @(result == "true" ? "selected=selected" : "")>已审批</option>
+                <select name="hasCheck" class="form-control">
+                    <option value="false" @(hasCheck == "false" ? "selected=selected" : "")>未审批</option>
+                    <option value="" @(string.IsNullOrEmpty(hasCheck) ? "selected=selected" : "")>全部</option>
+                    <option value="true" @(hasCheck == "true" ? "selected=selected" : "")>已审批</option>
                 </select>
             </div>
             <div class="input-group-btn">

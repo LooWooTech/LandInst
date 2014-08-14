@@ -60,7 +60,8 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
             {
                 Keyword = keyword,
                 InstID = GetCurrentInst().ID,
-                GetInstName = true
+                GetInstName = true,
+                MinStatus = MemberStatus.Member
             };
 
             switch (target.ToLower())
@@ -210,6 +211,10 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
                         ObtainDate = obtainDate == DateTime.MinValue ? default(Nullable<DateTime>) : obtainDate
                     });
                 }
+            }
+            catch { }
+
+            try{
 
                 var startDates = Request.Form["job.StartDate"].Split(',');
                 var endDates = Request.Form["job.StartDate"].Split(',');
@@ -245,7 +250,7 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
             }
             else
             {
-                Core.PracticeManager.UpdatePracticeInfo(checkLog.ID, data);
+                Core.PracticeManager.UpdatePracticeInfo(checkLog.InfoID, data);
             }
 
 

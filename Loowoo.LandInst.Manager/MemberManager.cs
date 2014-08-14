@@ -132,6 +132,16 @@ namespace Loowoo.LandInst.Manager
                     query = query.Where(e => e.RealName.Contains(filter.Keyword));
                 }
 
+                if (filter.MinStatus.HasValue)
+                {
+                    query = query.Where(e => e.Status >= filter.MinStatus.Value);
+                }
+
+                if (filter.Status.HasValue)
+                {
+                    query = query.Where(e => e.Status == filter.Status.Value);
+                }
+
                 var list = query.OrderByDescending(e => e.ID).SetPage(filter.Page).ToList();
                 if (filter.GetInstName)
                 {

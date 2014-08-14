@@ -16,7 +16,7 @@ namespace Loowoo.LandInst.Web.Areas.Institution
             return Session[sessionKey] as Model.Institution;
         }
 
-        private string sessionKey = "currentInst";
+        private string sessionKey = UserRole.Institution.ToString();
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
         {
             if (Session[sessionKey] == null)

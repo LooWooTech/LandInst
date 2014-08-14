@@ -12,8 +12,8 @@
                 <li><a href="/admin/institution/edit"><i class="glyphicon glyphicon-plus"></i>&nbsp;添加新机构</a></li>
 @*                <li><a href="/admin/institution/import"><i class="glyphicon glyphicon-import"></i>&nbsp;批量导入机构</a></li>*@
                 <li class="divider"></li>
-                <li><a href="/admin/institution/checkProfile">注册登记/资料变更审批</a></li>
-                <li><a href="/admin/institution/checkAnnual">机构年审</a></li>
+                <li><a href="/admin/institution/checkProfile?hascheck=false">注册登记/资料变更审批</a></li>
+                <li><a href="/admin/institution/checkAnnual?hascheck=false">机构年审</a></li>
             </ul>
         </li>
 
@@ -65,7 +65,7 @@
         </li>
     </ul>
     <ul class="nav navbar-nav navbar-right">
-        <li><a href="/user/signout">退出</a></li>
+        <li><a href="/user/signout">(@(System.Threading.Thread.CurrentPrincipal.Identity.Name))退出</a></li>
     </ul>
 }
 @RenderBody()

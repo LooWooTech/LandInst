@@ -21,5 +21,7 @@ namespace Loowoo.LandInst.Model.Filters
         public string City { get; set; }
 
         public PageFilter Page { get; set; }
+
+        public bool? HasCheck { get; set; }
     }
 }
