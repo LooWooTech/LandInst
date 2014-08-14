@@ -25,10 +25,23 @@ namespace Loowoo.LandInst.Web
             return Content(new { result = true, data = data }.ToJson());
         }
 
+        private string sessionKey = "currentUser";
+
+        protected Model.Member GetCurrentMember()
+        {
+            return ViewBag.Member as Model.Member;
+        }
+
+        protected void UpdateCurrentMember()
+        {
+            Session.Remove(sessionKey);
+        }
+
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
         {
             ViewBag.Controller = RouteData.Values["controller"];
-            ViewBag.Action = RouteData.Values["action"]; 
+            ViewBag.Action = RouteData.Values["action"];
+            ViewBag.CurrentUser = AuthUtils.GetCurrentUser(filterContext.HttpContext);
             base.OnActionExecuting(filterContext);
         }
 

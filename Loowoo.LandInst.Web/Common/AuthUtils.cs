@@ -13,7 +13,7 @@ namespace Loowoo.LandInst.Web
 
         public static void SaveAuth(this HttpContextBase context, User user)
         {
-            var ticket = new FormsAuthenticationTicket(user.ID.ToString() + "|" + user.Role, true, 60);
+            var ticket = new FormsAuthenticationTicket(user.ID.ToString() + "|" + user.Role + "|" + user.Username, true, 60);
             var cookieValue = FormsAuthentication.Encrypt(ticket);
             var cookie = new HttpCookie(_cookieName, cookieValue);
             context.Response.Cookies.Remove(_cookieName);
@@ -29,18 +29,21 @@ namespace Loowoo.LandInst.Web
                 if (ticket != null && !string.IsNullOrEmpty(ticket.Name))
                 {
                     var values = ticket.Name.Split('|');
-
-                    var userId = 0;
-                    if (int.TryParse(values[0], out userId))
+                    if (values.Length == 3)
                     {
-                        var role = UserRole.Everyone;
-                        if (values.Length > 1 && Enum.TryParse<UserRole>(values[1], out role))
+                        var userId = 0;
+                        if (int.TryParse(values[0], out userId))
                         {
-                            return new UserIdentity
+                            var role = UserRole.Everyone;
+                            if (values.Length > 1 && Enum.TryParse<UserRole>(values[1], out role))
                             {
-                                UserID = userId,
-                                Role = role
-                            };
+                                return new UserIdentity
+                                {
+                                    UserID = userId,
+                                    Role = role,
+                                    Username = values[2]
+                                };
+                            }
                         }
                     }
                 }

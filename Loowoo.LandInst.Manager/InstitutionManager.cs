@@ -52,9 +52,22 @@ namespace Loowoo.LandInst.Manager
                 {
                     query = query.Where(e => e.InstName.Contains(filter.Keyword));
                 }
+
                 if (filter.Result.HasValue)
                 {
                     query = query.Where(e => e.Result == filter.Result.Value);
+                }
+
+                if (filter.HasCheck.HasValue)
+                {
+                    if (filter.HasCheck.Value)
+                    {
+                        query = query.Where(e => e.Result.HasValue);
+                    }
+                    else
+                    {
+                        query = query.Where(e => e.Result == null);
+                    }
                 }
 
                 return query.OrderByDescending(e => e.ID).SetPage(filter.Page).ToList();

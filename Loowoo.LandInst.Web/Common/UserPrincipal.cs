@@ -30,6 +30,8 @@ namespace Loowoo.LandInst.Web
 
         public UserRole Role { get; set; }
 
+        public string Username { get; set; }
+
         public string AuthenticationType
         {
             get { return "Web.Session"; }
@@ -37,7 +39,7 @@ namespace Loowoo.LandInst.Web
 
         public string Name
         {
-            get { return UserID.ToString(); }
+            get { return Username; }
         }
 
         public bool IsAuthenticated

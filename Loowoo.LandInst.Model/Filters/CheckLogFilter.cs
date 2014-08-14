@@ -17,6 +17,8 @@ namespace Loowoo.LandInst.Model.Filters
 
         public int? UserID { get; set; }
 
+        public bool? HasCheck { get; set; }
+
         public DateTime? BeginTime { get; set; }
 
         public DateTime? EndTime { get; set; }

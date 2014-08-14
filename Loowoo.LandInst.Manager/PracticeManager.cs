@@ -8,6 +8,15 @@ namespace Loowoo.LandInst.Manager
 {
     public class PracticeManager : ManagerBase
     {
+        public int GetInstId(int practiceId)
+        {
+            using (var db = GetDataContext())
+            {
+                var entity = db.Practices.OrderByDescending(e => e.ID).FirstOrDefault(e => e.ID == practiceId);
+                return entity == null ? 0 : entity.InstID;
+            }
+        }
+
         public PracticeInfo GetPracticeInfo(int practiceId)
         {
             using (var db = GetDataContext())
