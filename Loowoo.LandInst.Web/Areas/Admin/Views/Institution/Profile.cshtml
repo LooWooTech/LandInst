@@ -25,13 +25,13 @@
     <div class="tab-pane fade active in" id="tab1">
         <table class="table table-bordered" id="profile-basic">
             <tr>
-                <th style="width: 100px;">机构简称</th>
-                <td colspan="3">
+                <th style="width: 150px;">机构名称</th>
+                <td>
                     @(profile.Name)
                 </td>
-                <th style="width: 150px;">所在城市</th>
+                <th style="width: 150px;">机构性质</th>
                 <td>
-                    @(profile.City)
+                    @(profile.CompanyType)
                 </td>
             </tr>
             <tr>
@@ -39,13 +39,12 @@
                 <td>
                     @(profile.LegalPerson)
                 </td>
-                <th>法人代码</th>
+                <th>技术负责人</th>
                 <td>
-                    @(profile.LegalpersonNo)
+                    @(profile.TechLeader)
                 </td>
-                <th style="width: 170px;">企业</th>
-                <td>@(profile.CompanyType)</td>
             </tr>
+            
             <tr>
                 <th>工商登记号</th>
                 <td>
@@ -54,6 +53,12 @@
                 <th>税务登记号</th>
                 <td>
                     @(profile.TaxRegistryNo)
+                </td>
+            </tr>
+            <tr>
+                <th>工商登记机关</th>
+                <td>
+                    @(profile.RegistrationInstitution)
                 </td>
                 <th>注册资金（万元）</th>
                 <td>
@@ -65,56 +70,38 @@
                 <td>
                     @(profile.EstablishedDate.HasValue ? profile.EstablishedDate.Value.ToShortDateString() : null)
                 </td>
-                <th>营业期限</th>
+                <th>企业法人营业执照注册号或事业单位法人证书登记号</th>
                 <td>
-                    @(profile.OperatingPeriod)
-                </td>
-                <th>工商登记机关</th>
-                <td>
-                    @(profile.RegistrationInstitution)
+                    @(profile.LegalpersonNo)
                 </td>
             </tr>
             <tr>
-                <th>机构总人数</th>
+                <th>机构当年在职职工总数（人）</th>
                 <td>
                     @(profile.TotalMembers)
                 </td>
-                <th>其中专业人员数</th>
+                <th>从事土地规划工作人员总数（人）</th>
                 <td>
                     @(profile.ProMembers)
                 </td>
-                <th>中级及以上专业人员数</th>
+            </tr>
+            <tr>
+                <th>从事土地规划工作办公用房面积（平方）</th>
                 <td>
-                    @(profile.ExpertMembers)
+                    @(profile.OfficeArea)
+                </td>
+                <th>所在城市</th>
+                <td>
+                    @(profile.City)
                 </td>
             </tr>
             <tr>
-                <th>执业注册号</th>
-                <td>
-                    @(profile.PracticeRegistrationNo)
-                </td>
-                <th>团体会员证号</th>
-                <td>
-                    @(profile.CorporateMemberNo)
-                </td>
-                <th>是否有测绘许可证书</th>
-                <td>
-                    @(profile.HasExequatur ? "是" : "否")
-                </td>
-            </tr>
-            <tr>
-                <th>经营范围</th>
-                <td colspan="3">
-                    @(profile.BusinessScope)
-                </td>
-                <th>证书级别</th>
-                <td>
-                    @(profile.ExequaturLevel)
-                </td>
-            </tr>
-            <tr>
+                <th>联系人</th>
+                <td>@(profile.ContactPerson)</td>
                 <th>手机</th>
                 <td>@(profile.MobilePhone)</td>
+            </tr>
+            <tr>
                 <th>电话</th>
                 <td>@(profile.Tel)</td>
                 <th>传真</th>
@@ -122,23 +109,24 @@
             </tr>
             <tr>
                 <th>公司地址</th>
-                <td colspan="3">@(profile.Address)</td>
+                <td>@(profile.Address)</td>
                 <th>邮编</th>
                 <td>@(profile.Postcode)</td>
             </tr>
             <tr>
                 <th>联系地址</th>
-                <td colspan="3">@(profile.Address1)</td>
+                <td>@(profile.Address1)</td>
                 <th>邮编</th>
                 <td>@(profile.Postcode1)</td>
             </tr>
             <tr>
                 <th>电子信箱</th>
-                <td colspan="3">@(profile.Email)</td>
+                <td>@(profile.Email)</td>
                 <th>公司网站</th>
                 <td>@(profile.Website)</td>
             </tr>
         </table>
+
     </div>
     <div class="tab-pane fade" id="tab2">
         <table class="table table-bordered">

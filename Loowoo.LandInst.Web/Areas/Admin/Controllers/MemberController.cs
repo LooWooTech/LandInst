@@ -93,9 +93,10 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
                 case CheckType.Practice:
                     if (checkLog.Result == true)
                     {
+                        Core.MemberManager.PracticeMemeber(checkLog);
                         if (member.InstitutionID == 0)
                         {
-                            member.InstitutionID = checkLog.InfoID;
+                            member.InstitutionID = Core.PracticeManager.GetInstId(checkLog.InfoID);
                         }
                         member.Status = MemberStatus.Practice;
                         Core.MemberManager.UpdateMember(member);

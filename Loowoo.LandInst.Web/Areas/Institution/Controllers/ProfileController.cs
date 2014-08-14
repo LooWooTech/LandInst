@@ -14,6 +14,7 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
             return View();
         }
 
+
         [HttpGet]
         public ActionResult Edit(int? checkLogId, string type)
         {
@@ -37,33 +38,20 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
                     var annualCheck = Core.AnnualCheckManager.GetIndateModel();
                     if (annualCheck != null)
                     {
-                        var annualCheckLog = Core.CheckLogManager.GetLastLog(currentInst.ID, CheckType.Annual);
-                        if (annualCheckLog == null || annualCheckLog.Result == false)
-                        {
-                            ViewBag.AnnualCheck = annualCheck;
-                        }
+                        ViewBag.AnnualCheck = annualCheck;
+                        ViewBag.CheckLog = Core.CheckLogManager.GetLastLog(currentInst.ID, CheckType.Annual);
                     }
                 }
-                ViewBag.CheckLog = checkLog;
+                else
+                {
+                    ViewBag.CheckLog = checkLog;
+                }
                 ViewBag.Profile = Core.InstitutionManager.GetProfile(currentInst.ID);
             }
             return View();
         }
 
 
-        //[HttpPost]
-        //public ActionResult Edit(InstitutionProfile profile, string mode)
-        //{
-        //    var currentInst = GetCurrentInst();
-        //    Core.InstitutionManager.SaveProfile(profile);
-        //    if (mode == "submit")
-        //    {
-        //        var approvalType = currentInst.Status == InstitutionStatus.Normal ? ApprovalType.Register : ApprovalType.Change;
-        //        Core.ApprovalManager.AddApproval(Identity.UserID, Identity.UserID, approvalType);
-        //    }
-
-        //    return JsonSuccess();
-        //}
 
         [HttpPost]
         public ActionResult Submit(InstitutionProfile data, string type, bool isSubmit = false)
@@ -75,7 +63,8 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
                 var shGenders = Request.Form["SH.Gender"].Split(',');
                 var shBirthdays = Request.Form["SH.Birthday"].Split(',');
                 var shShares = Request.Form["SH.Shares"].Split(',');
-                var shMobiles = Request.Form["SH.Mobile"].Split(',');
+                var shTitles = Request.Form["SH.Title"].Split(',');
+                var shProfessionals = Request.Form["SH.Professionals"].Split(',');
 
                 for (var i = 0; i < shNames.Length; i++)
                 {
@@ -85,11 +74,13 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
                         Gender = shGenders[i],
                         Birthday = shBirthdays[i],
                         Shares = shShares[i],
-                        Mobile = shMobiles[i]
+                        Title = shTitles[i],
+                        Professionals = shProfessionals[i] == "是"
                     });
                 }
             }
             catch { }
+
             try
             {
                 var equipmentNames = Request.Form["equipment.Name"].Split(',');
@@ -118,7 +109,7 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
             {
                 var softwareNames = Request.Form["software.Name"].Split(',');
                 var softwareNumbers = Request.Form["software.Number"].Split(',');
-                var softwareSources = Request.Form["software.Model"].Split(',');
+                var softwareSources = Request.Form["software.Source"].Split(',');
                 var softwarePurposes = Request.Form["software.Purpose"].Split(',');
                 var softwareNotes = Request.Form["software.Note"].Split(',');
                 for (var i = 0; i < softwareNames.Length; i++)

@@ -6,15 +6,19 @@
     Exam indateExam = ViewBag.IndateExam;
 }
 <div class="alert alert-warning">
-    @if (examCheckLog != null && examCheckLog.Result != false)
+    @if (examCheckLog != null)
     { 
-        @:您已于@(examCheckLog.CreateTime.ToString())申请了考试，
+        @:您已于“@(examCheckLog.CreateTime.ToString())”申请了考试，
         if (examCheckLog.Result.HasValue)
         {
             if (examCheckLog.Result.Value)
             {
                 Response.Redirect("/member/exam");
                 return;
+            }
+            else
+            {
+                @:但“没有通过”审批，未通过原因：@(examCheckLog.Note)
             }
         }
         else
@@ -33,7 +37,7 @@
         <legend>基本信息</legend>
         <div class="form-group">
             <label class="control-label col-lg-3">姓名</label>
-            <div class="col-sm-5">
+            <div class="col-sm-4">
                 <input type="text" name="Realname" class="form-control input-sm" value="@(profile.RealName)" />
             </div>
         </div>
@@ -52,13 +56,13 @@
         </div>
         <div class="form-group">
             <label class="control-label col-lg-3">出生日期</label>
-            <div class="col-sm-5">
+            <div class="col-sm-4">
                 <input type="text" name="Birthday" class="form-control input-sm datepicker" value="@(profile.Birthday.HasValue ? profile.Birthday.Value.ToShortDateString() : null)" />
             </div>
         </div>
         <div class="form-group">
             <label class="control-label col-lg-3">身份证号码</label>
-            <div class="col-sm-5">
+            <div class="col-sm-6">
                 <input type="text" name="IDNo" class="form-control input-sm" value="@(profile.IDNo)" />
             </div>
         </div>
@@ -84,55 +88,67 @@
                }), new { @class = "form-control input-sm" })
             </div>
         </div>
+        <div class="form-group">
+            <label class="control-label col-lg-3">学位</label>
+            <div class="col-sm-5">
+                <input type="text" name="Nationality" class="form-control input-sm" value="@(profile.EduLevel)" />
+            </div>
+        </div>
     </fieldset>
     <fieldset class="col-lg-6">
         <legend>详细信息</legend>
         <div class="form-group">
             <label class="control-label col-lg-3">民族</label>
-            <div class="col-sm-5">
+            <div class="col-sm-4">
                 <input type="text" name="Nationality" class="form-control input-sm" value="@(profile.Nationality)" />
             </div>
         </div>
         <div class="form-group">
             <label class="control-label col-lg-3">籍贯</label>
-            <div class="col-sm-5">
+            <div class="col-sm-4">
                 <input type="text" name="NativePlace" class="form-control input-sm"  value="@(profile.NativePlace)" />
             </div>
         </div>
         <div class="form-group">
             <label class="control-label col-lg-3">政治面貌</label>
-            <div class="col-sm-5">
+            <div class="col-sm-3">
                 <input type="text" name="PoliticalState" class="form-control input-sm"  value="@(profile.PoliticalState)" />
             </div>
         </div>
         <div class="form-group">
             <label class="control-label col-lg-3">职称</label>
-            <div class="col-sm-5">
+            <div class="col-sm-6">
                 <input type="text" name="Title" class="form-control input-sm"  value="@(profile.Title)" />
             </div>
         </div>
         <div class="form-group">
             <label class="control-label col-lg-3">毕业学校</label>
-            <div class="col-sm-5">
+            <div class="col-sm-6">
                 <input type="text" name="School" class="form-control input-sm"  value="@(profile.School)" />
             </div>
         </div>
         <div class="form-group">
             <label class="control-label col-lg-3">Email</label>
-            <div class="col-sm-5">
+            <div class="col-sm-6">
                 <input type="text" name="Email" class="form-control input-sm" value="@(profile.Email)" />
             </div>
         </div>
         <div class="form-group">
             <label class="control-label col-lg-3">手机</label>
-            <div class="col-sm-5">
+            <div class="col-sm-4">
                 <input type="text" name="MobilePhone" class="form-control input-sm"  value="@(profile.MobilePhone)" />
             </div>
         </div>
         <div class="form-group">
             <label class="control-label col-lg-3">通信地址</label>
-            <div class="col-sm-5">
+            <div class="col-sm-7">
                 <input type="text" name="Address" class="form-control input-sm"  value="@(profile.Address)" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-lg-3">邮编</label>
+            <div class="col-sm-3">
+                <input type="text" name="Address" class="form-control input-sm"  value="@(profile.Postcode)" />
             </div>
         </div>
     </fieldset>
@@ -144,7 +160,7 @@
                 <th>考试名称</th>
                 <td>@(indateExam.Name)</td>
                 <th>考试地点</th>
-                <td>@(indateExam.StartExamDate.ToShortDateString()) ~ @(indateExam.EndExamDate.ToShortDateString())</td>
+                <td>@(indateExam.Address)</td>
             </tr>
             <tr>
                 <th>报名时间</th>

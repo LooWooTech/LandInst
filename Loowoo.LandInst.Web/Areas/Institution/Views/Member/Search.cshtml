@@ -68,7 +68,7 @@
                 var options = "";
                 for (var i = 0; i < data.length; i++) {
                     var m = data[i];
-                    options += "<option value=" + m.ID + " selected=\"selected\">" + m.RealName + "(" + m.InstitutionName + ")" + "</option>";
+                    options += "<option value=" + m.ID + " selected=\"selected\">" + m.RealName + " (" + (m.InstitutionName || "暂无机构" )+ ")" + "</option>";
                 }
                 $("#memberId").html(options);
             });

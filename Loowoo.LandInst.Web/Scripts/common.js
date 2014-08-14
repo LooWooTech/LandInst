@@ -21,8 +21,10 @@
                 success(data);
             }
         }).fail(function (xhr) {
-            var data = eval("(" + xhr.responseText + ")");
-            error(data);
+            if (error) {
+                var data = eval("(" + xhr.responseText + ")");
+                error(data);
+            }
         });
         //$.post(url, data, success, "json").fail(error);
     };

@@ -80,6 +80,11 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
                 randomPwd = user.Password;
             }
 
+            if (string.IsNullOrEmpty(inst.Name))
+            {
+                throw new ArgumentException("机构名称没有填写");
+            }
+
             user.Role = UserRole.Institution;
             Core.UserManager.AddUser(user);
             inst.ID = user.ID;

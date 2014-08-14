@@ -17,7 +17,7 @@
     {
         if (annualCheck == null)
         { 
-            @:现在还不能申请年检，如果需要修改资料请申请<a href="?" class="btn btn-primary btn-xs">资料变更</a>
+        @:现在还不能申请年检，如果需要修改资料请申请<a href="?" class="btn btn-primary btn-xs">资料变更</a>
             return;
         }
     }
@@ -151,11 +151,11 @@
                     <td>
                         <input type="text" name="ContactPerson" class="form-control input-sm" value="@(model.ContactPerson)" />
                     </td>
-                     <th style="width: 120px;">联系电话</th>
+                    <th style="width: 120px;">联系电话</th>
                     <td>
                         <input type="text" name="Tel" class="form-control input-sm" value="@(model.Tel)" />
                     </td>
-                   <th style="width: 120px;">手机</th>
+                    <th style="width: 120px;">手机</th>
                     <td>
                         <input type="text" name="MobilePhone" class="form-control input-sm" value="@(model.MobilePhone)" />
                     </td>
@@ -197,141 +197,141 @@
 
             </table>
         </div>
-            <div class="tab-pane fade" id="profile-sharehoder">
-                <table class="table table-bordered">
-                    <thead>
+        <div class="tab-pane fade" id="profile-sharehoder">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th style="width: 140px;">姓名</th>
+                        <th style="width: 80px;">性别</th>
+                        <th>出生年月</th>
+                        <th style="width: 90px;">股份</th>
+                        <th style="width: 150px;">职务或职称</th>
+                        <th style="width: 150px;">是否专业人员</th>
+                        <th style="width: 70px;">
+                            <button id="btn-add-sh" class="btn btn-xs btn-primary">添加</button></th>
+                    </tr>
+                </thead>
+                <tbody id="list-sh">
+                    @foreach (var item in model.ShareHolders)
+                    { 
                         <tr>
-                            <th style="width: 140px;">姓名</th>
-                            <th style="width: 80px;">性别</th>
-                            <th>出生年月</th>
-                            <th style="width: 90px;">股份</th>
-                            <th style="width: 150px;">职务或职称</th>
-                            <th style="width: 150px;">是否专业人员</th>
-                            <th style="width: 70px;">
-                                <button id="btn-add-sh" class="btn btn-xs btn-primary">添加</button></th>
+                            <td>
+                                <input type="text" name="SH.Name"  value="@(item.Name)" class="form-control input-sm"/>
+                            </td>
+                            <td>
+                                <select name="SH.Gender" class="form-control input-sm">
+                                    <option @(item.Gender == "男" ? "selected=selected" : null)>男</option>
+                                    <option @(item.Gender == "女" ? "selected=selected" : null)>女</option>
+                                </select>
+                            </td>
+                            <td>
+                                <input type="text" name="SH.Birthday"  value="@(item.Birthday)" class="form-control input-sm"/>
+                            </td>
+                            <td>
+                                <input type="text" name="SH.Shares"  value="@(item.Shares)" class="form-control input-sm"/>
+                            </td>
+                            <td>
+                                <input type="text" name="SH.Title"  value="@(item.Title)" class="form-control input-sm"/>
+                            </td>
+                            <td>
+                                <select name="SH.Professionals" class="form-control input-sm">
+                                    <option></option>
+                                    <option value="true" @(item.Professionals == true ? "selected=selected" : null)>是</option>
+                                    <option value="false" @(item.Professionals == false ? "selected=selected" : null)>否</option>
+                                </select>
+                            </td>
+                            <td>
+                                <a class="btn btn-xs btn-warning btn-delete">删除</a>
+                            </td>
                         </tr>
-                    </thead>
-                    <tbody id="list-sh">
-                        @foreach (var item in model.ShareHolders)
-                        { 
-                            <tr>
-                                <td>
-                                    <input type="text" name="SH.Name"  value="@(item.Name)" class="form-control input-sm"/>
-                                </td>
-                                <td>
-                                    <select name="SH.Gender" class="form-control input-sm">
-                                        <option @(item.Gender == "男" ? "selected=selected" : null)>男</option>
-                                        <option @(item.Gender == "女" ? "selected=selected" : null)>女</option>
-                                    </select>
-                                </td>
-                                <td>
-                                    <input type="text" name="SH.Birthday"  value="@(item.Birthday)" class="form-control input-sm"/>
-                                </td>
-                                <td>
-                                    <input type="text" name="SH.Shares"  value="@(item.Shares)" class="form-control input-sm"/>
-                                </td>
-                                <td>
-                                    <input type="text" name="SH.Title"  value="@(item.Title)" class="form-control input-sm"/>
-                                </td>
-                                <td>
-                                    <select name="SH.Professionals" class="form-control input-sm">
-                                        <option></option>
-                                        <option value="true" @(item.Professionals == true ? "selected=selected" : null)>是</option>
-                                        <option value="false" @(item.Professionals == false ? "selected=selected" : null)>否</option>
-                                    </select>
-                                </td>
-                                <td>
-                                    <a class="btn btn-xs btn-warning btn-delete">删除</a>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
-            <div class="tab-pane fade" id="profile-equipment">
-                <table class="table table-bordered">
-                    <thead>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="tab-pane fade" id="profile-equipment">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>名称</th>
+                        <th style="width: 120px;">型号/规格</th>
+                        <th style="width: 60px;">数量</th>
+                        <th style="display: none;">生产厂商</th>
+                        <th style="width: 150px;">主要性能</th>
+                        <th>备注</th>
+                        <th style="width: 70px;">
+                            <button id="btn-add-equipment" class="btn btn-xs btn-primary">添加</button></th>
+                    </tr>
+                </thead>
+                <tbody id="list-equipment">
+                    @foreach (var item in model.Equipments)
+                    { 
                         <tr>
-                            <th>名称</th>
-                            <th style="width: 120px;">型号/规格</th>
-                            <th style="width: 60px;">数量</th>
-                            <th style="display:none;">生产厂商</th>
-                            <th style="width: 150px;">主要性能</th>
-                            <th>备注</th>
-                            <th style="width: 70px;">
-                                <button id="btn-add-equipment" class="btn btn-xs btn-primary">添加</button></th>
+                            <td>
+                                <input type="text" name="equipment.Name"  value="@(item.Name)" class="form-control input-sm"/>
+                            </td>
+                            <td>
+                                <input type="text" name="equipment.Model"  value="@(item.Model)" class="form-control input-sm"/>
+                            </td>
+                            <td>
+                                <input type="text" name="equipment.Number"  value="@(item.Number.HasValue && item.Number.Value > 0 ? item.Number.Value.ToString() : "")" class="form-control input-sm"/>
+                            </td>
+                            <td style="display: none;">
+                                <input type="text" name="equipment.Manufacturer"  value="@(item.Manufacturer)" class="form-control input-sm"/>
+                            </td>
+                            <td>
+                                <input type="text" name="equipment.Performance"  value="@(item.Performance)" class="form-control input-sm"/>
+                            </td>
+                            <td>
+                                <input type="text" name="equipment.Note"  value="@(item.Note)" class="form-control input-sm"/>
+                            </td>
+                            <td>
+                                <a class="btn btn-xs btn-warning btn-delete">删除</a>
+                            </td>
                         </tr>
-                    </thead>
-                    <tbody id="list-equipment">
-                        @foreach (var item in model.Equipments)
-                        { 
-                            <tr>
-                                <td>
-                                    <input type="text" name="equipment.Name"  value="@(item.Name)" class="form-control input-sm"/>
-                                </td>
-                                <td>
-                                    <input type="text" name="equipment.Model"  value="@(item.Model)" class="form-control input-sm"/>
-                                </td>
-                                <td>
-                                    <input type="text" name="equipment.Number"  value="@(item.Number.HasValue && item.Number.Value > 0 ? item.Number.Value.ToString() : "")" class="form-control input-sm"/>
-                                </td>
-                                <td style="display:none;">
-                                    <input type="text" name="equipment.Manufacturer"  value="@(item.Manufacturer)" class="form-control input-sm"/>
-                                </td>
-                                <td>
-                                    <input type="text" name="equipment.Performance"  value="@(item.Performance)" class="form-control input-sm"/>
-                                </td>
-                                <td>
-                                    <input type="text" name="equipment.Note"  value="@(item.Note)" class="form-control input-sm"/>
-                                </td>
-                                <td>
-                                    <a class="btn btn-xs btn-warning btn-delete">删除</a>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
-            <div class="tab-pane fade" id="profile-software">
-                <table class="table table-bordered">
-                    <thead>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="tab-pane fade" id="profile-software">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>软件名称</th>
+                        <th style="width: 60px;">数量</th>
+                        <th style="width: 120px;">来源</th>
+                        <th style="width: 200px;">用途</th>
+                        <th>备注</th>
+                        <th style="width: 70px;">
+                            <button id="btn-add-software" class="btn btn-xs btn-primary">添加</button></th>
+                    </tr>
+                </thead>
+                <tbody id="list-software">
+                    @foreach (var item in model.Softwares)
+                    { 
                         <tr>
-                            <th>软件名称</th>
-                            <th style="width: 60px;">数量</th>
-                            <th style="width: 120px;">来源</th>
-                            <th style="width: 200px;">用途</th>
-                                         <th>备注</th>
-               <th style="width: 70px;">
-                                <button id="btn-add-software" class="btn btn-xs btn-primary">添加</button></th>
+                            <td>
+                                <input type="text" name="software.Name"  value="@(item.Name)" class="form-control input-sm"/>
+                            </td>
+                            <td>
+                                <input type="text" name="software.Number"  value="@(item.Number.HasValue && item.Number.Value > 0 ? item.Number.Value.ToString() : "")" class="form-control input-sm"/>
+                            </td>
+                            <td>
+                                <input type="text" name="software.Source"  value="@(item.Source)" class="form-control input-sm"/>
+                            </td>
+                            <td>
+                                <input type="text" name="software.Purpose"  value="@(item.Purpose)" class="form-control input-sm"/>
+                            </td>
+                            <td>
+                                <input type="text" name="software.Note"  value="@(item.Note)" class="form-control input-sm"/>
+                            </td>
+                            <td>
+                                <a class="btn btn-xs btn-warning btn-delete">删除</a>
+                            </td>
                         </tr>
-                    </thead>
-                    <tbody id="list-software">
-                        @foreach (var item in model.Softwares)
-                        { 
-                            <tr>
-                                <td>
-                                    <input type="text" name="software.Name"  value="@(item.Name)" class="form-control input-sm"/>
-                                </td>
-                                <td>
-                                    <input type="text" name="software.Number"  value="@(item.Number.HasValue && item.Number.Value > 0 ? item.Number.Value.ToString() : "")" class="form-control input-sm"/>
-                                </td>
-                                <td>
-                                    <input type="text" name="software.Source"  value="@(item.Source)" class="form-control input-sm"/>
-                                </td>
-                                <td>
-                                    <input type="text" name="software.Purpose"  value="@(item.Purpose)" class="form-control input-sm"/>
-                                </td>
-                                 <td>
-                                    <input type="text" name="equipment.Note"  value="@(item.Note)" class="form-control input-sm"/>
-                                </td>
-                               <td>
-                                    <a class="btn btn-xs btn-warning btn-delete">删除</a>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
+                    }
+                </tbody>
+            </table>
+        </div>
     </div>
 
     @if (!disabled)

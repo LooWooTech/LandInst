@@ -47,7 +47,7 @@ namespace Loowoo.LandInst.Manager
                 throw new ArgumentException("密码不正确！");
             }
 
-            return user;
+                return user;
         }
 
         public bool Exists(string username)

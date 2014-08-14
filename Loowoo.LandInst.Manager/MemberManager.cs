@@ -193,5 +193,22 @@ namespace Loowoo.LandInst.Manager
                 return query.Select(e => e.ID).ToList();
             }
         }
+
+        public void PracticeMemeber(CheckLog checkLog)
+        {
+            using (var db = GetDataContext())
+            {
+                var entity = db.Practices.FirstOrDefault(e => e.ID == checkLog.ID);
+                if (entity != null)
+                {
+                    var member = db.Members.FirstOrDefault(e => e.ID == checkLog.UserID);
+                    if (member != null)
+                    {
+                        member.InstitutionID = entity.InstID;
+                        db.SaveChanges();
+                    }
+                }
+            }
+        }
     }
 }
