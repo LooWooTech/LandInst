@@ -27,19 +27,29 @@
     List<CheckLog> history = ViewBag.History;
 }
 <legend>业务处理</legend>
-<div>
-        <blockquote class="bs-callout bs-callout-warning">
-            <h4><i class="glyphicon glyphicon-list-alt"></i>&nbsp;资料变更</h4>
-            修改您的企业资料、机构成员、仪器设备、股东信息、联系方式等。<a href="/Institution/Profile/Edit" class="btn btn-primary btn-xs">立即变更</a>
-        </blockquote>
-        <blockquote>
-            <h4><i class="glyphicon glyphicon-check"></i>&nbsp;申请年检</h4>
-            每年一度的年检资料审核。<a href="/Institution/Profile/Edit" class="btn btn-primary btn-xs">立即申请</a>
-        </blockquote>
-        <blockquote>
-            <h4><i class="glyphicon glyphicon-time"></i>&nbsp;历史信息</h4>
-            查看机构所提交的申请历史记录和历史版本信息。<a href="/Institution/Profile/Edit" class="btn btn-primary btn-xs">立即查看</a>
-        </blockquote>
+<div class="col-lg-6">
+    <blockquote>
+        <p><i class="glyphicon glyphicon-list-alt"></i>&nbsp;<a href="/Institution/Profile/Edit">资料变更</a></p>
+        <small>修改您的企业资料、机构成员、仪器设备、股东信息、联系方式等。</small>
+    </blockquote>
+</div>
+<div class="col-lg-6">
+    <blockquote>
+        <p><i class="glyphicon glyphicon-check"></i>&nbsp;<a href="/institution/profile/edit?type=annualcheck">申请年检</a></p>
+        <small>每年一度的年检资料审核。</small>
+    </blockquote>
+</div>
+<div class="col-lg-6">
+    <blockquote>
+        <p><i class="glyphicon glyphicon-time"></i>&nbsp;<a href="/institution/profile/history">历史信息</a></p>
+        <small>查看机构所提交的申请历史记录和历史版本信息。</small>
+    </blockquote>
+</div>
+<div class="col-lg-6">
+    <blockquote>
+        <p><i class="glyphicon glyphicon-edit"></i>&nbsp;<a href="/user/editpassword">修改密码</a></p>
+        <small>如果您没有修改过密码，建议你修改为自己的安全密码。</small>
+    </blockquote>
 </div>
 @if (annualCheck != null)
 { 

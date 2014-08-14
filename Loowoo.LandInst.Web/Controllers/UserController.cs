@@ -59,6 +59,51 @@ namespace Loowoo.LandInst.Web.Controllers
             return JsonSuccess();
         }
 
+        [UserAuthorize]
+        [HttpGet]
+        public ActionResult EditPassword()
+        {
+            var user = Core.UserManager.GetUser(Identity.UserID);
+            ViewBag.User = user;
+            switch (user.Role)
+            { 
+                case UserRole.Institution:
+                    ViewBag.CurrentInst = Core.InstitutionManager.GetInstitution(user.ID);
+                    break;
+                case UserRole.Member:
+                    ViewBag.Member = Core.MemberManager.GetMember(user.ID);
+                    break;
+            }
+            return View();
+        }
+
+        [UserAuthorize]
+        [HttpPost]
+        public ActionResult EditPassword(string newPwd, string reNewPwd)
+        {
+            if (string.IsNullOrEmpty(newPwd))
+            {
+                throw new ArgumentException("新密码没有填写");
+            }
+
+            if (string.IsNullOrEmpty(reNewPwd))
+            {
+                throw new ArgumentException("确认密码没有填写");
+            }
+
+            if (newPwd != reNewPwd)
+            {
+                throw new ArgumentException("两次密码输入不一致");
+            }
+
+            var user = Core.UserManager.GetUser(Identity.UserID);
+            ViewBag.User = user;
+
+            Core.UserManager.UpdatePassword(Identity.UserID, newPwd);
+
+            return JsonSuccess();
+        }
+
         public ActionResult ForgetPwd()
         {
             return View();
