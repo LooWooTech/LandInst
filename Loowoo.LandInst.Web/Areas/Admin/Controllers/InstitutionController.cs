@@ -26,7 +26,7 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
             return View();
         }
 
-        public ActionResult CheckAnnual(string name, int annualCheckId = 0, bool? hasCheck = false, int page = 1)
+        public ActionResult CheckAnnual(string name, bool? hasCheck, int annualCheckId = 0, int page = 1)
         {
             var filter = new CheckLogFilter
             {
@@ -41,7 +41,7 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
             return View();
         }
 
-        public ActionResult CheckProfile(string name, bool? hasCheck = false, int page = 1)
+        public ActionResult CheckProfile(string name, bool? hasCheck, int page = 1)
         {
             var filter = new InstitutionFilter
             {

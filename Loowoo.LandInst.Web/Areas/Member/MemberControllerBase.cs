@@ -11,7 +11,7 @@ namespace Loowoo.LandInst.Web.Areas.Member
     [UserRole(Role = UserRole.Member)]
     public class MemberControllerBase : ControllerBase
     {
-        private string sessionKey = "currentMemeber";
+        private string sessionKey = UserRole.Member.ToString();
 
         protected Model.Member GetCurrentMember()
         {

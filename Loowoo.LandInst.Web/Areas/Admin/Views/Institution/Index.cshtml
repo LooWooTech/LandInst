@@ -14,7 +14,7 @@
                 @Html.DropDownList("city", Enum.GetNames(typeof(City)).Select(name => new SelectListItem
            {
                Text = name,
-               Value = name == "全国" ? "" : name,
+               Value = name == "浙江省" ? "" : name,
                Selected = Request.QueryString["city"] == name
            }), new { @class = "form-control" })
             </div>

@@ -14,7 +14,7 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
         {
             var filter = new MemberFilter
             {
-                InstID =  Identity.UserID,
+                InstID = Identity.UserID,
                 Keyword = name,
                 InInst = true,
                 IncludeNoHaveInstMember = !string.IsNullOrEmpty(name),
@@ -210,6 +210,10 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
                         ObtainDate = obtainDate == DateTime.MinValue ? default(Nullable<DateTime>) : obtainDate
                     });
                 }
+            }
+            catch { }
+            try
+            {
 
                 var startDates = Request.Form["job.StartDate"].Split(',');
                 var endDates = Request.Form["job.StartDate"].Split(',');
@@ -245,7 +249,7 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
             }
             else
             {
-                Core.PracticeManager.UpdatePracticeInfo(checkLog.ID, data);
+                Core.PracticeManager.UpdatePracticeInfo(checkLog.InfoID, data);
             }
 
 
