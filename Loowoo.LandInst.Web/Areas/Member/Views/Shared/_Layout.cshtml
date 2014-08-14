@@ -16,8 +16,11 @@
             <li @Html.Raw(Request.Path == "/member/" ? "class=\"active\"" : null)><a href="/member/"><i class="glyphicon glyphicon-home"></i>&nbsp;首页</a></li>
             <li @Html.Raw(action == "profile.edit" ? "class=\"active\"" : null)><a href="/member/profile/edit"><i class="glyphicon glyphicon-user"></i>&nbsp;个人资料</a></li>
             <li @Html.Raw(controller == "exam" ? "class=\"active\"" : null)><a href="/member/exam/"><i class="glyphicon glyphicon-pencil"></i>&nbsp;考试成绩</a></li>
-            <li @Html.Raw(action == "profile.practice" ? "class=\"active\"" : null)><a href="/member/profile/practice"><i class="glyphicon glyphicon-list-alt"></i>&nbsp;执业登记</a></li>
-            <li @Html.Raw(controller == "education" ? "class=\"active\"" : null)><a href="/member/education/"><i class="glyphicon glyphicon-book"></i>&nbsp;继续教育</a></li>
+            if (member.InstitutionID>0)
+            {
+                <li @Html.Raw(action == "profile.practice" ? "class=\"active\"" : null)><a href="/member/profile/practice"><i class="glyphicon glyphicon-list-alt"></i>&nbsp;执业登记</a></li>
+                <li @Html.Raw(controller == "education" ? "class=\"active\"" : null)><a href="/member/education/"><i class="glyphicon glyphicon-book"></i>&nbsp;继续教育</a></li>
+            }
         }
     </ul>
     <ul class="nav navbar-nav navbar-right">

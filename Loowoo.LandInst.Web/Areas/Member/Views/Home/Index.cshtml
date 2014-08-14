@@ -8,21 +8,44 @@
     MemberProfile profile = ViewBag.Profile;
     if (member.Status == MemberStatus.Normal)
     {
-        bool registeredExam = ViewBag.RegisteredExam == null ? false : ViewBag.RegisteredExam;
-        if (registeredExam)
-        {
-            //已报名，成绩查询
-            Response.Redirect("/member/exam/result");
-            return;
-        }
-        else
-        {
-            //报名考试
-            Response.Redirect("/member/exam/signup");
-        }
+        //报名考试
+        Response.Redirect("/member/exam/signup");
         return;
     }
+
+    CheckLog checkLog = ViewBag.CheckLog;
+    Exam exam = ViewBag.Exam;
 }
+@if (checkLog != null)
+{
+    if (exam.EndExamDate > DateTime.Now)
+    {
+        <div class="alert alert-success">
+            你与@(checkLog.CreateTime.ToString())申请的报名考试，已经通过审批了。
+        </div>
+    <legend>考试提醒</legend>
+    <table class="table table-bordered">
+        <tr>
+            <th>考试名称</th>
+            <td>@(exam.Name)</td>
+            <th>考试地点</th>
+            <td>@(exam.Address)</td>
+        </tr>
+        <tr>
+            <th>报名时间</th>
+            <td>@(exam.StartSignDate.ToShortDateString()) ~ @(exam.EndSignDate.ToShortDateString())</td>
+            <th>考试时间</th>
+            <td>@(exam.StartExamDate.ToShortDateString()) ~ @(exam.EndExamDate.ToShortDateString())</td>
+        </tr>
+        <tr>
+            <th>简介</th>
+            <td colspan="3">@(exam.Summary)</td>
+        </tr>
+    </table>
+    }
+}
+
+<legend>功能导航</legend>
 <div class="col-lg-6">
     <blockquote>
         <p><i class="glyphicon glyphicon-user"></i>&nbsp;<a href="/member/profile/edit">个人资料</a></p>
@@ -35,15 +58,17 @@
         <small>如果你已经通过了报名考试申请，你可以查询考试成绩</small>
     </blockquote>
 </div>
+@if(member.InstitutionID>0){
 <div class="col-lg-6">
     <blockquote>
         <p><i class="glyphicon glyphicon-book"></i>&nbsp;<a href="/member/education">继续教育</a></p>
-        <small>如果你已经加入了某机构，可以查询机构为你申请的继续教育信息。</small>
+        <small>你可以查询机构为你申请的继续教育信息。</small>
     </blockquote>
 </div>
 <div class="col-lg-6">
     <blockquote>
         <p><i class="glyphicon glyphicon-list-alt"></i>&nbsp;<a href="/member/profile/practice/">执业信息</a></p>
-        <small>如果你已经加入了某机构，可以查询机构为你申请的执业登记信息。</small>
+        <small>你可以查询机构为你申请的执业登记信息。</small>
     </blockquote>
 </div>
+}

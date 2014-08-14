@@ -10,15 +10,16 @@ namespace Loowoo.LandInst.Web.Areas.Member.Controllers
     {
         public ActionResult Index()
         {
-            var member = GetCurrentMember(); 
+            var member = GetCurrentMember();
             if (member.InstitutionID > 0)
             {
                 ViewBag.Institution = Core.InstitutionManager.GetInstitution(member.InstitutionID);
             }
             var checkLog = Core.CheckLogManager.GetLastLog(Identity.UserID, Model.CheckType.Exam);
-            if (checkLog != null)
+            if (member.Status == Model.MemberStatus.Registered && checkLog != null)
             {
-                ViewBag.RegisteredExam = checkLog.Result == null ? false : checkLog.Result.Value;
+                ViewBag.CheckLog = checkLog;
+                ViewBag.Exam = Core.ExamManager.GetExam(checkLog.InfoID);
             }
             return View();
         }
