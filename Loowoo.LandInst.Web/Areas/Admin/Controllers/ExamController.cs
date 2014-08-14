@@ -14,7 +14,7 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
     {
         public ActionResult Index()
         {
-            ViewBag.List = Core.ExamManager.GetIndateExams();
+            ViewBag.List = Core.ExamManager.GetExams();
             return View();
         }
 

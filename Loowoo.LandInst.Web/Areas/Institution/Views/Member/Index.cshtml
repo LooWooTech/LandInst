@@ -30,7 +30,7 @@
     @foreach (var item in list)
     { 
         <tr>
-            <td><a href="/institution/member/profile?id=@(item.ID)">@(item.RealName)</a> @Html.Raw(item.InstitutionID == 0 ? "<span class=\"label label-warning\">外</span>" : null)</td>
+            <td><a href="/institution/member/profile?id=@(item.ID)">@(string.IsNullOrEmpty(item.RealName)?"[无名氏]":item.RealName)</a> @Html.Raw(item.InstitutionID == 0 ? "<span class=\"label label-warning\">外</span>" : null)</td>
             <td>@(item.Gender)</td>
             <td>@(item.Birthday.HasValue ? item.Birthday.Value.ToShortDateString() : null)</td>
             <td>@(item.Major == 0 ? "" : item.Major.ToString())</td>

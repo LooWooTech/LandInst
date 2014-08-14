@@ -27,7 +27,7 @@
     @foreach (var item in list)
     { 
         <tr>
-            <td><a href="/admin/member/profile?id=@(item.ID)">@(item.RealName)</a></td>
+            <td><a href="/admin/member/profile?id=@(item.ID)">@(string.IsNullOrEmpty(item.RealName)?"[无名氏]":item.RealName)</a></td>
             <td>@(item.Status.GetDescription())</td>
             <td>@(item.Major == 0 ? "" : item.Major.ToString())</td>
             <td>@(item.EduRecord == 0 ? "" : item.EduRecord.ToString())</td>

@@ -23,6 +23,11 @@ namespace Loowoo.LandInst.Manager
             });
         }
 
+        private void ClearCache()
+        {
+            CacheHelper.Remove(_cacheKey);
+        }
+
         public AnnualCheck GetModel(int id)
         {
             return GetAnnualChecks().FirstOrDefault(e => e.ID == id);
@@ -45,6 +50,7 @@ namespace Loowoo.LandInst.Manager
                     db.AnnualChecks.Add(model);
                 }
                 db.SaveChanges();
+                ClearCache();
             }
         }
 
@@ -97,6 +103,21 @@ namespace Loowoo.LandInst.Manager
                 }
             }
             return list;
+        }
+
+        public void Delete(int id)
+        {
+            if (id == 0) return;
+            using (var db = GetDataContext())
+            {
+                var entity = db.AnnualChecks.FirstOrDefault(e => e.ID == id);
+                if (entity != null)
+                {
+                    db.AnnualChecks.Remove(entity);
+                    db.SaveChanges();
+                    ClearCache();
+                }
+            }
         }
     }
 }

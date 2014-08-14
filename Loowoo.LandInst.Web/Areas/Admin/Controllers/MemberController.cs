@@ -120,7 +120,7 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
             }
 
             var member = Core.MemberManager.GetMember(id);
-            var profile = Core.MemberManager.GetProfile(id);
+            var profile = Core.MemberManager.GetProfile(id) ?? new MemberProfile(member);
 
             profile.SetMemberField(member);
             ViewBag.User = user;

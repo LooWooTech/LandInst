@@ -115,5 +115,19 @@ namespace Loowoo.LandInst.Manager
             }
         }
 
+
+        public void Delete(int id)
+        {
+            using (var db = GetDataContext())
+            {
+                var entity = db.Educations.FirstOrDefault(e => e.ID == id);
+                if (entity != null)
+                {
+                    db.Educations.Remove(entity);
+                    db.SaveChanges();
+                    ClearCache();
+                }
+            }
+        }
     }
 }

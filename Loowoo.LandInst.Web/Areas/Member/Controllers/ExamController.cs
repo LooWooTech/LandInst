@@ -23,11 +23,14 @@ namespace Loowoo.LandInst.Web.Areas.Member.Controllers
             var member = GetCurrentMember();
 
             var indateExam = Core.ExamManager.GetIndateExams();
-            var checkLog = Core.CheckLogManager.GetCheckLog(indateExam.ID, member.ID, CheckType.Exam);
+            if (indateExam != null)
+            {
+                var checkLog = Core.CheckLogManager.GetCheckLog(indateExam.ID, member.ID, CheckType.Exam);
 
-            //所有有效的考试都报过名了，跳转到成绩查询
-            ViewBag.IndateExam = indateExam;
-            ViewBag.CheckLog = checkLog;
+                //所有有效的考试都报过名了，跳转到成绩查询
+                ViewBag.IndateExam = indateExam;
+                ViewBag.CheckLog = checkLog;
+            }
             ViewBag.Profile = Core.MemberManager.GetProfile(Identity.UserID) ?? new MemberProfile(member);
             return View();
         }

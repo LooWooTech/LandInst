@@ -42,5 +42,11 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
             return JsonSuccess();
         }
 
+        public ActionResult Delete(int id)
+        {
+            Core.AnnualCheckManager.Delete(id);
+            return JsonSuccess();
+        }
+
     }
 }
