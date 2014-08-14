@@ -38,6 +38,7 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
             }
 
             ViewBag.Inst = currentInst;
+            ViewBag.History = Core.CheckLogManager.GetList(currentInst.ID);
             return View();
         }
 

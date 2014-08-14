@@ -11,11 +11,15 @@
             <span class="input-group-addon">查询机构</span>
             <input type="text" class="form-control" name="name" placeholder="机构名称" value="@(Request.QueryString["name"])">
             <div class="input-group-btn">
-                @Html.DropDownList("city", Enum.GetNames(typeof(City)).Select(name => new SelectListItem {Text = name,Selected = Request.QueryString["city"] == name
+                @Html.DropDownList("city", Enum.GetNames(typeof(City)).Select(name => new SelectListItem
+           {
+               Text = name,
+               Value = name == "全国" ? "" : name,
+               Selected = Request.QueryString["city"] == name
            }), new { @class = "form-control" })
             </div>
             <div class="input-group-btn">
-                <button type="submit" class="btn btn-primary"><i class="glyphicon glyphicon-search"></i> 查询</button>
+                <button type="submit" class="btn btn-primary"><i class="glyphicon glyphicon-search"></i>查询</button>
             </div>
         </div>
     </div>
@@ -23,9 +27,9 @@
 <table class="table table-bordered">
     <tr>
         <th>机构名称</th>
-        <th style="width:120px;">注册时间</th>
-        <th style="width:90px;">当前状态</th>
-        <th style="width:100px;">法人代表</th>
+        <th style="width: 120px;">注册时间</th>
+        <th style="width: 90px;">当前状态</th>
+        <th style="width: 100px;">法人代表</th>
     </tr>
     @foreach (var item in list)
     { 
@@ -38,7 +42,7 @@
     }
     <tr>
         <td colspan="10">
-                @Html.Partial("_pagination", ViewBag.Page as object)
+            @Html.Partial("_pagination", ViewBag.Page as object)
         </td>
     </tr>
 </table>

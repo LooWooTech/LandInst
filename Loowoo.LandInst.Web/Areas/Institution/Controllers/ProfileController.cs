@@ -15,7 +15,7 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
         }
 
         [HttpGet]
-        public ActionResult Edit(int? checkLogId)
+        public ActionResult Edit(int? checkLogId, string type)
         {
             //查看历史
             if (checkLogId.HasValue)
@@ -32,7 +32,7 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
                 var currentInst = GetCurrentInst();
                 //只要不是注册登记，那么就获取资料变更的审核状态
                 var checkLog = Core.CheckLogManager.GetLastLog(currentInst.ID, CheckType.Profile);
-                if (checkLog == null || checkLog.Result.HasValue)
+                if (type == "annualcheck")
                 {
                     var annualCheck = Core.AnnualCheckManager.GetIndateModel();
                     if (annualCheck != null)
@@ -65,7 +65,7 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
         //}
 
         [HttpPost]
-        public ActionResult Submit(InstitutionProfile data, bool isSubmit = false)
+        public ActionResult Submit(InstitutionProfile data, string type, bool isSubmit = false)
         {
             var inst = GetCurrentInst();
             try
@@ -87,12 +87,15 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
                         Mobile = shMobiles[i]
                     });
                 }
-
+            }
+            catch { }
+            try
+            {
                 var memberNames = Request.Form["member.Name"].Split(',');
                 var memberGenders = Request.Form["member.Gender"].Split(',');
                 var memberBirthdays = Request.Form["member.Birthday"].Split(',');
-                var membermemberares = Request.Form["member.memberares"].Split(',');
-                var memberMobiles = Request.Form["member.Mobile"].Split(',');
+                var memberPracticeNos = Request.Form["member.PracticeNo"].Split(',');
+                var memberMobiles = Request.Form["member.MobilePhone"].Split(',');
 
                 for (var i = 0; i < memberNames.Length; i++)
                 {
@@ -101,11 +104,14 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
                         Name = memberNames[i],
                         Gender = memberGenders[i],
                         Birthday = memberBirthdays[i],
-                        PracticeNo = membermemberares[i],
+                        PracticeNo = memberPracticeNos[i],
                         MobilePhone = memberMobiles[i]
                     });
                 }
-
+            }
+            catch { }
+            try
+            {
                 var equipmentNames = Request.Form["equipment.Name"].Split(',');
                 var equipmentNumbers = Request.Form["equipment.Number"].Split(',');
                 var equipmentModels = Request.Form["equipment.Model"].Split(',');
@@ -113,7 +119,7 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
                 for (var i = 0; i < equipmentNames.Length; i++)
                 {
                     var number = 0;
-                    int.TryParse(equipmentNames[i],out number);
+                    int.TryParse(equipmentNames[i], out number);
                     data.Equipments.Add(new Equipment
                     {
                         Name = equipmentNames[i],
@@ -127,7 +133,14 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
 
             if (isSubmit)
             {
-                Core.InstitutionManager.SubmitProfile(inst, data);
+                if (type == "annualcheck")
+                {
+                    Core.InstitutionManager.SubmitAnnaulCheck(inst, data);
+                }
+                else
+                {
+                    Core.InstitutionManager.SubmitProfile(inst, data);
+                }
             }
             else
             {

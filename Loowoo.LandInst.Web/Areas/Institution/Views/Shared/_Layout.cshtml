@@ -7,6 +7,13 @@
         Institution inst = ViewBag.CurrentInst;
     }
    <ul class="nav navbar-nav">
+       @if(inst.Status == InstitutionStatus.Registered)
+       {
+        <li><a href="/institution/"><i class="glyphicon glyphicon-home"></i>&nbsp;首页</a></li>
+        <li><a href="/institution/profile/edit?type=change"><i class="glyphicon glyphicon-list-alt"></i>&nbsp;资料变更</a></li>
+        <li><a href="/institution/profile/edit?type=annualcheck"><i class="glyphicon glyphicon-check"></i>&nbsp;申请年检</a></li>
+        <li><a href="/institution/profile/history"><i class="glyphicon glyphicon-time"></i>&nbsp;历史信息</a></li>
+       }
     </ul>
     <ul class="nav navbar-nav navbar-right">
         <li><a href="/user/signout">退出</a></li>
