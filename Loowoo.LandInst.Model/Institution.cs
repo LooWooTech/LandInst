@@ -26,9 +26,6 @@ namespace Loowoo.LandInst.Model
 
         public DateTime CreateTime { get; set; }
 
-        [Column(TypeName = "int")]
-        public InstitutionType Type { get; set; }
-
         /// <summary>
         /// 机构名称
         /// </summary>

@@ -17,8 +17,7 @@
 </form>
 <table class="table table-bordered">
     <tr>
-        <th style="width:120px;">用户名</th>
-        <th>会员姓名</th>
+        <th style="width:120px;">会员姓名</th>
         <th>继续教育名称</th>
         <th style="width:120px;">申请时间</th>
         <th style="width:120px;">审批状态</th>
@@ -30,8 +29,7 @@
             @*            <td>
                 <input type="checkbox" name="id" value="@(item.ID)" />
             </td>*@
-            <td><a href="/admin/member/profile?id=@(item.Member.UserID)&checkLogId=@(item.Member.ID)">@(item.Member.Username)</a></td>
-            <td>@(item.Member.RealName)</td>
+            <td><a href="/admin/member/profile?id=@(item.Member.UserID)&checkLogId=@(item.Member.ID)">@(item.Member.RealName)</a></td>
             <td>@(item.EduName)</td>
             <td>@(item.Member.CreateTime.ToShortDateString())</td>
             <td>

@@ -13,19 +13,12 @@
         <li class="active"><a href="#tab1" data-toggle="tab">基本资料</a></li>
         <li class=""><a href="#tab5" data-toggle="tab">机构成员</a></li>
         <li class=""><a href="#tab2" data-toggle="tab">股东</a></li>
-        @if (profile.Type == InstitutionType.土地规划)
-        { 
-            <li class=""><a href="#tab3" data-toggle="tab">主要技术装备</a></li>
-            <li class=""><a href="#tab6" data-toggle="tab">应用软件情况</a></li>
-        }
-        else
-        {
-            <li class=""><a href="#tab3" data-toggle="tab">仪器设备</a></li>
-        }
+        <li class=""><a href="#tab3" data-toggle="tab">主要技术装备</a></li>
+        <li class=""><a href="#tab6" data-toggle="tab">应用软件情况</a></li>
         <li class=""><a href="#tab4" data-toggle="tab">审批记录</a></li>
     </ul>
     <ul style="position: absolute; right: 10px; top: 0px;">
-        <a href="export?id=@(profile.ID)" class="btn btn-primary"><i class="glyphicon glyphicon-export"></i>导出资料</a>
+@*        <a href="export?id=@(profile.ID)" class="btn btn-primary"><i class="glyphicon glyphicon-export"></i>导出资料</a>*@
     </ul>
 </div>
 <div class="tab-content">

@@ -31,7 +31,6 @@ namespace Loowoo.LandInst.Model
 
         public void SetInstField(Institution inst)
         {
-            Type = inst.Type;
             Status = inst.Status;
             ID = inst.ID;
             CreateTime = inst.CreateTime;
@@ -88,6 +87,11 @@ namespace Loowoo.LandInst.Model
         /// 机构类型
         /// </summary>
         public string CompanyType { get; set; }
+
+        /// <summary>
+        /// 申请推荐类别
+        /// </summary>
+        public string CommendLevel { get; set; }
 
         /// <summary>
         /// 联系人

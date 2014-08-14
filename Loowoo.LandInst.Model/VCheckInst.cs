@@ -11,15 +11,11 @@ namespace Loowoo.LandInst.Model
     {
         public string InstName { get; set; }
 
-        public InstitutionType Type { get; set; }
-
         public InstitutionStatus Status { get; set; }
 
         public string City { get; set; }
 
         public string LegalPerson { get; set; }
-
-        public string MobilePhone { get; set; }
 
         public string RegistrationNo { get; set; }
     }

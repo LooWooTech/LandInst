@@ -21,7 +21,6 @@
         <tr>
             <th>姓名</th>
             <th>继续教育名称</th>
-            <th style="width: 150px;">手机</th>
             <th style="width: 120px;">申请日期</th>
             <th style="width: 100px;">审批状态</th>
         </tr>
@@ -32,7 +31,6 @@
             <tr>
                 <td><a href="/institution/member/profile?id=@(item.Member.UserID)">@(item.Member.RealName)</a></td>
                 <td>@(item.EduName)</td>
-                <td>@item.Member.MobilePhone</td>
                 <td>@(item.Member.UpdateTime.HasValue ? item.Member.UpdateTime.Value.ToShortDateString() : null)</td>
                 <td>
                     @if (item.Member.Result.HasValue)

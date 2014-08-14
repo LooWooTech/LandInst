@@ -87,27 +87,44 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
                         Mobile = shMobiles[i]
                     });
                 }
-            }
-            catch
-            {
-            }
 
-            try
-            {
                 var equipmentNames = Request.Form["equipment.Name"].Split(',');
                 var equipmentNumbers = Request.Form["equipment.Number"].Split(',');
                 var equipmentModels = Request.Form["equipment.Model"].Split(',');
                 var equipmentManufacturers = Request.Form["equipment.Manufacturer"].Split(',');
+                var equipmentPerformances = Request.Form["equipment.Performance"].Split(',');
+                var equipmentNotes = Request.Form["equipment.Note"].Split(',');
                 for (var i = 0; i < equipmentNames.Length; i++)
                 {
                     var number = 0;
-                    int.TryParse(equipmentNames[i],out number);
+                    int.TryParse(equipmentNames[i], out number);
                     data.Equipments.Add(new Equipment
                     {
                         Name = equipmentNames[i],
                         Number = number,
                         Model = equipmentModels[i],
-                        Manufacturer = equipmentManufacturers[i]
+                        Manufacturer = equipmentManufacturers[i],
+                        Performance = equipmentPerformances[i],
+                        Note = equipmentNotes[i]
+                    });
+                }
+
+                var softwareNames = Request.Form["software.Name"].Split(',');
+                var softwareNumbers = Request.Form["software.Number"].Split(',');
+                var softwareSources = Request.Form["software.Model"].Split(',');
+                var softwarePurposes = Request.Form["software.Purpose"].Split(',');
+                var softwareNotes = Request.Form["software.Note"].Split(',');
+                for (var i = 0; i < softwareNames.Length; i++)
+                {
+                    var number = 0;
+                    int.TryParse(softwareNames[i], out number);
+                    data.Softwares.Add(new Software
+                    {
+                        Name = softwareNames[i],
+                        Number = number,
+                        Source = softwareSources[i],
+                        Purpose = softwarePurposes[i],
+                        Note = softwareNotes[i]
                     });
                 }
             }

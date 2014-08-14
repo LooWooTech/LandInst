@@ -61,23 +61,85 @@
             @if (!isRegister)
             {
                 <li class=""><a href="#profile-sharehoder" data-toggle="tab"><i class="glyphicon glyphicon-user"></i>&nbsp;股东</a></li>
-                <li class=""><a href="#profile-equipment" data-toggle="tab"><i class="glyphicon glyphicon-cog"></i>&nbsp;仪器设备</a></li>
-                <li class=""><a href="#profile-software" data-toggle="tab"><i class="glyphicon glyphicon-floppy-disk"></i>&nbsp;应用软件</a></li>
+                <li class=""><a href="#profile-equipment" data-toggle="tab"><i class="glyphicon glyphicon-cog"></i>&nbsp;主要技术设备</a></li>
+                <li class=""><a href="#profile-software" data-toggle="tab"><i class="glyphicon glyphicon-floppy-disk"></i>&nbsp;应用软件情况</a></li>
             }
         </ul>
-        @if(disabled){
-        <ul style="position: absolute; right: 10px; top: 0px;">
-            <a href="export?id=@(inst.ID)" class="btn btn-primary"><i class="glyphicon glyphicon-export"></i>导出资料</a>
-        </ul>
+        @if (disabled)
+        {
+            <ul style="position: absolute; right: 10px; top: 0px;">
+                <a href="export?id=@(inst.ID)" class="btn btn-primary"><i class="glyphicon glyphicon-export"></i>导出资料</a>
+            </ul>
         }
     </div>
     <div class="tab-content">
         <div class="tab-pane fade active in" id="profile-basic">
             <table class="table table-bordered">
                 <tr>
-                    <th style="width: 120px;">机构全称</th>
-                    <td colspan="3">
+                    <th style="width: 200px;">机构全称</th>
+                    <td>
                         <input type="text" name="Name" class="form-control input-sm" value="@(model.Name)" />
+                    </td>
+                    <th style="width: 250px;">机构性质</th>
+                    <td>
+                        <input type="text" name="CompanyType" class="form-control input-sm" value="@(model.CompanyType)" />
+                    </td>
+                </tr>
+                <tr>
+                    <th>法人代表</th>
+                    <td>
+                        <input type="text" name="LegalPerson" class="form-control input-sm" value="@(model.LegalPerson)" />
+                    </td>
+                    <th>技术负责人</th>
+                    <td>
+                        <input type="text" name="TechLeader" class="form-control input-sm" value="@(model.TechLeader)" />
+                    </td>
+                    @*                    *@
+                </tr>
+                <tr>
+                    <th>成立日期</th>
+                    <td>
+                        <input type="text" name="EstablishedDate" class="form-control input-sm datepicker" value="@(model.EstablishedDate.HasValue ? model.EstablishedDate.Value.ToShortDateString() : null)" />
+                    </td>
+                    <th>企业法人营业执照注册号或事业单位法人证书登记号</th>
+                    <td>
+                        <input type="text" name="LegalpersonNo" class="form-control input-sm" value="@(model.LegalpersonNo)" />
+                    </td>
+                </tr>
+                <tr>
+                    <th>工商登记号</th>
+                    <td>
+                        <input type="text" name="RegistrationNo" class="form-control input-sm" value="@(model.RegistrationNo)" />
+                    </td>
+                    <th>税务登记号</th>
+                    <td>
+                        <input type="text" name="TaxRegistryNo" class="form-control input-sm" value="@(model.TaxRegistryNo)" />
+                    </td>
+                </tr>
+                <tr>
+                    <th>工商登记机关</th>
+                    <td>
+                        <input type="text" name="RegistrationInstitution" class="form-control input-sm" value="@(model.RegistrationInstitution)" />
+                    </td>
+                    <th>注册资金（万元）</th>
+                    <td>
+                        <input type="text" name="RegisteredCapital" class="form-control input-sm" value="@(model.RegisteredCapital)" maxlength="6" />
+                    </td>
+                </tr>
+                <tr>
+                    <th>机构当年在职职工总数（人）</th>
+                    <td>
+                        <input type="text" name="TotalMembers" class="form-control input-sm" value="@(model.TotalMembers)" />
+                    </td>
+                    <th>从事土地规划工作人员总数（人）</th>
+                    <td>
+                        <input type="text" name="ProMembers" class="form-control input-sm" value="@(model.ProMembers)" />
+                    </td>
+                </tr>
+                <tr>
+                    <th>从事土地规划工作办公用房面积（平方）</th>
+                    <td>
+                        <input type="text" name="OfficeArea" class="form-control input-sm" value="@(model.OfficeArea)" />
                     </td>
                     <th>所在城市</th>
                     <td>
@@ -90,97 +152,27 @@
                     </td>
                 </tr>
                 <tr>
-                    <th>法人代表</th>
-                    <td>
-                        <input type="text" name="LegalPerson" class="form-control input-sm" value="@(model.LegalPerson)" />
-                    </td>
-                    <th>法人代码</th>
-                    <td>
-                        <input type="text" name="LegalpersonNo" class="form-control input-sm" value="@(model.LegalpersonNo)" />
-                    </td>
-                    <th>机构性质</th>
-                    <td>
-                        <input type="text" name="CompanyType" class="form-control input-sm" value="@(model.CompanyType)" />
-                    </td>
-                </tr>
-                <tr>
-                    <th>工商登记号</th>
-                    <td>
-                        <input type="text" name="RegistrationNo" class="form-control input-sm" value="@(model.RegistrationNo)" />
-                    </td>
-                    <th>税务登记号</th>
-                    <td style="width: 200px;">
-                        <input type="text" name="TaxRegistryNo" class="form-control input-sm" value="@(model.TaxRegistryNo)" />
-                    </td>
-                    <th style="width: 180px;">注册资金（万元）</th>
-                    <td>
-                        <input type="text" name="RegisteredCapital" class="form-control input-sm" value="@(model.RegisteredCapital)" maxlength="6" />
-                    </td>
-                </tr>
-                <tr>
-                    <th>成立日期</th>
-                    <td>
-                        <input type="text" name="EstablishedDate" class="form-control input-sm datepicker" value="@(model.EstablishedDate.HasValue ? model.EstablishedDate.Value.ToShortDateString() : null)" />
-                    </td>
-                    <th>营业期限</th>
-                    <td>
-                        <input type="text" name="OperatingPeriod" class="form-control input-sm" value="@(model.OperatingPeriod)" />
-                    </td>
-                    <th>工商登记机关</th>
-                    <td>
-                        <input type="text" name="RegistrationInstitution" class="form-control input-sm" value="@(model.RegistrationInstitution)" />
-                    </td>
-                </tr>
-                <tr>
-                    <th>机构总人数</th>
-                    <td>
-                        <input type="text" name="TotalMembers" class="form-control input-sm" value="@(model.TotalMembers)" />
-                    </td>
-                    <th>其中专业人员数</th>
-                    <td>
-                        <input type="text" name="ProMembers" class="form-control input-sm" value="@(model.ProMembers)" />
-                    </td>
-                    <th>中级及以上专业人员数</th>
-                    <td>
-                        <input type="text" name="ExpertMembers" class="form-control input-sm" value="@(model.ExpertMembers)" />
-                    </td>
-                </tr>
-                <tr>
-                    <th>执业注册号</th>
-                    <td>
-                        <input type="text" name="PracticeRegistrationNo" class="form-control input-sm" value="@(model.PracticeRegistrationNo)" />
-                    </td>
-                    <th>团体会员证号</th>
-                    <td>
-                        <input type="text" name="CorporateMemberNo" class="form-control input-sm" value="@(model.CorporateMemberNo)" />
-                    </td>
-                    <th>是否有测绘许可证书</th>
-                    <td>
-                        <label><input type="radio" name="HasExequatur" value="true" @(model.HasExequatur ? "checked=checked" : null) />是</label>&nbsp;&nbsp;&nbsp;&nbsp;
-                    <label><input type="radio" name="HasExequatur" value="false"  @(!model.HasExequatur ? "checked=checked" : null)/>否</label>
-                    </td>
-                </tr>
-                <tr>
-                    <th>经营范围</th>
+                    <th>申请推荐类别</th>
                     <td colspan="3">
-                        <input type="text" name="BusinessScope" class="form-control input-sm" value="@(model.BusinessScope)" />
-                        @*                <select name="BusinessScope" class="form-control input-sm">
-                    <option @(model.BusinessScope == "全国范围" ? "select=select" : null)>全国范围</option>
-                    <option @(model.BusinessScope == "省范围" ? "select=select" : null)>省范围</option>
-                    <option @(model.BusinessScope == "市范围" ? "select=select" : null)>市范围</option>
-                </select>*@
-                    </td>
-                    <th>证书级别</th>
-                    <td>
-                        <input type="text" name="ExequaturLevel" class="form-control input-sm" value="@(model.ExequaturLevel)" />
+                        <label><input type="radio" name="CommendLevel" value="true" @(model.CommendLevel == "甲级" ? "checked=checked" : null) />甲级</label>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <label><input type="radio" name="CommendLevel" value="false"  @(model.CommendLevel == "乙级" ? "checked=checked" : null)/>乙级</label>
                     </td>
                 </tr>
+
             </table>
         </div>
         <div class="tab-pane fade" id="profile-contact">
             <table class="table table-bordered" id="profile-contact">
                 <tr>
-                    <th style="width: 120px;">手机</th>
+                    <th style="width: 120px;">联系人</th>
+                    <td>
+                        <input type="text" name="ContactPerson" class="form-control input-sm" value="@(model.ContactPerson)" />
+                    </td>
+                     <th style="width: 120px;">联系电话</th>
+                    <td>
+                        <input type="text" name="Tel" class="form-control input-sm" value="@(model.Tel)" />
+                    </td>
+                   <th style="width: 120px;">手机</th>
                     <td>
                         <input type="text" name="MobilePhone" class="form-control input-sm" value="@(model.MobilePhone)" />
                     </td>
@@ -188,14 +180,10 @@
                     <td>
                         <input type="text" name="Fax" class="form-control input-sm" value="@(model.Fax)" />
                     </td>
-                    <th>联系电话</th>
-                    <td>
-                        <input type="text" name="Tel" class="form-control input-sm" value="@(model.Tel)" />
-                    </td>
                 </tr>
                 <tr>
-                    <th>公司地址</th>
-                    <td colspan="3">
+                    <th>办公地址</th>
+                    <td colspan="5">
                         <input type="text" name="Address" class="form-control input-sm" value="@(model.Address)" />
                     </td>
                     <th>邮政编码</th>
@@ -204,8 +192,8 @@
                     </td>
                 </tr>
                 <tr>
-                    <th>联系地址</th>
-                    <td colspan="3">
+                    <th>通讯地址</th>
+                    <td colspan="5">
                         <input type="text" name="Address1" class="form-control input-sm" value="@(model.Address1)" />
                     </td>
                     <th>邮政编码</th>
@@ -215,13 +203,11 @@
                 </tr>
                 <tr>
                     <th>电子邮箱</th>
-                    <td colspan="5">
+                    <td colspan="3">
                         <input type="text" name="Email" class="form-control input-sm" value="@(model.Email)" />
                     </td>
-                </tr>
-                <tr>
                     <th>公司网站</th>
-                    <td colspan="5">
+                    <td colspan="3">
                         <input type="text" name="Website" class="form-control input-sm" value="@(model.Website)" />
                     </td>
                 </tr>
@@ -285,11 +271,12 @@
                 <table class="table table-bordered">
                     <thead>
                         <tr>
-                            <th>仪器设备名称</th>
-                            <th style="width: 60px;">数量</th>
+                            <th>名称</th>
                             <th style="width: 120px;">型号/规格</th>
-                            <th style="width: 200px;">生产厂商</th>
-                            <th style="width: 150px;">性能</th>
+                            <th style="width: 60px;">数量</th>
+                            <th style="display:none;">生产厂商</th>
+                            <th style="width: 150px;">主要性能</th>
+                            <th>备注</th>
                             <th style="width: 70px;">
                                 <button id="btn-add-equipment" class="btn btn-xs btn-primary">添加</button></th>
                         </tr>
@@ -302,16 +289,19 @@
                                     <input type="text" name="equipment.Name"  value="@(item.Name)" class="form-control input-sm"/>
                                 </td>
                                 <td>
-                                    <input type="text" name="equipment.Number"  value="@(item.Number.HasValue && item.Number.Value > 0 ? item.Number.Value.ToString() : "")" class="form-control input-sm"/>
-                                </td>
-                                <td>
                                     <input type="text" name="equipment.Model"  value="@(item.Model)" class="form-control input-sm"/>
                                 </td>
                                 <td>
+                                    <input type="text" name="equipment.Number"  value="@(item.Number.HasValue && item.Number.Value > 0 ? item.Number.Value.ToString() : "")" class="form-control input-sm"/>
+                                </td>
+                                <td style="display:none;">
                                     <input type="text" name="equipment.Manufacturer"  value="@(item.Manufacturer)" class="form-control input-sm"/>
                                 </td>
                                 <td>
                                     <input type="text" name="equipment.Performance"  value="@(item.Performance)" class="form-control input-sm"/>
+                                </td>
+                                <td>
+                                    <input type="text" name="equipment.Note"  value="@(item.Note)" class="form-control input-sm"/>
                                 </td>
                                 <td>
                                     <a class="btn btn-xs btn-warning btn-delete">删除</a>
@@ -329,7 +319,8 @@
                             <th style="width: 60px;">数量</th>
                             <th style="width: 120px;">来源</th>
                             <th style="width: 200px;">用途</th>
-                            <th style="width: 70px;">
+                                         <th>备注</th>
+               <th style="width: 70px;">
                                 <button id="btn-add-software" class="btn btn-xs btn-primary">添加</button></th>
                         </tr>
                     </thead>
@@ -349,7 +340,10 @@
                                 <td>
                                     <input type="text" name="software.Purpose"  value="@(item.Purpose)" class="form-control input-sm"/>
                                 </td>
-                                <td>
+                                 <td>
+                                    <input type="text" name="equipment.Note"  value="@(item.Note)" class="form-control input-sm"/>
+                                </td>
+                               <td>
                                     <a class="btn btn-xs btn-warning btn-delete">删除</a>
                                 </td>
                             </tr>
