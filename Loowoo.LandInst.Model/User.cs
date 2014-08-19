@@ -38,6 +38,10 @@ namespace Loowoo.LandInst.Model
         public UserRole Role { get; set; }
 
         public bool Deleted { get; set; }
+
+        public string LastLoginIP { get; set; }
+
+        public int LoginTimes { get; set; }
     }
 
     public enum UserRole

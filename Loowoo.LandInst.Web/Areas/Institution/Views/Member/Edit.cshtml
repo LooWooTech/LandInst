@@ -1,0 +1,7 @@
+﻿@using Loowoo.LandInst.Model
+@{
+    var id = Request.QueryString["id"];
+    ViewBag.Title = string.IsNullOrEmpty(id) ? "新增会员" : "修改资料";
+    Layout = "~/Areas/Institution/Views/Shared/_Layout.cshtml";
+    Html.RenderPartial("_ProfileForm");
+}

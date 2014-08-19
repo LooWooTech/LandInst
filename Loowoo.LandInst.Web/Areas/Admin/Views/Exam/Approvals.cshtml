@@ -1,12 +1,12 @@
 ﻿@using Loowoo.LandInst.Common
 @using Loowoo.LandInst.Model
 @{
-    ViewBag.Title = "报名考试审批";
+    ViewBag.Title = "报名考试审核";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
     List<VCheckExam> list = ViewBag.List;
     List<Exam> exams = ViewBag.Exams;
+    var hasCheck = Request.QueryString["hasCheck"];
 }
-
 
 <form class="form-inline search-form">
     <div class="col-lg-8">
@@ -21,11 +21,16 @@
                         <option value="@(exam.ID)" @(Html.Raw(exam.ID.ToString() == Request.QueryString["examId"] ? " selected=\"selected\"" : null))>@(exam.Name)</option>
                     }
                 </select>
+                <select name="hasCheck" class="form-control">
+                    <option value="false" @(hasCheck == "false" ? "selected=selected" : "")>未审核</option>
+                    <option value="" @(string.IsNullOrEmpty(hasCheck) ? "selected=selected" : "")>全部</option>
+                    <option value="true" @(hasCheck == "true" ? "selected=selected" : "")>已审核</option>
+                </select>
             </div>
             <div class="input-group-btn">
                 <button type="submit" class="btn btn-primary"><i class="glyphicon glyphicon-search"></i>查询</button>
-                <input type="button" id="btn-agree" class="btn btn-success" value="批量审批" />
-                <input type="button" id="btn-disagree" class="btn btn-warning" value="批量不通过" />
+                <input type="button" id="btn-agree" class="btn btn-success" value="批量审核" />
+                <input type="button" id="btn-disagree" class="btn btn-danger" value="批量不通过" />
             </div>
         </div>
     </div>
@@ -36,25 +41,27 @@
             <input id="btn-select" type="checkbox" /></th>
         <th>姓名</th>
         <th>考试名称</th>
+        <th>报考科目</th>
         <th style="width: 120px;">报名日期</th>
         <th style="width: 120px;">审核日期</th>
-        <th style="width: 80px;">审批状态</th>
+        <th style="width: 80px;">审核状态</th>
     </tr>
     @foreach (var item in list)
     { 
         <tr>
             <td>
-                <input type="checkbox" name="id" value="@(item.Member.ID)" />
+                <input type="checkbox" name="id" value="@(item.ID)" />
             </td>
-            <td><a href="/admin/member/profile?id=@(item.Member.UserID)&checkLogId=@(item.Member.ID)">@(item.Member.RealName)</a></td>
+            <td><a href="/admin/member/profile?id=@(item.MemberID)&checkLogId=@(item.ID)">@(item.VCheck.RealName)</a></td>
             <td>@(item.ExamName)</td>
-            <td>@(item.Member.CreateTime.ToShortDateString())</td>
-            <td>@(item.Member.UpdateTime.HasValue ? item.Member.UpdateTime.Value.ToShortDateString() : "")
+            <td>@(item.Subjects)</td>
+            <td>@(item.VCheck.CreateTime.ToShortDateString())</td>
+            <td>@(item.VCheck.UpdateTime.HasValue ? item.VCheck.UpdateTime.Value.ToShortDateString() : "")
             </td>
             <td>
-                @if (item.Member.Result.HasValue)
+                @if (item.VCheck.Result.HasValue)
                 {
-                    if (item.Member.Result.Value)
+                    if (item.VCheck.Result.Value)
                     { 
                     <span class="label label-success">已通过</span>
                     }
@@ -65,17 +72,10 @@
                 }
                 else
                 {
-                    <span class="label label-default">尚未审批</span>
+                    <span class="label label-default">尚未审核</span>
                 }
 
             </td>
-            @*            <td>
-                @if (!item.Member.Result.HasValue)
-                { 
-                    <a href="/admin/exam/approval?id=@(item.Member.ID)&result=true" class="btn btn-xs btn-approval btn-success">通过</a>
-                    <a href="/admin/exam/approval?id=@(item.Member.ID)&result=false" class="btn btn-xs btn-approval btn-warning">不通过</a>
-                }
-            </td>*@
         </tr>
     }
     <tr>
@@ -87,14 +87,14 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <h4 class="modal-title">审批意见</h4>
+                <h4 class="modal-title">审核意见</h4>
             </div>
             <div class="modal-body">
                 <input type="hidden" id="hidResult" />
                 <textarea name="Note" id="txtNote" rows="4" style="width:100%;" ></textarea>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" id="btnApproval">确认审批</button>
+                <button type="button" class="btn btn-primary" id="btnApproval">确认审核</button>
             </div>
         </div>
     </div>
@@ -118,7 +118,7 @@
         $("#btn-agree").click(function () {
             var ids = getIds();
             if (ids.length == 0) {
-                alert("请先选择需要审批的用户");
+                alert("请先选择需要审核的用户");
                 return false;
             }
             $("#hidResult").val(true);
@@ -129,7 +129,7 @@
         $("#btn-disagree").click(function () {
             var ids = getIds();
             if (ids.length == 0) {
-                alert("请先选择需要审批的用户");
+                alert("请先选择需要审核的用户");
                 return false;
             }
             $("#hidResult").val(false);

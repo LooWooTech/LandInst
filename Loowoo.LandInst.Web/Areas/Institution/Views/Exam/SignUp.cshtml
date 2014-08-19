@@ -1,0 +1,82 @@
+﻿@using Loowoo.LandInst.Model
+@{
+    Layout = "~/Areas/Institution/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "报名考试";
+    Exam exam = ViewBag.Exam;
+    if (exam == null)
+    {
+    <div class="alert alert-warning">
+        暂无考试信息，请等待下一次考试。
+        <a href="@(Request.UrlReferrer.ToString())" class="btn btn-default">返回</a>
+    </div>
+        return;
+    }
+    ExamResult examResult = ViewBag.ExamResult;
+    CheckLog approval = ViewBag.CheckLog;
+    MemberProfile member = ViewBag.MemberProfile;
+    List<ExamSubject> subjects = ViewBag.Subjects;
+    List<ExamSubject> signedSubjects = ViewBag.SignedSubjects;
+    var canSignUp = signedSubjects == null || signedSubjects.Count < subjects.Count;
+}
+@if (examResult != null)
+{
+    
+    <div class="well">
+        该会员已于@(examResult.CreateTime.ToString())提交报名考试，报名科目包括“@(examResult.Subjects)”，
+    </div>
+}
+@Html.Partial("_MemberProfile", member)
+<legend>考试信息</legend>
+<form id="exam-form" role="form" class="form-horizontal" method="post">
+    <table class="table table-bordered">
+        <tr>
+            <th>考试名称</th>
+            <td>@(exam.Name)</td>
+            <th>考试地点</th>
+            <td>@(exam.Address)</td>
+        </tr>
+        <tr>
+            <th>报名时间</th>
+            <td>@(exam.StartSignDate.ToShortDateString()) ~ @(exam.EndSignDate.ToShortDateString())</td>
+            <th>考试时间</th>
+            <td>@(exam.StartExamDate.ToShortDateString()) ~ @(exam.EndExamDate.ToShortDateString())</td>
+        </tr>
+        <tr>
+            <th>考试科目</th>
+            <td colspan="3">
+                @foreach (var subject in subjects)
+                {
+                    var signed = signedSubjects != null && signedSubjects.Any(e => e.Name == subject.Name);
+                    <div class="checkbox checkbox-inline">
+                        <label><input type="checkbox" name="Subjects" value="@(subject.Name)" @(signed ? "checked=checked readonly=readonly" : null) />@(subject.Name)</label>
+                    </div>
+                }
+
+            </td>
+        </tr>
+
+    </table>
+
+    @if (canSignUp)
+    { 
+        <button type="submit" class="btn btn-primary">提交报名</button>
+    }
+
+</form>
+@if (canSignUp)
+{
+    <script>
+        $(function () {
+            $("#exam-form").submit(function () {
+                var data = $(this).serialize();
+
+                $.request("/institution/exam/signup?memberId=@(member.ID)&examId=@(exam.ID)", data, function (json) {
+                alert("申请报名成功，等待管理员审核");
+                window.location.href = "/institution/exam/";
+            });
+            return false;
+        });
+
+    });
+    </script>
+}

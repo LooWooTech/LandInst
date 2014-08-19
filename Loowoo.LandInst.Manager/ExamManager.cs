@@ -28,47 +28,25 @@ namespace Loowoo.LandInst.Manager
             });
         }
 
-        public Exam GetIndateExams()
+        public Exam GetIndateExam()
         {
             var now = DateTime.Now;
-            return GetExams().Where(e => e.StartSignDate <= now && e.EndSignDate >= now).OrderByDescending(e=>e.ID).FirstOrDefault();//.ToList();
+            return GetExams().Where(e => e.StartSignDate <= now && e.EndSignDate >= now).OrderByDescending(e => e.ID).FirstOrDefault();//.ToList();
         }
 
-        public ExamResult GetExamResult(int examResultId)
-        {
-            using (var db = GetDataContext())
-            {
-                return db.ExamResults.FirstOrDefault(e => e.ID == examResultId);
-            }
-        }
+        //public ExamResult GetExamResult(int examResultId)
+        //{
+        //    using (var db = GetDataContext())
+        //    {
+        //        return db.ExamResults.FirstOrDefault(e => e.ID == examResultId);
+        //    }
+        //}
 
         public ExamResult GetExamResult(int examId, int memberId)
         {
             using (var db = GetDataContext())
             {
                 return db.ExamResults.FirstOrDefault(e => e.ExamID == examId && e.MemberID == memberId);
-            }
-        }
-
-        public ExamResult GetExamResult(CheckLog checkLog)
-        {
-            if (checkLog == null)
-            {
-                throw new ArgumentException("没有申请考试报名");
-            }
-
-            using (var db = GetDataContext())
-            {
-                var entity = db.ExamResults.FirstOrDefault(e => e.ExamID == checkLog.InfoID && e.MemberID == checkLog.UserID);
-                if (entity == null)
-                {
-                    AddExamResult(checkLog.InfoID, checkLog.UserID);
-                    return GetExamResult(checkLog);
-                }
-                else
-                {
-                    return entity;
-                }
             }
         }
 
@@ -113,7 +91,7 @@ namespace Loowoo.LandInst.Manager
             }
         }
 
-        private void AddExamResult(int examId, int memberId)
+        private void SaveExamResult(int examId, int memberId, string subjectNames)
         {
             using (var db = GetDataContext())
             {
@@ -124,24 +102,29 @@ namespace Loowoo.LandInst.Manager
                     {
                         ExamID = examId,
                         MemberID = memberId,
+                        Subjects = subjectNames
                     });
-                    db.SaveChanges();
                 }
+                else
+                {
+                    var subjects = entity.Subjects + "," + subjectNames;
+                    var names = subjects.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).GroupBy(name => name).Select(g => g.Key);
+                    entity.Subjects = string.Join(",", names);
+                }
+                db.SaveChanges();
             }
         }
 
-        public void SignupExam(int examId, int memberId)
+
+
+        public void SubmitExam(int examId, int memberId, string subjectNames)
         {
-            var checkLog = Core.CheckLogManager.GetLastLog(memberId, CheckType.Exam);
-            if (checkLog == null || checkLog.Result == false)
+            if (string.IsNullOrEmpty(subjectNames))
             {
-                Core.CheckLogManager.AddCheckLog(examId, memberId, CheckType.Exam);
-                AddExamResult(examId, memberId);
+                throw new ArgumentNullException("没有选择报考科目");
             }
-            else
-            {
-                AddExamResult(examId, memberId);
-            }
+
+            Core.CheckLogManager.AddCheckLog(examId, memberId, CheckType.Exam, subjectNames);
         }
 
         public void Delete(int id)
@@ -163,83 +146,108 @@ namespace Loowoo.LandInst.Manager
             return exam == null ? null : exam.Name;
         }
 
-        public List<VCheckExam> GetVCheckExams(CheckLogFilter filter)
+        public List<VExamResult> GetVExamResults(MemberFilter filter)
+        {
+            using (var db = GetDataContext())
+            {
+                var query = db.VExamResults.AsQueryable();
+                if (!string.IsNullOrEmpty(filter.Keyword))
+                {
+                    query = query.Where(e => e.RealName.Contains(filter.Keyword));
+                }
+                if (filter.InstID.HasValue && filter.InstID.Value > 0)
+                {
+                    query = query.Where(e => e.InstitutionID == filter.InstID.Value);
+                }
+
+                if (filter.InfoID.HasValue && filter.InfoID.Value > 0)
+                {
+                    query = query.Where(e => e.ExamID == filter.InfoID.Value);
+                }
+
+                var list = query.OrderByDescending(e => e.ID).SetPage(filter.Page).ToList();
+                foreach (var item in list)
+                {
+                    item.Exam = GetExam(item.ExamID);
+                }
+
+                return list;
+            }
+        }
+
+        public List<VCheckExam> GetVCheckExams(MemberFilter filter)
         {
             using (var db = GetDataContext())
             {
                 filter.Type = CheckType.Exam;
-                var query = Core.MemberManager.GetVCheckMembers(db.VCheckMembers, filter);
-                var vlist = query.OrderByDescending(e => e.ID).SetPage(filter.Page).ToList();
-                return vlist.Select(e => new VCheckExam
+                return Core.MemberManager.GetVCheckMembers(filter).Select(e => new VCheckExam
                 {
-                    ExamID = e.InfoID,
                     ExamName = GetExamName(e.InfoID),
-                    Member = e
+                    VCheck = e
                 }).ToList();
             }
         }
 
-        //public void UpdateExamResult(ExamResult model)
-        //{
-        //    using (var db = GetDataContext())
-        //    {
-        //        var entity = db.ExamResults.FirstOrDefault(e => e.ExamID == model.ID);
-        //        entity.Result = model.Result;
-        //        entity.Note = model.Note;
-        //        entity.UpdateTime = DateTime.Now;
-        //        db.SaveChanges();
-        //    }
-        //}
-
-        public void UpdateExamResult(CheckLog checkLog, ExamResult model)
+        private string _subjectsCache = "subjects";
+        public List<ExamSubject> GetSubjects()
         {
-            using (var db = GetDataContext())
+            return CacheHelper.GetOrSet(_subjectsCache, () =>
             {
-                var entity = db.ExamResults.FirstOrDefault(e => e.ExamID == checkLog.InfoID && e.MemberID == checkLog.UserID);
-                entity.Result = model.Result;
-                entity.Note = model.Note;
-                entity.UpdateTime = DateTime.Now;
-
-                db.SaveChanges();
-
-                if (checkLog.Result == null)
+                using (var db = GetDataContext())
                 {
-                    checkLog.Result = entity.Result;
-                    Core.CheckLogManager.UpdateCheckLog(checkLog);
+                    return db.Subjects.ToList();
                 }
-
-                if (model.Result == true)
-                {
-                    Core.MemberManager.UpdateMemberStatus(model.MemberID, MemberStatus.Member);
-                }
-                else
-                {
-                    Core.MemberManager.UpdateMemberStatus(model.MemberID, MemberStatus.Registered);
-                }
-            }
+            });
         }
 
-        public void UpdateExamResult(int examId, int memberId, bool result)
+        public ExamSubject GetSubject(int subjectId)
+        {
+            return GetSubjects().FirstOrDefault(e => e.ID == subjectId);
+        }
+
+        public ExamSubject GetSubject(string name)
+        {
+            return GetSubjects().FirstOrDefault(e => e.Name == name);
+        }
+
+        public string GetSubjectName(int subjectId)
+        {
+            var subject = GetSubject(subjectId);
+            return subject == null ? null : subject.Name;
+        }
+
+        public int SaveSubject(string name, int totalScore)
         {
             using (var db = GetDataContext())
             {
-                var entity = db.ExamResults.FirstOrDefault(e => e.ExamID == examId && e.MemberID == memberId);
+                var entity = db.Subjects.FirstOrDefault(e => e.Name == name);
                 if (entity != null)
                 {
-                    entity.Result = result;
+                    entity.TotalScore = totalScore;
                 }
                 else
                 {
-                    db.ExamResults.Add(new ExamResult
-                    {
-                        ExamID = examId,
-                        MemberID = memberId,
-                        Result = result
-                    });
+                    entity = new ExamSubject { Name = name, TotalScore = totalScore };
+                    db.Subjects.Add(entity);
                 }
                 db.SaveChanges();
+                CacheHelper.Remove(_subjectsCache);
+                return entity.ID;
             }
         }
+
+        public void DeleteSubject(int subjectId)
+        {
+            using (var db = GetDataContext())
+            {
+                var entity = db.Subjects.FirstOrDefault(e => e.ID == subjectId);
+                db.Subjects.Remove(entity);
+                db.SaveChanges();
+                CacheHelper.Remove(_subjectsCache);
+            }
+        }
+
+
 
         public void Approval(int approvalId, bool result)
         {
@@ -250,12 +258,58 @@ namespace Loowoo.LandInst.Manager
             if (checkLog.Result.HasValue) return;
 
             checkLog.Result = result;
+
             Core.CheckLogManager.UpdateCheckLog(checkLog);
 
             if (result)
             {
-                Core.MemberManager.UpdateMemberStatus(checkLog.UserID, MemberStatus.Member);
+                Core.MemberManager.UpdateMemberStatus(checkLog.UserID, MemberStatus.Registered);
+                //Add ExamResult
+                Core.ExamManager.SaveExamResult(checkLog.InfoID, checkLog.UserID, checkLog.Data);
             }
         }
+
+        public void ImportExamResult(ExamResult model)
+        {
+            using (var db = GetDataContext())
+            {
+                var entity = db.ExamResults.FirstOrDefault(e => e.MemberID == model.MemberID && e.ExamID == model.ExamID);
+                if (entity == null)
+                {
+                    entity = new ExamResult
+                    {
+                        ExamID = model.ExamID,
+                        MemberID = model.MemberID,
+                        Subjects = model.Subjects,
+                        CreateTime = model.CreateTime == DateTime.MinValue ? DateTime.Now : model.CreateTime,
+                        UpdateTime = DateTime.Now,
+                        Scores = model.Scores
+                    };
+                    db.ExamResults.Add(entity);
+                }
+                else
+                {
+                    entity.Subjects = model.Subjects;
+                    entity.Scores = model.Scores;
+                    entity.UpdateTime = DateTime.Now;
+                }
+                db.SaveChanges();
+            }
+        }
+
+        public void UpdateExamScores(int memberId, int examId, string scores)
+        {
+            using (var db = GetDataContext())
+            {
+                var entity = db.ExamResults.FirstOrDefault(e => e.MemberID == memberId && e.ExamID == examId);
+                if (entity != null)
+                {
+                    entity.UpdateTime = DateTime.Now;
+                    entity.Scores = scores;
+                    db.SaveChanges();
+                }
+            }
+        }
+
     }
 }

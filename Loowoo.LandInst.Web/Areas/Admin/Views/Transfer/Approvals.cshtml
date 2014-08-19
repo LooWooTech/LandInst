@@ -1,7 +1,7 @@
 ﻿@using Loowoo.LandInst.Model
 @using Loowoo.LandInst.Common
 @{
-    ViewBag.Title = "会员机构转移审批";
+    ViewBag.Title = "会员机构转移审核";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
     List<VCheckTransfer> list = ViewBag.List;
     var type = Request.QueryString["type"] ?? "";
@@ -35,7 +35,7 @@
         <th>所属机构</th>
         <th>目标机构</th>
         <th style="width:120px">申请日期</th>
-        <th style="width:100px">审批状态</th>
+        <th style="width:100px">审核状态</th>
     </tr>
     @foreach (var item in list)
     { 
@@ -59,7 +59,7 @@
                 }
                 else
                 {
-                    <span class="label label-default">未审批</span>
+                    <span class="label label-default">未审核</span>
                 }
             </td>
         </tr>

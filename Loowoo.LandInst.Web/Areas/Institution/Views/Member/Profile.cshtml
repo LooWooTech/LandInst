@@ -4,7 +4,7 @@
     Institution inst = ViewBag.Institution;
     MemberProfile profile = ViewBag.Profile ?? new MemberProfile();
     PracticeInfo practice = ViewBag.Practice ?? new PracticeInfo();
-    List<ExamResult> examResults = ViewBag.ExamResults;
+    List<VExamResult> examResults = ViewBag.ExamResults;
     List<Education> educations = ViewBag.Educations;
     ViewBag.Title = profile.RealName + "用户资料";
     Layout = "~/Areas/Institution/Views/Shared/_Layout.cshtml";
@@ -32,7 +32,7 @@
         }
         else
         {
-            <a href="transferOut?memberid=@(profile.ID)" class="btn btn-warning">转出本机构</a>
+            <a href="transferOut?memberid=@(profile.ID)" class="btn btn-danger">转出本机构</a>
         }
     </ul>
 </div>
@@ -104,21 +104,7 @@
                     <td>@(item.CreateTime.ToShortDateString())</td>
                     <td>@(item.Exam.StartExamDate.ToShortDateString()) ~ @(item.Exam.EndExamDate.ToShortDateString())</td>
                     <td>
-                        @if (item.Result.HasValue)
-                        {
-                            if (item.Result.Value)
-                            { 
-                            <span class="label label-success">已通过</span>
-                            }
-                            else
-                            {
-                            <span class="label label-warning">未通过</span>
-                            }
-                        }
-                        else
-                        {
-                            <span class="label label-default">未出成绩</span>
-                        }
+                        @(string.IsNullOrEmpty(item.Scores)?item.Subjects:item.Scores)
                     </td>
                 </tr>
             }
@@ -131,7 +117,7 @@
                 <th>学习时间</th>
                 <th>教育机构</th>
                 <th>报名时间</th>
-                <th>审批状态</th>
+                <th>审核状态</th>
             </tr>
             @foreach (var item in educations)
             { 

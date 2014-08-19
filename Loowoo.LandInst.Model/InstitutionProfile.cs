@@ -15,6 +15,7 @@ namespace Loowoo.LandInst.Model
             ShareHolders = new List<Shareholder>();
             Equipments = new List<Equipment>();
             Softwares = new List<Software>();
+            Files = new List<UploadFile>();
         }
 
         public InstitutionProfile(Institution inst)
@@ -35,6 +36,7 @@ namespace Loowoo.LandInst.Model
             ID = inst.ID;
             CreateTime = inst.CreateTime;
         }
+
 
         /// <summary>
         /// 税务登记号
@@ -171,5 +173,7 @@ namespace Loowoo.LandInst.Model
         public List<Equipment> Equipments { get; set; }
 
         public List<Software> Softwares { get; set; }
+
+        public List<UploadFile> Files { get; set; }
     }
 }

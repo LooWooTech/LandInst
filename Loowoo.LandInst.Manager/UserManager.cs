@@ -47,7 +47,7 @@ namespace Loowoo.LandInst.Manager
                 throw new ArgumentException("密码不正确！");
             }
 
-                return user;
+            return user;
         }
 
         public bool Exists(string username)
@@ -74,21 +74,23 @@ namespace Loowoo.LandInst.Manager
             }
         }
 
-        public void UpdateLogin(int userId)
+        public void UpdateLogin(User user)
         {
             using (var db = GetDataContext())
             {
-                var entity = db.Users.FirstOrDefault(e => e.ID == userId);
+                var entity = db.Users.FirstOrDefault(e => e.ID == user.ID);
                 if (entity != null)
                 {
+                    entity.LastLoginIP = user.LastLoginIP;
                     entity.LastLoginTime = DateTime.Now;
+                    entity.LoginTimes++;
 
                     db.SaveChanges();
                 }
             }
         }
 
-        public void ResetPwd(int userId,string newPwd)
+        public void ResetPwd(int userId, string newPwd)
         {
             if (string.IsNullOrEmpty(newPwd))
             {
@@ -119,6 +121,26 @@ namespace Loowoo.LandInst.Manager
             {
                 var entity = db.Users.FirstOrDefault(e => e.ID == userId);
                 entity.Password = newPwd.MD5();
+                db.SaveChanges();
+            }
+        }
+
+        internal void UpdateUsername(int userId, string username)
+        {
+            if (userId == 0 || string.IsNullOrEmpty(username))
+            {
+                throw new Exception("没找到这个用户");
+            }
+
+            using (var db = GetDataContext())
+            {
+                var entity = db.Users.FirstOrDefault(e => e.ID == userId);
+                if (entity.Username == username) return;
+                if (db.Users.Any(e => e.Username == username))
+                {
+                    throw new ArgumentException("用户名已被占用");
+                }
+                entity.Username = username;
                 db.SaveChanges();
             }
         }

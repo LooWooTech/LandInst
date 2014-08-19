@@ -30,13 +30,14 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
             return JsonSuccess();
         }
 
-        public ActionResult Approvals(string name, int? eduId = 0, int page = 1)
+        public ActionResult Approvals(string name, bool? hasCheck, int? eduId = 0, int page = 1)
         {
             var filter = new MemberFilter
             {
                 Keyword = name,
                 Page = new Model.Filters.PageFilter { PageIndex = page },
-                InfoID = eduId
+                InfoID = eduId,
+                HasCheck= hasCheck,
             };
             ViewBag.List = Core.EducationManager.GetApprovalEducations(filter);
             return View();

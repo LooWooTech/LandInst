@@ -14,7 +14,6 @@ namespace Loowoo.LandInst.Model
     {
         public Institution()
         {
-            Type = InstitutionType.土地规划;
             CreateTime = DateTime.Now;
         }
 
@@ -26,8 +25,6 @@ namespace Loowoo.LandInst.Model
         public InstitutionStatus Status { get; set; }
 
         public DateTime CreateTime { get; set; }
-
-        public InstitutionType Type { get; set; }
 
         /// <summary>
         /// 机构名称

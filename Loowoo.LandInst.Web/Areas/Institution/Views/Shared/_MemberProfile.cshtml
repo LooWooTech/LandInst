@@ -1,9 +1,61 @@
 ﻿@using Loowoo.LandInst.Model
+@using Loowoo.LandInst.Common
 @{
     ViewBag.Title = "_MemberProfile";
-    MemberProfile member = Model ?? new MemberProfile();
+    MemberProfile profile = Model ?? new MemberProfile();
 }
-<div class="form-group">
+<legend>会员资料</legend>
+<table class="table table-bordered">
+    <tr>
+        <th style="width: 150px;">真实姓名</th>
+        <td>@(profile.RealName)</td>
+        <th style="width: 150px;">用户名</th>
+        <td></td>
+    </tr>
+    <tr>
+        <th style="width: 150px;">性别</th>
+        <td>@(profile.Gender)</td>
+        <th style="width: 150px;">出生年月</th>
+        <td>@(profile.RealName)</td>
+    </tr>
+    <tr>
+        <th style="width: 150px;">民族</th>
+        <td>@(profile.Nationality)</td>
+        <th style="width: 150px;">籍贯</th>
+        <td>@(profile.NativePlace)</td>
+    </tr>
+    <tr>
+        <th style="width: 150px;">手机</th>
+        <td>@(profile.MobilePhone)</td>
+        <th style="width: 150px;">邮箱</th>
+        <td>@(profile.Email)</td>
+    </tr>
+    <tr>
+        <th style="width: 150px;">邮编</th>
+        <td>@(profile.Postcode)</td>
+        <th style="width: 150px;">通信地址</th>
+        <td>@(profile.Address)</td>
+    </tr>
+    <tr>
+        <th style="width: 150px;">毕业学校</th>
+        <td>@(profile.School)</td>
+        <th style="width: 150px;">专业</th>
+        <td>@(profile.Major)</td>
+    </tr>
+    <tr>
+        <th style="width: 150px;">学位</th>
+        <td>@(profile.EduLevel)</td>
+        <th style="width: 150px;">学历</th>
+        <td>@(profile.EduRecord)</td>
+    </tr>
+    <tr>
+        <th style="width: 150px;">职称</th>
+        <td>@(profile.Title)</td>
+        <th style="width: 150px;">用户状态</th>
+        <td>@(profile.Status.GetDescription())</td>
+    </tr>
+</table>
+@*<div class="form-group">
     <label class="control-label col-lg-2">会员信息</label>
     <div class="col-sm-8">
         <div class="input-group">
@@ -11,7 +63,7 @@
             <table class="table table-bordered">
                 <tr>
                     <th>姓名</th>
-                    <td>@(member.RealName)</td>
+                    <td><a href="/institution/member/profile?id=@(member.ID)">@(member.RealName)</a></td>
                     <th>性别</th>
                     <td>@(member.Gender)</td>
                     <th>出生年月</th>
@@ -44,4 +96,4 @@
             </table>
         </div>
     </div>
-</div>
+</div>*@

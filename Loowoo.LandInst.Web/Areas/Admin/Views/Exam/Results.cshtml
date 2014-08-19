@@ -1,0 +1,54 @@
+﻿@using Loowoo.LandInst.Common
+@using Loowoo.LandInst.Model
+@{
+    ViewBag.Title = "考试成绩管理";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    List<VExamResult> list = ViewBag.List;
+    List<Exam> exams = ViewBag.Exams;
+}
+
+<form class="form-inline search-form">
+    <div class="col-lg-5">
+        <div class="input-group">
+            <span class="input-group-addon">查询会员</span>
+            <input type="text" class="form-control" name="name" placeholder="会员姓名" value="@(Request.QueryString["name"])">
+            <div class="input-group-btn">
+                <select name="examId" class="form-control">
+                    <option value="0">选择考试</option>
+                    @foreach (var exam in exams)
+                    { 
+                        <option value="@(exam.ID)" @(Html.Raw(exam.ID.ToString() == Request.QueryString["examId"] ? " selected=\"selected\"" : null))>@(exam.Name)</option>
+                    }
+                </select>
+            </div>
+            <div class="input-group-btn">
+                <button type="submit" class="btn btn-primary"><i class="glyphicon glyphicon-search"></i>查询</button>
+            </div>
+        </div>
+    </div>
+    <a href="Import" class="btn btn-danger"><i class="glyphicon glyphicon-plus"></i>批量导入成绩</a>
+</form>
+<table class="table table-bordered">
+    <tr>
+        <th style="width: 100px;">姓名</th>
+        <th>考试名称</th>
+        <th style="width: 150px;">报名时间</th>
+        <th>科目成绩</th>
+        <th style="width: 100px;">详细</th>
+    </tr>
+    @foreach (var item in list)
+    { 
+        <tr>
+            <td>@(item.RealName)</td>
+            <td>@(item.Exam.Name)</td>
+            <td>@(item.CreateTime.ToString())</td>
+            <td>@(item.Scores)</td>
+            <td><a href="EditResult?examId=@(item.ExamID)&memberId=@(item.MemberID)" class="btn btn-primary btn-xs">设置/查看</a></td>
+        </tr>
+    }
+    <tr>
+        <td colspan="6">
+            @Html.Partial("_pagination", ViewBag.Page as object)
+        </td>
+    </tr>
+</table>

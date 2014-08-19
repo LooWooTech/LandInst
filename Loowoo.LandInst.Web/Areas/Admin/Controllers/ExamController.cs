@@ -21,6 +21,7 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
         [HttpGet]
         public ActionResult Edit(int id = 0)
         {
+            ViewBag.Subjects = Core.ExamManager.GetSubjects();
             ViewBag.Model = Core.ExamManager.GetExam(id);
             return View();
         }
@@ -28,17 +29,20 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
         [HttpPost]
         public ActionResult Edit(Exam model)
         {
+            model.Subjects = Request.Form["Subjects"];
+
             Core.ExamManager.SaveExam(model);
             return JsonSuccess();
         }
 
-        public ActionResult Approvals(string name, int? examId, int page = 1)
+        public ActionResult Approvals(string name, int? examId, bool? hasCheck, int page = 1)
         {
-            var filter = new CheckLogFilter
+            var filter = new MemberFilter
             {
                 Keyword = name,
                 InfoID = examId,
                 Page = new Model.Filters.PageFilter { PageIndex = page },
+                HasCheck = hasCheck,
             };
             ViewBag.Exams = Core.ExamManager.GetExams();
             ViewBag.List = Core.ExamManager.GetVCheckExams(filter);
@@ -46,21 +50,31 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
             return View();
         }
 
-        //[HttpPost]
-        //public ActionResult Approval(int id, bool result)
-        //{
-        //    var checkLog = Core.CheckLogManager.GetCheckLog(id);
-        //    if (checkLog == null || checkLog.Result.HasValue)
-        //    {
-        //        throw new ArgumentException("参数错误");
-        //    }
+        public ActionResult Subjects()
+        {
+            ViewBag.List = Core.ExamManager.GetSubjects();
+            return View();
+        }
 
-        //    checkLog.Result = result;
-        //    checkLog.UpdateTime = DateTime.Now;
-        //    Core.CheckLogManager.UpdateCheckLog(checkLog);
-        //    Core.MemberManager.UpdateMemberStatus(checkLog.UserID, MemberStatus.Registered);
-        //    return JsonSuccess();
-        //}
+        [HttpGet]
+        public ActionResult EditSubject(int id = 0)
+        {
+            ViewBag.Model = Core.ExamManager.GetSubject(id) ?? new ExamSubject();
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult EditSubject(string name, int totalScore = 0)
+        {
+            Core.ExamManager.SaveSubject(name, totalScore);
+            return JsonSuccess();
+        }
+
+        public ActionResult DeleteSubject(int id)
+        {
+            Core.ExamManager.DeleteSubject(id);
+            return JsonSuccess();
+        }
 
         [HttpPost]
         public ActionResult Approval(string id, bool result = true)
@@ -77,17 +91,16 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
             return JsonSuccess();
         }
 
-        [HttpGet]
-        public ActionResult ExamResult(string name, int? examId, int page = 1)
+        public ActionResult Results(string name, int? examId, int page = 1)
         {
-            var filter = new CheckLogFilter
+            var filter = new MemberFilter
             {
                 Result = true,
                 Keyword = name,
                 InfoID = examId,
                 Page = new Model.Filters.PageFilter { PageIndex = page },
             };
-            ViewBag.List = Core.ExamManager.GetVCheckExams(filter);
+            ViewBag.List = Core.ExamManager.GetVExamResults(filter);
             ViewBag.Exams = Core.ExamManager.GetExams();
             ViewBag.Page = filter.Page;
             return View();
@@ -136,66 +149,52 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
                     continue;
                 }
 
-                examResult.Result = Convert.ToInt32(values[2]) == 1;
-                examResult.Note = null; 
-                if (columns.Count > 3)
+                if (columns.Count > 2)
                 {
                     try
                     {
-                        for (var i = 3; i < columns.Count; i++)
+                        for (var i = 2; i < columns.Count; i++)
                         {
-                            examResult.Note += columns[i] + "\t" + values[i] + "\r\n";
+                            examResult.Scores += columns[i] + "\t" + values[i] + "\r\n";
                         }
                     }
                     catch { }
                 }
-                var checkLog = Core.CheckLogManager.GetCheckLog(examId, member.ID, CheckType.Exam);
-                Core.ExamManager.UpdateExamResult(checkLog, examResult);
+
+                Core.ExamManager.ImportExamResult(examResult);
+                Core.MemberManager.UpdateMemberStatus(member.ID, MemberStatus.Registered);
+
             }
 
             return JsonSuccess();
         }
 
-        //[HttpPost]
-        //public ActionResult ExamResult(string id, bool result = true)
-        //{
-        //    if (string.IsNullOrEmpty(id))
-        //    {
-        //        throw new ArgumentException("缺少参数");
-        //    }
-        //    var ids = id.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(s => int.Parse(s));
-        //    foreach (var approvalId in ids)
-        //    {
-        //        var app = Core.CheckLogManager.GetCheckLog(approvalId);
-        //        if (app != null)
-        //        {
-        //            Core.ExamManager.UpdateExamResult(app.InfoID, app.UserID, result);
-
-        //            //Core.MemberManager.UpdateMemberStatus(app.UserID, result ? MemberStatus.ExamSuccess : MemberStatus.Registered);
-        //        }
-        //    }
-        //    return JsonSuccess();
-        //}
-
         [HttpGet]
-        public ActionResult EditResult(int checkLogId)
+        public ActionResult EditResult(int examId, int memberId)
         {
-            var checkLog = Core.CheckLogManager.GetCheckLog(checkLogId);
-            var result = Core.ExamManager.GetExamResult(checkLog);
+            var result = Core.ExamManager.GetExamResult(examId, memberId);
             result.Exam = Core.ExamManager.GetExam(result.ExamID);
+            var member = Core.MemberManager.GetMember(result.MemberID);
+
+            ViewBag.Member = member;
             ViewBag.Model = result;
-            ViewBag.CheckLog = checkLog;
+            ViewBag.Institution = Core.InstitutionManager.GetInstitution(member.InstitutionID);
             return View();
         }
 
         [HttpPost]
-        public ActionResult EditResult(int checkLogId, ExamResult data)
+        public ActionResult EditResult(int examId, int memberId, ExamResult data)
         {
-            var checkLog = Core.CheckLogManager.GetCheckLog(checkLogId);
-            if (checkLog != null)
+            var scores = Request.Form["scores"].Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+            if (scores.Length == 0)
             {
-                Core.ExamManager.UpdateExamResult(checkLog, data);
+                throw new ArgumentException("填写不正确");
             }
+
+            data.Scores = string.Join(",", scores);
+
+            Core.ExamManager.UpdateExamScores(data.MemberID, data.ExamID, data.Scores);
+            Core.MemberManager.UpdateMemberStatus(memberId, MemberStatus.Registered);
             return JsonSuccess();
         }
 

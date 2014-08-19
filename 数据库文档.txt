@@ -82,8 +82,8 @@ User			账户表
 	Deleted		是否删除
 --------------------------------------------------------------------------------------
 VApproval_AnnualCheck	后台年审视图
-VApproval_Education		后台继续教育审批视图
-VApproval_Exam			后台考试审批视图
-VApproval_Inst			后台机构审批视图
-VApproval_Member		后台用户审批视图
+VApproval_Education		后台继续教育审核视图
+VApproval_Exam			后台考试审核视图
+VApproval_Inst			后台机构审核视图
+VApproval_Member		后台用户审核视图
 

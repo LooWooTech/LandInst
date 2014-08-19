@@ -127,7 +127,7 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
             ViewBag.User = user;
             ViewBag.Member = member;
             ViewBag.Profile = profile;
-            ViewBag.ExamResults = Core.ExamManager.GetMemberExamResult(id);
+            ViewBag.ExamResults = Core.ExamManager.GetVExamResults(new MemberFilter { UserID = id });
             ViewBag.Educations = Core.EducationManager.GetMemberEducations(id);
             //TODO 执业信息
             var practiceCheckLog = Core.CheckLogManager.GetLastLog(id, CheckType.Practice);

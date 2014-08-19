@@ -33,5 +33,7 @@ namespace Loowoo.LandInst.Model
         public string Summary { get; set; }
 
         public string Address { get; set; }
+
+        public string Subjects { get; set; }
     }
 }

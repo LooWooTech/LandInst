@@ -15,7 +15,7 @@
         <li class=""><a href="#tab2" data-toggle="tab">股东</a></li>
         <li class=""><a href="#tab3" data-toggle="tab">主要技术装备</a></li>
         <li class=""><a href="#tab6" data-toggle="tab">应用软件情况</a></li>
-        <li class=""><a href="#tab4" data-toggle="tab">审批记录</a></li>
+        <li class=""><a href="#tab4" data-toggle="tab">审核记录</a></li>
     </ul>
     <ul style="position: absolute; right: 10px; top: 0px;">
 @*        <a href="export?id=@(profile.ID)" class="btn btn-primary"><i class="glyphicon glyphicon-export"></i>导出资料</a>*@
@@ -171,10 +171,10 @@
     <div class="tab-pane fade" id="tab4">
         <table class="table table-bordered">
             <tr>
-                <th>审批类型</th>
+                <th>审核类型</th>
                 <th>申请时间</th>
-                <th>审批时间</th>
-                <th>审批结果</th>
+                <th>审核时间</th>
+                <th>审核结果</th>
                 <th>详情</th>
             </tr>
             @foreach (var checkLog in checkLogs)
@@ -188,16 +188,16 @@
                         {
                             if (checkLog.Result.Value)
                             { 
-                            <span class="label label-success">审批通过</span>
+                            <span class="label label-success">审核通过</span>
                             }
                             else
                             {
-                            <span class="label label-warning">审批不通过</span>
+                            <span class="label label-warning">审核不通过</span>
                             }
                         }
                         else
                         {
-                            <span class="label label-default">尚未审批</span>
+                            <span class="label label-default">尚未审核</span>
                         }
                     </td>
                     <td>@if (checkLog.CheckType == CheckType.Profile || checkLog.CheckType == CheckType.Annual)

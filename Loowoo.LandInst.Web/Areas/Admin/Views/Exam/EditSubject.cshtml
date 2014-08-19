@@ -1,0 +1,40 @@
+﻿@using Loowoo.LandInst.Model
+@{
+    var id = Request.QueryString["id"];
+    ViewBag.Title = (string.IsNullOrEmpty(id) ? "添加" : "修改") + "考试科目";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+
+    ExamSubject model = ViewBag.Model;
+}
+<form id="subject-form" role="form" class="form-horizontal">
+    <div class="form-group">
+        <label class="control-label col-lg-2">科目名称</label>
+        <div class="col-sm-3">
+            <input type="text" name="Name" class="form-control input-sm" value="@(model.Name)" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-lg-2">满分分数</label>
+        <div class="col-sm-3">
+            <input type="text" name="TotalScore" class="form-control input-sm" value="@(string.IsNullOrEmpty(id) ? 100 : model.TotalScore)" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-lg-2"></label>
+        <div class="col-sm-3">
+            <button type="submit" class="btn btn-primary">保存科目</button>
+        </div>
+    </div>
+</form>
+<script>
+    $(function () {
+        $("#subject-form").submit(function () {
+            var data = $(this).serialize();
+            $.request("/admin/exam/editsubject?id=@(id)", data, function () {
+                alert("保存成功");
+                window.location.href = "/admin/exam/subjects";
+            });
+            return false;
+        });
+    });
+</script>

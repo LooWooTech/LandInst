@@ -11,21 +11,14 @@ namespace Loowoo.LandInst.Manager
 {
     public class MemberManager : ManagerBase
     {
-        public void AddMember(Member member)
+        public int AddMember(Member member)
         {
             using (var db = GetDataContext())
             {
                 db.Members.Add(member);
                 db.SaveChanges();
+                return member.ID;
             }
-
-            //AddProfile(member);
-        }
-
-        private void AddProfile(Member member)
-        {
-            var profile = new MemberProfile(member);
-            Core.ProfileManager.AddProfile(member.ID, profile);
         }
 
         public void UpdateMemberStatus(int memberId, MemberStatus status)
@@ -109,21 +102,11 @@ namespace Loowoo.LandInst.Manager
                 {
                     if (filter.InInst)
                     {
-                        if (filter.IncludeNoHaveInstMember)
-                        {
-                            query = query.Where(e => e.InstitutionID == filter.InstID || e.InstitutionID == 0);
-                        }
-                        else
-                        {
-                            query = query.Where(e => e.InstitutionID == filter.InstID);
-                        }
+                        query = query.Where(e => e.InstitutionID == filter.InstID);
                     }
                     else
                     {
-                        if (filter.IncludeNoHaveInstMember)
-                        {
-                            query = query.Where(e => e.InstitutionID != filter.InstID);
-                        }
+                        query = query.Where(e => e.InstitutionID != filter.InstID);
                     }
                 }
 
@@ -159,38 +142,36 @@ namespace Loowoo.LandInst.Manager
         {
             using (var db = GetDataContext())
             {
-                var query = GetVCheckMembers(db.VCheckMembers, filter);
+                var query = db.VCheckMembers.AsQueryable().GetCheckBaseQuery(filter);
+
                 if (filter.Status.HasValue)
                 {
                     query = query.Where(e => e.Status == filter.Status.Value);
                 }
+                
                 if (filter.InstID.HasValue && filter.InstID.Value > 0)
                 {
                     query = query.Where(e => e.InstitutionID == filter.InstID.Value);
                 }
+                
+                if (!string.IsNullOrEmpty(filter.Keyword))
+                {
+                    query = query.Where(e => e.RealName.Contains(filter.Keyword));
+                }
+                
                 return query.OrderByDescending(e => e.ID).SetPage(filter.Page).ToList();
             }
         }
 
         internal IQueryable<VCheckMember> GetVCheckMembers(IQueryable<VCheckMember> query, CheckLogFilter filter)
         {
-            query = query.Where(e => e.CheckType == filter.Type);
-            if (filter.Result.HasValue)
-            {
-                query = query.Where(e => e.Result == filter.Result.Value);
-            }
-            if (filter.InfoID.HasValue && filter.InfoID.Value > 0)
-            {
-                query = query.Where(e => e.InfoID == filter.InfoID.Value);
-            }
+            query = query.GetCheckBaseQuery(filter);
+
             if (!string.IsNullOrEmpty(filter.Keyword))
             {
                 query = query.Where(e => e.RealName.Contains(filter.Keyword.Trim()));
             }
-            if (filter.UserID.HasValue && filter.UserID.Value > 0)
-            {
-                query = query.Where(e => e.UserID == filter.UserID.Value);
-            }
+
 
             return query;
         }

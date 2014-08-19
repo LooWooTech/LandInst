@@ -5,21 +5,21 @@
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
     User user = ViewBag.User;
     MemberProfile profile = ViewBag.Profile;
-    List<ExamResult> examResults = ViewBag.ExamResults;
+    List<VExamResult> examResults = ViewBag.ExamResults;
     List<Education> educations = ViewBag.Educations;
     PracticeInfo practiceInfo = ViewBag.PracticeInfo ?? new PracticeInfo();
     CheckLog checkLog = ViewBag.CheckLog;
 }
-<div style="position:relative;">
+<div style="position: relative;">
     <ul class="nav nav-tabs">
         <li class="active"><a href="#tab1" data-toggle="tab">基本资料</a></li>
         <li class=""><a href="#tab2" data-toggle="tab">考试成绩</a></li>
         <li class=""><a href="#tab3" data-toggle="tab">继续教育</a></li>
         <li class=""><a href="#tab4" data-toggle="tab">执业信息</a></li>
     </ul>
-    <ul style="position:absolute;right:10px;top:0px;">
-        <a href="export?id=@(profile.ID)" class="btn btn-primary"><i class="glyphicon glyphicon-export"></i> 导出资料</a>
-        <a href="transfer?id=@(profile.ID)" class="btn btn-warning"><i class="glyphicon glyphicon-transfer"></i> 机构转移</a>
+    <ul style="position: absolute; right: 10px; top: 0px;">
+        <a href="export?id=@(profile.ID)" class="btn btn-primary"><i class="glyphicon glyphicon-export"></i>导出资料</a>
+        <a href="transfer?id=@(profile.ID)" class="btn btn-danger"><i class="glyphicon glyphicon-transfer"></i>机构转移</a>
 
     </ul>
 </div>
@@ -91,21 +91,7 @@
                     <td>@(item.CreateTime.ToShortDateString())</td>
                     <td>@(item.Exam.StartExamDate.ToShortDateString()) ~ @(item.Exam.EndExamDate.ToShortDateString())</td>
                     <td>
-                        @if (item.Result.HasValue)
-                        {
-                            if (item.Result.Value)
-                            { 
-                            <span class="label label-success">已通过</span>
-                            }
-                            else
-                            {
-                            <span class="label label-warning">未通过</span>
-                            }
-                        }
-                        else
-                        {
-                            <span class="label label-default">未出成绩</span>
-                        }
+                        @(string.IsNullOrEmpty(item.Scores) ? "未出成绩" : item.Scores)
                     </td>
                 </tr>
             }
@@ -118,7 +104,7 @@
                 <th>学习时间</th>
                 <th>教育机构</th>
                 <th>报名时间</th>
-                <th>审批状态</th>
+                <th>审核状态</th>
             </tr>
             @foreach (var item in educations)
             { 
@@ -190,7 +176,7 @@
                             <tr>
                                 <td>@(cert.CertificationNo)</td>
                                 <td>@(cert.Name)</td>
-                                <td>@(cert.ObtainDate.HasValue?cert.ObtainDate.Value.ToShortDateString():null)</td>
+                                <td>@(cert.ObtainDate.HasValue ? cert.ObtainDate.Value.ToShortDateString() : null)</td>
                             </tr>
                         }
                     </table>
@@ -215,7 +201,8 @@
                                 <td>@(job.Note)</td>
                             </tr>
                         }
-                    </table></td>
+                    </table>
+                </td>
             </tr>
         </table>
     </div>

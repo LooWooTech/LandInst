@@ -5,6 +5,7 @@
 @section nav{
     @{
         Institution inst = ViewBag.CurrentInst;
+        var baseDir = UserRole.Institution.ToString();
     }
     <ul class="nav navbar-nav">
         @if (inst.Status == InstitutionStatus.Normal)
@@ -12,47 +13,67 @@
         }
         else
         {
-            <li><a href="/institution/"><i class="glyphicon glyphicon-home"></i>&nbsp;首页</a></li>
+            <li><a href="/@(baseDir)/"><i class="glyphicon glyphicon-home"></i>&nbsp;首页</a></li>
             <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="glyphicon glyphicon-user"></i>&nbsp;会员 <b class="caret"></b></a>
                 <ul class="dropdown-menu">
-                    <li><a href="/institution/member">会员查询</a></li>
+                    <li><a href="/@(baseDir)/member"><i class="glyphicon glyphicon-search"></i>&nbsp;会员查询</a></li>
+                    <li><a href="/@(baseDir)/member/edit"><i class="glyphicon glyphicon-plus"></i>&nbsp;新增会员</a></li>
                     <li class="divider"></li>
-                    <li><a href="/institution/member/transferin">会员转入申请</a></li>
-                    <li><a href="/institution/member/transferout">会员转出申请</a></li>
-                    <li><a href="/institution/member/transfers">会员转移记录</a></li>
+                    <li><a href="/@(baseDir)/member/transferin">会员转入申请</a></li>
+                    <li><a href="/@(baseDir)/member/transferout">会员转出申请</a></li>
+                    <li><a href="/@(baseDir)/member/transfers">会员转移记录</a></li>
                     <li class="divider"></li>
-                    <li><a href="/institution/member/practice">会员执业登记</a></li>
-                    <li><a href="/institution/member/practices">会员执业登记记录</a></li>
+                    <li><a href="/@(baseDir)/member/practice">会员执业登记</a></li>
+                    <li><a href="/@(baseDir)/member/practices">会员执业登记记录</a></li>
                 </ul>
             </li>
-@*            <li><a href="/institution/member">会员管理</a></li>*@
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="glyphicon glyphicon-pencil"></i>&nbsp;考试 <b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="/@(baseDir)/exam/signup">报名考试</a></li>
+                        <li><a href="/@(baseDir)/exam/results">成绩查询</a></li>
+                        <li class="divider"></li>
+                        <li><a href="/@(baseDir)/exam/">报名申请记录</a></li>
+                   </ul>
+            </li>
+@*            <li><a href="/@(baseDir)/member">会员管理</a></li>*@
             <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="glyphicon glyphicon-list-alt"></i>&nbsp;信息 <b class="caret"></b>
                 </a>
                 <ul class="dropdown-menu">
-                    <li><a href="/institution/profile/edit">修改资料</a></li>
-                    <li><a href="/institution/profile/edit?type=annualcheck">申请年检</a></li>
+                    <li><a href="/@(baseDir)/profile/edit">修改资料</a></li>
+                    <li><a href="/@(baseDir)/profile/edit?type=annualcheck">申请年检</a></li>
                     <li class="divider"></li>
                     <li><a href="/user/editpassword">修改密码</a></li>
-                    <li><a href="/institution/profile/logout">机构注销登记</a></li>
+                    <li><a href="/@(baseDir)/profile/logout">机构注销登记</a></li>
                     <li class="divider"></li>
-                    <li><a href="/institution/annual/">机构年检记录</a></li>
-                    <li><a href="/institution/profile/history">历史信息</a></li>
+                    <li><a href="/@(baseDir)/annual/">机构年检记录</a></li>
+                    <li><a href="/@(baseDir)/profile/history">历史信息</a></li>
                 </ul>
             </li>
             <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="glyphicon glyphicon glyphicon-book"></i>&nbsp;继续教育 <b class="caret"></b>
                 </a>
                 <ul class="dropdown-menu">
-                    <li><a href="/institution/education/">继续教育申请记录</a></li>
-                    <li><a href="/institution/education/import">继续教育申请</a></li>
+                    <li><a href="/@(baseDir)/education/">继续教育申请记录</a></li>
+                    <li><a href="/@(baseDir)/education/import">继续教育申请</a></li>
                 </ul>
             </li>
         }
     </ul>
     <ul class="nav navbar-nav navbar-right">
-        <li><a href="/user/signout">(@(System.Threading.Thread.CurrentPrincipal.Identity.Name))退出</a></li>
+        <li><a href="/user/signout">(@{
+            var name = System.Threading.Thread.CurrentPrincipal.Identity.Name;
+            if(name.Length>6)
+            {
+                <span>@(name.Substring(0,6))...</span>
+            }
+            else
+            {
+                <span>@(name)</span>
+            }
+            })退出</a></li>
     </ul>
 
 }

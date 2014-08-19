@@ -1,8 +1,9 @@
 ﻿@using Loowoo.LandInst.Model
 @{
-    ViewBag.Title = "继续教育审批";
+    ViewBag.Title = "继续教育审核";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
     List<VCheckEducation> list = ViewBag.List;
+    var hasCheck = Request.QueryString["hasCheck"];
 }
 <form class="form-inline search-form">
     <div class="col-lg-8">
@@ -10,18 +11,25 @@
             <span class="input-group-addon">查询会员</span>
             <input type="text" class="form-control" name="name" placeholder="会员姓名" value="@(Request.QueryString["name"])">
             <div class="input-group-btn">
-                <button type="submit" class="btn btn-primary"><i class="glyphicon glyphicon-search"></i> 查询</button>
+                <select name="hasCheck" class="form-control">
+                    <option value="false" @(hasCheck == "false" ? "selected=selected" : "")>未审核</option>
+                    <option value="" @(string.IsNullOrEmpty(hasCheck) ? "selected=selected" : "")>全部</option>
+                    <option value="true" @(hasCheck == "true" ? "selected=selected" : "")>已审核</option>
+                </select>
+            </div>
+            <div class="input-group-btn">
+                <button type="submit" class="btn btn-primary"><i class="glyphicon glyphicon-search"></i>查询</button>
             </div>
         </div>
     </div>
 </form>
 <table class="table table-bordered">
     <tr>
-        <th style="width:120px;">会员姓名</th>
+        <th style="width: 120px;">会员姓名</th>
         <th>继续教育名称</th>
-        <th style="width:120px;">申请时间</th>
-        <th style="width:120px;">审批状态</th>
-        <th style="width:120px;">审批时间</th>
+        <th style="width: 120px;">申请时间</th>
+        <th style="width: 120px;">审核状态</th>
+        <th style="width: 120px;">审核时间</th>
     </tr>
     @foreach (var item in list)
     { 
@@ -46,7 +54,7 @@
                 }
                 else
                 {
-                    <span class="label label-default">尚未审批</span>
+                    <span class="label label-default">尚未审核</span>
                 }
 
             </td>

@@ -48,7 +48,7 @@ namespace Loowoo.LandInst.Manager
         public void Approval(int checkLogId)
         {
             var checkLog = Core.CheckLogManager.GetCheckLog(checkLogId);
-            //已经通过审批
+            //已经通过审核
             if (checkLog.Checked && checkLog.Result.Value)
             {
                 var transfer = GetTransfer(checkLog.InfoID);

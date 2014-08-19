@@ -8,10 +8,17 @@ namespace Loowoo.LandInst.Model
 {
     public class VCheckExam
     {
-        public int ExamID { get; set; }
+        public int ExamID { get { return VCheck.InfoID; } }
+
+        public int MemberID { get { return VCheck.UserID; } }
 
         public string ExamName { get; set; }
 
-        public VCheckMember Member { get; set; }
+        public VCheckMember VCheck { get; set; }
+
+        public int ID { get { return VCheck.ID; } }
+
+        public string Subjects { get { return VCheck.Data; } }
+
     }
 }

@@ -7,8 +7,8 @@
 {
     var user = Loowoo.LandInst.Manager.ManagerCore.Instance.UserManager.GetUser(approval.UserID);
 
-    <legend>审批</legend>
-    <div class="alert alert-dismissable alert-warning">
+    <legend>审核</legend>
+    <div class="well">
         该@(user.Role.GetDescription())于@(approval.CreateTime.ToShortDateString())申请了 
         <span class="label label-default">@(approval.CheckType.GetDescription())</span>，目前
             @if (approval.Result.HasValue)
@@ -25,7 +25,7 @@
             }
             else
             {
-                <span class="label label-default">尚未审批</span>
+                <span class="label label-default">尚未审核</span>
                 
             }
     </div>
@@ -35,7 +35,7 @@
             <form id="approval-form" role="form" class="form-horizontal">
                 <input id="approval-result" type="hidden" name="Result" value="" />
                 <div class="form-group">
-                    <label class="control-label col-lg-2">审批意见</label>
+                    <label class="control-label col-lg-2">审核意见</label>
                     <div class="col-sm-3">
                         <textarea name="Note" rows="4" cols="50"></textarea>
                     </div>
@@ -43,8 +43,8 @@
                 <div class="form-group">
                     <label class="control-label col-lg-2"></label>
                     <div class="col-sm-3">
-                        <button id="btn-agree" type="submit"  class="btn btn-sm btn-success"><i class="glyphicon glyphicon-ok"></i> 通过审批</button>
-                        <button id="btn-disagree" type="submit"  class="btn btn-sm btn-warning"><i class="glyphicon glyphicon-remove"></i> 不通过</button>
+                        <button id="btn-agree" type="submit"  class="btn btn-sm btn-success"><i class="glyphicon glyphicon-ok"></i> 通过审核</button>
+                        <button id="btn-disagree" type="submit"  class="btn btn-sm btn-danger"><i class="glyphicon glyphicon-remove"></i> 不通过</button>
                     </div>
                 </div>
             </form>
@@ -64,7 +64,7 @@
             $("#approval-form").submit(function () {
                 var data = $(this).serialize();
                 $.request("/admin/@(user.Role.ToString())/approval?id=@(approval.ID)", data, function () {
-                    alert("审批完成！");
+                    alert("审核完成！");
                     window.location.href = "@Html.Raw(Request.Url.AbsoluteUri)"
 
                 });

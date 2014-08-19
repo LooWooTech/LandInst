@@ -7,19 +7,14 @@ using System.Text;
 
 namespace Loowoo.LandInst.Model
 {
-    [Table("ExamResult")]
-    public class ExamResult
+    [Table("VExamResult")]
+    public class VExamResult
     {
-        public ExamResult()
-        {
-            CreateTime = DateTime.Now;
-        }
-
-        [Key]
-        [DatabaseGenerated(System.ComponentModel.DataAnnotations.Schema.DatabaseGeneratedOption.Identity)]
         public int ID { get; set; }
 
         public int ExamID { get; set; }
+
+        public string RealName { get; set; }
 
         public int MemberID { get; set; }
 
@@ -27,9 +22,9 @@ namespace Loowoo.LandInst.Model
 
         public string Scores { get; set; }
 
-        public DateTime CreateTime { get; set; }
+        public int InstitutionID { get; set; }
 
-        public DateTime? UpdateTime { get; set; }
+        public DateTime CreateTime { get; set; }
 
         [NotMapped]
         public Exam Exam { get; set; }

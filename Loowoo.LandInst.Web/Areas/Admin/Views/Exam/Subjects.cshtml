@@ -1,0 +1,44 @@
+﻿@using Loowoo.LandInst.Model
+@{
+    ViewBag.Title = "考试科目管理";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    
+    List<ExamSubject> list = ViewBag.List;
+}
+<form class="form-inline search-form">
+    <div class="col-lg-8">
+        <a href="/admin/exam/editsubject" class="btn btn-primary"><i class="glyphicon glyphicon-plus"></i>&nbsp;添加科目</a>
+    </div>
+</form>
+<table class="table table-bordered">
+    <tr>
+        <th>科目名称</th>
+        <th>满分</th>
+        <th style="width:150px;">管理</th>
+    </tr>
+    @foreach (var item in list)
+    { 
+        <tr>
+            <td>@(item.Name)</td>
+            <td>@(item.TotalScore)</td>
+            <td>
+                <a href="/admin/exam/editSubject?id=@(item.ID)" class="btn btn-xs btn-primary"><i class="glyphicon glyphicon-edit"></i>&nbsp;修改</a>
+                <a href="/admin/exam/deleteSubject?id=@(item.ID)" class="btn btn-xs btn-danger btn-delete"><i class="glyphicon glyphicon-remove"></i>&nbsp;删除</a>
+            </td>
+        </tr>
+    }
+</table>
+<script>
+    $(function () {
+        $(".btn-delete").click(function () {
+            if (confirm("如果科目用于考试，删除会造成影响，你确认删除吗？")) {
+                var href = $(this).attr("href");
+                $.request(href, null, function () {
+                    alert("已删除");
+                    window.location.href = "@Html.Raw(Request.Url.AbsoluteUri)";
+                });
+            }
+            return false;
+        });
+    });
+</script>

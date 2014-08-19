@@ -18,6 +18,7 @@
         <th style="width:120px;">考试起始时间</th>
         <th style="width:120px;">考试结束时间</th>
         <th style="width:150px;">考试地点</th>
+        <th>考试科目</th>
         <th style="width:100px;">管理</th>
     </tr>
     @foreach (var item in list)
@@ -29,9 +30,10 @@
             <td>@(item.StartExamDate.ToShortDateString())</td>
             <td>@(item.EndExamDate.ToShortDateString())</td>
             <td>@(item.Address)</td>
+            <td>@(item.Subjects)</td>
             <td>
                 <a class="btn btn-xs btn-primary" href="/admin/exam/edit?id=@(item.ID)">修改</a>
-                <a class="btn btn-xs btn-warning btn-delete" href="/admin/exam/delete?id=@(item.ID)">删除</a>
+                <a class="btn btn-xs btn-danger btn-delete" href="/admin/exam/delete?id=@(item.ID)">删除</a>
             </td>
         </tr>
     }

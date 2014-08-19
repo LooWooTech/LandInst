@@ -31,7 +31,8 @@ namespace Loowoo.LandInst.Web.Controllers
 
             //Save Login
             HttpContext.SaveAuth(user);
-
+            user.LastLoginIP = Request.UserHostAddress;
+            Core.UserManager.UpdateLogin(user);
             return JsonSuccess(new { role = user.Role.ToString().ToLower() });
         }
 

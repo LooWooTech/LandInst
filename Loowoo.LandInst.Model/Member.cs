@@ -12,13 +12,8 @@ namespace Loowoo.LandInst.Model
     [Table("Member")]
     public class Member
     {
-        public Member()
-        {
-            Status = MemberStatus.Normal;
-        }
-
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ID { get; set; }
 
         public int InstitutionID { get; set; }
@@ -39,10 +34,10 @@ namespace Loowoo.LandInst.Model
         public EduRecord EduRecord { get; set; }
 
         public string IDNo { get; set; }
-        ///// <summary>
-        ///// 土地规划从业人员职业培训合格证号
-        ///// </summary>
-        //public string CertificationNo { get; set; }
+
+        public string MobilePhone { get; set; }
+
+        public string Email { get; set; }
 
         [Column(TypeName = "int")]
         public MemberStatus Status { get; set; }
@@ -53,11 +48,8 @@ namespace Loowoo.LandInst.Model
         [Description("新注册用户")]
         Normal = 0,
 
-        [Description("已报名考试")]
+        [Description("认证会员")]
         Registered = 1,
-
-        [Description("正式会员")]
-        Member = 2,
 
         [Description("执业人员")]
         Practice

@@ -19,15 +19,21 @@
 <table class="table table-bordered">
     <tr>
         <th style="width: 150px;">姓名</th>
+        <th style="width: 60px">性别</th>
+        <th style="width: 120px">出生年月</th>
+        <th style="width: 100px">手机</th>
         <th style="width: 100px;">状态</th>
-        <th style="width: 200px;">专业</th>
-        <th style="width: 200px;">学历</th>
+        <th style="width: 150px;">专业</th>
+        <th style="width: 100px;">学历</th>
         <th>所属机构</th>
     </tr>
     @foreach (var item in list)
     { 
         <tr>
-            <td><a href="/admin/member/profile?id=@(item.ID)">@(string.IsNullOrEmpty(item.RealName)?"[无名氏]":item.RealName)</a></td>
+            <td><a href="/admin/member/profile?id=@(item.ID)">@(string.IsNullOrEmpty(item.RealName) ? "[无名氏]" : item.RealName)</a></td>
+            <td>@(item.Gender)</td>
+            <td>@(item.Birthday.HasValue?item.Birthday.Value.ToShortDateString():null)</td>
+            <td>@(item.MobilePhone)</td>
             <td>@(item.Status.GetDescription())</td>
             <td>@(item.Major == 0 ? "" : item.Major.ToString())</td>
             <td>@(item.EduRecord == 0 ? "" : item.EduRecord.ToString())</td>

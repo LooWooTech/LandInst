@@ -14,15 +14,42 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
         {
             var filter = new MemberFilter
             {
-                InstID =  Identity.UserID,
+                InstID = Identity.UserID,
                 Keyword = name,
                 InInst = true,
-                IncludeNoHaveInstMember = !string.IsNullOrEmpty(name),
                 Page = new Model.Filters.PageFilter { PageIndex = page },
             };
             ViewBag.List = Core.MemberManager.GetMembers(filter);
             ViewBag.Page = filter.Page;
             return View();
+        }
+
+        [HttpGet]
+        public ActionResult Edit(int id = 0)
+        {
+            ViewBag.Profile = Core.MemberManager.GetProfile(id);
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult Edit(int id, Member member, MemberProfile profile)
+        {
+            var inst = GetCurrentInst();
+            member.InstitutionID = inst.ID;
+            profile.InstitutionID = member.InstitutionID;
+
+            if (id == 0)
+            {
+                id = Core.MemberManager.AddMember(member);
+                Core.MemberManager.SaveProfile(member, profile);
+                return JsonSuccess(new { id });
+            }
+            else
+            {
+                member = Core.MemberManager.GetMember(id);
+                Core.MemberManager.SaveProfile(member, profile);
+                return JsonSuccess();
+            }
         }
 
         public new ActionResult Profile(int id)
@@ -36,7 +63,7 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
             //ViewBag.CheckLog = Core.CheckLogManager.GetLastLog(id, CheckType.Practice);
             ViewBag.Practice = Core.PracticeManager.GetPracticeInfo(id, inst.ID);
             ViewBag.ChecLogs = Core.CheckLogManager.GetList(id);
-            ViewBag.ExamResults = Core.ExamManager.GetMemberExamResult(id);
+            ViewBag.ExamResults = Core.ExamManager.GetVExamResults(new MemberFilter { UserID = id });
             ViewBag.Educations = Core.EducationManager.GetMemberEducations(id);
             return View();
         }
@@ -61,22 +88,21 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
                 Keyword = keyword,
                 InstID = GetCurrentInst().ID,
                 GetInstName = true,
-                MinStatus = MemberStatus.Member
             };
 
             switch (target.ToLower())
             {
-                case "transferout":
-                    filter.InInst = true;
-                    filter.IncludeNoHaveInstMember = false;
-                    break;
                 case "transferin":
                     filter.InInst = false;
-                    filter.IncludeNoHaveInstMember = true;
+                    filter.MinStatus = MemberStatus.Registered;
                     break;
+                case "transferout":
                 case "practice":
                     filter.InInst = true;
-                    filter.IncludeNoHaveInstMember = true;
+                    filter.MinStatus = MemberStatus.Registered;
+                    break;
+                default:
+                    filter.InInst = true;
                     break;
             }
 
@@ -214,7 +240,8 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
             }
             catch { }
 
-            try{
+            try
+            {
 
                 var startDates = Request.Form["job.StartDate"].Split(',');
                 var endDates = Request.Form["job.StartDate"].Split(',');

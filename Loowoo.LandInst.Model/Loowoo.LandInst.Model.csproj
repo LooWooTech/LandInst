@@ -37,6 +37,9 @@
     <Reference Include="EntityFramework.SqlServer">
       <HintPath>..\packages\EntityFramework.6.1.0\lib\net40\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.6.0.4\lib\net40\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
@@ -49,11 +52,11 @@
   <ItemGroup>
     <Compile Include="AnnualCheck.cs" />
     <Compile Include="Certification.cs" />
-    <Compile Include="CheckProfile.cs" />
     <Compile Include="Education.cs" />
     <Compile Include="Equipment.cs" />
     <Compile Include="Exam.cs" />
     <Compile Include="ExamResult.cs" />
+    <Compile Include="ExamSubject.cs" />
     <Compile Include="Filters\CheckLogFilter.cs" />
     <Compile Include="Filters\ExamFilter.cs" />
     <Compile Include="Filters\InstitutionFilter.cs" />
@@ -69,13 +72,17 @@
     <Compile Include="Practice.cs" />
     <Compile Include="Profile.cs" />
     <Compile Include="Software.cs" />
-    <Compile Include="Transfer.cs" />
+    <Compile Include="Transfer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UploadFile.cs" />
     <Compile Include="VCheckAnnual.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="VCheckBase.cs" />
     <Compile Include="VCheckEducation.cs" />
-    <Compile Include="VCheckExam.cs">
+    <Compile Include="VCheckExam.cs" />
+    <Compile Include="VExamResult.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="VCheckInst.cs" />
