@@ -1,0 +1,80 @@
+﻿@{
+    var submitUrl = Model ?? "approval";
+    }
+<div class="modal fade" id="myModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">审核意见</h4>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="hidResult" />
+                <textarea name="Note" id="txtNote" rows="4" style="width:100%;" ></textarea>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="btnApproval">确认审核</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /.modal -->
+<script>
+    $(function () {
+        $(".btn-approval").click(function () {
+            var href = $(this).attr("href");
+            $.request(href, null, function () {
+                alert("操作成功");
+                window.location.href = "@Html.Raw(Request.Url.AbsoluteUri)";
+            });
+            return false;
+        });
+
+        $("#btn-select").click(function () {
+            $("input[type='checkbox']").prop('checked', this.checked);
+        });
+
+        $("#btn-agree").click(function () {
+            var ids = getIds();
+            if (ids.length == 0) {
+                alert("请先选择需要审核的用户");
+                return false;
+            }
+            $("#hidResult").val(true);
+            $("#txtNote").focus();
+            $('#myModal').modal('show');
+        });
+
+        $("#btn-disagree").click(function () {
+            var ids = getIds();
+            if (ids.length == 0) {
+                alert("请先选择需要审核的用户");
+                return false;
+            }
+            $("#hidResult").val(false);
+            $("#txtNote").focus();
+            $('#myModal').modal('show');
+        });
+
+        $("#btnApproval").click(function () {
+            var result = $("#hidResult").val();
+            var note = $("#txtNode").val();
+            var data = { note: note, id: getIds().join() };
+            $.request("@(submitUrl)?result=" + result, data, function () {
+                alert("操作成功");
+                window.location.href = "@Html.Raw(Request.Url.AbsoluteUri)";
+            });
+        });
+
+        function getIds() {
+            var ids = [];
+            $("input[name='id']:checked").each(function () {
+                var val = $(this).val();
+                ids.push(val);
+
+            });
+            return ids;
+        }
+    });
+
+</script>

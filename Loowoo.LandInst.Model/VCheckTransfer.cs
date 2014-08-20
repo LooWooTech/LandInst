@@ -6,21 +6,36 @@ using System.Text;
 
 namespace Loowoo.LandInst.Model
 {
-    [Table("vcheck_transfer")]
-    public class VCheckTransfer : VCheckBase
+    public class VCheckTransfer
     {
-        public string RealName { get; set; }
+        public int ID
+        {
+            get
+            {
+                return VCheck.ID;
+            }
+        }
 
-        public int TargetInstID { get; set; }
+        public int TargetInstID
+        {
+            get
+            {
+                return int.Parse(VCheck.Data);
+            }
+        }
 
-        public TransferMode Mode     { get; set; }
+        public int CurrentInstID
+        {
+            get
+            {
+                return VCheck.InfoID;
+            }
+        }
 
-        public int CurrentInstID { get; set; }
+        public VCheckMember VCheck { get; set; }
 
-        [NotMapped]
         public string CurrentInstName { get; set; }
 
-        [NotMapped]
         public string TargetInstName { get; set; }
     }
 }

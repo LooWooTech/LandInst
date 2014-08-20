@@ -69,7 +69,6 @@
     <Compile Include="EnumDatas.cs" />
     <Compile Include="Member.cs" />
     <Compile Include="MemberProfile.cs" />
-    <Compile Include="Practice.cs" />
     <Compile Include="Profile.cs" />
     <Compile Include="Software.cs" />
     <Compile Include="Transfer.cs">

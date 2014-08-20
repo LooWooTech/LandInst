@@ -32,24 +32,88 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
         }
 
         [HttpPost]
-        public ActionResult Edit(int id, Member member, MemberProfile profile)
+        public ActionResult Edit(int id, CheckType? type, Member member, MemberProfile profile)
         {
             var inst = GetCurrentInst();
             member.InstitutionID = inst.ID;
-            profile.InstitutionID = member.InstitutionID;
 
+            try
+            {
+                var certNames = Request.Form["Cert.Name"].Split(',');
+                var certNos = Request.Form["Cert.No"].Split(',');
+                var certObtainDates = Request.Form["Cert.ObtainDate"].Split(',');
+                for (var i = 0; i < certNames.Length; i++)
+                {
+                    var obtainDate = DateTime.Now;
+                    DateTime.TryParse(certObtainDates[i], out obtainDate);
+                    profile.Certifications.Add(new Certification
+                    {
+                        Name = certNames[i],
+                        CertificationNo = certNos[i],
+                        ObtainDate = obtainDate == DateTime.MinValue ? default(Nullable<DateTime>) : obtainDate
+                    });
+                }
+            }
+            catch { }
+
+            try
+            {
+
+                var startDates = Request.Form["job.StartDate"].Split(',');
+                var endDates = Request.Form["job.StartDate"].Split(',');
+                var insts = Request.Form["job.Institution"].Split(',');
+                var offices = Request.Form["job.Office"].Split(',');
+                var notes = Request.Form["job.Note"].Split(',');
+                for (var i = 0; i < startDates.Length; i++)
+                {
+                    var startDate = DateTime.MinValue;
+                    DateTime.TryParse(startDates[i], out startDate);
+                    var endDate = DateTime.MinValue;
+                    DateTime.TryParse(endDates[i], out endDate);
+
+                    profile.Jobs.Add(new Job
+                    {
+                        StartDate = startDate == DateTime.MinValue ? null : startDate.ToShortDateString(),
+                        EndDate = endDate == DateTime.MinValue ? null : endDate.ToShortDateString(),
+                        Institution = insts[i],
+                        Office = offices[i],
+                        Note = notes[i]
+                    });
+                }
+
+            }
+            catch { }
+            
             if (id == 0)
             {
-                id = Core.MemberManager.AddMember(member);
-                Core.MemberManager.SaveProfile(member, profile);
-                return JsonSuccess(new { id });
-            }
-            else
-            {
-                member = Core.MemberManager.GetMember(id);
+                var memberId = Core.MemberManager.AddMember(member);
+                member.ID = memberId;
                 Core.MemberManager.SaveProfile(member, profile);
                 return JsonSuccess();
             }
+
+            if (!type.HasValue)
+            {
+                //没参加考试的用户可以随时变更资料 不需要审核
+                if (member.Status == MemberStatus.Normal)
+                {
+                    Core.MemberManager.UpdateMember(member);
+                }
+                Core.MemberManager.SaveProfile(member, profile);
+                return JsonSuccess();
+            }
+
+            if (type.Value == CheckType.Profile)
+            {
+                Core.MemberManager.SubmitProfile(member, profile);
+                
+            }
+            else if (type.Value == CheckType.Practice)
+            {
+                Core.MemberManager.SubmitPractice(member, profile);
+            }
+
+            return JsonSuccess();
         }
 
         public new ActionResult Profile(int id)
@@ -60,8 +124,6 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
             profile.SetMemberField(member);
             ViewBag.Profile = profile;
             ViewBag.Institution = inst;
-            //ViewBag.CheckLog = Core.CheckLogManager.GetLastLog(id, CheckType.Practice);
-            ViewBag.Practice = Core.PracticeManager.GetPracticeInfo(id, inst.ID);
             ViewBag.ChecLogs = Core.CheckLogManager.GetList(id);
             ViewBag.ExamResults = Core.ExamManager.GetVExamResults(new MemberFilter { UserID = id });
             ViewBag.Educations = Core.EducationManager.GetMemberEducations(id);
@@ -151,11 +213,11 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
                 {
                     throw new ArgumentException("你没有权限转移此用户");
                 }
-                Core.TransferManager.Submit(member, instId, mode);
+                Core.MemberManager.SubmitTransfer(member, instId);
             }
             else
             {
-                Core.TransferManager.Submit(member, Identity.UserID, mode);
+                Core.MemberManager.SubmitTransfer(member, instId);
             }
 
 
@@ -202,17 +264,17 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
             }
 
             var currentInst = GetCurrentInst();
-            ViewBag.MemberProfile = Core.MemberManager.GetProfile(memberId);
+            ViewBag.Profile = Core.MemberManager.GetProfile(memberId);
             var checkLog = Core.CheckLogManager.GetLastLog(memberId, CheckType.Practice);
             ViewBag.Institution = currentInst;
             ViewBag.CheckLog = checkLog;
-            ViewBag.Practice = Core.PracticeManager.GetPracticeInfo(memberId, currentInst.ID);
+            //ViewBag.Practice = Core.PracticeManager.GetPracticeInfo(memberId, currentInst.ID);
             return View();
         }
 
 
         [HttpPost]
-        public ActionResult Practice(int memberId, PracticeInfo data)
+        public ActionResult Practice(int memberId, MemberProfile profile)
         {
             var currentInst = GetCurrentInst();
             var member = Core.MemberManager.GetMember(memberId);
@@ -221,64 +283,20 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
                 throw new HttpException(401, "你不能为此会员申请执业登记");
                 return JsonSuccess();
             }
-            try
-            {
-                var certNames = Request.Form["Cert.Name"].Split(',');
-                var certNos = Request.Form["Cert.No"].Split(',');
-                var certObtainDates = Request.Form["Cert.ObtainDate"].Split(',');
-                for (var i = 0; i < certNames.Length; i++)
-                {
-                    var obtainDate = DateTime.Now;
-                    DateTime.TryParse(certObtainDates[i], out obtainDate);
-                    data.Certifications.Add(new Certification
-                    {
-                        Name = certNames[i],
-                        CertificationNo = certNos[i],
-                        ObtainDate = obtainDate == DateTime.MinValue ? default(Nullable<DateTime>) : obtainDate
-                    });
-                }
-            }
-            catch { }
+            //TODO
+            //Core.MemberManager.SubmitPractice(member, profile);
 
-            try
-            {
+            //var checkLog = Core.CheckLogManager.GetLastLog(memberId, CheckType.Practice);
+            //if (checkLog == null || checkLog.Result.HasValue)
+            //{
 
-                var startDates = Request.Form["job.StartDate"].Split(',');
-                var endDates = Request.Form["job.StartDate"].Split(',');
-                var insts = Request.Form["job.Institution"].Split(',');
-                var offices = Request.Form["job.Office"].Split(',');
-                var notes = Request.Form["job.Note"].Split(',');
-                for (var i = 0; i < startDates.Length; i++)
-                {
-                    var startDate = DateTime.MinValue;
-                    DateTime.TryParse(startDates[i], out startDate);
-                    var endDate = DateTime.MinValue;
-                    DateTime.TryParse(endDates[i], out endDate);
-
-                    data.Jobs.Add(new Job
-                    {
-                        StartDate = startDate == DateTime.MinValue ? null : startDate.ToShortDateString(),
-                        EndDate = endDate == DateTime.MinValue ? null : endDate.ToShortDateString(),
-                        Institution = insts[i],
-                        Office = offices[i],
-                        Note = notes[i]
-                    });
-                }
-
-            }
-            catch { }
-
-            var checkLog = Core.CheckLogManager.GetLastLog(memberId, CheckType.Practice);
-            if (checkLog == null || checkLog.Result.HasValue)
-            {
-
-                var practiceId = Core.PracticeManager.AddPracticeInfo(memberId, currentInst.ID, data);
-                Core.CheckLogManager.AddCheckLog(practiceId, memberId, CheckType.Practice);
-            }
-            else
-            {
-                Core.PracticeManager.UpdatePracticeInfo(checkLog.InfoID, data);
-            }
+            //    var practiceId = Core.PracticeManager.AddPracticeInfo(memberId, currentInst.ID, data);
+            //    Core.CheckLogManager.AddCheckLog(practiceId, memberId, CheckType.Practice);
+            //}
+            //else
+            //{
+            //    Core.PracticeManager.UpdatePracticeInfo(checkLog.InfoID, data);
+            //}
 
 
             return JsonSuccess();

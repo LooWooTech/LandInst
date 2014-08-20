@@ -1,7 +1,7 @@
 ﻿@using Loowoo.LandInst.Model
 @{
     var id = Request.QueryString["id"];
-    ViewBag.Title = (string.IsNullOrEmpty(id) ? "添加" : "修改") + "考试科目";
+    ViewBag.Title = (string.IsNullOrEmpty(id) ? "添加" : "修改") + "培训科目";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 
     ExamSubject model = ViewBag.Model;

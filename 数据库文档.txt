@@ -9,7 +9,7 @@ AnnualCheck		年度审核表
 Approval		审核表
 	ID
 	InfoID		审核数据ID
-	ApprovalType审核数据类型（注册、变更、年审、教育、考试等，详细见枚举）
+	ApprovalType审核数据类型（注册、变更、年审、教育、培训等，详细见枚举）
 	UserID		用户（会员、机构）的ID
 	ApprovalTime审核时间
 	Result		审核结果
@@ -25,17 +25,17 @@ Education		继续教育表
 	Angecy
 	Summary
 --------------------------------------------------------------------------------------
-Exam			考试表
+Exam			培训表
 	ID
 	StartSignDate	开始报名时间
 	EndSignDate		结束报名时间
-	StartExamDate	开始考试时间
-	EndExamDate		结束考试时间
+	StartExamDate	开始培训时间
+	EndExamDate		结束培训时间
 	Name
 	Summary			简介
-	Address			考试地点
+	Address			培训地点
 --------------------------------------------------------------------------------------
-ExamResult	考试成绩表
+ExamResult	培训成绩表
 	ID
 	ExamID
 	MemberID
@@ -68,7 +68,7 @@ Member			会员表
 	Gender		性别
 	Email	
 	MobilePhone
-	Status		会员状态（新注册、报名考试、通过考试、从业人员）
+	Status		会员状态（新注册、报名培训、通过培训、从业人员）
 --------------------------------------------------------------------------------------
 User			账户表
 	ID
@@ -83,7 +83,7 @@ User			账户表
 --------------------------------------------------------------------------------------
 VApproval_AnnualCheck	后台年审视图
 VApproval_Education		后台继续教育审核视图
-VApproval_Exam			后台考试审核视图
+VApproval_Exam			后台培训审核视图
 VApproval_Inst			后台机构审核视图
 VApproval_Member		后台用户审核视图
 

@@ -3,15 +3,15 @@
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
     Exam model = ViewBag.Model ?? new Exam();
     List<ExamSubject> subjects = ViewBag.Subjects;
-    ViewBag.Title = model.ID > 0 ? "修改考试设置" : "添加考试";
+    ViewBag.Title = model.ID > 0 ? "修改培训设置" : "添加培训";
 }
 <form id="exam-form" role="form" class="form-horizontal">
     <div class="form-group">
-        <label class="control-label col-lg-2">考试名称</label>
+        <label class="control-label col-lg-2">培训名称</label>
         <div class="col-sm-3">
             <input type="text" name="Name" class="form-control input-sm" value="@(model.Name)" />
         </div>
-        <label class="control-label col-lg-2">考试地点</label>
+        <label class="control-label col-lg-2">培训地点</label>
         <div class="col-sm-2">
             <input type="text" name="Address" class="form-control input-sm"  value="@(model.Address)" />
         </div>
@@ -27,17 +27,17 @@
         </div>
     </div>
     <div class="form-group">
-        <label class="control-label col-lg-2">考试开始时间</label>
+        <label class="control-label col-lg-2">培训开始时间</label>
         <div class="col-sm-3">
             <input type="text" name="StartExamDate" class="form-control input-sm datepicker""  value="@(model.StartExamDate == DateTime.MinValue ? "" : model.StartExamDate.ToShortDateString())" />
         </div>
-        <label class="control-label col-lg-2">考试结束时间</label>
+        <label class="control-label col-lg-2">培训结束时间</label>
         <div class="col-sm-3">
             <input type="text" name="EndExamDate" class="form-control input-sm datepicker""  value="@(model.EndExamDate == DateTime.MinValue ? "" : model.EndExamDate.ToShortDateString())" />
         </div>
     </div>
     <div class="form-group">
-        <label class="control-label col-lg-2">考试科目</label>
+        <label class="control-label col-lg-2">培训科目</label>
         <div class="col-sm-8">
             @foreach (var subject in subjects)
             { 

@@ -165,6 +165,11 @@ namespace Loowoo.LandInst.Manager
                     query = query.Where(e => e.ExamID == filter.InfoID.Value);
                 }
 
+                if (filter.UserID.HasValue && filter.UserID.Value > 0)
+                {
+                    query = query.Where(e => e.MemberID == filter.UserID.Value);
+                }
+
                 var list = query.OrderByDescending(e => e.ID).SetPage(filter.Page).ToList();
                 foreach (var item in list)
                 {

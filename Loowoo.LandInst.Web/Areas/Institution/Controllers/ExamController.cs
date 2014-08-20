@@ -54,7 +54,7 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
                 ViewBag.Subjects = exam.Subjects.Split(',').Select(name => Core.ExamManager.GetSubject(name)).ToList();
                 if (examResult != null)
                 {
-                    ViewBag.SignedSubjects = examResult.Subjects.Select(name => Core.ExamManager.GetSubject(name)).ToList();
+                    ViewBag.SignedSubjects = examResult.Subjects.Split(',').Select(name => Core.ExamManager.GetSubject(name)).ToList();
                 }
 
                 ViewBag.CheckLog = Core.CheckLogManager.GetCheckLog(exam.ID, memberId, CheckType.Exam);

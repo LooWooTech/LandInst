@@ -12,7 +12,8 @@ namespace Loowoo.LandInst.Model
     {
         public MemberProfile()
         {
-            PracticeInfo = new PracticeInfo();
+            Certifications = new List<Certification>();
+            Jobs = new List<Job>();
         }
 
         public MemberProfile(Member member):this()
@@ -99,9 +100,64 @@ namespace Loowoo.LandInst.Model
         public string Address { get; set; }
 
         /// <summary>
-        /// 执业登记信息
+        /// 其他资格证书
         /// </summary>
-        public PracticeInfo PracticeInfo { get; set; }
+        public List<Certification> Certifications { get; set; }
+
+        /// <summary>
+        /// 工作简历
+        /// </summary>
+        public List<Job> Jobs { get; set; }
+
+
+        #region 执业资料
+
+        /// <summary>
+        /// 人事档案编号
+        /// </summary>
+        public string PersonalRecordsNO { get; set; }
+
+        /// <summary>
+        /// 个人社会保险编号
+        /// </summary>
+        public string SocialSecurityNO { get; set; }
+
+        /// <summary>
+        /// 人事档案存放机构
+        /// </summary>
+        public string PersonalRecordsInstitution { get; set; }
+
+        /// <summary>
+        /// 个人社会保险存放机构
+        /// </summary>
+        public string SocialSecurityInstitution { get; set; }
+
+        /// <summary>
+        /// 职业登记号
+        /// </summary>
+        public string PracticeRegistrationNO { get; set; }
+
+        /// <summary>
+        /// 资格证书号
+        /// </summary>
+        public string CertificationNO { get; set; }
+
+        /// <summary>
+        /// 职务
+        /// </summary>
+        public string Office { get; set; }
+
+        /// <summary>
+        /// 照片1（证件正面）
+        /// </summary>
+        public string Photo1 { get; set; }
+
+        /// <summary>
+        /// 照片2（证件反面）
+        /// </summary>
+        public string Photo2 { get; set; }
+
+        #endregion
 
     }
 }

@@ -48,7 +48,7 @@ namespace Loowoo.LandInst.Model
         [Description("新注册用户")]
         Normal = 0,
 
-        [Description("认证会员")]
+        [Description("培训合格")]
         Registered = 1,
 
         [Description("执业人员")]

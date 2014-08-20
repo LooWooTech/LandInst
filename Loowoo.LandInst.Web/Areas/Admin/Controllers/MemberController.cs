@@ -88,20 +88,19 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
                 case CheckType.Education:
                     break;
                 case CheckType.Transfer:
-                    Core.TransferManager.TransferMember(checkLog.InfoID, member);
+                    Core.MemberManager.ApprovalTransfer(checkLog);
                     break;
                 case CheckType.Practice:
                     if (checkLog.Result == true)
                     {
-                        Core.MemberManager.PracticeMemeber(checkLog);
-                        if (member.InstitutionID == 0)
-                        {
-                            member.InstitutionID = Core.PracticeManager.GetInstId(checkLog.InfoID);
-                        }
-                        member.Status = MemberStatus.Practice;
-                        Core.MemberManager.UpdateMember(member);
-                        //Core.MemberManager.UpdateMemberStatus(ember.ID, MemberStatus.Practice);
+                        var profile = Core.MemberManager.GetProfile(checkLog);
+                        profile.ID = checkLog.UserID;
+                        profile.Status = MemberStatus.Practice;
+                        Core.MemberManager.UpdateMember(profile);
+                        //Core.MemberManager.UpdateMemberStatus(member.ID, MemberStatus.Practice);
                     }
+                    break;
+                case CheckType.Profile:
                     break;
             }
             return JsonSuccess();
@@ -129,12 +128,7 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
             ViewBag.Profile = profile;
             ViewBag.ExamResults = Core.ExamManager.GetVExamResults(new MemberFilter { UserID = id });
             ViewBag.Educations = Core.EducationManager.GetMemberEducations(id);
-            //TODO 执业信息
-            var practiceCheckLog = Core.CheckLogManager.GetLastLog(id, CheckType.Practice);
-            if (practiceCheckLog != null)
-            {
-                ViewBag.PracticeInfo = Core.PracticeManager.GetPracticeInfo(practiceCheckLog.InfoID);
-            }
+
             if (checkLogId > 0)
             {
                 ViewBag.CheckLog = Core.CheckLogManager.GetCheckLog(checkLogId);
@@ -147,19 +141,25 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
             return View();
         }
 
-        public ActionResult Practices(string name, bool? result, int page = 1)
+        public ActionResult Practices(string name, bool? hasCheck, int page = 1)
         {
             var filter = new MemberFilter
             {
                 Keyword = name,
                 Page = new PageFilter { PageIndex = page },
-                Result = result,
+                HasCheck = hasCheck,
                 Type = CheckType.Practice
             };
             ViewBag.List = Core.MemberManager.GetVCheckMembers(filter);
             ViewBag.Page = filter.Page;
             return View();
         }
+
+        public ActionResult Transfers(string name, bool? hasCheck, int page = 1)
+        {
+            return View();
+        }
+
 
         [HttpGet]
         public ActionResult ResetPwd()

@@ -118,7 +118,7 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
         {
             if (examId == 0)
             {
-                throw new ArgumentException("没有选择哪一次考试");
+                throw new ArgumentException("没有选择哪一次培训");
             }
 
             var file = Request.Files[0];

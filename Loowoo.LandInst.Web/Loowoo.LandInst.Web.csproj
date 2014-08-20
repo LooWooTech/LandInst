@@ -108,6 +108,7 @@
     <Compile Include="Areas\Institution\Controllers\AnnualController.cs" />
     <Compile Include="Areas\Institution\Controllers\EducationController.cs" />
     <Compile Include="Areas\Institution\Controllers\ExamController.cs" />
+    <Compile Include="Areas\Institution\Controllers\FileController.cs" />
     <Compile Include="Areas\Institution\Controllers\HomeController.cs" />
     <Compile Include="Areas\Institution\Controllers\MemberController.cs" />
     <Compile Include="Areas\Institution\Controllers\ProfileController.cs" />
@@ -313,6 +314,8 @@
     <Content Include="Areas\Admin\Views\Exam\Subjects.cshtml" />
     <Content Include="Areas\Admin\Views\Exam\EditSubject.cshtml" />
     <Content Include="Areas\Institution\Views\Exam\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\Member\Transfers.cshtml" />
+    <Content Include="Areas\Admin\Views\Shared\_batchApproval.cshtml" />
     <None Include="Properties\PublishProfiles\LandInst.pubxml" />
     <Content Include="Views\User\ForgetPwd.cshtml" />
     <Content Include="Views\User\EditPassword.cshtml" />

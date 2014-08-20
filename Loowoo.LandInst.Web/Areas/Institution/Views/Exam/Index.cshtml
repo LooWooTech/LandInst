@@ -1,7 +1,7 @@
 ﻿@using Loowoo.LandInst.Model
 @{
     Layout = "~/Areas/Institution/Views/Shared/_Layout.cshtml";
-    ViewBag.Title = "报名考试记录";
+    ViewBag.Title = "报名培训记录";
     List<Exam> exams = ViewBag.Exams;
     List<VCheckExam> list = ViewBag.List;
 }
@@ -13,7 +13,7 @@
             <input type="text" class="form-control" name="name" placeholder="会员姓名" value="@(Request.QueryString["name"])">
             <div class="input-group-btn">
                 <select name="examId" class="form-control">
-                    <option value="0">选择考试</option>
+                    <option value="0">选择培训</option>
                     @foreach (var exam in exams)
                     { 
                         <option value="@(exam.ID)" @(Html.Raw(exam.ID.ToString() == Request.QueryString["examId"] ? " selected=\"selected\"" : null))>@(exam.Name)</option>
@@ -22,7 +22,7 @@
             </div>
             <div class="input-group-btn">
                 <button type="submit" class="btn btn-primary"><i class="glyphicon glyphicon-search"></i>查询</button>
-                <a href="/institution/exam/signup" class="btn btn-success">报名考试</a>
+                <a href="/institution/exam/signup" class="btn btn-success">报名培训</a>
             </div>
         </div>
     </div>
@@ -30,7 +30,7 @@
 <table class="table table-bordered">
     <tr>
         <th style="width: 120px;">姓名</th>
-        <th>考试名称</th>
+        <th>培训名称</th>
         <th>报考科目</th>
         <th style="width: 160px;">报名日期</th>
         <th style="width: 160px;">审核日期</th>

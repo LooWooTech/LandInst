@@ -1,6 +1,6 @@
 ﻿@using Loowoo.LandInst.Model
 @{
-    ViewBag.Title = "考试科目管理";
+    ViewBag.Title = "培训科目管理";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
     
     List<ExamSubject> list = ViewBag.List;
@@ -31,7 +31,7 @@
 <script>
     $(function () {
         $(".btn-delete").click(function () {
-            if (confirm("如果科目用于考试，删除会造成影响，你确认删除吗？")) {
+            if (confirm("如果科目用于培训，删除会造成影响，你确认删除吗？")) {
                 var href = $(this).attr("href");
                 $.request(href, null, function () {
                     alert("已删除");

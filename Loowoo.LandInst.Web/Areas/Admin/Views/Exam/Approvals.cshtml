@@ -1,7 +1,7 @@
 ﻿@using Loowoo.LandInst.Common
 @using Loowoo.LandInst.Model
 @{
-    ViewBag.Title = "报名考试审核";
+    ViewBag.Title = "报名培训审核";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
     List<VCheckExam> list = ViewBag.List;
     List<Exam> exams = ViewBag.Exams;
@@ -15,7 +15,7 @@
             <input type="text" class="form-control" name="name" placeholder="会员姓名" value="@(Request.QueryString["name"])">
             <div class="input-group-btn">
                 <select name="examId" class="form-control">
-                    <option value="0">选择考试</option>
+                    <option value="0">选择培训</option>
                     @foreach (var exam in exams)
                     { 
                         <option value="@(exam.ID)" @(Html.Raw(exam.ID.ToString() == Request.QueryString["examId"] ? " selected=\"selected\"" : null))>@(exam.Name)</option>
@@ -40,7 +40,7 @@
         <th style="width: 30px;">
             <input id="btn-select" type="checkbox" /></th>
         <th>姓名</th>
-        <th>考试名称</th>
+        <th>培训名称</th>
         <th>报考科目</th>
         <th style="width: 120px;">报名日期</th>
         <th style="width: 120px;">审核日期</th>
@@ -82,80 +82,4 @@
         <td colspan="10">@Html.Partial("_pagination", ViewBag.Page as object)</td>
     </tr>
 </table>
-<div class="modal fade" id="myModal">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <h4 class="modal-title">审核意见</h4>
-            </div>
-            <div class="modal-body">
-                <input type="hidden" id="hidResult" />
-                <textarea name="Note" id="txtNote" rows="4" style="width:100%;" ></textarea>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" id="btnApproval">确认审核</button>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- /.modal -->
-<script>
-    $(function () {
-        $(".btn-approval").click(function () {
-            var href = $(this).attr("href");
-            $.request(href, null, function () {
-                alert("操作成功");
-                window.location.href = "@Html.Raw(Request.Url.AbsoluteUri)";
-            });
-            return false;
-        });
-
-        $("#btn-select").click(function () {
-            $("input[type='checkbox']").prop('checked', this.checked);
-        });
-
-        $("#btn-agree").click(function () {
-            var ids = getIds();
-            if (ids.length == 0) {
-                alert("请先选择需要审核的用户");
-                return false;
-            }
-            $("#hidResult").val(true);
-            $("#txtNote").focus();
-            $('#myModal').modal('show');
-        });
-
-        $("#btn-disagree").click(function () {
-            var ids = getIds();
-            if (ids.length == 0) {
-                alert("请先选择需要审核的用户");
-                return false;
-            }
-            $("#hidResult").val(false);
-            $("#txtNote").focus();
-            $('#myModal').modal('show');
-        });
-
-        $("#btnApproval").click(function () {
-            var result = $("#hidResult").val();
-            var note = $("#txtNode").val();
-            var data = { note:note,id:getIds().join()};
-            $.request("approval?result=" + result, data, function () {
-                alert("操作成功");
-                window.location.href = "@Html.Raw(Request.Url.AbsoluteUri)";
-            });
-        });
-
-        function getIds() {
-            var ids = [];
-            $("input[name='id']:checked").each(function () {
-                var val = $(this).val();
-                ids.push(val);
-
-            });
-            return ids;
-        }
-    });
-
-</script>
+@Html.Partial("_batchApproval")

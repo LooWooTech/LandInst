@@ -13,13 +13,13 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
             return View();
         }
 
-        public ActionResult Approvals(string name, int? instId, bool? result, int page = 1)
+        public ActionResult Approvals(string name, int? instId, bool? hasCheck, int page = 1)
         {
-            ViewBag.List = Core.TransferManager.GetVCheckTransfers(new Model.Filters.MemberFilter
+            ViewBag.List = Core.MemberManager.GetVCheckTransfers(new Model.Filters.MemberFilter
             {
                 Type = Model.CheckType.Transfer,
                 Keyword = name,
-                Result = result,
+                HasCheck = hasCheck,
                 InstID = instId,
                 Page = new Model.Filters.PageFilter { PageIndex = page }
             });

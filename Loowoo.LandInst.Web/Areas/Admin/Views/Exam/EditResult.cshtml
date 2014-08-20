@@ -1,6 +1,6 @@
 ﻿@using Loowoo.LandInst.Model
 @{
-    ViewBag.Title = "会员考试成绩";
+    ViewBag.Title = "会员培训成绩";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
     ExamResult model = ViewBag.Model;
     Member member = ViewBag.Member;
@@ -28,15 +28,15 @@
             <td>@(member.MobilePhone)</td>
         </tr>
         <tr>
-            <th>考试名称</th>
+            <th>培训名称</th>
             <td>@(model.Exam.Name)</td>
-            <th>考试地点</th>
+            <th>培训地点</th>
             <td>@(model.Exam.Address)</td>
         </tr>
         <tr>
             <th>报名</th>
             <td>@(model.Exam.StartSignDate.ToShortDateString()) ~ @(model.Exam.EndSignDate.ToShortDateString())</td>
-            <th>考试时间</th>
+            <th>培训时间</th>
             <td>@(model.Exam.StartExamDate.ToShortDateString()) ~ @(model.Exam.EndExamDate.ToShortDateString())</td>
         </tr>
         <tr>
@@ -46,7 +46,7 @@
             <td>@(model.Subjects)</td>
         </tr>
         <tr>
-            <th>考试成绩</th>
+            <th>培训成绩</th>
             <td colspan="3">
                 @foreach (var name in model.Subjects.Split(','))
                 {

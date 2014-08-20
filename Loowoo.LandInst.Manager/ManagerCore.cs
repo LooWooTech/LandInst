@@ -60,18 +60,6 @@ namespace Loowoo.LandInst.Manager
         }
 
 
-        private TransferManager _transferManager;
-        public TransferManager TransferManager
-        {
-            get { return _transferManager == null ? _transferManager = new TransferManager() : _transferManager; }
-        }
-
-        private PracticeManager _practiceManager;
-        public PracticeManager PracticeManager
-        {
-            get { return _practiceManager == null ? _practiceManager = new PracticeManager() : _practiceManager; }
-        }
-
         private FileManager _fileManager;
         public FileManager FileManager
         {

@@ -1,0 +1,56 @@
+﻿@using Loowoo.LandInst.Model
+@using Loowoo.LandInst.Common
+@{
+    ViewBag.Title = "会员转移审核";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    List<VCheckTransfer> list = ViewBag.List;
+    var hasCheck = Request.QueryString["hasCheck"];
+}
+<form class="form-inline search-form">
+    <div class="col-lg-10">
+        <div class="input-group">
+            <span class="input-group-addon">查询会员</span>
+            <input type="text" class="form-control" name="name" placeholder="机构名称" value="@(Request.QueryString["name"])">
+            <div class="input-group-btn">
+                <select name="hasCheck" class="form-control">
+                    <option value="false" @(hasCheck == "false" ? "selected=selected" : "")>未审核</option>
+                    <option value="" @(string.IsNullOrEmpty(hasCheck) ? "selected=selected" : "")>全部</option>
+                    <option value="true" @(hasCheck == "true" ? "selected=selected" : "")>已审核</option>
+                </select>
+            </div>
+            <div class="input-group-btn">
+                <button type="submit" class="btn btn-primary"><i class="glyphicon glyphicon-search"></i>查询</button>
+                <input type="button" id="btn-agree" class="btn btn-success" value="批量审核" />
+                <input type="button" id="btn-disagree" class="btn btn-danger" value="批量不通过" />
+            </div>
+        </div>
+    </div>
+</form>
+<table class="table table-bordered">
+    <tr>
+        <th style="width: 30px;">
+            <input id="btn-select" type="checkbox" /></th>
+        <th>会员姓名</th>
+        <th style="width: 150px;">申请日期</th>
+        <th style="width: 150px;">当前机构</th>
+        <th style="width: 100px;">转移至机构</th>
+    </tr>
+    @foreach (var item in list)
+    { 
+        <tr>
+            <td>
+                <input type="checkbox" name="id" value="@(item.ID)" />
+            </td>
+            <td><a href="profile?id=@(item.VCheck.UserID)&checklogId=@(item.VCheck.ID)">@(item.VCheck.RealName)</a></td>
+            <td>@(item.VCheck.CreateTime.ToString())</td>
+            <td>@(item.CurrentInstName)</td>
+            <td>@(item.TargetInstName)</td>
+        </tr>
+    }
+    <tr>
+        <td colspan="10">
+            @Html.Partial("_pagination", ViewBag.Page as object)
+        </td>
+    </tr>
+</table>
+@Html.Partial("_batchApproval")

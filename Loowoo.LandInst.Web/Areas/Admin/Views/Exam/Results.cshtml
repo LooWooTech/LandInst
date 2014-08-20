@@ -1,7 +1,7 @@
 ﻿@using Loowoo.LandInst.Common
 @using Loowoo.LandInst.Model
 @{
-    ViewBag.Title = "考试成绩管理";
+    ViewBag.Title = "培训成绩管理";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
     List<VExamResult> list = ViewBag.List;
     List<Exam> exams = ViewBag.Exams;
@@ -14,7 +14,7 @@
             <input type="text" class="form-control" name="name" placeholder="会员姓名" value="@(Request.QueryString["name"])">
             <div class="input-group-btn">
                 <select name="examId" class="form-control">
-                    <option value="0">选择考试</option>
+                    <option value="0">选择培训</option>
                     @foreach (var exam in exams)
                     { 
                         <option value="@(exam.ID)" @(Html.Raw(exam.ID.ToString() == Request.QueryString["examId"] ? " selected=\"selected\"" : null))>@(exam.Name)</option>
@@ -31,7 +31,7 @@
 <table class="table table-bordered">
     <tr>
         <th style="width: 100px;">姓名</th>
-        <th>考试名称</th>
+        <th>培训名称</th>
         <th style="width: 150px;">报名时间</th>
         <th>科目成绩</th>
         <th style="width: 100px;">详细</th>

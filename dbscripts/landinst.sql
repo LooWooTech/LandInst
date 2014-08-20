@@ -231,7 +231,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`loowootech`@`localhost` SQL SECURITY DEFINER
 INSERT INTO `annualcheck` VALUES ('4', '2014-08-01 00:00:00', '2014-09-01 00:00:00', '2014年度审批', null);
 INSERT INTO `checklog` VALUES ('1', '1', '26', '1', '2014-08-18 15:58:16', '2014-08-18 16:13:01', '', null, null);
 INSERT INTO `checklog` VALUES ('3', '1', '1', '6', '2014-08-19 19:42:31', '2014-08-19 20:03:46', '', null, '语文,英语');
-INSERT INTO `exam` VALUES ('1', '2014-08-01 00:00:00', '2014-09-30 00:00:00', '2014-12-15 00:00:00', '2014-12-16 00:00:00', '测试考试', null, null, '语文,英语,计算机');
+INSERT INTO `exam` VALUES ('1', '2014-08-01 00:00:00', '2014-09-30 00:00:00', '2014-12-15 00:00:00', '2014-12-16 00:00:00', '测试培训', null, null, '语文,英语,计算机');
 INSERT INTO `examresult` VALUES ('2', '1', '1', '2014-08-19 20:03:46', '语文,英语', '语文:100,英语:90', '2014-08-19 20:03:58');
 INSERT INTO `examsubject` VALUES ('1', '语文', '100');
 INSERT INTO `examsubject` VALUES ('2', '数学', '100');

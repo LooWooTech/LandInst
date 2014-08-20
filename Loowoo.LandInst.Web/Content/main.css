@@ -41,3 +41,20 @@ legend {
   border-bottom: 1px solid #ddd;
   display: block;
 }
+.control-upload {
+  display: block;
+  position: relative;
+}
+.control-upload input[type='file'] {
+  position: absolute;
+  width: 88px;
+  filter: alpha(opacity=0);
+  opacity: 0;
+}
+.img-preview {
+  max-width: 300px;
+  max-height: 100px;
+  border: solid 1px;
+  padding: 2px;
+  margin: 2px;
+}

@@ -8,30 +8,30 @@ using System.Text;
 
 namespace Loowoo.LandInst.Model
 {
-    [Table("transfer")]
-    public class Transfer
-    {
-        public Transfer()
-        {
-            CreateTime = DateTime.Now;
-        }
+    //[Table("transfer")]
+    //public class Transfer
+    //{
+    //    public Transfer()
+    //    {
+    //        CreateTime = DateTime.Now;
+    //    }
 
-        [Key]
-        [DatabaseGenerated(System.ComponentModel.DataAnnotations.Schema.DatabaseGeneratedOption.Identity)]
-        public int ID { get; set; }
+    //    [Key]
+    //    [DatabaseGenerated(System.ComponentModel.DataAnnotations.Schema.DatabaseGeneratedOption.Identity)]
+    //    public int ID { get; set; }
 
-        public int MemberID { get; set; }
+    //    public int MemberID { get; set; }
 
-        public int CurrentInstID { get; set; }
+    //    public int CurrentInstID { get; set; }
 
-        public int TargetInstID { get; set; }
+    //    public int TargetInstID { get; set; }
 
-        public TransferMode Mode { get; set; }
+    //    public TransferMode Mode { get; set; }
 
-        public DateTime CreateTime { get; set; }
+    //    public DateTime CreateTime { get; set; }
 
-        public DateTime? UpdateTime { get; set; }
-    }
+    //    public DateTime? UpdateTime { get; set; }
+    //}
 
     public enum TransferMode
     {

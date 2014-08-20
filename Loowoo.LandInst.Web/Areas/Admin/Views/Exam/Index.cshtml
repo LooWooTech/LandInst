@@ -1,13 +1,13 @@
 ﻿@using Loowoo.LandInst.Model
 @{
-    ViewBag.Title = "考试设置";
+    ViewBag.Title = "培训设置";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
     List<Exam> list = ViewBag.List;
 }
 
 <form class="form-inline search-form">
     <div class="col-lg-8">
-        <a href="/admin/exam/edit" class="btn btn-primary"><i class="glyphicon glyphicon-plus"></i> 添加考试</a>
+        <a href="/admin/exam/edit" class="btn btn-primary"><i class="glyphicon glyphicon-plus"></i> 添加培训</a>
     </div>
 </form>
 <table class="table table-bordered">
@@ -15,10 +15,10 @@
         <th>名称</th>
         <th style="width:120px;">报名起始时间</th>
         <th style="width:120px;">报名结束时间</th>
-        <th style="width:120px;">考试起始时间</th>
-        <th style="width:120px;">考试结束时间</th>
-        <th style="width:150px;">考试地点</th>
-        <th>考试科目</th>
+        <th style="width:120px;">培训起始时间</th>
+        <th style="width:120px;">培训结束时间</th>
+        <th style="width:150px;">培训地点</th>
+        <th>培训科目</th>
         <th style="width:100px;">管理</th>
     </tr>
     @foreach (var item in list)

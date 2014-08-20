@@ -20,6 +20,11 @@ namespace Loowoo.LandInst.Web
             }
         }
 
+        protected ActionResult JsonFail(string message)
+        {
+            return Content(new { result = false, message }.ToJson());
+        }
+
         protected ActionResult JsonSuccess(object data = null)
         {
             return Content(new { result = true, data = data }.ToJson());

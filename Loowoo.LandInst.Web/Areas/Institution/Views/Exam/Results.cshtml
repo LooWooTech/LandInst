@@ -13,7 +13,7 @@
             <input type="text" class="form-control" name="name" placeholder="会员姓名" value="@(Request.QueryString["name"])">
             <div class="input-group-btn">
                 <select name="examId" class="form-control">
-                    <option value="0">选择考试</option>
+                    <option value="0">选择培训</option>
                     @foreach (var exam in exams)
                     { 
                         <option value="@(exam.ID)" @(Html.Raw(exam.ID.ToString() == Request.QueryString["examId"] ? " selected=\"selected\"" : null))>@(exam.Name)</option>
@@ -29,9 +29,9 @@
 <table class="table table-bordered">
     <tr>
         <th style="width: 120px;">姓名</th>
-        <th>考试名称</th>
+        <th>培训名称</th>
         <th>报名时间</th>
-        <th>考试时间</th>
+        <th>培训时间</th>
         <th style="width: 170px;">报名日期</th>
         <th>科目分数</th>
     </tr>

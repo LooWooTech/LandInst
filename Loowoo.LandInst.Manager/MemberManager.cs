@@ -9,8 +9,52 @@ using Loowoo.LandInst.Model.Filters;
 
 namespace Loowoo.LandInst.Manager
 {
-    public class MemberManager : ManagerBase
+    public partial class MemberManager : ManagerBase
     {
+
+        public int SaveProfile(Member member, MemberProfile profile)
+        {
+            profile.SetMemberField(member);
+            var draftProfile = Core.ProfileManager.GetLastProfile(member.ID);
+            if (draftProfile == null || draftProfile.CheckResult.HasValue)
+            {
+                return Core.ProfileManager.AddProfile(member.ID, profile);
+            }
+            Core.ProfileManager.UpdateProfile(draftProfile.ID, profile);
+            return draftProfile.ID;
+        }
+
+        public void SubmitProfile(Member member, MemberProfile profile)
+        {
+            //如果当前已经提交了资料变更申请，则只更新资料
+            var checkLog = Core.CheckLogManager.GetLastLog(member.ID, CheckType.Profile);
+
+            if (checkLog == null || checkLog.Result.HasValue)
+            {
+                var profileId = SaveProfile(member, profile);
+                Core.CheckLogManager.AddCheckLog(profileId, member.ID, CheckType.Profile, profileId.ToString());
+            }
+            else
+            {
+                Core.ProfileManager.UpdateProfile(checkLog.InfoID, profile);
+            }
+        }
+
+        public void SubmitPractice(Member member, MemberProfile profile)
+        {
+            if (member.Status == MemberStatus.Practice) return;
+            var checkLog = Core.CheckLogManager.GetLastLog(member.ID, CheckType.Practice);
+            if (checkLog == null || checkLog.Result == false)
+            {
+                var profileId = SaveProfile(member, profile);
+                Core.CheckLogManager.AddCheckLog(profileId, member.ID, CheckType.Annual, profileId.ToString());
+            }
+            else
+            {
+                SaveProfile(member, profile);
+            }
+        }
+
         public int AddMember(Member member)
         {
             using (var db = GetDataContext())
@@ -65,10 +109,20 @@ namespace Loowoo.LandInst.Manager
             }
         }
 
+        public MemberProfile GetProfile(CheckLog checkLog)
+        {
+            if (checkLog == null || (checkLog.CheckType != CheckType.Profile && checkLog.CheckType != CheckType.Profile)) return null;
+            return Core.ProfileManager.GetProfile<MemberProfile>(checkLog.DataAsInt());
+        }
 
         public MemberProfile GetProfile(int memberId)
         {
-            return Core.ProfileManager.GetLastProfile<MemberProfile>(memberId);
+            if (memberId == 0) return null;
+            var member = Core.MemberManager.GetMember(memberId);
+            if (member == null) return null;
+            var profile = Core.ProfileManager.GetLastProfile<MemberProfile>(memberId);
+            profile.SetMemberField(member);
+            return profile;
             //if (memberId == 0) return null;
             //var checkLog = Core.CheckLogManager.GetLastLog(memberId, CheckType.Profile, checkResult);
             //if (checkLog == null)
@@ -76,21 +130,21 @@ namespace Loowoo.LandInst.Manager
             //return Core.ProfileManager.GetProfile<MemberProfile>(checkLog.InfoID);
         }
 
-        public void SaveProfile(Member member, MemberProfile profile)
-        {
-            profile.SetMemberField(member);
-            Core.MemberManager.UpdateMember(profile);
-            var entity = Core.ProfileManager.GetLastProfile(member.ID);
-            if (entity == null)
-            {
-                Core.ProfileManager.AddProfile(member.ID, profile);
-            }
-            else
-            {
-                Core.ProfileManager.UpdateProfile(entity.ID, profile);
-            }
+        //public void SaveProfile(Member member, MemberProfile profile)
+        //{
+        //    profile.SetMemberField(member);
+        //    Core.MemberManager.UpdateMember(profile);
+        //    var entity = Core.ProfileManager.GetLastProfile(member.ID);
+        //    if (entity == null)
+        //    {
+        //        Core.ProfileManager.AddProfile(member.ID, profile);
+        //    }
+        //    else
+        //    {
+        //        Core.ProfileManager.UpdateProfile(entity.ID, profile);
+        //    }
 
-        }
+        //}
 
         public List<Member> GetMembers(MemberFilter filter)
         {
@@ -148,17 +202,17 @@ namespace Loowoo.LandInst.Manager
                 {
                     query = query.Where(e => e.Status == filter.Status.Value);
                 }
-                
+
                 if (filter.InstID.HasValue && filter.InstID.Value > 0)
                 {
                     query = query.Where(e => e.InstitutionID == filter.InstID.Value);
                 }
-                
+
                 if (!string.IsNullOrEmpty(filter.Keyword))
                 {
                     query = query.Where(e => e.RealName.Contains(filter.Keyword));
                 }
-                
+
                 return query.OrderByDescending(e => e.ID).SetPage(filter.Page).ToList();
             }
         }
@@ -182,23 +236,6 @@ namespace Loowoo.LandInst.Manager
             {
                 var query = db.Members.Where(e => e.InstitutionID == instId && realNames.Contains(e.RealName));
                 return query.Select(e => e.ID).ToList();
-            }
-        }
-
-        public void PracticeMemeber(CheckLog checkLog)
-        {
-            using (var db = GetDataContext())
-            {
-                var entity = db.Practices.FirstOrDefault(e => e.ID == checkLog.ID);
-                if (entity != null)
-                {
-                    var member = db.Members.FirstOrDefault(e => e.ID == checkLog.UserID);
-                    if (member != null)
-                    {
-                        member.InstitutionID = entity.InstID;
-                        db.SaveChanges();
-                    }
-                }
             }
         }
     }

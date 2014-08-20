@@ -44,7 +44,7 @@ namespace Loowoo.LandInst.Model
         public bool Checked { get { return Result.HasValue; } }
 
         /// <summary>
-        /// 提交申请会附加一些数据，在审核成功之后使用，比如年检的ProfileID、考试报名的科目、会员转移到机构的ID，目前只支持存放一个值，如果需要多个值，请自行解析值的含义
+        /// 提交申请会附加一些数据，在审核成功之后使用，比如年检的ProfileID、培训报名的科目、会员转移到机构的ID，目前只支持存放一个值，如果需要多个值，请自行解析值的含义
         /// </summary>
         [MaxLength(255)]
         public string Data { get; set; }
@@ -108,7 +108,7 @@ namespace Loowoo.LandInst.Model
         Annual = 4,
         [Description("继续教育")]
         Education = 5,
-        [Description("报名考试")]
+        [Description("报名培训")]
         Exam = 6
     }
 }

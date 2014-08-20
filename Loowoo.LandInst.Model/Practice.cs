@@ -7,29 +7,6 @@ using System.Text;
 
 namespace Loowoo.LandInst.Model
 {
-    /*个人社会保险存放机构、编号
-人事档案存放机构、编号
-起始从业时间
-资格证书号
-执业登记号
-继续教育证书号
-其他经济鉴证资格（一对多，包括经济鉴证资格名称、资格证书号、资格取得时间）
-资料补充后点击提交将申请提交后台管理员审核。一旦提交则当前页面信息暂时不可修改。当前页面还负责显示是否审核通过、审核不通过的原因等。*/
-
-    [Table("practice")]
-    public class Practice
-    {
-        [Key]
-        [DatabaseGenerated(System.ComponentModel.DataAnnotations.Schema.DatabaseGeneratedOption.Identity)]
-        public int ID { get; set; }
-
-        public int MemberID { get; set; }
-
-        public int InstID { get; set; }
-
-        public byte[] Data { get; set; }
-    }
-
     public class PracticeInfo
     {
         public PracticeInfo()

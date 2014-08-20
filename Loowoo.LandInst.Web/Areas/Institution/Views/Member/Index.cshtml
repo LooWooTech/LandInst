@@ -1,4 +1,5 @@
 ﻿@using Loowoo.LandInst.Model
+@using Loowoo.LandInst.Common
 @{
     ViewBag.Title = "会员管理";
     Layout = "~/Areas/Institution/Views/Shared/_Layout.cshtml";
@@ -25,7 +26,8 @@
         <th style="width: 120px;">出生年月</th>
         <th style="width: 150px;">专业</th>
         <th style="width: 150px;">学历</th>
-        <th style="width: 90px;">管理</th>
+        <th style="width:100px;">状态</th>
+        <th style="width: 150px;">管理</th>
     </tr>
     @foreach (var item in list)
     { 
@@ -35,16 +37,18 @@
             <td>@(item.Birthday.HasValue ? item.Birthday.Value.ToShortDateString() : null)</td>
             <td>@(item.Major == 0 ? "" : item.Major.ToString())</td>
             <td>@(item.EduRecord == 0 ? "" : item.EduRecord.ToString())</td>
+            <td>@(item.Status.GetDescription())</td>
             <td>
-                @if (item.Status < MemberStatus.Practice)
+                <a href="/institution/member/edit?id=@(item.ID)" class="btn btn-xs btn-primary"><i class="glyphicon glyphicon-edit"></i>&nbsp;资料变更</a>
+                @if (item.Status == MemberStatus.Normal)
                 {
-                    <a href="/institution/exam/signup?memberId=@(item.ID)" class="btn btn-xs btn-primary"><i class="glyphicon glyphicon-pencil"></i>&nbsp;考试</a>
+                    <a href="/institution/exam/signup?memberId=@(item.ID)" class="btn btn-xs btn-warning"><i class="glyphicon glyphicon-pencil"></i>&nbsp;培训</a>
                 }
                 else
                 {
-                <a href="/institution/member/practice?memberId=@(item.ID)" class="btn btn-xs btn-primary"><i class="glyphicon glyphicon-ok"></i>执业</a>
+                <a href="/institution/member/practice?memberId=@(item.ID)" class="btn btn-xs btn-success"><i class="glyphicon glyphicon-ok"></i>&nbsp;执业</a>
                 }
-                <a href="/institution/member/transferout?memberId=@(item.ID)" class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-transfer"></i>转出</a>
+                <a href="/institution/member/transferout?memberId=@(item.ID)" class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-transfer"></i>&nbsp;转出</a>
             </td>
         </tr>
     }
