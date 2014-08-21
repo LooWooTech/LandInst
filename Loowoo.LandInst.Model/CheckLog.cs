@@ -98,7 +98,7 @@ namespace Loowoo.LandInst.Model
 
     public enum CheckType
     {
-        [Description("注册/变更登记")]
+        [Description("变更登记")]
         Profile = 1,
         [Description("会员转移")]
         Transfer = 2,

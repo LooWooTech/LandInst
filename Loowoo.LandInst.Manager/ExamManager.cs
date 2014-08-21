@@ -184,7 +184,7 @@ namespace Loowoo.LandInst.Manager
         {
             using (var db = GetDataContext())
             {
-                filter.Type = CheckType.Exam;
+                filter.CheckType = CheckType.Exam;
                 return Core.MemberManager.GetVCheckMembers(filter).Select(e => new VCheckExam
                 {
                     ExamName = GetExamName(e.InfoID),
@@ -252,26 +252,37 @@ namespace Loowoo.LandInst.Manager
             }
         }
 
+        public void Approval(CheckLog checkLog)
+        {
+            if (checkLog == null) return;
+
+            if (checkLog.Result.HasValue) return;
+
+            Core.CheckLogManager.UpdateCheckLog(checkLog);
+
+            if (checkLog.Result == true)
+            {
+                var member = Core.MemberManager.GetMember(checkLog.UserID);
+                if (member.Status == MemberStatus.Normal)
+                {
+                    Core.MemberManager.UpdateMemberStatus(checkLog.UserID, MemberStatus.Registered);
+                }
+                //Add ExamResult
+                Core.ExamManager.SaveExamResult(checkLog.InfoID, checkLog.UserID, checkLog.Data);
+            }
+        }
 
 
         public void Approval(int approvalId, bool result)
         {
             var checkLog = Core.CheckLogManager.GetCheckLog(approvalId);
-
             if (checkLog == null) return;
 
             if (checkLog.Result.HasValue) return;
 
             checkLog.Result = result;
 
-            Core.CheckLogManager.UpdateCheckLog(checkLog);
-
-            if (result)
-            {
-                Core.MemberManager.UpdateMemberStatus(checkLog.UserID, MemberStatus.Registered);
-                //Add ExamResult
-                Core.ExamManager.SaveExamResult(checkLog.InfoID, checkLog.UserID, checkLog.Data);
-            }
+            Approval(checkLog);
         }
 
         public void ImportExamResult(ExamResult model)

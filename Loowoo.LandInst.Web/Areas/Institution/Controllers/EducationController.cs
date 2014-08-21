@@ -12,7 +12,7 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
         {
             var filter = new Model.Filters.MemberFilter
             {
-                Type = Model.CheckType.Education,
+                CheckType = Model.CheckType.Education,
                 Keyword = name,
                 Result = result,
                 InstID = Identity.UserID,

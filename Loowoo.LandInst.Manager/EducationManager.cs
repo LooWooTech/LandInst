@@ -100,7 +100,7 @@ namespace Loowoo.LandInst.Manager
         {
             using (var db = GetDataContext())
             {
-                filter.Type = CheckType.Education;
+                filter.CheckType = CheckType.Education;
 
                 var query = Core.MemberManager.GetVCheckMembers(db.VCheckMembers, filter);
 

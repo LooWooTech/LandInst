@@ -124,7 +124,7 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
             profile.SetMemberField(member);
             ViewBag.Profile = profile;
             ViewBag.Institution = inst;
-            ViewBag.ChecLogs = Core.CheckLogManager.GetList(id);
+            ViewBag.CheckLogs = Core.CheckLogManager.GetList(id);
             ViewBag.ExamResults = Core.ExamManager.GetVExamResults(new MemberFilter { UserID = id });
             ViewBag.Educations = Core.EducationManager.GetMemberEducations(id);
             return View();
@@ -230,7 +230,7 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
             {
                 Keyword = name,
                 Page = new Model.Filters.PageFilter { PageIndex = page },
-                Type = CheckType.Transfer
+                CheckType = CheckType.Transfer
 
             };
 
@@ -247,7 +247,7 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
                 InstID = currentInst.ID,
                 Keyword = name,
                 Result = result,
-                Type = CheckType.Practice,
+                CheckType = CheckType.Practice,
                 Page = new PageFilter { PageIndex = page }
             };
             ViewBag.List = Core.MemberManager.GetVCheckMembers(filter);

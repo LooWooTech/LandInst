@@ -10,7 +10,7 @@
             <ul class="dropdown-menu">
                 <li><a href="/admin/institution/"><i class="glyphicon glyphicon-search"></i>&nbsp;查询机构</a></li>
                 <li><a href="/admin/institution/edit"><i class="glyphicon glyphicon-plus"></i>&nbsp;添加新机构</a></li>
-@*                <li><a href="/admin/institution/import"><i class="glyphicon glyphicon-import"></i>&nbsp;批量导入机构</a></li>*@
+                <li><a href="/admin/institution/import"><i class="glyphicon glyphicon-import"></i>&nbsp;批量导入机构</a></li>
                 <li class="divider"></li>
                 <li><a href="/admin/institution/checkProfile?hascheck=false">注册登记/资料变更审核</a></li>
                 <li><a href="/admin/institution/checkAnnual?hascheck=false">机构年审</a></li>
@@ -23,11 +23,12 @@
             <ul class="dropdown-menu">
                 <li><a href="/admin/member/"><i class="glyphicon glyphicon-search"></i>&nbsp;会员查询</a></li>
                 <li class="divider"></li>
-                <li><a href="/admin/member/practices?hascheck=false">执业登记审核</a></li>
+                <li><a href="/admin/member/approvals?type=practice&hascheck=false">执业登记审核</a></li>
+                <li><a href="/admin/member/approvals?type=profile&hascheck=false">资料变更审核</a></li>
                 <li class="divider"></li>
-                <li><a href="/admin/transfer/approvals?hascheck=false">会员机构转移审核</a></li>
+                <li><a href="/admin/member/transfers?hascheck=false">机构转移审核</a></li>
                 <li class="divider"></li>
-@*                <li><a href="/admin/member/import"><i class="glyphicon glyphicon-import"></i>&nbsp;导入会员</a></li>*@
+                <li><a href="/admin/member/import"><i class="glyphicon glyphicon-import"></i>&nbsp;导入会员</a></li>
                 <li><a href="/admin/member/resetpwd">密码重置</a></li>
             </ul>
         </li>
@@ -45,7 +46,7 @@
                 <li class="divider"></li>
                 <li><a href="/admin/exam/subjects">科目管理</a></li>
                 <li><a href="/admin/exam/editsubject">科目管理</a></li>
-          </ul>
+            </ul>
         </li>
 
         <li class="dropdown">

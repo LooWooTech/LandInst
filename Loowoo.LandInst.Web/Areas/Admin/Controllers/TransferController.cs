@@ -17,7 +17,7 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
         {
             ViewBag.List = Core.MemberManager.GetVCheckTransfers(new Model.Filters.MemberFilter
             {
-                Type = Model.CheckType.Transfer,
+                CheckType = Model.CheckType.Transfer,
                 Keyword = name,
                 HasCheck = hasCheck,
                 InstID = instId,

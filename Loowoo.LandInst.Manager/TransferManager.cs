@@ -44,7 +44,7 @@ namespace Loowoo.LandInst.Manager
         {
             using (var db = GetDataContext())
             {
-                filter.Type = CheckType.Transfer;
+                filter.CheckType = CheckType.Transfer;
 
                 return Core.MemberManager.GetVCheckMembers(filter).Select(e => new VCheckTransfer
                 {

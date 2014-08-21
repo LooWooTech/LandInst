@@ -39,36 +39,42 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
             return JsonSuccess();
         }
 
-        //[HttpGet]
-        //public ActionResult Transfer()
-        //{
-        //    return View();
-        //}
 
-        //[HttpPost]
-        //public ActionResult Transfer(int userId, int oldInstId, int newInstId)
-        //{
-        //    var member = Core.MemberManager.GetMember(userId);
-        //    if (member == null)
-        //    {
-        //        throw new ArgumentException("UserId");
-        //    }
+        public ActionResult Approvals(string name, CheckType? type, bool? hasCheck, int page = 1)
+        {
+            var filter = new MemberFilter
+            {
+                Keyword = name,
+                Page = new PageFilter { PageIndex = page },
+                CheckType = type,
+                HasCheck = hasCheck,
+            };
+            ViewBag.List = Core.MemberManager.GetVCheckMembers(filter);
+            ViewBag.Page = filter.Page;
+            switch (filter.CheckType)
+            {
+                default:
+                //case CheckType.Profile:
+                //case CheckType.Practice:
+                    return View();
+                case CheckType.Transfer:
+                    return RedirectToAction("Transfers");
+            }
+        }
 
-        //    if (member.InstitutionID != oldInstId)
-        //    {
-        //        throw new ArgumentException("oldInstId");
-        //    }
-
-        //    if (member.InstitutionID == newInstId)
-        //    {
-        //        throw new ArgumentException("newInstId");
-        //    }
-
-        //    member.InstitutionID = newInstId;
-        //    Core.MemberManager.UpdateMember(member);
-
-        //    return JsonSuccess();
-        //}
+        public ActionResult Transfers(string name, bool? hasCheck, int page = 1)
+        {
+            var filter = new MemberFilter
+            {
+                Keyword = name,
+                Page = new PageFilter { PageIndex = page },
+                CheckType = CheckType.Transfer,
+                HasCheck = hasCheck,
+            };
+            ViewBag.List = Core.MemberManager.GetVCheckTransfers(filter);
+            ViewBag.Page = filter.Page;
+            return View();
+        }
 
         public ActionResult Approval(int id, CheckLog data)
         {
@@ -76,14 +82,10 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
             checkLog.Note = data.Note;
             checkLog.Result = data.Result;
             Core.CheckLogManager.UpdateCheckLog(checkLog);
-            var member = Core.MemberManager.GetMember(checkLog.UserID);
             switch (checkLog.CheckType)
             {
                 case CheckType.Exam:
-                    if (checkLog.Result == true && member.Status == MemberStatus.Normal)
-                    {
-                        Core.MemberManager.UpdateMemberStatus(member.ID, MemberStatus.Registered);
-                    }
+                    Core.ExamManager.Approval(checkLog);
                     break;
                 case CheckType.Education:
                     break;
@@ -91,16 +93,8 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
                     Core.MemberManager.ApprovalTransfer(checkLog);
                     break;
                 case CheckType.Practice:
-                    if (checkLog.Result == true)
-                    {
-                        var profile = Core.MemberManager.GetProfile(checkLog);
-                        profile.ID = checkLog.UserID;
-                        profile.Status = MemberStatus.Practice;
-                        Core.MemberManager.UpdateMember(profile);
-                        //Core.MemberManager.UpdateMemberStatus(member.ID, MemberStatus.Practice);
-                    }
-                    break;
                 case CheckType.Profile:
+                    Core.MemberManager.ApprovalMember(checkLog);
                     break;
             }
             return JsonSuccess();
@@ -112,23 +106,21 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
             {
                 return View();
             }
-            var user = Core.UserManager.GetUser(id);
-            if (user == null)
-            {
-                throw new ArgumentException("UserId");
-
-            }
 
             var member = Core.MemberManager.GetMember(id);
+            if (member == null)
+            {
+                throw new ArgumentException("参数不正确");
+            }
+
             var profile = Core.MemberManager.GetProfile(id) ?? new MemberProfile(member);
 
             profile.SetMemberField(member);
-            ViewBag.User = user;
             ViewBag.Member = member;
             ViewBag.Profile = profile;
             ViewBag.ExamResults = Core.ExamManager.GetVExamResults(new MemberFilter { UserID = id });
             ViewBag.Educations = Core.EducationManager.GetMemberEducations(id);
-
+            ViewBag.CheckLogs = Core.CheckLogManager.GetList(id);
             if (checkLogId > 0)
             {
                 ViewBag.CheckLog = Core.CheckLogManager.GetCheckLog(checkLogId);
@@ -138,25 +130,6 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
                 ViewBag.CheckLog = Core.CheckLogManager.GetLastLog(id);
             }
 
-            return View();
-        }
-
-        public ActionResult Practices(string name, bool? hasCheck, int page = 1)
-        {
-            var filter = new MemberFilter
-            {
-                Keyword = name,
-                Page = new PageFilter { PageIndex = page },
-                HasCheck = hasCheck,
-                Type = CheckType.Practice
-            };
-            ViewBag.List = Core.MemberManager.GetVCheckMembers(filter);
-            ViewBag.Page = filter.Page;
-            return View();
-        }
-
-        public ActionResult Transfers(string name, bool? hasCheck, int page = 1)
-        {
             return View();
         }
 

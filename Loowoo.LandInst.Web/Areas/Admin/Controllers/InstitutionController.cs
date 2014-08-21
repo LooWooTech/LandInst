@@ -50,7 +50,7 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
                 CheckType = CheckType.Profile,
                 HasCheck = hasCheck,
             };
-            ViewBag.List = Core.InstitutionManager.GetApprovalInsts(filter);
+            ViewBag.List = Core.InstitutionManager.GetVCheckInsts(filter);
             ViewBag.Page = filter.Page;
             return View();
         }

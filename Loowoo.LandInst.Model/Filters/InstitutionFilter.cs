@@ -6,22 +6,12 @@ using System.Threading.Tasks;
 
 namespace Loowoo.LandInst.Model.Filters
 {
-    public class InstitutionFilter
+    public class InstitutionFilter : CheckLogFilter
     {
         public int? InstId { get; set; }
 
-        public string Keyword { get; set; }
-
         public InstitutionStatus? Status { get; set; }
 
-        public CheckType CheckType { get; set; }
-
-        public bool? Result { get; set; }
-
         public string City { get; set; }
-
-        public PageFilter Page { get; set; }
-
-        public bool? HasCheck { get; set; }
     }
 }

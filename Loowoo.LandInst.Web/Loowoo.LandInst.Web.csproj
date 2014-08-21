@@ -296,7 +296,7 @@
     <Content Include="Areas\Institution\Views\Member\Practices.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Areas\Admin\Views\Member\Practices.cshtml" />
+    <Content Include="Areas\Admin\Views\Member\Approvals.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Areas\Admin\Views\Institution\Index.cshtml" />

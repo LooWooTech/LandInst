@@ -22,7 +22,10 @@ namespace Loowoo.LandInst.Manager
 
         public static IQueryable<T> GetCheckBaseQuery<T>(this IQueryable<T> query, CheckLogFilter filter) where T: VCheckBase
         {
-            query = query.Where(e => e.CheckType == filter.Type);
+            if (filter.CheckType.HasValue)
+            {
+                query = query.Where(e => e.CheckType == filter.CheckType.Value);
+            }
 
             if (filter.InfoID.HasValue && filter.InfoID.Value > 0)
             {
@@ -37,7 +40,7 @@ namespace Loowoo.LandInst.Manager
                 }
                 else
                 {
-                    query = query.Where(e => !e.Result.HasValue);
+                    query = query.Where(e => e.Result == null);
                 }
             }
 

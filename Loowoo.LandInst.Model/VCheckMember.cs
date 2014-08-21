@@ -20,5 +20,9 @@ namespace Loowoo.LandInst.Model
         public EduRecord EduRecord { get; set; }
 
         public int InstitutionID { get; set; }
+
+        public DateTime? Birthday { get; set; }
+
+        public string MobilePhone { get; set; }
     }
 }

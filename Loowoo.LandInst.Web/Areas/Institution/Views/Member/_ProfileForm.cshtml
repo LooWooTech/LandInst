@@ -1,8 +1,10 @@
 ﻿@using Loowoo.LandInst.Model
+@using Loowoo.LandInst.Common
 @{
     MemberProfile profile = ViewBag.Profile ?? new MemberProfile();
     List<VExamResult> examResults = ViewBag.ExamResults ?? new List<VExamResult>();
     List<Education> educations = ViewBag.Educations ?? new List<Education>();
+    List<CheckLog> checklogs = ViewBag.CheckLogs ?? new List<CheckLog>();
     profile.Jobs.Add(new Job());
     profile.Certifications.Add(new Certification());
 
@@ -16,6 +18,7 @@
 
     Func<string, string> getFileName = (fileName) =>
     {
+        if (string.IsNullOrEmpty(fileName)) return null;
         var startIndex = fileName.LastIndexOf('/');
         var endIndex = fileName.LastIndexOf('.') - 1;
         var length = endIndex - startIndex;
@@ -39,13 +42,17 @@
                 <li class=""><a href="#profile-examresult" data-toggle="tab"><i class="glyphicon glyphicon-pencil"></i>&nbsp;培训成绩</a></li>
                 <li class=""><a href="#profile-education" data-toggle="tab"><i class="glyphicon glyphicon-book"></i>&nbsp;继续教育</a></li>
             }
+            @if (isViewPage)
+            { 
+                <li class=""><a href="#profile-history" data-toggle="tab"><i class="glyphicon glyphicon-time"></i>&nbsp;审核历史</a></li>
+            }
         </ul>
-        @*        @if (disabled)
+        @if (isViewPage)
         {
             <ul style="position: absolute; right: 10px; top: 0px;">
-                <a href="export?id=@(inst.ID)" class="btn btn-primary"><i class="glyphicon glyphicon-export"></i>导出资料</a>
+                <a href="export?id=@(profile.ID)" class="btn btn-primary"><i class="glyphicon glyphicon-export"></i>导出资料</a>
             </ul>
-        }*@
+        }
     </div>
     <div class="tab-content">
         <div class="tab-pane fade @(isPracticePage ? "" : " active in")" id="profile-basic">
@@ -386,6 +393,53 @@
             </div>
             
         }
+
+        @if (isViewPage)
+        { 
+            <div class="tab-pane fade" id="profile-history">
+                <table class="table table-bordered">
+                    <tr>
+                        <th>申请类型</th>
+                        <th>申请日期</th>
+                        <th>审核时间</th>
+                        <th>审核结果</th>
+                        <th>查看</th>
+                    </tr>
+                    @foreach (var item in checklogs)
+                    { 
+                        <tr>
+                            <td>@(item.CheckType.GetDescription())</td>
+                            <td>@(item.CreateTime.ToString())</td>
+                            <td>@(item.UpdateTime.HasValue?item.UpdateTime.Value.ToString():null)</td>
+                            <td>
+                                @if (item.Result.HasValue)
+                                {
+                                    if (item.Result.Value)
+                                    { 
+                                    <span class="label label-success">已通过</span>
+                                    }
+                                    else
+                                    {
+                                    <span class="label label-warning">未通过</span>
+                                    }
+
+                                }
+                                else
+                                {
+                                    <span class="label label-default">未审核</span>
+                                }
+                            </td>
+                            <td>
+                                @if (item.CheckType == CheckType.Practice || item.CheckType == CheckType.Profile)
+                                { 
+                                    <a href="?id=@(item.UserID)&checkLogId=@(item.ID)" class="btn btn-xs btn-primary">历史资料</a>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </table>
+            </div>
+        }
     </div>
     @if (!isViewPage)
     {
@@ -409,7 +463,7 @@
             { 
                 <button id="btn-submit-practice" type="submit" class="btn btn-warning"><i class="glyphicon glyphicon-ok"></i>&nbsp;提交执业登记申请</button>
             }
-            <a href="@(Request.UrlReferrer == null ? "../" : Request.UrlReferrer.ToString())" class="btn btn-default"><i class="glyphicon glyphicon-chevron-left"></i>&nbsp;返回</a>
+            <a href="/institution/member" class="btn btn-default"><i class="glyphicon glyphicon-chevron-left"></i>&nbsp;返回</a>
         </div>
     }
 

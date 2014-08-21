@@ -5,51 +5,47 @@
 }
 @if (approval != null)
 {
-    var user = Loowoo.LandInst.Manager.ManagerCore.Instance.UserManager.GetUser(approval.UserID);
-
     <legend>审核</legend>
-    <div class="well">
-        该@(user.Role.GetDescription())于@(approval.CreateTime.ToShortDateString())申请了 
-        <span class="label label-default">@(approval.CheckType.GetDescription())</span>，目前
-            @if (approval.Result.HasValue)
-            {
-                <span>并且与@(approval.UpdateTime.Value.ToShortDateString())</span>
-                if (approval.Result.Value)
-                {
-                <span class="label label-success">通过审核</span>
-                }
-                else
-                {
-                <span class="label label-warning">未通过审核</span>
-                }
+    <div class="alert @(approval.Result == true ? "alert-success" : "alert-warning")">
+        该会员已在<b>“@(approval.CreateTime.ToString())”</b>提交了<span class="label label-default">@(approval.CheckType.GetDescription())</span>申请。
+        @if (approval.Result.HasValue)
+        {
+            if (approval.Result.Value)
+            { 
+            @:已于<b>“@(approval.UpdateTime.Value.ToString())”</b><span class="label label-success">通过审核</span>
             }
             else
             {
-                <span class="label label-default">尚未审核</span>
-                
+            @:<span class="label label-warning">未通过审核</span>，审核意见：@(approval.Note)
             }
+        }
+        else
+        {
+            @:目前<span class="label label-default">尚未审核</span>，请耐心等待。
+        }
     </div>
-    if (!approval.Result.HasValue)
-    { 
-        <div class="well">
-            <form id="approval-form" role="form" class="form-horizontal">
-                <input id="approval-result" type="hidden" name="Result" value="" />
-                <div class="form-group">
-                    <label class="control-label col-lg-2">审核意见</label>
-                    <div class="col-sm-3">
-                        <textarea name="Note" rows="4" cols="50"></textarea>
-                    </div>
+
+        if (!approval.Result.HasValue)
+        { 
+    <div class="well">
+        <form id="approval-form" role="form" class="form-horizontal">
+            <input id="approval-result" type="hidden" name="Result" value="" />
+            <div class="form-group">
+                <label class="control-label col-lg-2">审核意见</label>
+                <div class="col-sm-3">
+                    <textarea name="Note" rows="4" cols="50"></textarea>
                 </div>
-                <div class="form-group">
-                    <label class="control-label col-lg-2"></label>
-                    <div class="col-sm-3">
-                        <button id="btn-agree" type="submit"  class="btn btn-sm btn-success"><i class="glyphicon glyphicon-ok"></i> 通过审核</button>
-                        <button id="btn-disagree" type="submit"  class="btn btn-sm btn-danger"><i class="glyphicon glyphicon-remove"></i> 不通过</button>
-                    </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-lg-2"></label>
+                <div class="col-sm-3">
+                    <button id="btn-agree" type="submit" class="btn btn-sm btn-success"><i class="glyphicon glyphicon-ok"></i>通过审核</button>
+                    <button id="btn-disagree" type="submit" class="btn btn-sm btn-danger"><i class="glyphicon glyphicon-remove"></i>不通过</button>
                 </div>
-            </form>
-        </div>
-    }
+            </div>
+        </form>
+    </div>
+        }
     <script>
         $(function () {
 
@@ -63,7 +59,7 @@
 
             $("#approval-form").submit(function () {
                 var data = $(this).serialize();
-                $.request("/admin/@(user.Role.ToString())/approval?id=@(approval.ID)", data, function () {
+                $.request("/admin/@(ViewBag.Controller)/approval?id=@(approval.ID)", data, function () {
                     alert("审核完成！");
                     window.location.href = "@Html.Raw(Request.Url.AbsoluteUri)"
 

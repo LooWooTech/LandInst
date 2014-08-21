@@ -11,7 +11,7 @@ namespace Loowoo.LandInst.Model.Filters
 
         public bool? Result { get; set; }
 
-        public CheckType Type { get; set; }
+        public CheckType? CheckType { get; set; }
 
         public int? InfoID { get; set; }
 

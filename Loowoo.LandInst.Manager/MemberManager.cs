@@ -47,12 +47,30 @@ namespace Loowoo.LandInst.Manager
             if (checkLog == null || checkLog.Result == false)
             {
                 var profileId = SaveProfile(member, profile);
-                Core.CheckLogManager.AddCheckLog(profileId, member.ID, CheckType.Annual, profileId.ToString());
+                Core.CheckLogManager.AddCheckLog(profileId, member.ID, CheckType.Practice, profileId.ToString());
             }
             else
             {
                 SaveProfile(member, profile);
             }
+        }
+
+        public void ApprovalMember(CheckLog checkLog)
+        {
+            if (!checkLog.Result.HasValue) return;
+            if (checkLog.Result.Value == true)
+            {
+                var profile = Core.MemberManager.GetProfile(checkLog);
+                if (profile == null) return;
+
+                profile.ID = checkLog.UserID;
+                if (checkLog.CheckType == CheckType.Practice)
+                {
+                    profile.Status = MemberStatus.Practice;
+                }
+                Core.MemberManager.UpdateMember(profile);
+            }
+            Core.ProfileManager.UpdateProfileCheckResult(checkLog.DataAsInt(), checkLog.Result);
         }
 
         public int AddMember(Member member)
@@ -111,7 +129,7 @@ namespace Loowoo.LandInst.Manager
 
         public MemberProfile GetProfile(CheckLog checkLog)
         {
-            if (checkLog == null || (checkLog.CheckType != CheckType.Profile && checkLog.CheckType != CheckType.Profile)) return null;
+            if (checkLog == null || !(checkLog.CheckType == CheckType.Practice || checkLog.CheckType == CheckType.Profile)) return null;
             return Core.ProfileManager.GetProfile<MemberProfile>(checkLog.DataAsInt());
         }
 

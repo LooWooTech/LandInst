@@ -2,5 +2,27 @@
 @{
     ViewBag.Title = "人员执业登记";
     Layout = "~/Areas/Institution/Views/Shared/_Layout.cshtml";
+    CheckLog checkLog = ViewBag.CheckLog;
+    if (checkLog != null)
+    {
+    <div class="alert @(checkLog.Result == true ? "alert-success" : "alert-warning")">
+        该会员已在<b>“@(checkLog.CreateTime.ToString())”</b>提交了<b>执业登记</b>申请。
+        @if (checkLog.Result.HasValue)
+        {
+            if (checkLog.Result.Value)
+            { 
+            @:已于<b>“@(checkLog.UpdateTime.Value.ToString())”</b><b>通过审核</b>
+            }
+            else
+            {
+            @:<b>未通过</b>审核，审核意见：@(checkLog.Note)
+            }
+        }
+        else
+        {
+            @:目前<b>尚未审核</b>，请耐心等待。
+        }
+    </div>
+    }
     Html.RenderPartial("_ProfileForm");
 }

@@ -43,31 +43,11 @@ namespace Loowoo.LandInst.Manager
         }
 
 
-        public List<VCheckInst> GetApprovalInsts(InstitutionFilter filter)
+        public List<VCheckInst> GetVCheckInsts(InstitutionFilter filter)
         {
             using (var db = GetDataContext())
             {
-                var query = db.VCheckInsts.Where(e => e.CheckType == filter.CheckType && e.Type == InstitutionType.土地规划);
-                if (!String.IsNullOrEmpty(filter.Keyword))
-                {
-                    query = query.Where(e => e.InstName.Contains(filter.Keyword));
-                }
-                if (filter.Result.HasValue)
-                {
-                    query = query.Where(e => e.Result == filter.Result.Value);
-                }
-
-                if (filter.HasCheck.HasValue)
-                {
-                    if (filter.HasCheck.Value)
-                    {
-                        query = query.Where(e => e.Result.HasValue);
-                    }
-                    else
-                    {
-                        query = query.Where(e => e.Result == null);
-                    }
-                }
+                var query = db.VCheckInsts.AsQueryable().GetCheckBaseQuery(filter);
 
                 return query.OrderByDescending(e => e.ID).SetPage(filter.Page).ToList();
             }

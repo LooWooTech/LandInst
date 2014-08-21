@@ -30,7 +30,9 @@
     <tr>
         <th style="width: 30px;">
             <input id="btn-select" type="checkbox" /></th>
-        <th>会员姓名</th>
+        <th style="width: 120px;">姓名</th>
+        <th style="width: 60px;">性别</th>
+        <th style="width: 120px;">出生年月</th>
         <th style="width: 150px;">申请日期</th>
         <th style="width: 150px;">当前机构</th>
         <th style="width: 100px;">转移至机构</th>
@@ -42,6 +44,8 @@
                 <input type="checkbox" name="id" value="@(item.ID)" />
             </td>
             <td><a href="profile?id=@(item.VCheck.UserID)&checklogId=@(item.VCheck.ID)">@(item.VCheck.RealName)</a></td>
+            <td>@(item.VCheck.Gender)</td>
+            <td>@(item.VCheck.Birthday.HasValue ? item.VCheck.Birthday.Value.ToShortDateString() : null)</td>
             <td>@(item.VCheck.CreateTime.ToString())</td>
             <td>@(item.CurrentInstName)</td>
             <td>@(item.TargetInstName)</td>
