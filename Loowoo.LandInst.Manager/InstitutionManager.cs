@@ -151,8 +151,10 @@ namespace Loowoo.LandInst.Manager
         public InstitutionProfile GetProfile(CheckLog checkLog)
         {
             if (checkLog == null) return null;
-
-            return Core.ProfileManager.GetProfile<InstitutionProfile>(checkLog.DataAsInt());
+            var profileId = checkLog.DataAsInt();
+            if (profileId == 0 && checkLog.CheckType == CheckType.Profile)
+                profileId = checkLog.InfoID;
+            return Core.ProfileManager.GetProfile<InstitutionProfile>(profileId);
         }
 
 

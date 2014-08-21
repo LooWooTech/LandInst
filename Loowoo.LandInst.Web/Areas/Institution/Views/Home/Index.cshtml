@@ -12,14 +12,6 @@
         ViewBag.Title = "提交注册登记";
         Html.RenderPartial("_ProfileForm");
         return;
-        //else if (checkLog != null)
-        //{
-        //    ViewBag.CanSubmit = false;
-        //    //如果未通过
-        //    ViewBag.Title = "提交注册登记-审核中";
-        //    Html.RenderPartial("_ProfileForm");
-        //    return;
-        //}
     }
 
     ViewBag.Title = "欢迎 " + inst.Name + " 登录系统。";
@@ -45,7 +37,7 @@
             </td>
         </tr>
     </table>
-    <a href="/Institution/Profile/Edit?type=annualcheck" class="btn btn-primary">立即申请年检</a>
+    <a href="/Institution/Profile/AnnualCheck" class="btn btn-primary">立即申请年检</a>
 }
 
 <legend>业务处理</legend>

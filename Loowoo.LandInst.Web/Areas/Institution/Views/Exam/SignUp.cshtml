@@ -7,22 +7,23 @@
     {
     <div class="alert alert-warning">
         暂无培训信息，请等待下一次培训。
-        <a href="@(Request.UrlReferrer.ToString())" class="btn btn-default">返回</a>
+        <a href="/institution/exam/" class="btn btn-default">返回</a>
     </div>
         return;
     }
     ExamResult examResult = ViewBag.ExamResult;
-    CheckLog approval = ViewBag.CheckLog;
+    List<CheckLog> checkLogs = ViewBag.CheckLogs;
     MemberProfile member = ViewBag.MemberProfile;
     List<ExamSubject> subjects = ViewBag.Subjects;
     List<ExamSubject> signedSubjects = ViewBag.SignedSubjects;
-    var canSignUp = signedSubjects == null || signedSubjects.Count < subjects.Count;
 }
-@if (examResult != null)
+@if (checkLogs != null && checkLogs.Count > 0)
 {
-    
-    <div class="well">
-        该会员已于@(examResult.CreateTime.ToString())提交报名培训，报名科目包括“@(examResult.Subjects)”，
+    <div class="alert alert-warning">
+        @foreach (var checkLog in checkLogs)
+        { 
+            @:该会员已于“<b>@(checkLog.CreateTime.ToString())</b>”提交报名培训申请，报名科目包括“<b>@(checkLog.Data)</b>”<br />
+    }
     </div>
 }
 @Html.Partial("_MemberProfile", member)
@@ -57,26 +58,20 @@
 
     </table>
 
-    @if (canSignUp)
-    { 
-        <button type="submit" class="btn btn-primary">提交报名</button>
-    }
+    <button type="submit" class="btn btn-primary">提交报名</button>
 
 </form>
-@if (canSignUp)
-{
-    <script>
-        $(function () {
-            $("#exam-form").submit(function () {
-                var data = $(this).serialize();
+<script>
+    $(function () {
+        $("#exam-form").submit(function () {
+            var data = $(this).serialize();
 
-                $.request("/institution/exam/signup?memberId=@(member.ID)&examId=@(exam.ID)", data, function (json) {
-                    alert("申请报名成功，等待管理员审核");
-                    window.location.href = "/institution/exam/";
-                });
-                return false;
+            $.request("/institution/exam/signup?memberId=@(member.ID)&examId=@(exam.ID)", data, function (json) {
+                alert("申请报名成功，等待管理员审核");
+                window.location.href = "/institution/exam/";
             });
-
+            return false;
         });
-    </script>
-}
+
+    });
+</script>

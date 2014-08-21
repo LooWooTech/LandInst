@@ -1,53 +1,37 @@
-﻿@using Loowoo.LandInst.Model
+﻿@using Loowoo.LandInst.Common
+@using Loowoo.LandInst.Model
 @{
-    var type = Request.QueryString["type"];
-    var viewHistory = !string.IsNullOrEmpty(Request.QueryString["checkLogId"]);
-    Institution inst = ViewBag.CurrentInst;
+    var action = (ViewBag.Controller + "." + ViewBag.Action).ToLower();
+    var isViewPage = action == "profile.index";
+    var isEditPage = action == "profile.edit";
+    var isAnnualPage = action == "profile.annualcheck";
+    var isRegisterPage = action == "home.index";
+
     CheckLog checkLog = ViewBag.CheckLog;
-    AnnualCheck annualCheck = ViewBag.AnnualCheck;
-    var isAnnualCheck = annualCheck != null && type == "annualcheck";
-    bool isRegister = ViewBag.IsRegister == null ? false : ViewBag.IsRegister;
-    InstitutionProfile model = ViewBag.Profile ?? new InstitutionProfile(inst);
-    bool disabled = ViewBag.Disabled == null ? false : true;
-    if (!viewHistory)
+    InstitutionProfile profile = ViewBag.Profile;
+    if (!isViewPage)
     {
-        model.ShareHolders.Add(new Shareholder());
-        model.Equipments.Add(new Equipment());
-        model.Softwares.Add(new Software());
+        profile.ShareHolders.Add(new Shareholder());
+        profile.Equipments.Add(new Equipment());
+        profile.Softwares.Add(new Software());
     }
 }
-@if (!viewHistory)
-{
-    <div class="well">
-        @if (type == "annualcheck")
-        {
-            if (annualCheck == null)
-            { 
-            @:现在还不能申请年检，如果需要修改资料请申请<a href="?" class="btn btn-primary btn-xs">资料变更</a>
-            return;
-            }
-        }
-        @if (annualCheck != null)
+
+@if (checkLog != null)
+{ 
+    <div class="alert alert-@(checkLog.Result.HasValue ? (checkLog.Result.Value ? "success" : "danger") : "warning")">
+        贵机构已于“@(checkLog.CreateTime.ToString())”申请了“<b>@(checkLog.CheckType.GetDescription())</b>”，
+        @if (checkLog.Result.HasValue)
         { 
-            @:现在是<span class="label label-warning">@(annualCheck.Name)</span>期间，
-            @:年检时间段： <span class="label label-warning">@(annualCheck.StartDate.ToShortDateString()) ~ @(annualCheck.EndDate.ToShortDateString())</span>，
-            @:无法修改基本资料，但可修改联系方式、股东、证书信息。
-    }
+            @:并且于“@(checkLog.UpdateTime.Value.ToString())”@Html.Raw(checkLog.Result.Value ? "“<b>通过审核</b>”" : "“<b>未通过审核</b>” ，审核意见：" + checkLog.Note)。
+        }
         else
         {
-            if (inst.Status == InstitutionStatus.Normal)
-            {
-            @:你可以在提交注册登记前重复保存草稿，在审核之前你可以重复提交。
+            @:请耐心等待管理员审核。
         }
-            else
-            {
-            @:机构资料的提交会自动提交资料变更登记审核请求，重复提交不会重复提交请求。
-        }
-        }
-        <br />
-        修改机构全称审核通过后请使用新的全称登录系统。
     </div>
 }
+
 <form id="profile-form" role="form" class="form-horizontal" method="post">
     <div style="position: relative;">
         <ul class="nav nav-tabs">
@@ -57,10 +41,10 @@
             <li class=""><a href="#profile-equipment" data-toggle="tab"><i class="glyphicon glyphicon-cog"></i>&nbsp;主要技术设备</a></li>
             <li class=""><a href="#profile-software" data-toggle="tab"><i class="glyphicon glyphicon-floppy-disk"></i>&nbsp;应用软件情况</a></li>
         </ul>
-        @if (disabled)
+        @if (isViewPage)
         {
             <ul style="position: absolute; right: 10px; top: 0px;">
-                <a href="export?id=@(inst.ID)" class="btn btn-primary"><i class="glyphicon glyphicon-export"></i>导出资料</a>
+                <a href="export?id=@(profile.ID)" class="btn btn-primary"><i class="glyphicon glyphicon-export"></i>导出资料</a>
             </ul>
         }
     </div>
@@ -69,62 +53,62 @@
             <div class="form-group ">
                 <label class="control-label col-lg-2">机构全称</label>
                 <div class="col-lg-4">
-                    <input type="text" name="Name" class="form-control input-sm" value="@(model.Name)" />
+                    <input type="text" name="Name" class="form-control input-sm" value="@(profile.Name)" />
                 </div>
                 <label class="control-label col-lg-2">机构性质</label>
                 <div class="col-lg-3">
-                    <input type="text" name="CompanyType" class="form-control input-sm" value="@(model.CompanyType)" />
+                    <input type="text" name="CompanyType" class="form-control input-sm" value="@(profile.CompanyType)" />
                 </div>
             </div>
             <div class="form-group ">
                 <label class="control-label col-lg-2">成立日期</label>
                 <div class="col-lg-2">
-                    <input type="text" name="EstablishedDate" class="form-control input-sm datepicker" value="@(model.EstablishedDate.HasValue ? model.EstablishedDate.Value.ToShortDateString() : null)" />
+                    <input type="text" name="EstablishedDate" class="form-control input-sm datepicker" value="@(profile.EstablishedDate.HasValue ? profile.EstablishedDate.Value.ToShortDateString() : null)" />
                 </div>
                 <label class="control-label col-lg-4">注册资金（万元）</label>
                 <div class="col-lg-1">
-                    <input type="text" name="RegisteredCapital" class="form-control input-sm" value="@(model.RegisteredCapital)" maxlength="6" />
+                    <input type="text" name="RegisteredCapital" class="form-control input-sm" value="@(profile.RegisteredCapital)" maxlength="6" />
                 </div>
             </div>
             <div class="form-group ">
                 <label class="control-label col-lg-2">法人代表</label>
                 <div class="col-lg-2">
-                    <input type="text" name="LegalPerson" class="form-control input-sm" value="@(model.LegalPerson)" />
+                    <input type="text" name="LegalPerson" class="form-control input-sm" value="@(profile.LegalPerson)" />
                 </div>
                 <label class="control-label col-lg-4">技术负责人</label>
                 <div class="col-lg-2">
-                    <input type="text" name="TechLeader" class="form-control input-sm" value="@(model.TechLeader)" />
+                    <input type="text" name="TechLeader" class="form-control input-sm" value="@(profile.TechLeader)" />
                 </div>
             </div>
             <div class="form-group ">
                 <label class="control-label col-lg-2">税务登记号</label>
                 <div class="col-lg-2">
-                    <input type="text" name="TaxRegistryNo" class="form-control input-sm" value="@(model.TaxRegistryNo)" />
+                    <input type="text" name="TaxRegistryNo" class="form-control input-sm" value="@(profile.TaxRegistryNo)" />
                 </div>
                 <label class="control-label col-lg-4">企业法人营业执照注册号<br />
                     或事业单位法人证书登记号</label>
                 <div class="col-lg-2">
-                    <input type="text" name="LegalpersonNo" class="form-control input-sm" value="@(model.LegalpersonNo)" />
+                    <input type="text" name="LegalpersonNo" class="form-control input-sm" value="@(profile.LegalpersonNo)" />
                 </div>
             </div>
             <div class="form-group ">
                 <label class="control-label col-lg-2">工商登记号</label>
                 <div class="col-lg-3">
-                    <input type="text" name="RegistrationNo" class="form-control input-sm" value="@(model.RegistrationNo)" />
+                    <input type="text" name="RegistrationNo" class="form-control input-sm" value="@(profile.RegistrationNo)" />
                 </div>
                 <label class="control-label col-lg-3">工商登记机关</label>
                 <div class="col-lg-3">
-                    <input type="text" name="RegistrationInstitution" class="form-control input-sm" value="@(model.RegistrationInstitution)" />
+                    <input type="text" name="RegistrationInstitution" class="form-control input-sm" value="@(profile.RegistrationInstitution)" />
                 </div>
             </div>
             <div class="form-group ">
                 <label class="control-label col-lg-2">机构当年在职职工总数</label>
                 <div class="col-lg-1">
-                    <input type="text" name="TotalMembers" class="form-control input-sm" value="@(model.TotalMembers)" />
+                    <input type="text" name="TotalMembers" class="form-control input-sm" value="@(profile.TotalMembers)" />
                 </div>
                 <label class="control-label col-lg-5">从事土地规划工作人员总数</label>
                 <div class="col-lg-1">
-                    <input type="text" name="ProMembers" class="form-control input-sm" value="@(model.ProMembers)" />
+                    <input type="text" name="ProMembers" class="form-control input-sm" value="@(profile.ProMembers)" />
                 </div>
             </div>
             <div class="form-group ">
@@ -133,26 +117,26 @@
                     <select name="City" class="form-control input-sm">
                         @foreach (var city in Enum.GetNames(typeof(City)))
                         { 
-                            <option @(city == model.City ? "selected=selected" : null)>@(city)</option>
+                            <option @(city == profile.City ? "selected=selected" : null)>@(city)</option>
                         }
                     </select>
                 </div>
                 <label class="control-label col-lg-4">从事土地规划工作办公用房面积（平方）</label>
                 <div class="col-lg-2">
-                    <input type="text" name="OfficeArea" class="form-control input-sm" value="@(model.OfficeArea)" />
+                    <input type="text" name="OfficeArea" class="form-control input-sm" value="@(profile.OfficeArea)" />
                 </div>
             </div>
             <div class="form-group ">
                 <label class="control-label col-lg-2">申请推荐类别</label>
                 <div class="col-lg-8">
                     <div class="radio-inline col-lg-2">
-                        <label><input type="radio" name="CommendLevel" value="甲级" @(model.CommendLevel == "甲级" ? "checked=checked" : null) />甲级</label>
+                        <label><input type="radio" name="CommendLevel" value="甲级" @(profile.CommendLevel == "甲级" ? "checked=checked" : null) />甲级</label>
                     </div>
                     <div class="radio-inline col-lg-2">
-                        <label><input type="radio" name="CommendLevel" value="乙级"  @(model.CommendLevel == "乙级" ? "checked=checked" : null)/>乙级</label>
+                        <label><input type="radio" name="CommendLevel" value="乙级"  @(profile.CommendLevel == "乙级" ? "checked=checked" : null)/>乙级</label>
                     </div>
                     <div class="radio-inline col-lg-2">
-                        <label><input type="radio" name="CommendLevel" value="准乙级"  @(model.CommendLevel == "准乙级" ? "checked=checked" : null)/>准乙级</label>
+                        <label><input type="radio" name="CommendLevel" value="准乙级"  @(profile.CommendLevel == "准乙级" ? "checked=checked" : null)/>准乙级</label>
                     </div>
                 </div>
             </div>
@@ -161,49 +145,49 @@
             <div class="form-group ">
                 <label class="control-label col-lg-1">联系人</label>
                 <div class="col-lg-2">
-                    <input type="text" name="ContactPerson" class="form-control input-sm" value="@(model.ContactPerson)" />
+                    <input type="text" name="ContactPerson" class="form-control input-sm" value="@(profile.ContactPerson)" />
                 </div>
                 <label class="control-label col-lg-1">联系电话</label>
                 <div class="col-lg-2">
-                    <input type="text" name="Tel" class="form-control input-sm" value="@(model.Tel)" />
+                    <input type="text" name="Tel" class="form-control input-sm" value="@(profile.Tel)" />
                 </div>
                 <label class="control-label col-lg-1">手机</label>
                 <div class="col-lg-2">
-                    <input type="text" name="MobilePhone" class="form-control input-sm" value="@(model.MobilePhone)" />
+                    <input type="text" name="MobilePhone" class="form-control input-sm" value="@(profile.MobilePhone)" />
                 </div>
                 <label class="control-label col-lg-1">传真电话</label>
                 <div class="col-lg-2">
-                    <input type="text" name="Fax" class="form-control input-sm" value="@(model.Fax)" />
+                    <input type="text" name="Fax" class="form-control input-sm" value="@(profile.Fax)" />
                 </div>
             </div>
             <div class="form-group ">
                 <label class="control-label col-lg-1">办公地址</label>
                 <div class="col-lg-5">
-                    <input type="text" name="Address" class="form-control input-sm" value="@(model.Address)" />
+                    <input type="text" name="Address" class="form-control input-sm" value="@(profile.Address)" />
                 </div>
                 <label class="control-label col-lg-1">邮政编码</label>
                 <div class="col-lg-2">
-                    <input type="text" name="Postcode" class="form-control input-sm" value="@(model.Postcode)" />
+                    <input type="text" name="Postcode" class="form-control input-sm" value="@(profile.Postcode)" />
                 </div>
             </div>
             <div class="form-group ">
                 <label class="control-label col-lg-1">通讯地址</label>
                 <div class="col-lg-5">
-                    <input type="text" name="Address1" class="form-control input-sm" value="@(model.Address1)" />
+                    <input type="text" name="Address1" class="form-control input-sm" value="@(profile.Address1)" />
                 </div>
                 <label class="control-label col-lg-1">邮政编码</label>
                 <div class="col-lg-2">
-                    <input type="text" name="Postcode1" class="form-control input-sm" value="@(model.Postcode1)" />
+                    <input type="text" name="Postcode1" class="form-control input-sm" value="@(profile.Postcode1)" />
                 </div>
             </div>
             <div class="form-group ">
                 <label class="control-label col-lg-1">电子邮箱</label>
                 <div class="col-lg-4">
-                    <input type="text" name="Email" class="form-control input-sm" value="@(model.Email)" />
+                    <input type="text" name="Email" class="form-control input-sm" value="@(profile.Email)" />
                 </div>
                 <label class="control-label col-lg-2">公司网站</label>
                 <div class="col-lg-4">
-                    <input type="text" name="Website" class="form-control input-sm" value="@(model.Website)" />
+                    <input type="text" name="Website" class="form-control input-sm" value="@(profile.Website)" />
                 </div>
             </div>
         </div>
@@ -217,7 +201,7 @@
                         <th style="width: 90px;">股份</th>
                         <th style="width: 150px;">职务或职称</th>
                         <th style="width: 80px;">是否专业人员</th>
-                        @if (!viewHistory)
+                        @if (!isViewPage)
                         {
                             <th style="width: 70px;">
                                 <button id="btn-add-sh" class="btn btn-xs btn-primary">添加</button></th>
@@ -225,7 +209,7 @@
                     </tr>
                 </thead>
                 <tbody id="list-sh">
-                    @foreach (var item in model.ShareHolders)
+                    @foreach (var item in profile.ShareHolders)
                     { 
                         <tr>
                             <td>
@@ -253,7 +237,7 @@
                                     <option value="false" @(item.Professionals == false ? "selected=selected" : null)>否</option>
                                 </select>
                             </td>
-                            @if (!viewHistory)
+                            @if (!isViewPage)
                             {
                                 <td>
                                     <a class="btn btn-xs btn-danger btn-delete">删除</a>
@@ -274,7 +258,7 @@
                         <th style="display: none;">生产厂商</th>
                         <th style="width: 150px;">主要性能</th>
                         <th>备注</th>
-                        @if (!viewHistory)
+                        @if (!isViewPage)
                         {
                             <th style="width: 70px;">
                                 <button id="btn-add-equipment" class="btn btn-xs btn-primary">添加</button></th>
@@ -282,7 +266,7 @@
                     </tr>
                 </thead>
                 <tbody id="list-equipment">
-                    @foreach (var item in model.Equipments)
+                    @foreach (var item in profile.Equipments)
                     { 
                         <tr>
                             <td>
@@ -303,7 +287,7 @@
                             <td>
                                 <input type="text" name="equipment.Note"  value="@(item.Note)" class="form-control input-sm"/>
                             </td>
-                            @if (!viewHistory)
+                            @if (!isViewPage)
                             {
                                 <td>
                                     <a class="btn btn-xs btn-danger btn-delete">删除</a>
@@ -323,7 +307,7 @@
                         <th style="width: 120px;">来源</th>
                         <th style="width: 200px;">用途</th>
                         <th>备注</th>
-                        @if (!viewHistory)
+                        @if (!isViewPage)
                         {
                             <th style="width: 70px;">
                                 <button id="btn-add-software" class="btn btn-xs btn-primary">添加</button></th>
@@ -331,7 +315,7 @@
                     </tr>
                 </thead>
                 <tbody id="list-software">
-                    @foreach (var item in model.Softwares)
+                    @foreach (var item in profile.Softwares)
                     { 
                         <tr>
                             <td>
@@ -349,7 +333,7 @@
                             <td>
                                 <input type="text" name="software.Note"  value="@(item.Note)" class="form-control input-sm"/>
                             </td>
-                            @if (!viewHistory)
+                            @if (!isViewPage)
                             {
                                 <td>
                                     <a class="btn btn-xs btn-danger btn-delete">删除</a>
@@ -362,101 +346,100 @@
         </div>
     </div>
 
-    @if (!disabled)
+    @if (!isViewPage)
     {
         <div style="clear: both; margin: 20px;" id="btn-group">
-            <input id="isSubmit" type="hidden" name="isSubmit" />
-            <button id="btn-draft" type="button" class="btn btn-primary"><i class="glyphicon glyphicon-floppy-saved"></i>&nbsp;保存为草稿</button>
-            <button id="btn-submit" type="button" class="btn btn-success"><i class="glyphicon glyphicon-ok"></i>&nbsp;@(isAnnualCheck ? "提交年检申请" : (isRegister ? "提交注册登记" : "提交资料变更"))</button>
+            <input id="profile-submit-type" type="hidden" name="type" />
+            <button id="btn-submit-draft" type="button" class="btn btn-primary"><i class="glyphicon glyphicon-floppy-saved"></i>&nbsp;保存资料</button>
+            @if (isAnnualPage)
+            { 
+                <button id="btn-submit-annual" type="button" class="btn btn-success"><i class="glyphicon glyphicon-ok"></i>&nbsp;提交年检申请</button>
+            }
+            else
+            {
+                <button id="btn-submit-profile" type="button" class="btn btn-success"><i class="glyphicon glyphicon-ok"></i>&nbsp;@(isRegisterPage ? "提交注册登记" : "提交资料变更")</button>
+            }
         </div>
     }
 </form>
-<script>
-    $(function () {
-        $(".datepicker").datepicker();
-        $("#City").val("@(model.City)");
-        var form = $("#profile-form");
-
-        @if (disabled)
-        {
-            //如果是查看历史资料，则为锁定状态
-        <text>
-
-        $("input,select", form).each(function () {
-            $(this).attr("disabled", "disabled");
-        });
+@if (!isViewPage)
+{
+    <script>
+        $(function () {
+            $(".datepicker").datepicker();
 
 
-        </text>
-        }
-        else
-        {
-        <text>
+            var form = $("#profile-form");
 
+            var controlSubmitType = $("#profile-submit-type");
 
-        $("#btn-draft").click(function () {
-            $("#isSubmit").val("false");
-            form.submit();
-        });
-        $("#btn-submit").click(function () {
-            $("#isSubmit").val("true");
-            form.submit();
-        });
-
-        form.submit(function () {
-            var data = $(this).serialize()
-            var isSubmit = $("#isSubmit").val() === "true";
-            $.request("/institution/profile/submit?isSubmit=" + isSubmit, data, function (json) {
-                alert(isSubmit ? "提交成功" : "保存草稿成功");
-                window.location.href = "@Html.Raw(Request.Url.AbsoluteUri)";
-            });
-            return false;
-        });
-
-
-        </text>
-        }
-
-        //如果是年审，则disabled基本资料
-        @if (isAnnualCheck)
-        {
-         <text>
-
-        $("#profile-basic input,#profile-basic select").each(function () {
-            $(this).attr("readonly", "readonly");
-        });
-
-        </text>
-        }
-
-        @if (!viewHistory)
-        {
-            <text>
-        setList("list-sh", "btn-add-sh");
-        setList("list-software", "btn-add-software");
-        setList("list-equipment", "btn-add-equipment");
-
-        function setList(listId, btnAddId) {
-            var list = $("#" + listId);
-            var template = "<tr>" + $("tr", list).last().html() + "</tr>";
-            $("tr", list).last().remove();
-            $("#" + btnAddId).bind("click", function () {
-                list.append(template);
-                setBtnDelete();
+            $("#btn-submit-draft").click(function () {
+                controlSubmitType.val("");
+                submitFormBySave();
+                form.submit();
                 return false;
             });
 
-            setBtnDelete();
+            $("#btn-submit-annual").click(function () {
+                controlSubmitType.val("annual");
+                submitFormBySave();
+                form.submit();
+                return false;
+            });
 
-            function setBtnDelete() {
-                $(".btn-delete").unbind("click").bind("click", function () {
-                    var tr = $(this).parent().parent();
-                    tr.remove();
+            $("#btn-submit-profile").click(function () {
+                controlSubmitType.val("profile");
+                submitFormBySave();
+                form.submit();
+                return false;
+            });
+
+            function submitFormByUpload() {
+                form.unbind("submit").bind("submit", function () { });
+            }
+
+            function submitFormBySave() {
+                form.removeAttr("target");
+                form.removeAttr("enctype");
+                form.unbind("submit").bind("submit", function () {
+
+                    var type = controlSubmitType.val();
+                    var data = $(this).serialize();
+                    $.request("/institution/profile/submit?id=@(profile.ID)&type=" + type, data, function () {
+                        alert((type ? "提交" : "保存") + "成功");
+                        window.location.href = "@(Request.Url.AbsoluteUri)";
+                    });
+                    return false;
                 });
             }
-        }
-        </text>
-        }
-    });
 
-</script>
+
+
+            setList("list-sh", "btn-add-sh");
+            setList("list-software", "btn-add-software");
+            setList("list-equipment", "btn-add-equipment");
+
+            function setList(listId, btnAddId) {
+                var list = $("#" + listId);
+                var template = "<tr>" + $("tr", list).last().html() + "</tr>";
+                $("tr", list).last().remove();
+                $("#" + btnAddId).bind("click", function () {
+                    list.append(template);
+                    setBtnDelete();
+                    return false;
+                });
+
+                setBtnDelete();
+
+                function setBtnDelete() {
+                    $(".btn-delete").unbind("click").bind("click", function () {
+                        var tr = $(this).parent().parent();
+                        tr.remove();
+                    });
+                }
+            }
+        });
+
+    </script>
+
+}

@@ -316,6 +316,8 @@
     <Content Include="Areas\Institution\Views\Exam\Index.cshtml" />
     <Content Include="Areas\Admin\Views\Member\Transfers.cshtml" />
     <Content Include="Areas\Admin\Views\Shared\_batchApproval.cshtml" />
+    <Content Include="Areas\Institution\Views\Profile\Index.cshtml" />
+    <Content Include="Areas\Institution\Views\Profile\AnnualCheck.cshtml" />
     <None Include="Properties\PublishProfiles\LandInst.pubxml" />
     <Content Include="Views\User\ForgetPwd.cshtml" />
     <Content Include="Views\User\EditPassword.cshtml" />

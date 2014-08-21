@@ -33,7 +33,7 @@
             </tr>
             <tr>
                 <th>出生年月</th>
-                <td>@(profile.RealName)</td>
+                <td>@(profile.Birthday.HasValue ? profile.Birthday.Value.ToShortDateString() : null)</td>
                 <th>证件号码</th>
                 <td>@(profile.IDNo)</td>
             </tr>

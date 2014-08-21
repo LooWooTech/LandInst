@@ -9,49 +9,49 @@
     <tr>
         <th style="width: 150px;">真实姓名</th>
         <td>@(profile.RealName)</td>
-        <th style="width: 150px;">用户名</th>
-        <td></td>
-    </tr>
-    <tr>
         <th style="width: 150px;">性别</th>
         <td>@(profile.Gender)</td>
-        <th style="width: 150px;">出生年月</th>
-        <td>@(profile.RealName)</td>
     </tr>
     <tr>
-        <th style="width: 150px;">民族</th>
-        <td>@(profile.Nationality)</td>
-        <th style="width: 150px;">籍贯</th>
-        <td>@(profile.NativePlace)</td>
+        <th>出生年月</th>
+        <td>@(profile.Birthday.HasValue ? profile.Birthday.Value.ToShortDateString() : null)</td>
+        <th>证件号码</th>
+        <td>@(profile.IDNo)</td>
     </tr>
     <tr>
-        <th style="width: 150px;">手机</th>
-        <td>@(profile.MobilePhone)</td>
-        <th style="width: 150px;">邮箱</th>
-        <td>@(profile.Email)</td>
-    </tr>
-    <tr>
-        <th style="width: 150px;">邮编</th>
-        <td>@(profile.Postcode)</td>
-        <th style="width: 150px;">通信地址</th>
-        <td>@(profile.Address)</td>
-    </tr>
-    <tr>
-        <th style="width: 150px;">毕业学校</th>
-        <td>@(profile.School)</td>
-        <th style="width: 150px;">专业</th>
+        <th>专业</th>
         <td>@(profile.Major)</td>
-    </tr>
-    <tr>
-        <th style="width: 150px;">学位</th>
-        <td>@(profile.EduLevel)</td>
-        <th style="width: 150px;">学历</th>
+        <th>学历</th>
         <td>@(profile.EduRecord)</td>
     </tr>
     <tr>
-        <th style="width: 150px;">职称</th>
+        <th>学位</th>
+        <td>@(profile.EduLevel)</td>
+        <th>毕业学校</th>
+        <td>@(profile.School)</td>
+    </tr>
+    <tr>
+        <th>民族</th>
+        <td>@(profile.Nationality)</td>
+        <th>籍贯</th>
+        <td>@(profile.NativePlace)</td>
+    </tr>
+    <tr>
+        <th>职称</th>
         <td>@(profile.Title)</td>
-        <th style="width: 150px;">用户状态</th>
-        <td>@(profile.Status.GetDescription())</td>
+        <th>政治面貌</th>
+        <td>@(profile.PoliticalState)</td>
+    </tr>
+    <tr>
+        <th>手机</th>
+        <td>@(profile.MobilePhone)</td>
+        <th>邮箱</th>
+        <td>@(profile.Email)</td>
+    </tr>
+    <tr>
+        <th>通信地址</th>
+        <td>@(profile.Address)</td>
+        <th>邮编</th>
+        <td>@(profile.Postcode)</td>
     </tr>
 </table>

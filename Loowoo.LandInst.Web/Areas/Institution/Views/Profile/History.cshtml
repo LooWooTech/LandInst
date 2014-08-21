@@ -39,7 +39,7 @@
                 <td>
                     @(item.UpdateTime.HasValue ? item.UpdateTime.ToString() : null)
                 </td>
-                <td><a href="Edit?checkLogId=@(item.ID)" class="btn btn-primary btn-xs">详细</a></td>
+                <td><a href="/institution/profile/?checkLogId=@(item.ID)" class="btn btn-primary btn-xs">详细</a></td>
             </tr>
         }
     </tbody>

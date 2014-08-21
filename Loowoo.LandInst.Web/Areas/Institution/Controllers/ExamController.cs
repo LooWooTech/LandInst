@@ -50,20 +50,29 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
             if (exam != null)
             {
                 var examResult = Core.ExamManager.GetExamResult(exam.ID, memberId);
-
-                ViewBag.Subjects = exam.Subjects.Split(',').Select(name => Core.ExamManager.GetSubject(name)).ToList();
-                if (examResult != null)
+                if (examResult != null && !string.IsNullOrEmpty(examResult.Scores))
                 {
-                    ViewBag.SignedSubjects = examResult.Subjects.Split(',').Select(name => Core.ExamManager.GetSubject(name)).ToList();
+                    exam = null;
                 }
+                else
+                {
 
-                ViewBag.CheckLog = Core.CheckLogManager.GetCheckLog(exam.ID, memberId, CheckType.Exam);
+                    var checkLogs = Core.CheckLogManager.GetList(memberId, CheckType.Exam);
+                    var signedSubjects = checkLogs.Where(e => e.Result == true).Select(e => e.Data);
 
-                ViewBag.MemberProfile = Core.MemberManager.GetProfile(memberId);
+
+                    ViewBag.Subjects = exam.Subjects.Split(',').Where(name => !signedSubjects.Contains(name)).Select(name => Core.ExamManager.GetSubject(name)).ToList();
+                    //如果所有科目都已经报过，并且得到了批准，则不能再报名
+                    ViewBag.SignedSubjects = checkLogs.Where(e => !e.Result.HasValue).SelectMany(e => e.Data.Split(',')).Select(name => Core.ExamManager.GetSubject(name)).ToList();
+
+                    ViewBag.CheckLogs = checkLogs;
+
+                    ViewBag.MemberProfile = Core.MemberManager.GetProfile(memberId);
+                    ViewBag.Exam = exam;
+                }
 
             }
 
-            ViewBag.Exam = exam;
             return View();
         }
 

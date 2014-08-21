@@ -76,6 +76,8 @@ namespace Loowoo.LandInst.Manager
                 var entity = db.CheckLogs.FirstOrDefault(e => e.InfoID == infoId && e.UserID == userId && e.CheckType == type);
                 if (entity != null && !entity.Result.HasValue)
                 {
+                    entity.Data = extendData;
+                    db.SaveChanges();
                     return entity.ID;
                 }
                 else

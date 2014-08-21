@@ -9,140 +9,77 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
 {
     public class ProfileController : InstitutionControllerBase
     {
-        public ActionResult Index()
+        public ActionResult Index(int? checkLogId)
         {
-            return View();
-        }
-
-
-        [HttpGet]
-        public ActionResult Edit(int? checkLogId, string type)
-        {
-            //查看历史
             if (checkLogId.HasValue)
             {
                 var checkLog = Core.CheckLogManager.GetCheckLog(checkLogId.Value);
                 if (checkLog != null)
                 {
-                    ViewBag.Disabled = true;
+                    ViewBag.CheckLog = checkLog;
                     ViewBag.Profile = Core.InstitutionManager.GetProfile(checkLog);
                 }
             }
             else
             {
-                var currentInst = GetCurrentInst();
-                //只要不是注册登记，那么就获取资料变更的审核状态
-                var checkLog = Core.CheckLogManager.GetLastLog(currentInst.ID, CheckType.Profile);
-                if (type == "annualcheck")
-                {
-                    var annualCheck = Core.AnnualCheckManager.GetIndateModel();
-                    if (annualCheck != null)
-                    {
-                        ViewBag.AnnualCheck = annualCheck;
-                        ViewBag.CheckLog = Core.CheckLogManager.GetLastLog(currentInst.ID, CheckType.Annual);
-                    }
-                }
-                else
-                {
-                    ViewBag.CheckLog = checkLog;
-                }
+                ViewBag.Profile = Core.InstitutionManager.GetProfile(Identity.UserID);
+            }
+            return View();
+        }
+
+        public ActionResult AnnualCheck()
+        {
+            var currentInst = GetCurrentInst();
+            var annualCheck = Core.AnnualCheckManager.GetIndateModel();
+            if (annualCheck != null)
+            {
+                ViewBag.AnnualCheck = annualCheck;
+                var checkLog = Core.CheckLogManager.GetLastLog(currentInst.ID, CheckType.Annual);
+                ViewBag.Profile = Core.InstitutionManager.GetProfile(checkLog) ?? Core.InstitutionManager.GetProfile(currentInst.ID);
+                ViewBag.CheckLog = checkLog;
+            }
+            else
+            {
                 ViewBag.Profile = Core.InstitutionManager.GetProfile(currentInst.ID);
             }
             return View();
         }
 
 
+        [HttpGet]
+        public ActionResult Edit()
+        {
+            var currentInst = GetCurrentInst();
+            ViewBag.CheckLog = Core.CheckLogManager.GetLastLog(currentInst.ID, CheckType.Profile);
+            ViewBag.Profile = Core.InstitutionManager.GetProfile(currentInst.ID);
+            return View();
+        }
+
+
 
         [HttpPost]
-        public ActionResult Submit(InstitutionProfile data, string type, bool isSubmit = false)
+        public ActionResult Submit(InstitutionProfile data, CheckType? type, bool isSubmit = false)
         {
             var inst = GetCurrentInst();
-            try
-            {
-                var shNames = Request.Form["SH.Name"].Split(',');
-                var shGenders = Request.Form["SH.Gender"].Split(',');
-                var shBirthdays = Request.Form["SH.Birthday"].Split(',');
-                var shShares = Request.Form["SH.Shares"].Split(',');
-                var shTitles = Request.Form["SH.Title"].Split(',');
-                var shProfessionals = Request.Form["SH.Professionals"].Split(',');
 
-                for (var i = 0; i < shNames.Length; i++)
-                {
-                    data.ShareHolders.Add(new Shareholder
-                    {
-                        Name = shNames[i],
-                        Gender = shGenders[i],
-                        Birthday = shBirthdays[i],
-                        Shares = shShares[i],
-                        Title = shTitles[i],
-                        Professionals = shProfessionals[i] == "是"
-                    });
-                }
-            }
-            catch { }
+            data.ID = inst.ID;
+            data.ShareHolders = Shareholder.GetList(Request.Form);
+            data.Equipments = Equipment.GetList(Request.Form);
+            data.Softwares = Software.GetList(Request.Form);
 
-            try
+            if (type == CheckType.Annual)
             {
-                var equipmentNames = Request.Form["equipment.Name"].Split(',');
-                var equipmentNumbers = Request.Form["equipment.Number"].Split(',');
-                var equipmentModels = Request.Form["equipment.Model"].Split(',');
-                var equipmentManufacturers = Request.Form["equipment.Manufacturer"].Split(',');
-                var equipmentPerformances = Request.Form["equipment.Performance"].Split(',');
-                var equipmentNotes = Request.Form["equipment.Note"].Split(',');
-                for (var i = 0; i < equipmentNames.Length; i++)
-                {
-                    var number = 0;
-                    int.TryParse(equipmentNames[i], out number);
-                    data.Equipments.Add(new Equipment
-                    {
-                        Name = equipmentNames[i],
-                        Number = number,
-                        Model = equipmentModels[i],
-                        Manufacturer = equipmentManufacturers[i],
-                        Performance = equipmentPerformances[i],
-                        Note = equipmentNotes[i]
-                    });
-                }
+                Core.InstitutionManager.SubmitAnnaulCheck(inst, data);
             }
-            catch { }
-            try
+            else if (type == CheckType.Profile)
             {
-                var softwareNames = Request.Form["software.Name"].Split(',');
-                var softwareNumbers = Request.Form["software.Number"].Split(',');
-                var softwareSources = Request.Form["software.Source"].Split(',');
-                var softwarePurposes = Request.Form["software.Purpose"].Split(',');
-                var softwareNotes = Request.Form["software.Note"].Split(',');
-                for (var i = 0; i < softwareNames.Length; i++)
-                {
-                    var number = 0;
-                    int.TryParse(softwareNames[i], out number);
-                    data.Softwares.Add(new Software
-                    {
-                        Name = softwareNames[i],
-                        Number = number,
-                        Source = softwareSources[i],
-                        Purpose = softwarePurposes[i],
-                        Note = softwareNotes[i]
-                    });
-                }
-            }
-            catch { }
-
-            if (isSubmit)
-            {
-                if (type == "annualcheck")
-                {
-                    Core.InstitutionManager.SubmitAnnaulCheck(inst, data);
-                }
-                else
-                {
-                    Core.InstitutionManager.SubmitProfile(inst, data);
-                }
+                Core.InstitutionManager.SubmitProfile(inst, data);
             }
             else
             {
                 Core.InstitutionManager.SaveProfile(inst, data);
             }
+
             return JsonSuccess();
         }
 

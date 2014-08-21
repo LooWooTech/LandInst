@@ -37,68 +37,13 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
             var inst = GetCurrentInst();
             member.InstitutionID = inst.ID;
 
-            try
-            {
-                var certNames = Request.Form["Cert.Name"].Split(',');
-                var certNos = Request.Form["Cert.No"].Split(',');
-                var certObtainDates = Request.Form["Cert.ObtainDate"].Split(',');
-                for (var i = 0; i < certNames.Length; i++)
-                {
-                    var obtainDate = DateTime.Now;
-                    DateTime.TryParse(certObtainDates[i], out obtainDate);
-                    profile.Certifications.Add(new Certification
-                    {
-                        Name = certNames[i],
-                        CertificationNo = certNos[i],
-                        ObtainDate = obtainDate == DateTime.MinValue ? default(Nullable<DateTime>) : obtainDate
-                    });
-                }
-            }
-            catch { }
-
-            try
-            {
-
-                var startDates = Request.Form["job.StartDate"].Split(',');
-                var endDates = Request.Form["job.StartDate"].Split(',');
-                var insts = Request.Form["job.Institution"].Split(',');
-                var offices = Request.Form["job.Office"].Split(',');
-                var notes = Request.Form["job.Note"].Split(',');
-                for (var i = 0; i < startDates.Length; i++)
-                {
-                    var startDate = DateTime.MinValue;
-                    DateTime.TryParse(startDates[i], out startDate);
-                    var endDate = DateTime.MinValue;
-                    DateTime.TryParse(endDates[i], out endDate);
-
-                    profile.Jobs.Add(new Job
-                    {
-                        StartDate = startDate == DateTime.MinValue ? null : startDate.ToShortDateString(),
-                        EndDate = endDate == DateTime.MinValue ? null : endDate.ToShortDateString(),
-                        Institution = insts[i],
-                        Office = offices[i],
-                        Note = notes[i]
-                    });
-                }
-
-            }
-            catch { }
+            profile.Certifications = Certification.GetList(Request.Form);
+            profile.Jobs = Job.GetList(Request.Form);
             
             if (id == 0)
             {
                 var memberId = Core.MemberManager.AddMember(member);
                 member.ID = memberId;
-                Core.MemberManager.SaveProfile(member, profile);
-                return JsonSuccess();
-            }
-
-            if (!type.HasValue)
-            {
-                //没参加考试的用户可以随时变更资料 不需要审核
-                if (member.Status == MemberStatus.Normal)
-                {
-                    Core.MemberManager.UpdateMember(member);
-                }
                 Core.MemberManager.SaveProfile(member, profile);
                 return JsonSuccess();
             }
@@ -111,6 +56,15 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
             else if (type.Value == CheckType.Practice)
             {
                 Core.MemberManager.SubmitPractice(member, profile);
+            }
+            else
+            {
+                //没参加考试的用户可以随时变更资料 不需要审核
+                if (member.Status == MemberStatus.Normal)
+                {
+                    Core.MemberManager.UpdateMember(member);
+                }
+                Core.MemberManager.SaveProfile(member, profile);
             }
 
             return JsonSuccess();

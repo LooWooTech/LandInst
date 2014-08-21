@@ -37,7 +37,7 @@
             <td>@(item.Status.GetDescription())</td>
             <td>@(item.Major == 0 ? "" : item.Major.ToString())</td>
             <td>@(item.EduRecord == 0 ? "" : item.EduRecord.ToString())</td>
-            <td>@(item.InstitutionName)</td>
+            <td><a href="/admin/institution/profile?id=@(item.InstitutionID)">@(item.InstitutionName)</a></td>
         </tr>
     }
     <tr>

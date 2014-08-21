@@ -23,8 +23,6 @@ namespace Loowoo.LandInst.Model.Filters
 
         public MemberStatus? Status { get; set; }
 
-        public CheckType? CheckType { get; set; }
-
         public bool GetInstName { get; set; }
     }
 }
