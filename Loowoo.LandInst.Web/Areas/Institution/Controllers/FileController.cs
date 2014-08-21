@@ -16,7 +16,16 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
                 return JsonFail("没有选择上传文件");
             }
 
-            var file = Request.Files[index];
+            HttpPostedFileBase file = null;
+            for (var i = 0; i < Request.Files.Count; i++)
+            {
+                file = Request.Files[i];
+                if (file.ContentLength > 0)
+                {
+                    break; 
+                }
+            }
+
             if (file.ContentLength == 0)
             {
                 return JsonFail("文件不正确");

@@ -62,9 +62,9 @@
         });
 
         function reset() {
-            var fileId = file.attr("id");
             file.replaceWith(file.clone());
-            $("#" + fileId).setUpload(uploadUrl, callback, beforeUpload);
+            console.log(file);
+            $(file).setUpload(uploadUrl, callback, beforeUpload);
         }
     };
 })();

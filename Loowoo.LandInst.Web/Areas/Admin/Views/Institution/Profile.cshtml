@@ -10,20 +10,21 @@
 }
 <div style="position: relative;">
     <ul class="nav nav-tabs">
-        <li class="active"><a href="#tab1" data-toggle="tab">基本资料</a></li>
-        <li class=""><a href="#tab5" data-toggle="tab">技术人员</a></li>
-        <li class=""><a href="#tab2" data-toggle="tab">股东</a></li>
-        <li class=""><a href="#tab3" data-toggle="tab">主要技术装备</a></li>
-        <li class=""><a href="#tab6" data-toggle="tab">应用软件情况</a></li>
-        <li class=""><a href="#tab4" data-toggle="tab">审核记录</a></li>
+        <li class="active"><a href="#profile-basic" data-toggle="tab">基本资料</a></li>
+        <li class=""><a href="#profile-member" data-toggle="tab">技术人员</a></li>
+        <li class=""><a href="#profile-shareholders" data-toggle="tab">股东</a></li>
+        <li class=""><a href="#profile-equipments" data-toggle="tab">主要技术装备</a></li>
+        <li class=""><a href="#profile-softwares" data-toggle="tab">应用软件情况</a></li>
+        <li class=""><a href="#profile-files" data-toggle="tab">证件扫描件</a></li>
+        <li class=""><a href="#profile-history" data-toggle="tab">审核记录</a></li>
     </ul>
     <ul style="position: absolute; right: 10px; top: 0px;">
-@*        <a href="export?id=@(profile.ID)" class="btn btn-primary"><i class="glyphicon glyphicon-export"></i>导出资料</a>*@
+        <a href="export?id=@(profile.ID)" class="btn btn-primary"><i class="glyphicon glyphicon-export"></i>导出资料</a>
     </ul>
 </div>
 <div class="tab-content">
-    <div class="tab-pane fade active in" id="tab1">
-        <table class="table table-bordered" id="profile-basic">
+    <div class="tab-pane fade active in" id="profile-basic">
+        <table class="table table-bordered">
             <tr>
                 <th style="width: 150px;">机构名称</th>
                 <td>
@@ -44,7 +45,7 @@
                     @(profile.TechLeader)
                 </td>
             </tr>
-            
+
             <tr>
                 <th>工商登记号</th>
                 <td>
@@ -128,7 +129,7 @@
         </table>
 
     </div>
-    <div class="tab-pane fade" id="tab2">
+    <div class="tab-pane fade" id="profile-shareholders">
         <table class="table table-bordered">
             <tr>
                 <th>姓名</th>
@@ -149,7 +150,7 @@
             }
         </table>
     </div>
-    <div class="tab-pane fade" id="tab3">
+    <div class="tab-pane fade" id="profile-equipments">
         <table class="table table-bordered">
             <tr>
                 <th>名称</th>
@@ -168,7 +169,7 @@
             }
         </table>
     </div>
-    <div class="tab-pane fade" id="tab4">
+    <div class="tab-pane fade" id="profile-history">
         <table class="table table-bordered">
             <tr>
                 <th>审核类型</th>
@@ -208,7 +209,7 @@
             }
         </table>
     </div>
-    <div class="tab-pane fade" id="tab5">
+    <div class="tab-pane fade" id="profile-member">
         <table class="table table-bordered">
             <tr>
                 <th>姓名</th>
@@ -229,7 +230,7 @@
             }
         </table>
     </div>
-    <div class="tab-pane fade" id="tab6">
+    <div class="tab-pane fade" id="profile-softwares">
         <table class="table table-bordered">
             <tr>
                 <th>软件名称</th>
@@ -249,6 +250,20 @@
                 </tr>
             }
         </table>
+    </div>
+    <div class="tab-pane fade" id="profile-files">
+        @foreach (var file in profile.Files)
+        {
+            <div class="col-lg-2">
+                <a href="@(file.SavePath)" target="_blank" title="@(file.FileName)">
+                    <img src="@(file.SavePath)" class="img-preview" /></a>
+            </div>
+            <div class="col-lg-4">
+                <b>证件名称</b>@file.FileName
+                <br />
+                <b>证件描述</b>@(file.Description)
+            </div>
+        }
     </div>
 </div>
 @Html.Partial("_approvalForm", approval)

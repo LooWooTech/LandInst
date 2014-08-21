@@ -14,6 +14,7 @@
         profile.ShareHolders.Add(new Shareholder());
         profile.Equipments.Add(new Equipment());
         profile.Softwares.Add(new Software());
+        profile.Files.Add(new UploadFile());
     }
 }
 
@@ -40,6 +41,7 @@
             <li class=""><a href="#profile-sharehoder" data-toggle="tab"><i class="glyphicon glyphicon-user"></i>&nbsp;股东</a></li>
             <li class=""><a href="#profile-equipment" data-toggle="tab"><i class="glyphicon glyphicon-cog"></i>&nbsp;主要技术设备</a></li>
             <li class=""><a href="#profile-software" data-toggle="tab"><i class="glyphicon glyphicon-floppy-disk"></i>&nbsp;应用软件情况</a></li>
+            <li class=""><a href="#profile-files" data-toggle="tab"><i class="glyphicon glyphicon-floppy-disk"></i>&nbsp;证件扫描件</a></li>
         </ul>
         @if (isViewPage)
         {
@@ -344,6 +346,51 @@
                 </tbody>
             </table>
         </div>
+        <div class="tab-pane fade" id="profile-files">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th style="width: 200px;">证件名称</th>
+                        <th>描述</th>
+                        <th style="width: 200px;">文件预览</th>
+                        @if (!isViewPage)
+                        {
+                            <th style="width: 170px;"><a id="btn-add-file" class="btn btn-xs btn-primary">添加</a></th>
+                        }
+                    </tr>
+                </thead>
+                <tbody id="list-files">
+                    @foreach (var file in profile.Files)
+                    {
+                        <tr>
+                            <td>
+                                <input type="text" name="file.FileName" class="form-control input-sm" value="@(file.FileName)" />
+                                <input type="hidden" name="file.SavePath" value="@(file.SavePath)" />
+                            </td>
+                            <td>
+                                <input name="file.Description" class="form-control input-sm" value="@(file.Description)" /></td>
+                            <td class="img-preview">
+                                @if (!string.IsNullOrEmpty(file.SavePath))
+                                { 
+                                    <a href="@(file.SavePath)" title="点击查案大图" target="_blank">
+                                        <img src="@(file.SavePath)" class="img-preview"></a>
+                                }
+                            </td>
+                            @if (!isViewPage)
+                            {
+                                <td>
+                                    <div class="control-upload">
+                                        <input type="file" class="form-control input-sm control-file" name="files" />
+                                        <div class="btn btn-sm btn-primary"><i class="glyphicon glyphicon-upload"></i>&nbsp;上传文件</div>
+                                        <a href="#" class="btn btn-sm btn-warning btn-delete">删除</a>
+                                    </div>
+                                </td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
     </div>
 
     @if (!isViewPage)
@@ -418,14 +465,41 @@
             setList("list-sh", "btn-add-sh");
             setList("list-software", "btn-add-software");
             setList("list-equipment", "btn-add-equipment");
+            setList("list-files", "btn-add-file", function () {
+                var tr = $("#list-files tr:last");
+                setUpload(tr);
+            });
 
-            function setList(listId, btnAddId) {
+            $("#list-files tr").each(function () {
+                var tr = $(this);
+                setUpload(tr);
+            });
+
+            function setUpload(tr) {
+                var valueControl = $("input[type='hidden']", tr);
+                var file = $("input[type='file']", tr);
+                var preview = $(".img-preview", tr);
+                file.setUpload("/institution/file/upload", function (json) {
+                    if (json.result) {
+                        valueControl.val(json.data);
+                        preview.html('<a href="' + json.data + '" title="点击查案大图" target="_blank"><img src="' + json.data + '" class="img-preview" /></a>');
+                    }
+                    else {
+                        alert(json.message);
+                    }
+                });
+            }
+
+            function setList(listId, btnAddId, customFunc) {
                 var list = $("#" + listId);
                 var template = "<tr>" + $("tr", list).last().html() + "</tr>";
                 $("tr", list).last().remove();
                 $("#" + btnAddId).bind("click", function () {
                     list.append(template);
                     setBtnDelete();
+                    if (customFunc) {
+                        customFunc();
+                    }
                     return false;
                 });
 
@@ -433,7 +507,7 @@
 
                 function setBtnDelete() {
                     $(".btn-delete").unbind("click").bind("click", function () {
-                        var tr = $(this).parent().parent();
+                        var tr = $(this).parents("tr");
                         tr.remove();
                     });
                 }

@@ -66,6 +66,7 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
             data.ShareHolders = Shareholder.GetList(Request.Form);
             data.Equipments = Equipment.GetList(Request.Form);
             data.Softwares = Software.GetList(Request.Form);
+            data.Files = UploadFile.GetList(Request.Form);
 
             if (type == CheckType.Annual)
             {
