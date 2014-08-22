@@ -33,7 +33,7 @@ namespace Loowoo.LandInst.Manager
 
         public DbSet<VCheckInst> VCheckInsts { get; set; }
 
-        //public DbSet<Member> Members { get; set; }
+        public DbSet<Member> Members { get; set; }
 
         //public DbSet<Education> Educations { get; set; }
 

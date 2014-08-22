@@ -18,51 +18,46 @@
                 </select>
             </div>
             <div class="input-group-btn">
-                <button type="submit" class="btn btn-primary"><i class="glyphicon glyphicon-search"></i> 查询</button>
-
-                @*                <input type="button" id="btn-agree" class="btn btn-success" value="批量通过" />
-                <input type="button" id="btn-disagree" class="btn btn-danger" value="批量不通过" />*@
+                <button type="submit" class="btn btn-primary"><i class="glyphicon glyphicon-search"></i>查询</button>
             </div>
         </div>
     </div>
 </form>
 @if (list != null)
 {
-    <table class="table table-bordered">
-        <tr>
-            @*            <th>
+<table class="table table-bordered">
+    <tr>
+        @*            <th>
                 <input id="btn-select" type="checkbox" /></th>*@
-            <th>ID</th>
-            <th>机构名称</th>
-            <th>法人代表</th>
-            <th>所在地</th>
-            <th>工商登记号</th>
-            <th>申请日期</th>
-            <th>审核状态</th>
-        </tr>
-        @foreach (var item in list)
+        <th>ID</th>
+        <th>机构名称</th>
+        <th>法人代表</th>
+        <th>所在地</th>
+        <th>工商登记号</th>
+        <th>申请日期</th>
+        <th>审核状态</th>
+    </tr>
+    @foreach (var item in list)
         { 
-            <tr>
-                @*                <td>
-                    <input type="checkbox" name="id" value="@(item.ID)" /></td>*@
-                <td>@(item.UserID)</td>
-                <td><a href="/admin/institution/profile?id=@(item.UserID)&approvalId=@(item.ID)">@(item.InstName)</a></td>
-                <td>@(item.LegalPerson)</td>
-                <td>@(item.City)</td>
-                <td>@(item.RegistrationNo)</td>
-                <td>@(item.CreateTime.ToShortDateString())</td>
-                <td>
-                    @if (item.Result.HasValue)
+        <tr>
+            <td>@(item.UserID)</td>
+            <td><a href="/admin/institution/profile?id=@(item.UserID)&checklogId=@(item.ID)">@(item.InstName)</a></td>
+            <td>@(item.LegalPerson)</td>
+            <td>@(item.City)</td>
+            <td>@(item.RegistrationNo)</td>
+            <td>@(item.CreateTime.ToShortDateString())</td>
+            <td>
+                @if (item.Result.HasValue)
                     {
-                        <span class="label label-success">已审核</span>
+                    <span class="label label-success">已审核</span>
                     }
                     else
                     {
-                        <span class="label label-default">未审核</span>
+                    <span class="label label-default">未审核</span>
 
                     }
-                </td>
-                @*                <td>
+            </td>
+            @*                <td>
                     @if (item.Result.HasValue)
                     { 
                         <a href="" class="btn btn-sm btn-agree">通过</a>
@@ -73,49 +68,11 @@
 
                     }
                 </td>*@
-            </tr>
-        }
-        <tr>
-            <td colspan="10">
-                @Html.Partial("_pagination", ViewBag.Page as object)
-            </td>
         </tr>
-    </table>
-    <script>
-        $(function () {
-
-            $("#btn-select").click(function () {
-                $("input[type='checkbox']").prop('checked', this.checked);
-            });
-
-            $("#btn-agree").click(function () {
-                submitApproval(true);
-            });
-
-            $("#btn-disagree").click(function () {
-                submitApproval(false);
-            });
-
-            function submitApproval(result) {
-                var data = getData();
-                $.post("/admin/institution/approval?result=" + result, data, function (json) {
-                    if (json.result) {
-                        alert("操作成功");
-                        window.location.href = "@Html.Raw(Request.Url.AbsoluteUri)";
-                    }
-                }, "json");
-            }
-
-            function getData() {
-                var ids = [];
-                $("input[name='id']:checked").each(function () {
-                    var val = $(this).val();
-                    ids.push(val);
-
-                });
-                return { id: ids.join() };
-            }
-
-        });
-    </script>
-}
+        }
+    <tr>
+        <td colspan="10">
+            @Html.Partial("_pagination", ViewBag.Page as object)
+        </td>
+    </tr>
+</table>

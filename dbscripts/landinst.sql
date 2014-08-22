@@ -4,7 +4,7 @@ Source Host: localhost
 Source Database: landinst
 Target Host: localhost
 Target Database: landinst
-Date: 2014/8/22 11:29:07
+Date: 2014/8/22 16:28:30
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -165,7 +165,7 @@ CREATE TABLE `user` (
   `Answer` varchar(255) DEFAULT NULL,
   `RegisterTime` datetime NOT NULL,
   `LastLoginTime` datetime DEFAULT NULL,
-  `LastLoginIP` varchar(20) NOT NULL,
+  `LastLoginIP` varchar(20) DEFAULT NULL,
   `LoginTimes` int(11) NOT NULL DEFAULT '0',
   `Role` int(11) NOT NULL,
   `Deleted` bit(1) NOT NULL,
@@ -194,7 +194,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`loowootech`@`localhost` SQL SECURITY DEFINER
 -- ----------------------------
 -- Records 
 -- ----------------------------
-INSERT INTO `annualcheck` VALUES ('4', '2014-08-01 00:00:00', '2014-09-01 00:00:00', '2014年度审核', null);
+INSERT INTO `annualcheck` VALUES ('4', '2014-08-01 00:00:00', '2014-09-01 00:00:00', '2014年度审批', null);
 INSERT INTO `checklog` VALUES ('1', '1', '26', '1', '2014-08-18 15:58:16', '2014-08-18 16:13:01', '', null, null);
 INSERT INTO `checklog` VALUES ('3', '1', '1', '6', '2014-08-19 19:42:31', '2014-08-19 20:03:46', '', null, '语文,英语');
 INSERT INTO `checklog` VALUES ('4', '2', '1', '3', '2014-08-20 19:44:58', '2014-08-21 11:30:11', '', null, '2');

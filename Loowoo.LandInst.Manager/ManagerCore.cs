@@ -47,11 +47,11 @@ namespace Loowoo.LandInst.Manager
             get { return _profileManager == null ? _profileManager = new ProfileManager() : _profileManager; }
         }
 
-        //private MemberManager _memberManager;
-        //public MemberManager MemberManager
-        //{
-        //    get { return _memberManager == null ? _memberManager = new MemberManager() : _memberManager; }
-        //}
+        private MemberManager _memberManager;
+        public MemberManager MemberManager
+        {
+            get { return _memberManager == null ? _memberManager = new MemberManager() : _memberManager; }
+        }
 
         //private ExamManager _examManager;
         //public ExamManager ExamManager

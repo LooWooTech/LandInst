@@ -37,6 +37,9 @@
     <Reference Include="EntityFramework.SqlServer">
       <HintPath>..\packages\EntityFramework.6.1.0\lib\net40\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.6.0.4\lib\net40\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
@@ -57,7 +60,7 @@
     <Compile Include="InstitutionProfile.cs" />
     <Compile Include="CheckLog.cs" />
     <Compile Include="EnumDatas.cs" />
-    <Compile Include="InstMember.cs" />
+    <Compile Include="Member.cs" />
     <Compile Include="Profile.cs" />
     <Compile Include="Software.cs" />
     <Compile Include="UploadFile.cs" />

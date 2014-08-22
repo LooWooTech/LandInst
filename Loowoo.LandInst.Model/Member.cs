@@ -1,64 +1,73 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
+using System.Collections.Specialized;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Loowoo.LandInst.Model
 {
     [Table("Member")]
     public class Member
     {
-        public Member()
-        {
-            Status = MemberStatus.Normal;
-        }
-
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        [DatabaseGenerated(System.ComponentModel.DataAnnotations.Schema.DatabaseGeneratedOption.Identity)]
         public int ID { get; set; }
 
-        public int InstitutionID { get; set; }
-
-        [NotMapped]
-        public string InstitutionName { get; set; }
+        public int InstID { get; set; }
 
         public string RealName { get; set; }
 
-        public DateTime? Birthday { get; set; }
+        public string IDNo { get; set; }
+
+        public string Birthday { get; set; }
+
+        public string CertificationNo { get; set; }
+
+        public string PracticeNo { get; set; }
+
+        public string MobilePhone { get; set; }
 
         public string Gender { get; set; }
 
-        [Column(TypeName = "int")]
-        public Major Major { get; set; }
+        public static List<Member> GetList(NameValueCollection requestForm)
+        {
+            var list = new List<Member>();
+            if (!requestForm.AllKeys.Contains("member.RealName"))
+            {
+                return list;
+            }
+            var realNames = requestForm["member.RealName"].Split(',');
+            var genders = requestForm["member.Gender"].Split(',');
+            var birthdays = requestForm["member.Birthday"].Split(',');
+            var practiceNos = requestForm["member.PracticeNo"].Split(',');
+            //var certificationNos = requestForm["member.CertificationNo"].Split(',');
+            var mobilePhones = requestForm["member.MobilePhone"].Split(',');
+            var idNos = requestForm["member.IDNo"].Split(',');
 
-        [Column(TypeName = "int")]
-        public EduRecord EduRecord { get; set; }
+            for (var i = 0; i < realNames.Length; i++)
+            {
+                var realName = realNames[i];
+                var idNo = idNos[i];
 
-        public string IDNo { get; set; }
-        ///// <summary>
-        ///// 土地规划从业人员职业培训合格证号
-        ///// </summary>
-        //public string CertificationNo { get; set; }
+                if (string.IsNullOrEmpty(realName) || string.IsNullOrEmpty(idNo))
+                {
+                    throw new ArgumentException("请填写姓名和身份证号码");
+                }
 
-        [Column(TypeName = "int")]
-        public MemberStatus Status { get; set; }
+                list.Add(new Member
+                {
+                    RealName = realName,
+                    Gender = genders[i],
+                    Birthday = birthdays[i],
+                    //CertificationNo = certificationNos[i],
+                    PracticeNo = practiceNos[i],
+                    MobilePhone = mobilePhones[i],
+                    IDNo = idNo,
+                });
+            }
+            return list;
+        }
     }
-
-    public enum MemberStatus
-    {
-        [Description("新注册用户")]
-        Normal = 0,
-
-        [Description("已通过考试")]
-        Registered = 1,
-
-        [Description("执业人员")]
-        Practice
-    }
-
-
 }

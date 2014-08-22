@@ -65,20 +65,32 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
             data.ID = inst.ID;
             data.ShareHolders = Shareholder.GetList(Request.Form);
             data.Equipments = Equipment.GetList(Request.Form);
-            data.Members = InstMember.GetList(Request.Form);
+            data.Members = Member.GetList(Request.Form);
+
+            foreach (var member in data.Members)
+            {
+                if (Core.MemberManager.Exist(member.IDNo, inst.ID))
+                {
+                    throw new ArgumentException(member.RealName + "已存在");
+                }
+            }
+
+            Core.MemberManager.AddMembers(inst.ID, data.Members);
+
             data.Files = UploadFile.GetList(Request.Form);
 
+            int profileId = 0;
             if (type == CheckType.Annual)
             {
-                Core.InstitutionManager.SubmitAnnaulCheck(inst, data);
+                profileId = Core.InstitutionManager.SubmitAnnaulCheck(inst, data);
             }
             else if (type == CheckType.Profile)
             {
-                Core.InstitutionManager.SubmitProfile(inst, data);
+                profileId = Core.InstitutionManager.SubmitProfile(inst, data);
             }
             else
             {
-                Core.InstitutionManager.SaveProfile(inst, data);
+                profileId = Core.InstitutionManager.SaveProfile(inst, data);
             }
 
             return JsonSuccess();

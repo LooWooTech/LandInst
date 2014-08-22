@@ -15,8 +15,8 @@ namespace Loowoo.LandInst.Model
             ShareHolders = new List<Shareholder>();
             Equipments = new List<Equipment>();
             Softwares = new List<Software>();
-            Members = new List<InstMember>();
             Files = new List<UploadFile>();
+            Members = new List<Member>();
         }
 
         public InstitutionProfile(Institution inst)
@@ -169,6 +169,6 @@ namespace Loowoo.LandInst.Model
 
         public List<Software> Softwares { get; set; }
 
-        public List<InstMember> Members { get; set; }
+        public List<Member> Members { get; set; }
     }
 }

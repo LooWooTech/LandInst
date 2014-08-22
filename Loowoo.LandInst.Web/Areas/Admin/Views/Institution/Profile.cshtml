@@ -225,15 +225,17 @@
                 <th>姓名</th>
                 <th>性别</th>
                 <th>出生年月</th>
+                <th>身份证号</th>
                 <th>执业证书号</th>
                 <th>手机</th>
             </tr>
             @foreach (var member in profile.Members)
             { 
                 <tr>
-                    <td>@(member.Name)</td>
+                    <td>@(member.RealName)</td>
                     <td>@(member.Gender)</td>
                     <td>@(member.Birthday)</td>
+                    <td>@(member.IDNo)</td>
                     <td>@(member.PracticeNo)</td>
                     <td>@(member.MobilePhone)</td>
                 </tr>

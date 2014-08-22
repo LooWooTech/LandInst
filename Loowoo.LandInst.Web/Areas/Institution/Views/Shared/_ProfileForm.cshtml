@@ -13,8 +13,8 @@
     {
         profile.ShareHolders.Add(new Shareholder());
         profile.Equipments.Add(new Equipment());
-        profile.Softwares.Add(new Software());
         profile.Files.Add(new UploadFile());
+        profile.Members.Add(new Member());
     }
 }
 
@@ -39,8 +39,8 @@
             <li class="active"><a href="#profile-basic" data-toggle="tab"><i class="glyphicon glyphicon-list-alt"></i>&nbsp;详细资料</a></li>
             <li class=""><a href="#profile-contact" data-toggle="tab"><i class="glyphicon glyphicon-phone-alt"></i>&nbsp;联系方式</a></li>
             <li class=""><a href="#profile-sharehoder" data-toggle="tab"><i class="glyphicon glyphicon-star"></i>&nbsp;股东</a></li>
-            <li class=""><a href="#profile-member" data-toggle="tab"><i class="glyphicon glyphicon-user"></i>&nbsp;机构成员</a></li>
             <li class=""><a href="#profile-equipment" data-toggle="tab"><i class="glyphicon glyphicon-cog"></i>&nbsp;仪器设备</a></li>
+            <li class=""><a href="#profile-member" data-toggle="tab"><i class="glyphicon glyphicon-user"></i>&nbsp;机构成员</a></li>
             <li class=""><a href="#profile-files" data-toggle="tab"><i class="glyphicon glyphicon-floppy-disk"></i>&nbsp;证件扫描件</a></li>
         </ul>
         @if (isViewPage)
@@ -298,11 +298,12 @@
             <table class="table table-bordered">
                 <thead>
                     <tr>
-                        <th>姓名</th>
-                        <th style="width: 100px;">性别</th>
-                        <th style="width: 150px;">出生年月</th>
-                        <th style="width: 200px;">执业证书号</th>
-                        <th style="width: 150px;">手机号</th>
+                        <th style="width: 100px;">姓名</th>
+                        <th style="width: 70px;">性别</th>
+                        <th style="width: 120px;">出生年月</th>
+                        <th style="width: 180px;">身份证号</th>
+                        <th style="width: 180px;">执业证书号</th>
+                        <th style="width: 120px;">手机号</th>
                         <th style="width: 70px;">
                             <button id="btn-add-member" class="btn btn-xs btn-primary">添加</button></th>
                     </tr>
@@ -312,7 +313,7 @@
                     { 
                         <tr>
                             <td>
-                                <input type="text" name="member.Name"  value="@(item.Name)" class="form-control input-sm"/>
+                                <input type="text" name="member.RealName"  value="@(item.RealName)" class="form-control input-sm"/>
                             </td>
                             <td>
                                 <select name="member.Gender" class="form-control input-sm">
@@ -323,6 +324,10 @@
                             <td>
                                 <input type="text" name="member.Birthday"  value="@(item.Birthday)" class="form-control input-sm datepicker"/>
                             </td>
+                            <td><input type="text" name="member.IDno" value="@(item.IDNo)" class="form-control input-sm" /></td>
+@*                            <td>
+                                <input type="text" name="member.CertificationNo"  value="@(item.CertificationNo)" class="form-control input-sm"/>
+                            </td>*@
                             <td>
                                 <input type="text" name="member.PracticeNo"  value="@(item.PracticeNo)" class="form-control input-sm"/>
                             </td>
