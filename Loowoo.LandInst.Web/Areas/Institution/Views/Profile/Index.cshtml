@@ -1,0 +1,15 @@
+﻿@using Loowoo.LandInst.Model
+@{
+    CheckLog checkLog = ViewBag.CheckLog;
+    ViewBag.Title = checkLog == null ? "资料查看" : "历史资料";
+    Layout = "~/Areas/Institution/Views/Shared/_Layout.cshtml";
+    Html.RenderPartial("_ProfileForm");
+    
+}
+<script>
+    $(function () {
+        $("input,select", "#profile-form").each(function () {
+            $(this).attr("disabled", "disabled");
+        });
+    });
+</script>

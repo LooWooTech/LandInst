@@ -10,8 +10,8 @@
         <tr>
             <th>申请类型</th>
             <th style="width: 150px;">申请时间</th>
-            <th style="width: 120px;">审批结果</th>
-            <th style="width: 150px;">审批时间</th>
+            <th style="width: 120px;">审核结果</th>
+            <th style="width: 150px;">审核时间</th>
             <th style="width: 100px">查看</th>
         </tr>
     </thead>
@@ -29,17 +29,17 @@
                         }
                         else
                         {
-                    <span class="label label-warning">没通过</span>
+                    <span class="label label-warning">未通过</span>
                         }
                     }
                     else
                     {
-                    <span class="label label-default">未审批</span>
+                    <span class="label label-default">未审核</span>
                     }</td>
                 <td>
                     @(item.UpdateTime.HasValue ? item.UpdateTime.ToString() : null)
                 </td>
-                <td><a href="Edit?checkLogId=@(item.ID)" class="btn btn-primary btn-xs">详细</a></td>
+                <td><a href="/institution/profile/?checkLogId=@(item.ID)" class="btn btn-primary btn-xs">详细</a></td>
             </tr>
         }
     </tbody>

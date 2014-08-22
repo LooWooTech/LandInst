@@ -13,7 +13,7 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
         public ActionResult Index()
         {
             var currentInst = GetCurrentInst();
-            //尚未提交注册登记或注册登记尚未被审批通过
+            //尚未提交注册登记或注册登记尚未被审核通过
             if (currentInst.Status == Model.InstitutionStatus.Normal)
             {
                 var checkLog = Core.CheckLogManager.GetLastLog(Identity.UserID, Model.CheckType.Profile);
@@ -38,7 +38,6 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
             }
 
             ViewBag.Inst = currentInst;
-            ViewBag.History = Core.CheckLogManager.GetList(currentInst.ID);
             return View();
         }
 

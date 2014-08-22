@@ -1,68 +1,38 @@
-﻿@using Loowoo.LandInst.Model
-@using Loowoo.LandInst.Common
+﻿@using Loowoo.LandInst.Common
+@using Loowoo.LandInst.Model
 @{
-    var type = Request.QueryString["type"];
-    Institution inst = ViewBag.CurrentInst;
+    var action = (ViewBag.Controller + "." + ViewBag.Action).ToLower();
+    var isViewPage = action == "profile.index";
+    var isEditPage = action == "profile.edit";
+    var isAnnualPage = action == "profile.annualcheck";
+    var isRegisterPage = action == "home.index";
+
     CheckLog checkLog = ViewBag.CheckLog;
-    AnnualCheck annualCheck = ViewBag.AnnualCheck;
-    var isAnnualCheck = annualCheck != null;
-    bool isRegister = ViewBag.IsRegister == null ? false : ViewBag.IsRegister;
-    InstitutionProfile model = ViewBag.Profile ?? new InstitutionProfile(inst);
-    bool disabled = ViewBag.Disabled == null ? false : true;
-    model.ShareHolders.Add(new Shareholder());
-    model.Equipments.Add(new Equipment());
-    model.Softwares.Add(new Software());
-    model.Members.Add(new InstMember());
+    InstitutionProfile profile = ViewBag.Profile;
+    if (!isViewPage)
+    {
+        profile.ShareHolders.Add(new Shareholder());
+        profile.Equipments.Add(new Equipment());
+        profile.Softwares.Add(new Software());
+        profile.Files.Add(new UploadFile());
+    }
 }
-<div class="alert alert-dismissable alert-warning">
-    @if (type == "annualcheck")
-    {
-        if (annualCheck == null)
+
+@if (checkLog != null)
+{ 
+    <div class="alert alert-@(checkLog.Result.HasValue ? (checkLog.Result.Value ? "success" : "danger") : "warning")">
+        贵机构已于“@(checkLog.CreateTime.ToString())”申请了“<b>@(checkLog.CheckType.GetDescription())</b>”，
+        @if (checkLog.Result.HasValue)
         { 
-        @:现在还不能申请年检，如果需要修改资料请申请<a href="?" class="btn btn-primary btn-xs">资料变更</a>
-            return;
-        }
-    }
-    @if (annualCheck != null)
-    {
-        ViewBag.Title = "申请" + annualCheck.Name + "年检";
-        @:现在是<span class="label label-warning">@(annualCheck.Name)</span>期间，
-        @:年检时间段：“ @(annualCheck.StartDate.ToShortDateString()) ~ @(annualCheck.EndDate.ToShortDateString())”，
-        @:无法修改基本资料，但可修改联系方式、股东、证书信息。
-    }
-    else
-    {
-        if (inst.Status == InstitutionStatus.Normal)
-        {
-        @:你可以在提交注册登记前重复保存草稿，在审批之前你可以重复提交。
+            @:并且于“@(checkLog.UpdateTime.Value.ToString())”@Html.Raw(checkLog.Result.Value ? "“<b>通过审核</b>”" : "“<b>未通过审核</b>” ，审核意见：" + checkLog.Note)。
         }
         else
         {
-        @:机构资料的提交会自动提交资料变更登记审批请求，重复提交不会重复提交请求。
+            @:请耐心等待管理员审核。
         }
-    }
+    </div>
+}
 
-    @if (checkLog != null)
-    { 
-        @:<br />贵机构与“@(checkLog.CreateTime.ToString())”提交了<span class="label label-default">@(checkLog.CheckType.GetDescription())</span>申请，
-        if (checkLog.Result.HasValue)
-        {
-            if (checkLog.Result.Value)
-            {
-        @:于“@(checkLog.UpdateTime.Value.ToString()) ”<span class="label label-success">审批通过</span>
-            }
-            else
-            {
-        @:于“@(checkLog.UpdateTime.Value.ToString()) ”<span class="label label-warning">未通过审批</span>。<br />审批意见：@(checkLog.Note)
-            }
-        }
-        else
-        {
-        @:目前<span class="label label-success">尚未审批</span>，请耐心等待。
-        }
-
-    }
-</div>
 <form id="profile-form" role="form" class="form-horizontal" method="post">
     <div style="position: relative;">
         <ul class="nav nav-tabs">
@@ -71,12 +41,14 @@
             <li class=""><a href="#profile-sharehoder" data-toggle="tab"><i class="glyphicon glyphicon-star"></i>&nbsp;股东</a></li>
             <li class=""><a href="#profile-member" data-toggle="tab"><i class="glyphicon glyphicon-user"></i>&nbsp;机构成员</a></li>
             <li class=""><a href="#profile-equipment" data-toggle="tab"><i class="glyphicon glyphicon-cog"></i>&nbsp;仪器设备</a></li>
+            <li class=""><a href="#profile-files" data-toggle="tab"><i class="glyphicon glyphicon-floppy-disk"></i>&nbsp;证件扫描件</a></li>
         </ul>
-        @*@if(disabled){
+        @if (isViewPage)
+        {
             <ul style="position: absolute; right: 10px; top: 0px;">
-                <a href="export?id=@(inst.ID)" class="btn btn-primary"><i class="glyphicon glyphicon-export"></i>导出资料</a>
+                <a href="export?id=@(profile.ID)" class="btn btn-primary"><i class="glyphicon glyphicon-export"></i>导出资料</a>
             </ul>
-        }*@
+        }
     </div>
     <div class="tab-content">
         <div class="tab-pane fade active in" id="profile-basic">
@@ -84,14 +56,14 @@
                 <tr>
                     <th style="width: 120px;">机构全称</th>
                     <td colspan="3">
-                        <input type="text" name="Name" class="form-control input-sm" value="@(model.Name)" />
+                        <input type="text" name="Name" class="form-control input-sm" value="@(profile.Name)" />
                     </td>
                     <th>所在城市</th>
                     <td>
                         <select name="City" class="form-control input-sm">
                             @foreach (var city in Enum.GetNames(typeof(City)))
                             { 
-                                <option @(city == model.City ? "selected=selected" : null)>@(city)</option>
+                                <option @(city == profile.City ? "selected=selected" : null)>@(city)</option>
                             }
                         </select>
                     </td>
@@ -99,137 +71,137 @@
                 <tr>
                     <th>法人代表</th>
                     <td>
-                        <input type="text" name="LegalPerson" class="form-control input-sm" value="@(model.LegalPerson)" />
+                        <input type="text" name="LegalPerson" class="form-control input-sm" value="@(profile.LegalPerson)" />
                     </td>
                     <th>法人代码</th>
                     <td>
-                        <input type="text" name="LegalpersonNo" class="form-control input-sm" value="@(model.LegalpersonNo)" />
+                        <input type="text" name="LegalpersonNo" class="form-control input-sm" value="@(profile.LegalpersonNo)" />
                     </td>
                     <th>机构性质</th>
                     <td>
-                        <input type="text" name="CompanyType" class="form-control input-sm" value="@(model.CompanyType)" />
+                        <input type="text" name="CompanyType" class="form-control input-sm" value="@(profile.CompanyType)" />
                     </td>
                 </tr>
                 <tr>
                     <th>工商登记号</th>
                     <td>
-                        <input type="text" name="RegistrationNo" class="form-control input-sm" value="@(model.RegistrationNo)" />
+                        <input type="text" name="RegistrationNo" class="form-control input-sm" value="@(profile.RegistrationNo)" />
                     </td>
                     <th>税务登记号</th>
                     <td style="width: 200px;">
-                        <input type="text" name="TaxRegistryNo" class="form-control input-sm" value="@(model.TaxRegistryNo)" />
+                        <input type="text" name="TaxRegistryNo" class="form-control input-sm" value="@(profile.TaxRegistryNo)" />
                     </td>
                     <th style="width: 180px;">注册资金（万元）</th>
                     <td>
-                        <input type="text" name="RegisteredCapital" class="form-control input-sm" value="@(model.RegisteredCapital)" maxlength="6" />
+                        <input type="text" name="RegisteredCapital" class="form-control input-sm" value="@(profile.RegisteredCapital)" maxlength="6" />
                     </td>
                 </tr>
                 <tr>
                     <th>成立日期</th>
                     <td>
-                        <input type="text" name="EstablishedDate" class="form-control input-sm datepicker" value="@(model.EstablishedDate.HasValue ? model.EstablishedDate.Value.ToShortDateString() : null)" />
+                        <input type="text" name="EstablishedDate" class="form-control input-sm datepicker" value="@(profile.EstablishedDate.HasValue ? profile.EstablishedDate.Value.ToShortDateString() : null)" />
                     </td>
                     <th>营业期限</th>
                     <td>
-                        <input type="text" name="OperatingPeriod" class="form-control input-sm" value="@(model.OperatingPeriod)" />
+                        <input type="text" name="OperatingPeriod" class="form-control input-sm" value="@(profile.OperatingPeriod)" />
                     </td>
                     <th>工商登记机关</th>
                     <td>
-                        <input type="text" name="RegistrationInstitution" class="form-control input-sm" value="@(model.RegistrationInstitution)" />
+                        <input type="text" name="RegistrationInstitution" class="form-control input-sm" value="@(profile.RegistrationInstitution)" />
                     </td>
                 </tr>
                 <tr>
                     <th>机构总人数</th>
                     <td>
-                        <input type="text" name="TotalMembers" class="form-control input-sm" value="@(model.TotalMembers)" />
+                        <input type="text" name="TotalMembers" class="form-control input-sm" value="@(profile.TotalMembers)" />
                     </td>
                     <th>其中专业人员数</th>
                     <td>
-                        <input type="text" name="ProMembers" class="form-control input-sm" value="@(model.ProMembers)" />
+                        <input type="text" name="ProMembers" class="form-control input-sm" value="@(profile.ProMembers)" />
                     </td>
                     <th>中级及以上专业人员数</th>
                     <td>
-                        <input type="text" name="ExpertMembers" class="form-control input-sm" value="@(model.ExpertMembers)" />
+                        <input type="text" name="ExpertMembers" class="form-control input-sm" value="@(profile.ExpertMembers)" />
                     </td>
                 </tr>
                 <tr>
                     <th>执业注册号</th>
                     <td>
-                        <input type="text" name="PracticeRegistrationNo" class="form-control input-sm" value="@(model.PracticeRegistrationNo)" />
+                        <input type="text" name="PracticeRegistrationNo" class="form-control input-sm" value="@(profile.PracticeRegistrationNo)" />
                     </td>
                     <th>团体会员证号</th>
                     <td>
-                        <input type="text" name="CorporateMemberNo" class="form-control input-sm" value="@(model.CorporateMemberNo)" />
+                        <input type="text" name="CorporateMemberNo" class="form-control input-sm" value="@(profile.CorporateMemberNo)" />
                     </td>
                     <th>是否有测绘许可证书</th>
                     <td>
-                        <label><input type="radio" name="HasExequatur" value="true" @(model.HasExequatur ? "checked=checked" : null) />是</label>&nbsp;&nbsp;&nbsp;&nbsp;
-                    <label><input type="radio" name="HasExequatur" value="false"  @(!model.HasExequatur ? "checked=checked" : null)/>否</label>
+                        <label><input type="radio" name="HasExequatur" value="true" @(profile.HasExequatur ? "checked=checked" : null) />是</label>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <label><input type="radio" name="HasExequatur" value="false"  @(!profile.HasExequatur ? "checked=checked" : null)/>否</label>
                     </td>
                 </tr>
                 <tr>
                     <th>经营范围</th>
                     <td colspan="3">
-                        <input type="text" name="BusinessScope" class="form-control input-sm" value="@(model.BusinessScope)" />
+                        <input type="text" name="BusinessScope" class="form-control input-sm" value="@(profile.BusinessScope)" />
                         @*                <select name="BusinessScope" class="form-control input-sm">
-                    <option @(model.BusinessScope == "全国范围" ? "select=select" : null)>全国范围</option>
-                    <option @(model.BusinessScope == "省范围" ? "select=select" : null)>省范围</option>
-                    <option @(model.BusinessScope == "市范围" ? "select=select" : null)>市范围</option>
+                    <option @(profile.BusinessScope == "全国范围" ? "select=select" : null)>全国范围</option>
+                    <option @(profile.BusinessScope == "省范围" ? "select=select" : null)>省范围</option>
+                    <option @(profile.BusinessScope == "市范围" ? "select=select" : null)>市范围</option>
                 </select>*@
                     </td>
                     <th>证书级别</th>
                     <td>
-                        <input type="text" name="ExequaturLevel" class="form-control input-sm" value="@(model.ExequaturLevel)" />
+                        <input type="text" name="ExequaturLevel" class="form-control input-sm" value="@(profile.ExequaturLevel)" />
                     </td>
                 </tr>
             </table>
         </div>
         <div class="tab-pane fade" id="profile-contact">
-            <table class="table table-bordered" id="profile-contact">
+            <table class="table table-bordered">
                 <tr>
                     <th style="width: 120px;">手机</th>
                     <td>
-                        <input type="text" name="MobilePhone" class="form-control input-sm" value="@(model.MobilePhone)" />
+                        <input type="text" name="MobilePhone" class="form-control input-sm" value="@(profile.MobilePhone)" />
                     </td>
                     <th style="width: 120px;">传真电话</th>
                     <td>
-                        <input type="text" name="Fax" class="form-control input-sm" value="@(model.Fax)" />
+                        <input type="text" name="Fax" class="form-control input-sm" value="@(profile.Fax)" />
                     </td>
                     <th>联系电话</th>
                     <td>
-                        <input type="text" name="Tel" class="form-control input-sm" value="@(model.Tel)" />
+                        <input type="text" name="Tel" class="form-control input-sm" value="@(profile.Tel)" />
                     </td>
                 </tr>
                 <tr>
                     <th>公司地址</th>
                     <td colspan="3">
-                        <input type="text" name="Address" class="form-control input-sm" value="@(model.Address)" />
+                        <input type="text" name="Address" class="form-control input-sm" value="@(profile.Address)" />
                     </td>
                     <th>邮政编码</th>
                     <td>
-                        <input type="text" name="Postcode" class="form-control input-sm" value="@(model.Postcode)" />
+                        <input type="text" name="Postcode" class="form-control input-sm" value="@(profile.Postcode)" />
                     </td>
                 </tr>
                 <tr>
                     <th>联系地址</th>
                     <td colspan="3">
-                        <input type="text" name="Address1" class="form-control input-sm" value="@(model.Address1)" />
+                        <input type="text" name="Address1" class="form-control input-sm" value="@(profile.Address1)" />
                     </td>
                     <th>邮政编码</th>
                     <td>
-                        <input type="text" name="Postcode1" class="form-control input-sm" value="@(model.Postcode1)" />
+                        <input type="text" name="Postcode1" class="form-control input-sm" value="@(profile.Postcode1)" />
                     </td>
                 </tr>
                 <tr>
                     <th>电子邮箱</th>
                     <td colspan="5">
-                        <input type="text" name="Email" class="form-control input-sm" value="@(model.Email)" />
+                        <input type="text" name="Email" class="form-control input-sm" value="@(profile.Email)" />
                     </td>
                 </tr>
                 <tr>
                     <th>公司网站</th>
                     <td colspan="5">
-                        <input type="text" name="Website" class="form-control input-sm" value="@(model.Website)" />
+                        <input type="text" name="Website" class="form-control input-sm" value="@(profile.Website)" />
                     </td>
                 </tr>
 
@@ -250,7 +222,7 @@
                     </tr>
                 </thead>
                 <tbody id="list-sh">
-                    @foreach (var item in model.ShareHolders)
+                    @foreach (var item in profile.ShareHolders)
                     { 
                         <tr>
                             <td>
@@ -299,7 +271,7 @@
                     </tr>
                 </thead>
                 <tbody id="list-equipment">
-                    @foreach (var item in model.Equipments)
+                    @foreach (var item in profile.Equipments)
                     { 
                         <tr>
                             <td>
@@ -336,7 +308,7 @@
                     </tr>
                 </thead>
                 <tbody id="list-member">
-                    @foreach (var item in model.Members)
+                    @foreach (var item in profile.Members)
                     { 
                         <tr>
                             <td>
@@ -365,99 +337,174 @@
                 </tbody>
             </table>
         </div>
+        <div class="tab-pane fade" id="profile-files">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th style="width: 200px;">证件名称</th>
+                        <th>描述</th>
+                        <th style="width: 200px;">文件预览</th>
+                        @if (!isViewPage)
+                        {
+                            <th style="width: 170px;"><a id="btn-add-file" class="btn btn-xs btn-primary">添加</a></th>
+                        }
+                    </tr>
+                </thead>
+                <tbody id="list-files">
+                    @foreach (var file in profile.Files)
+                    {
+                        <tr>
+                            <td>
+                                <input type="text" name="file.FileName" class="form-control input-sm" value="@(file.FileName)" />
+                                <input type="hidden" name="file.SavePath" value="@(file.SavePath)" />
+                            </td>
+                            <td>
+                                <input name="file.Description" class="form-control input-sm" value="@(file.Description)" /></td>
+                            <td class="img-preview">
+                                @if (!string.IsNullOrEmpty(file.SavePath))
+                                { 
+                                    <a href="@(file.SavePath)" title="点击查案大图" target="_blank">
+                                        <img src="@(file.SavePath)" class="img-preview"></a>
+                                }
+                            </td>
+                            @if (!isViewPage)
+                            {
+                                <td>
+                                    <div class="control-upload">
+                                        <input type="file" class="form-control input-sm control-file" name="files" />
+                                        <div class="btn btn-sm btn-primary"><i class="glyphicon glyphicon-upload"></i>&nbsp;上传文件</div>
+                                        <a href="#" class="btn btn-sm btn-warning btn-delete">删除</a>
+                                    </div>
+                                </td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
     </div>
 
-    @if (!disabled)
+    @if (!isViewPage)
     {
         <div style="clear: both; margin: 20px;" id="btn-group">
-            <input id="isSubmit" type="hidden" name="isSubmit" />
-            <button id="btn-draft" type="button" class="btn btn-primary"><i class="glyphicon glyphicon-floppy-saved"></i>保存为草稿</button>
-            <button id="btn-submit" type="button" class="btn btn-success"><i class="glyphicon glyphicon-ok"></i>@(isAnnualCheck ? "提交年检申请" : (isRegister ? "提交注册登记" : "提交资料变更"))</button>
+            <input id="profile-submit-type" type="hidden" name="type" />
+            <button id="btn-submit-draft" type="button" class="btn btn-primary"><i class="glyphicon glyphicon-floppy-saved"></i>&nbsp;保存资料</button>
+            @if (isAnnualPage)
+            { 
+                <button id="btn-submit-annual" type="button" class="btn btn-success"><i class="glyphicon glyphicon-ok"></i>&nbsp;提交年检申请</button>
+            }
+            else
+            {
+                <button id="btn-submit-profile" type="button" class="btn btn-success"><i class="glyphicon glyphicon-ok"></i>&nbsp;@(isRegisterPage ? "提交注册登记" : "提交资料变更")</button>
+            }
         </div>
     }
 </form>
-<script>
-    $(function () {
-        $(".datepicker").datepicker();
-        $("#City").val("@(model.City)");
-        var form = $("#profile-form");
-
-        @if (disabled)
-        {
-            //如果是查看历史资料，则为锁定状态
-        <text>
-
-        $("input,select", form).each(function () {
-            $(this).attr("readonly", "readonly");
-        });
+@if (!isViewPage)
+{
+    <script>
+        $(function () {
+            $(".datepicker").datepicker();
 
 
-        </text>
-        }
-        else
-        {
-        <text>
+            var form = $("#profile-form");
 
+            var controlSubmitType = $("#profile-submit-type");
 
-        $("#btn-draft").click(function () {
-            $("#isSubmit").val("false");
-            form.submit();
-        });
-        $("#btn-submit").click(function () {
-            $("#isSubmit").val("true");
-            form.submit();
-        });
-
-        form.submit(function () {
-            var data = $(this).serialize()
-            var isSubmit = $("#isSubmit").val() === "true";
-            $.request("/institution/profile/submit?type=@(type)&isSubmit=" + isSubmit, data, function (json) {
-                alert(isSubmit ? "提交成功" : "保存草稿成功");
-                window.location.href = "@Html.Raw(Request.Url.AbsoluteUri)";
-            });
-            return false;
-        });
-
-
-        </text>
-        }
-
-        //如果是年审，则disabled基本资料
-        @if (isAnnualCheck)
-        {
-         <text>
-
-        $("#profile-basic input,#profile-basic select").each(function () {
-            $(this).attr("readonly", "readonly");
-        });
-
-        </text>
-        }
-
-
-        setList("list-sh", "btn-add-sh");
-        setList("list-member", "btn-add-member");
-        setList("list-equipment", "btn-add-equipment");
-
-        function setList(listId, btnAddId) {
-            var list = $("#" + listId);
-            var template = "<tr>" + $("tr", list).last().html() + "</tr>";
-            $("tr", list).last().remove();
-            $("#" + btnAddId).bind("click", function () {
-                list.append(template);
-                setBtnDelete();
+            $("#btn-submit-draft").click(function () {
+                controlSubmitType.val("");
+                submitFormBySave();
+                form.submit();
                 return false;
             });
 
-            setBtnDelete();
+            $("#btn-submit-annual").click(function () {
+                controlSubmitType.val("annual");
+                submitFormBySave();
+                form.submit();
+                return false;
+            });
 
-            function setBtnDelete() {
-                $(".btn-delete").unbind("click").bind("click", function () {
-                    var tr = $(this).parent().parent();
-                    tr.remove();
+            $("#btn-submit-profile").click(function () {
+                controlSubmitType.val("profile");
+                submitFormBySave();
+                form.submit();
+                return false;
+            });
+
+            function submitFormByUpload() {
+                form.unbind("submit").bind("submit", function () { });
+            }
+
+            function submitFormBySave() {
+                form.removeAttr("target");
+                form.removeAttr("enctype");
+                form.unbind("submit").bind("submit", function () {
+
+                    var type = controlSubmitType.val();
+                    var data = $(this).serialize();
+                    $.request("/institution/profile/submit?id=@(profile.ID)&type=" + type, data, function () {
+                        alert((type ? "提交" : "保存") + "成功");
+                        window.location.href = "@(Request.Url.AbsoluteUri)";
+                    });
+                    return false;
                 });
             }
-        }
-    });
 
-</script>
+
+
+            setList("list-sh", "btn-add-sh");
+            setList("list-member", "btn-add-member");
+            setList("list-equipment", "btn-add-equipment");
+            setList("list-files", "btn-add-file", function () {
+                var tr = $("#list-files tr:last");
+                setUpload(tr);
+            });
+
+            $("#list-files tr").each(function () {
+                var tr = $(this);
+                setUpload(tr);
+            });
+
+            function setUpload(tr) {
+                var valueControl = $("input[type='hidden']", tr);
+                var file = $("input[type='file']", tr);
+                var preview = $(".img-preview", tr);
+                file.setUpload("/institution/file/upload", function (json) {
+                    if (json.result) {
+                        valueControl.val(json.data);
+                        preview.html('<a href="' + json.data + '" title="点击查案大图" target="_blank"><img src="' + json.data + '" class="img-preview" /></a>');
+                    }
+                    else {
+                        alert(json.message);
+                    }
+                });
+            }
+
+            function setList(listId, btnAddId, customFunc) {
+                var list = $("#" + listId);
+                var template = "<tr>" + $("tr", list).last().html() + "</tr>";
+                $("tr", list).last().remove();
+                $("#" + btnAddId).bind("click", function () {
+                    list.append(template);
+                    setBtnDelete();
+                    if (customFunc) {
+                        customFunc();
+                    }
+                    return false;
+                });
+
+                setBtnDelete();
+
+                function setBtnDelete() {
+                    $(".btn-delete").unbind("click").bind("click", function () {
+                        var tr = $(this).parents("tr");
+                        tr.remove();
+                    });
+                }
+            }
+        });
+
+    </script>
+
+}

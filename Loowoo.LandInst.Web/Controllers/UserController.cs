@@ -48,17 +48,6 @@ namespace Loowoo.LandInst.Web.Controllers
             return View();
         }
 
-        [HttpPost]
-        public ActionResult SignUp(User user, Member member)
-        {
-            user.Role = UserRole.Member;
-            var userId = Core.UserManager.AddUser(user);
-            member.ID = userId;
-            Core.MemberManager.AddMember(member);
-
-            return JsonSuccess();
-        }
-
         [UserAuthorize]
         [HttpGet]
         public ActionResult EditPassword()
@@ -69,9 +58,6 @@ namespace Loowoo.LandInst.Web.Controllers
             { 
                 case UserRole.Institution:
                     ViewBag.CurrentInst = Core.InstitutionManager.GetInstitution(user.ID);
-                    break;
-                case UserRole.Member:
-                    ViewBag.Member = Core.MemberManager.GetMember(user.ID);
                     break;
             }
             return View();

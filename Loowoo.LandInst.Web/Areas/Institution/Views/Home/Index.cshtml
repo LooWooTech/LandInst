@@ -12,45 +12,12 @@
         ViewBag.Title = "提交注册登记";
         Html.RenderPartial("_ProfileForm");
         return;
-        //else if (checkLog != null)
-        //{
-        //    ViewBag.CanSubmit = false;
-        //    //如果没有通过
-        //    ViewBag.Title = "提交注册登记-审核中";
-        //    Html.RenderPartial("_ProfileForm");
-        //    return;
-        //}
     }
 
     ViewBag.Title = "欢迎 " + inst.Name + " 登录系统。";
     AnnualCheck annualCheck = ViewBag.AnnualCheck;
     List<CheckLog> history = ViewBag.History;
 }
-<legend>业务处理</legend>
-<div class="col-lg-6">
-    <blockquote>
-        <p><i class="glyphicon glyphicon-list-alt"></i>&nbsp;<a href="/Institution/Profile/Edit">资料变更</a></p>
-        <small>修改您的企业资料、机构成员、仪器设备、股东信息、联系方式等。</small>
-    </blockquote>
-</div>
-<div class="col-lg-6">
-    <blockquote>
-        <p><i class="glyphicon glyphicon-check"></i>&nbsp;<a href="/institution/profile/edit?type=annualcheck">申请年检</a></p>
-        <small>每年一度的年检资料审核。</small>
-    </blockquote>
-</div>
-<div class="col-lg-6">
-    <blockquote>
-        <p><i class="glyphicon glyphicon-time"></i>&nbsp;<a href="/institution/profile/history">历史信息</a></p>
-        <small>查看机构所提交的申请历史记录和历史版本信息。</small>
-    </blockquote>
-</div>
-<div class="col-lg-6">
-    <blockquote>
-        <p><i class="glyphicon glyphicon-edit"></i>&nbsp;<a href="/user/editpassword">修改密码</a></p>
-        <small>如果您没有修改过密码，建议你修改为自己的安全密码。</small>
-    </blockquote>
-</div>
 @if (annualCheck != null)
 { 
     <legend>年检提醒</legend>
@@ -70,47 +37,31 @@
             </td>
         </tr>
     </table>
-    <a href="/Institution/Profile/Edit?type=annualcheck" class="btn btn-primary">立即申请年检</a>@*
-    <div class="alert alert-warning">
-        新的年检<span class="label label-warning">@(annualCheck.Name)</span>启动了！<br />
-        <br />
-        年检审核时间为<span class="label label-warning">@(annualCheck.StartDate.ToShortDateString()) ~ @(annualCheck.EndDate.ToShortDateString())</span>，
-        贵机构尚未申请年检，请  <a href="/Institution/Profile/Edit?type=annualcheck" class="btn btn-primary btn-xs">申请年检</a>
-    </div>*@
+    <a href="/Institution/Profile/AnnualCheck" class="btn btn-primary">立即申请年检</a>
 }
-<legend>申请记录</legend>
-<table class="table table-bordered">
-    <tr>
-        <th>申请类型</th>
-        <th style="width: 150px;">申请时间</th>
-        <th style="width: 120px;">审批结果</th>
-        <th style="width: 150px;">审批时间</th>
-        <th style="width: 100px">查看</th>
-    </tr>
-    @foreach (var item in history)
-    {
-        <tr>
-            <td>@(item.CheckType.GetDescription())</td>
-            <td>@(item.CreateTime.ToString())</td>
-            <td>@if (item.Result.HasValue)
-                {
-                    if (item.Result.Value)
-                    { 
-                <span class="label label-success">已通过</span>
-                    }
-                    else
-                    {
-                <span class="label label-warning">没通过</span>
-                    }
-                }
-                else
-                {
-                <span class="label label-default">未审批</span>
-                }</td>
-            <td>
-                @(item.UpdateTime.HasValue ? item.UpdateTime.ToString() : null)
-            </td>
-            <td><a href="/institution/profile/edit?checkLogId=@(item.ID)" class="btn btn-primary btn-xs">详细</a></td>
-        </tr>
-    }
-</table>
+
+<legend>业务处理</legend>
+<div class="col-lg-6">
+    <blockquote>
+        <p><i class="glyphicon glyphicon-list-alt"></i>&nbsp;<a href="/Institution/Profile/Edit">资料变更</a></p>
+        <small>修改您的企业资料、技术人员、仪器设备、股东信息、联系方式等。</small>
+    </blockquote>
+</div>
+<div class="col-lg-6">
+    <blockquote>
+        <p><i class="glyphicon glyphicon-time"></i>&nbsp;<a href="/institution/profile/history">历史信息</a></p>
+        <small>查看机构所提交的申请历史记录和历史版本信息。</small>
+    </blockquote>
+</div>
+<div class="col-lg-6">
+    <blockquote>
+        <p><i class="glyphicon glyphicon-check"></i>&nbsp;<a href="/institution/profile/edit?type=annualcheck">申请年检</a></p>
+        <small>每年一度的年检资料审核。</small>
+    </blockquote>
+</div>
+<div class="col-lg-6">
+    <blockquote>
+        <p><i class="glyphicon glyphicon-edit"></i>&nbsp;<a href="/user/editpassword">修改密码</a></p>
+        <small>如果您没有修改过密码，建议你修改为自己的安全密码。</small>
+    </blockquote>
+</div>

@@ -1,0 +1,31 @@
+﻿@using Loowoo.LandInst.Model
+@{
+    ViewBag.Title = "机构年检申请";
+    Layout = "~/Areas/Institution/Views/Shared/_Layout.cshtml";
+    AnnualCheck annualCheck = ViewBag.AnnualCheck;
+    CheckLog checkLog = ViewBag.CheckLog;
+    if (annualCheck == null)
+    {
+    <div class="alert alert-warning">
+        当前没有年检审核，如需修改资料，请点击<a href="edit" class="btn btn-primary btn-xs">资料变更</a>
+    </div>
+        return;
+    }
+}
+@if (checkLog == null)
+{
+    <div class="alert alert-warning">
+        现在是<span class="label label-warning">@(annualCheck.Name)</span>期间，
+    年检时间段： <b>“@(annualCheck.StartDate.ToShortDateString()) ~ @(annualCheck.EndDate.ToShortDateString())”</b>，
+    无法修改基本资料，但可修改联系方式、股东、证书信息。
+    </div>
+}
+
+@Html.Partial("_ProfileForm")
+<script>
+    $(function () {
+        $("#profile-basic input,#profile-basic select").each(function () {
+            $(this).attr("readonly", "readonly");
+        });
+    });
+</script>

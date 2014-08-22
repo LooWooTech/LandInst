@@ -11,18 +11,18 @@ namespace Loowoo.LandInst.Model.Filters
 
         public bool? Result { get; set; }
 
-        public CheckType Type { get; set; }
+        public CheckType? CheckType { get; set; }
 
         public int? InfoID { get; set; }
 
         public int? UserID { get; set; }
-
-        public bool? HasCheck { get; set; }
 
         public DateTime? BeginTime { get; set; }
 
         public DateTime? EndTime { get; set; }
 
         public PageFilter Page { get; set; }
+
+        public bool? HasCheck { get; set; }
     }
 }

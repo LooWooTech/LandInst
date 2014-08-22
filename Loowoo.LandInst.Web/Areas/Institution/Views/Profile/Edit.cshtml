@@ -1,7 +1,6 @@
 ﻿@using Loowoo.LandInst.Model
 @{
-    var type = Request.QueryString["type"];
-    ViewBag.Title = type == "annualcheck" ? "申请年检" : "资料变更登记";
+    ViewBag.Title = "资料变更登记";
     Layout = "~/Areas/Institution/Views/Shared/_Layout.cshtml";
     CheckLog approval = ViewBag.CheckLog;
     InstitutionProfile model = ViewBag.Profile;
@@ -11,6 +10,5 @@
     var fullEdit = model.Status == InstitutionStatus.Normal && !disabled;
     ViewBag.EditShareholder = true;
     ViewBag.EditCertification = true;
-    
-    Html.RenderPartial("_ProfileForm", model);
+    Html.RenderPartial("_ProfileForm");
 }

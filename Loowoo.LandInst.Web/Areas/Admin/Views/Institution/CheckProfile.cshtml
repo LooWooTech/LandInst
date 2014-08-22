@@ -1,6 +1,6 @@
 ﻿@using Loowoo.LandInst.Model
 @{
-    ViewBag.Title = "注册登记/资料变更审批";
+    ViewBag.Title = "资料变更审核";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
     List<VCheckInst> list = ViewBag.List;
     var hasCheck = Request.QueryString["hasCheck"];
@@ -12,16 +12,16 @@
             <input type="text" class="form-control" name="name" placeholder="机构名称" value="@(Request.QueryString["name"])">
             <div class="input-group-btn">
                 <select name="hasCheck" class="form-control">
-                    <option value="false" @(hasCheck == "false" ? "selected=selected" : "")>未审批</option>
+                    <option value="false" @(hasCheck == "false" ? "selected=selected" : "")>未审核</option>
                     <option value="" @(string.IsNullOrEmpty(hasCheck) ? "selected=selected" : "")>全部</option>
-                    <option value="true" @(hasCheck == "true" ? "selected=selected" : "")>已审批</option>
+                    <option value="true" @(hasCheck == "true" ? "selected=selected" : "")>已审核</option>
                 </select>
             </div>
             <div class="input-group-btn">
                 <button type="submit" class="btn btn-primary"><i class="glyphicon glyphicon-search"></i> 查询</button>
 
                 @*                <input type="button" id="btn-agree" class="btn btn-success" value="批量通过" />
-                <input type="button" id="btn-disagree" class="btn btn-warning" value="批量不通过" />*@
+                <input type="button" id="btn-disagree" class="btn btn-danger" value="批量不通过" />*@
             </div>
         </div>
     </div>
@@ -38,7 +38,7 @@
             <th>所在地</th>
             <th>工商登记号</th>
             <th>申请日期</th>
-            <th>审批状态</th>
+            <th>审核状态</th>
         </tr>
         @foreach (var item in list)
         { 
@@ -46,7 +46,7 @@
                 @*                <td>
                     <input type="checkbox" name="id" value="@(item.ID)" /></td>*@
                 <td>@(item.UserID)</td>
-                <td><a href="/admin/institution/profile?id=@(item.UserID)&checkLogId=@(item.ID)">@(item.InstName)</a></td>
+                <td><a href="/admin/institution/profile?id=@(item.UserID)&approvalId=@(item.ID)">@(item.InstName)</a></td>
                 <td>@(item.LegalPerson)</td>
                 <td>@(item.City)</td>
                 <td>@(item.RegistrationNo)</td>
@@ -54,14 +54,7 @@
                 <td>
                     @if (item.Result.HasValue)
                     {
-                        if (item.Result.Value)
-                        { 
-                        <span class="label label-success">已通过</span>
-                        }
-                        else
-                        {
-                        <span class="label label-danger">未通过</span>
-                        }
+                        <span class="label label-success">已审核</span>
                     }
                     else
                     {

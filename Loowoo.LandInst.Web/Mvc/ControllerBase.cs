@@ -20,28 +20,20 @@ namespace Loowoo.LandInst.Web
             }
         }
 
+        protected ActionResult JsonFail(string message)
+        {
+            return Content(new { result = false, message }.ToJson());
+        }
+
         protected ActionResult JsonSuccess(object data = null)
         {
             return Content(new { result = true, data = data }.ToJson());
-        }
-
-        private string sessionKey = "currentUser";
-
-        protected Model.Member GetCurrentMember()
-        {
-            return ViewBag.Member as Model.Member;
-        }
-
-        protected void UpdateCurrentMember()
-        {
-            Session.Remove(sessionKey);
         }
 
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
         {
             ViewBag.Controller = RouteData.Values["controller"];
             ViewBag.Action = RouteData.Values["action"];
-            ViewBag.CurrentUser = AuthUtils.GetCurrentUser(filterContext.HttpContext);
             base.OnActionExecuting(filterContext);
         }
 
@@ -54,7 +46,7 @@ namespace Loowoo.LandInst.Web
             }
             return ex;
         }
-        
+
         protected override void OnException(ExceptionContext filterContext)
         {
             if (filterContext.ExceptionHandled) return;

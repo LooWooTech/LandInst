@@ -99,26 +99,14 @@
     <Compile Include="Areas\Admin\AdminAreaRegistration.cs" />
     <Compile Include="Areas\Admin\AdminControllerBase.cs" />
     <Compile Include="Areas\Admin\Controllers\AnnualController.cs" />
-    <Compile Include="Areas\Admin\Controllers\EducationController.cs" />
-    <Compile Include="Areas\Admin\Controllers\ExamController.cs" />
     <Compile Include="Areas\Admin\Controllers\HomeController.cs" />
     <Compile Include="Areas\Admin\Controllers\InstitutionController.cs" />
-    <Compile Include="Areas\Admin\Controllers\MemberController.cs" />
-    <Compile Include="Areas\Admin\Controllers\TransferController.cs" />
     <Compile Include="Areas\Institution\Controllers\AnnualController.cs" />
-    <Compile Include="Areas\Institution\Controllers\EducationController.cs" />
+    <Compile Include="Areas\Institution\Controllers\FileController.cs" />
     <Compile Include="Areas\Institution\Controllers\HomeController.cs" />
-    <Compile Include="Areas\Institution\Controllers\MemberController.cs" />
     <Compile Include="Areas\Institution\Controllers\ProfileController.cs" />
     <Compile Include="Areas\Institution\InstitutionAreaRegistration.cs" />
     <Compile Include="Areas\Institution\InstitutionControllerBase.cs" />
-    <Compile Include="Areas\Member\Controllers\EducationController.cs" />
-    <Compile Include="Areas\Member\Controllers\ExamController.cs" />
-    <Compile Include="Areas\Member\Controllers\HomeController.cs" />
-    <Compile Include="Areas\Member\Controllers\InstitutionController.cs" />
-    <Compile Include="Areas\Member\Controllers\ProfileController.cs" />
-    <Compile Include="Areas\Member\MemberControllerBase.cs" />
-    <Compile Include="Areas\Member\MemberAreaRegistration.cs" />
     <Compile Include="Common\UserPrincipal.cs" />
     <Compile Include="Common\AuthUtils.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -151,31 +139,12 @@
     <Content Include="Global.asax" />
     <Content Include="Areas\Admin\Views\Web.config" />
     <Content Include="Areas\Institution\Views\Web.config" />
-    <Content Include="Areas\Member\Views\Web.config" />
-    <Content Include="Areas\Member\Views\Shared\_Layout.cshtml" />
-    <Content Include="Areas\Member\Views\Home\Index.cshtml" />
-    <Content Include="Areas\Member\Views\Education\Index.cshtml" />
-    <Content Include="Areas\Member\Views\Exam\Index.cshtml" />
-    <Content Include="Areas\Member\Views\Exam\SignUp.cshtml" />
-    <Content Include="Areas\Member\Views\Profile\Index.cshtml" />
-    <Content Include="Areas\Member\Views\Profile\Edit.cshtml" />
-    <Content Include="Areas\Member\Views\Institution\Index.cshtml" />
     <Content Include="Areas\Institution\Views\Shared\_Layout.cshtml" />
     <Content Include="Areas\Institution\Views\Home\Index.cshtml" />
-    <Content Include="Areas\Institution\Views\Member\Index.cshtml" />
     <Content Include="Areas\Admin\Views\Shared\_Layout.cshtml" />
     <Content Include="Areas\Institution\Views\Profile\Edit.cshtml" />
     <Content Include="Areas\Institution\Views\Profile\Logout.cshtml" />
-    <Content Include="Areas\Institution\Views\Education\Index.cshtml" />
     <Content Include="Areas\Institution\Views\Profile\History.cshtml" />
-    <Content Include="Areas\Member\Views\Shared\_ProfileForm.cshtml" />
-    <Content Include="Areas\Admin\Views\Member\Profile.cshtml" />
-    <Content Include="Areas\Admin\Views\Member\Transfer.cshtml" />
-    <Content Include="Areas\Admin\Views\Exam\Approvals.cshtml" />
-    <Content Include="Areas\Admin\Views\Exam\ExamResult.cshtml" />
-    <Content Include="Areas\Institution\Views\Profile\Shareholder.cshtml" />
-    <Content Include="Areas\Institution\Views\Shareholder\Index.cshtml" />
-    <Content Include="Areas\Institution\Views\Certification\Index.cshtml" />
     <Content Include="Areas\Admin\Views\Annual\Index.cshtml" />
     <Content Include="Areas\Admin\Views\Annual\Edit.cshtml" />
     <Content Include="Areas\Institution\Views\Annual\Index.cshtml" />
@@ -242,19 +211,10 @@
     <Content Include="Views\User\SignIn.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Areas\Admin\Views\Education\Index.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Views\Shared\_pagination.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Areas\Admin\Views\Home\Index.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Areas\Admin\Views\Education\Edit.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Areas\Admin\Views\Education\Approvals.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Areas\Admin\Views\Institution\CheckProfile.cshtml" />
@@ -263,67 +223,18 @@
     <Content Include="Areas\Admin\Views\Institution\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Areas\Admin\Views\Exam\Index.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Areas\Admin\Views\Member\ResetPwd.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Areas\Admin\Views\Member\Index.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Areas\Admin\Views\Exam\Edit.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Areas\Institution\Views\Member\Profile.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Areas\Institution\Views\Member\Practice.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Areas\Institution\Views\Education\Import.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Areas\Institution\Views\Member\TransferIn.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Areas\Institution\Views\Member\TransferOut.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Areas\Institution\Views\Member\Transfers.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Areas\Admin\Views\Institution\CheckAnnual.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Areas\Institution\Views\Shareholder\Edit.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Areas\Institution\Views\Certification\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Areas\Admin\Views\Shared\_approvalForm.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Areas\Admin\Views\Transfer\Approvals.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Areas\Institution\Views\Member\Practices.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Areas\Admin\Views\Member\Practices.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Areas\Admin\Views\Institution\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Areas\Institution\Views\Member\Search.cshtml" />
-    <Content Include="Areas\Institution\Views\Shared\_MemberProfile.cshtml" />
-    <Content Include="Areas\Admin\Views\Exam\EditResult.cshtml" />
-    <Content Include="Areas\Admin\Views\Exam\Import.cshtml" />
-    <Content Include="Areas\Member\Views\Shared\_PracticeForm.cshtml" />
-    <Content Include="Areas\Member\Views\Profile\Practice.cshtml" />
     <Content Include="Areas\Admin\Views\Institution\Import.cshtml" />
+    <Content Include="Areas\Institution\Views\Profile\AnnualCheck.cshtml" />
+    <Content Include="Areas\Institution\Views\Profile\Index.cshtml" />
     <None Include="Properties\PublishProfiles\LandInst.pubxml" />
     <Content Include="Views\User\ForgetPwd.cshtml" />
     <Content Include="Views\User\EditPassword.cshtml" />

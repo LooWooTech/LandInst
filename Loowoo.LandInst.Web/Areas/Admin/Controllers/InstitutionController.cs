@@ -33,7 +33,7 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
                 InfoID = annualCheckId,
                 Keyword = name,
                 Page = new Model.Filters.PageFilter { PageIndex = page },
-                HasCheck = hasCheck
+                HasCheck = hasCheck,
             };
             ViewBag.AnnualChecks = Core.AnnualCheckManager.GetAnnualChecks();
             ViewBag.List = Core.AnnualCheckManager.GetVCheckAnnual(filter);
@@ -48,9 +48,9 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
                 Keyword = name,
                 Page = new PageFilter { PageIndex = page },
                 CheckType = CheckType.Profile,
-                HasCheck = hasCheck
+                HasCheck = hasCheck,
             };
-            ViewBag.List = Core.InstitutionManager.GetApprovalInsts(filter);
+            ViewBag.List = Core.InstitutionManager.GetVCheckInsts(filter);
             ViewBag.Page = filter.Page;
             return View();
         }
@@ -63,7 +63,7 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult Edit(User user, Model.Institution inst)
+        public ActionResult Edit(User user)
         {
             if (Core.UserManager.Exists(user.Username))
             {
@@ -79,15 +79,15 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
             {
                 randomPwd = user.Password;
             }
-            
-            if (string.IsNullOrEmpty(inst.Name))
-            {
-                throw new ArgumentException("机构名称没有填写");
-            }
+
 
             user.Role = UserRole.Institution;
             Core.UserManager.AddUser(user);
-            inst.ID = user.ID;
+            var inst = new Model.Institution
+            {
+                ID = user.ID,
+                Name = user.Username,
+            };
             Core.InstitutionManager.AddInstitution(inst);
             return JsonSuccess(new { password = randomPwd });
         }
@@ -129,8 +129,6 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
 
             ViewBag.CheckLogs = Core.CheckLogManager.GetList(id);
 
-            ViewBag.Members = Core.MemberManager.GetMembers(new MemberFilter { InstID = id, InInst = true, IncludeNoHaveInstMember = false });
-
             return View();
         }
 
@@ -147,8 +145,8 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
 
             if (checkLog.CheckType == CheckType.Profile || checkLog.CheckType == CheckType.Annual)
             {
-                var inst = Core.InstitutionManager.GetInstitution(checkLog.UserID);
                 Core.InstitutionManager.ApprovalInst(checkLog);
+                var inst = Core.InstitutionManager.GetInstitution(checkLog.UserID);
                 if (checkLog.Result == true && inst.Status == InstitutionStatus.Normal)
                 {
                     Core.InstitutionManager.UpdateStatus(checkLog.UserID, InstitutionStatus.Registered);

@@ -16,6 +16,7 @@ namespace Loowoo.LandInst.Model
             Equipments = new List<Equipment>();
             Softwares = new List<Software>();
             Members = new List<InstMember>();
+            Files = new List<UploadFile>();
         }
 
         public InstitutionProfile(Institution inst)
@@ -32,7 +33,6 @@ namespace Loowoo.LandInst.Model
 
         public void SetInstField(Institution inst)
         {
-            Type = inst.Type;
             Status = inst.Status;
             ID = inst.ID;
             CreateTime = inst.CreateTime;
@@ -163,7 +163,7 @@ namespace Loowoo.LandInst.Model
 
         public List<Shareholder> ShareHolders { get; set; }
 
-        //public List<Certification> Certifications { get; set; }
+        public List<UploadFile> Files { get; set; }
 
         public List<Equipment> Equipments { get; set; }
 

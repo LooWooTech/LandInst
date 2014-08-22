@@ -6,23 +6,23 @@
     InstitutionProfile profile = ViewBag.Profile;
     List<CheckLog> checkLogs = ViewBag.CheckLogs;
     CheckLog approval = ViewBag.CheckLog;
-    List<Member> members = ViewBag.Members;
 }
 <div style="position: relative;">
     <ul class="nav nav-tabs">
-        <li class="active"><a href="#tab1" data-toggle="tab">基本资料</a></li>
-        <li class=""><a href="#tab2" data-toggle="tab">股东</a></li>
-        <li class=""><a href="#tab5" data-toggle="tab">机构成员</a></li>
-        <li class=""><a href="#tab3" data-toggle="tab">仪器设备</a></li>
-        <li class=""><a href="#tab4" data-toggle="tab">审批记录</a></li>
+        <li class="active"><a href="#profile-basic" data-toggle="tab">基本资料</a></li>
+        <li class=""><a href="#profile-members" data-toggle="tab">技术人员</a></li>
+        <li class=""><a href="#profile-shareholders" data-toggle="tab">股东</a></li>
+        <li class=""><a href="#profile-equipments" data-toggle="tab">仪器设备</a></li>
+        <li class=""><a href="#profile-files" data-toggle="tab">证件扫描件</a></li>
+        <li class=""><a href="#profile-history" data-toggle="tab">审核记录</a></li>
     </ul>
     <ul style="position: absolute; right: 10px; top: 0px;">
 @*        <a href="export?id=@(profile.ID)" class="btn btn-primary"><i class="glyphicon glyphicon-export"></i>导出资料</a>*@
     </ul>
 </div>
 <div class="tab-content">
-    <div class="tab-pane fade active in" id="tab1">
-        <table class="table table-bordered" id="profile-basic">
+    <div class="tab-pane fade active in" id="profile-basic">
+        <table class="table table-bordered">
             <tr>
                 <th style="width: 100px;">机构简称</th>
                 <td colspan="3">
@@ -139,7 +139,7 @@
             </tr>
         </table>
     </div>
-    <div class="tab-pane fade" id="tab2">
+    <div class="tab-pane fade" id="profile-shareholders">
         <table class="table table-bordered">
             <tr>
                 <th>姓名</th>
@@ -160,7 +160,7 @@
             }
         </table>
     </div>
-    <div class="tab-pane fade" id="tab3">
+    <div class="tab-pane fade" id="profile-equipments">
         <table class="table table-bordered">
             <tr>
                 <th>名称</th>
@@ -179,13 +179,13 @@
             }
         </table>
     </div>
-    <div class="tab-pane fade" id="tab4">
+    <div class="tab-pane fade" id="profile-history">
         <table class="table table-bordered">
             <tr>
-                <th>审批类型</th>
+                <th>审核类型</th>
                 <th>申请时间</th>
-                <th>审批时间</th>
-                <th>审批结果</th>
+                <th>审核时间</th>
+                <th>审核结果</th>
                 <th>详情</th>
             </tr>
             @foreach (var checkLog in checkLogs)
@@ -199,16 +199,16 @@
                         {
                             if (checkLog.Result.Value)
                             { 
-                            <span class="label label-success">审批通过</span>
+                            <span class="label label-success">审核通过</span>
                             }
                             else
                             {
-                            <span class="label label-warning">审批不通过</span>
+                            <span class="label label-warning">审核不通过</span>
                             }
                         }
                         else
                         {
-                            <span class="label label-default">尚未审批</span>
+                            <span class="label label-default">尚未审核</span>
                         }
                     </td>
                     <td>@if (checkLog.CheckType == CheckType.Profile || checkLog.CheckType == CheckType.Annual)
@@ -219,7 +219,7 @@
             }
         </table>
     </div>
-    <div class="tab-pane fade" id="tab5">
+    <div class="tab-pane fade" id="profile-members">
         <table class="table table-bordered">
             <tr>
                 <th>姓名</th>
@@ -240,26 +240,18 @@
             }
         </table>
     </div>
-    <div class="tab-pane fade" id="tab6">
-        <table class="table table-bordered">
-            <tr>
-                <th>软件名称</th>
-                <th>来源</th>
-                <th>数量</th>
-                <th>用途</th>
-                <th>备注</th>
-            </tr>
-            @foreach (var software in profile.Softwares)
-            {
-                <tr>
-                    <td>@(software.Name)</td>
-                    <td>@(software.Source)</td>
-                    <td>@(software.Number)</td>
-                    <td>@(software.Purpose)</td>
-                    <td>@(software.Note)</td>
-                </tr>
-            }
-        </table>
-    </div>
-</div>
+    <div class="tab-pane fade" id="profile-files">
+        @foreach (var file in profile.Files)
+        {
+            <div class="col-lg-2">
+                <a href="@(file.SavePath)" target="_blank" title="@(file.FileName)">
+                    <img src="@(file.SavePath)" class="img-preview" /></a>
+            </div>
+            <div class="col-lg-4">
+                <b>证件名称：</b>@file.FileName
+                <br />
+                <b>证件描述：</b>@(file.Description)
+            </div>
+        }
+    </div></div>
 @Html.Partial("_approvalForm", approval)

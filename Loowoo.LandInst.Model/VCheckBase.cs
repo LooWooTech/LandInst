@@ -12,7 +12,7 @@ namespace Loowoo.LandInst.Model
         public int InfoID { get; set; }
 
         public int UserID { get; set; }
-        
+
         public CheckType CheckType { get; set; }
 
         public DateTime CreateTime { get; set; }
@@ -20,6 +20,8 @@ namespace Loowoo.LandInst.Model
         public DateTime? UpdateTime { get; set; }
 
         public bool? Result { get; set; }
+
+        public string Data { get; set; }
 
     }
 }

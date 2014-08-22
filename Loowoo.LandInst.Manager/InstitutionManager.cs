@@ -18,7 +18,7 @@ namespace Loowoo.LandInst.Manager
             {
                 using (var db = GetDataContext())
                 {
-                    return db.Institutions.Where(e => e.Type == InstitutionType.土地勘测).Select(e => new { e.ID, e.Name }).ToDictionary(e => e.ID, e => e.Name);
+                    return db.Institutions.Select(e => new { e.ID, e.Name }).ToDictionary(e => e.ID, e => e.Name);
                 }
             });
         }
@@ -43,32 +43,11 @@ namespace Loowoo.LandInst.Manager
         }
 
 
-        public List<VCheckInst> GetApprovalInsts(InstitutionFilter filter)
+        public List<VCheckInst> GetVCheckInsts(InstitutionFilter filter)
         {
             using (var db = GetDataContext())
             {
-                var query = db.VCheckInsts.Where(e => e.CheckType == filter.CheckType && e.Type == InstitutionType.土地勘测);
-                if (!String.IsNullOrEmpty(filter.Keyword))
-                {
-                    query = query.Where(e => e.InstName.Contains(filter.Keyword));
-                }
-
-                if (filter.Result.HasValue)
-                {
-                    query = query.Where(e => e.Result == filter.Result.Value);
-                }
-
-                if (filter.HasCheck.HasValue)
-                {
-                    if (filter.HasCheck.Value)
-                    {
-                        query = query.Where(e => e.Result.HasValue);
-                    }
-                    else
-                    {
-                        query = query.Where(e => e.Result == null);
-                    }
-                }
+                var query = db.VCheckInsts.AsQueryable().GetCheckBaseQuery(filter);
 
                 return query.OrderByDescending(e => e.ID).SetPage(filter.Page).ToList();
             }
@@ -78,7 +57,7 @@ namespace Loowoo.LandInst.Manager
         {
             using (var db = GetDataContext())
             {
-                var query = db.Institutions.Where(e => e.Type == InstitutionType.土地勘测);
+                var query = db.Institutions.AsQueryable();
                 if (filter.InstId.HasValue && filter.InstId.Value > 0)
                 {
                     query = query.Where(e => e.ID == filter.InstId);
@@ -144,6 +123,11 @@ namespace Loowoo.LandInst.Manager
                 var entity = db.Institutions.FirstOrDefault(e => e.ID == instId);
                 if (entity != null)
                 {
+                    if (model.Name != entity.Name)
+                    {
+                        Core.UserManager.UpdateUsername(entity.ID, model.Name);
+                    }
+
                     entity.Name = model.Name;
                     entity.RegistrationNo = model.RegistrationNo;
                     entity.LegalPerson = model.LegalPerson;
@@ -167,11 +151,12 @@ namespace Loowoo.LandInst.Manager
         public InstitutionProfile GetProfile(CheckLog checkLog)
         {
             if (checkLog == null) return null;
-
-            var profileId = Core.ProfileManager.GetProfileId(checkLog.ID);
-
+            var profileId = checkLog.DataAsInt();
+            if (profileId == 0 && checkLog.CheckType == CheckType.Profile)
+                profileId = checkLog.InfoID;
             return Core.ProfileManager.GetProfile<InstitutionProfile>(profileId);
         }
+
 
         public void SubmitAnnaulCheck(Institution inst, InstitutionProfile profile)
         {
@@ -179,9 +164,8 @@ namespace Loowoo.LandInst.Manager
             var checkLog = Core.CheckLogManager.GetCheckLog(annualCheck.ID, inst.ID, CheckType.Annual);
             if (checkLog == null || checkLog.Result == false)
             {
-                var checkLogId = Core.CheckLogManager.AddCheckLog(annualCheck.ID, inst.ID, CheckType.Annual);
                 var profileId = SaveProfile(inst, profile);
-                Core.ProfileManager.SaveCheckProfile(checkLogId, profileId);
+                Core.CheckLogManager.AddCheckLog(annualCheck.ID, inst.ID, CheckType.Annual, profileId.ToString());
             }
             else
             {
@@ -197,8 +181,7 @@ namespace Loowoo.LandInst.Manager
             if (checkLog == null || checkLog.Result.HasValue)
             {
                 var profileId = SaveProfile(inst, profile);
-                var checkLogId = Core.CheckLogManager.AddCheckLog(profileId, inst.ID, CheckType.Profile);
-                Core.ProfileManager.SaveCheckProfile(checkLogId, profileId);
+                Core.CheckLogManager.AddCheckLog(profileId, inst.ID, CheckType.Profile, profileId.ToString());
             }
             else
             {

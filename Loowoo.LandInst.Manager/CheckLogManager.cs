@@ -69,13 +69,15 @@ namespace Loowoo.LandInst.Manager
             }
         }
 
-        public int AddCheckLog(int infoId, int userId, CheckType type)
+        public int AddCheckLog(int infoId, int userId, CheckType type, string extendData = null)
         {
             using (var db = GetDataContext())
             {
                 var entity = db.CheckLogs.FirstOrDefault(e => e.InfoID == infoId && e.UserID == userId && e.CheckType == type);
                 if (entity != null && !entity.Result.HasValue)
                 {
+                    entity.Data = extendData;
+                    db.SaveChanges();
                     return entity.ID;
                 }
                 else
@@ -85,8 +87,10 @@ namespace Loowoo.LandInst.Manager
                         InfoID = infoId,
                         UserID = userId,
                         CheckType = type,
-                        CreateTime = DateTime.Now
+                        CreateTime = DateTime.Now,
+                        Data = extendData
                     };
+
                     db.CheckLogs.Add(entity);
                 }
                 db.SaveChanges();
