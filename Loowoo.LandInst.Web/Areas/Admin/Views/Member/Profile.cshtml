@@ -19,7 +19,7 @@
         <li class=""><a href="#tab5" data-toggle="tab">审核历史</a></li>
     </ul>
     <ul style="position: absolute; right: 10px; top: 0px;">
-        <a href="export?id=@(profile.ID)" class="btn btn-primary"><i class="glyphicon glyphicon-export"></i>导出资料</a>
+        <a href="export?id=@(profile.ID)&checklogId=@(checkLog == null ? 0 : checkLog.ID)" class="btn btn-primary"><i class="glyphicon glyphicon-export"></i>导出资料</a>
     </ul>
 </div>
 <div class="tab-content">

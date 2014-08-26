@@ -23,7 +23,7 @@ namespace Loowoo.LandInst.Manager
             {
                 using (var db = GetDataContext())
                 {
-                    return db.Exams.ToList();
+                    return db.Exams.OrderByDescending(e => e.ID).ToList();
                 }
             });
         }
@@ -290,22 +290,22 @@ namespace Loowoo.LandInst.Manager
             using (var db = GetDataContext())
             {
                 var entity = db.ExamResults.FirstOrDefault(e => e.MemberID == model.MemberID && e.ExamID == model.ExamID);
-                if (entity == null)
+                //if (entity == null)
+                //{
+                //    entity = new ExamResult
+                //    {
+                //        ExamID = model.ExamID,
+                //        MemberID = model.MemberID,
+                //        Subjects = model.Subjects,
+                //        CreateTime = model.CreateTime == DateTime.MinValue ? DateTime.Now : model.CreateTime,
+                //        UpdateTime = DateTime.Now,
+                //        Scores = model.Scores
+                //    };
+                //    db.ExamResults.Add(entity);
+                //}
+                //else
                 {
-                    entity = new ExamResult
-                    {
-                        ExamID = model.ExamID,
-                        MemberID = model.MemberID,
-                        Subjects = model.Subjects,
-                        CreateTime = model.CreateTime == DateTime.MinValue ? DateTime.Now : model.CreateTime,
-                        UpdateTime = DateTime.Now,
-                        Scores = model.Scores
-                    };
-                    db.ExamResults.Add(entity);
-                }
-                else
-                {
-                    entity.Subjects = model.Subjects;
+                    //entity.Subjects = model.Subjects;
                     entity.Scores = model.Scores;
                     entity.UpdateTime = DateTime.Now;
                 }

@@ -5,6 +5,7 @@
     List<VExamResult> examResults = ViewBag.ExamResults ?? new List<VExamResult>();
     List<Education> educations = ViewBag.Educations ?? new List<Education>();
     List<CheckLog> checklogs = ViewBag.CheckLogs ?? new List<CheckLog>();
+    CheckLog checkLog = ViewBag.CheckLog;
     profile.Jobs.Add(new Job());
     profile.Certifications.Add(new Certification());
 
@@ -50,7 +51,7 @@
         @if (isViewPage)
         {
             <ul style="position: absolute; right: 10px; top: 0px;">
-                <a href="export?id=@(profile.ID)" class="btn btn-primary"><i class="glyphicon glyphicon-export"></i>导出资料</a>
+                <a href="export?id=@(profile.ID)&checkLogId=@(checkLog == null ? 0 : checkLog.ID)" class="btn btn-primary"><i class="glyphicon glyphicon-export"></i>导出资料</a>
             </ul>
         }
     </div>
@@ -114,6 +115,31 @@
                 </div>
             </div>
             <div class="form-group">
+                <label class="control-label col-lg-2">从事土地规划工作年限</label>
+                <div class="col-lg-2">
+                    <input type="text" name="WorkingYears" class="form-control input-sm" value="@(profile.WorkingYears)" />
+                </div>
+                <label class="control-label col-lg-3">现从事的工作</label>
+                <div class="col-lg-3">
+                    <input type="text" name="Job" class="form-control input-sm"  value="@(profile.Job)" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-lg-2">职务</label>
+                <div class="col-lg-2">
+                    <input type="text" name="Office" class="form-control input-sm" value="@(profile.Office)" />
+                </div>
+                <label class="control-label col-lg-3">用工形式</label>
+                <div class="col-lg-3">
+                    <div class="radio-inline">
+                        <label><input type="radio" name="IsFullTime"  value="true" @(profile.IsFullTime ? "checked=checked" : null)/>全职</label>
+                    </div>
+                    <div class="radio-inline">
+                        <label><input type="radio" name="IsFullTime"  value="false" @(!profile.IsFullTime ? "checked=checked" : null)/>兼职</label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
                 <label class="control-label col-lg-2">民族</label>
                 <div class="col-lg-2">
                     <input type="text" name="Nationality" class="form-control input-sm" value="@(profile.Nationality)" />
@@ -124,9 +150,14 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="control-label col-lg-2">职称</label>
+                <label class="control-label col-lg-2">职级</label>
                 <div class="col-lg-2">
-                    <input type="text" name="Title" class="form-control input-sm"  value="@(profile.Title)" />
+                    @Html.DropDownList("EduRecord", Enum.GetNames(typeof(ProfessionalLevel)).Select(name => new SelectListItem
+               {
+                   Selected = (ProfessionalLevel)Enum.Parse(typeof(ProfessionalLevel), name) == profile.ProfessionalLevel,
+                   Value = ((int)Enum.Parse(typeof(ProfessionalLevel), name)).ToString(),
+                   Text = name,
+               }), new { @class = "form-control input-sm" })
                 </div>
                 <label class="control-label col-lg-3">政治面貌</label>
                 <div class="col-lg-2">
@@ -410,7 +441,7 @@
                         <tr>
                             <td>@(item.CheckType.GetDescription())</td>
                             <td>@(item.CreateTime.ToString())</td>
-                            <td>@(item.UpdateTime.HasValue?item.UpdateTime.Value.ToString():null)</td>
+                            <td>@(item.UpdateTime.HasValue ? item.UpdateTime.Value.ToString() : null)</td>
                             <td>
                                 @if (item.Result.HasValue)
                                 {

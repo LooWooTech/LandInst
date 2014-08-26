@@ -61,6 +61,7 @@
     <Compile Include="CacheHelper.cs" />
     <Compile Include="EncryptExtensions.cs" />
     <Compile Include="EnumExtensions.cs" />
+    <Compile Include="Extendions.cs" />
     <Compile Include="JsonExtensions.cs" />
     <Compile Include="NOPIHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

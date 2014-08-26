@@ -29,19 +29,26 @@ namespace Loowoo.LandInst.Model
         /// <summary>
         /// 机构名称
         /// </summary>
+        [MaxLength(255)]
         public string Name { get; set; }
 
         /// <summary>
         /// 工商登记号
         /// </summary>
+        [MaxLength(45)]
         public string RegistrationNo { get; set; }
 
+        [MaxLength(45)]
         public string City { get; set; }
 
         /// <summary>
         /// 法人代表
         /// </summary>
+        [MaxLength(45)]
         public string LegalPerson { get; set; }
+
+        [MaxLength(45)]
+        public string MobilePhone { get; set; }
     }
 
     public enum InstitutionType

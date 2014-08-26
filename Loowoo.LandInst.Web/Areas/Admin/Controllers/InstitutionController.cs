@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using Loowoo.LandInst.Common;
 using Loowoo.LandInst.Model;
 using Loowoo.LandInst.Model.Filters;
+using System.IO;
 
 namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
 {
@@ -164,16 +165,117 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult ImportResult()
+        public ActionResult Import(string password, string rePassword)
         {
+            if (string.IsNullOrEmpty(password))
+            {
+                throw new ArgumentException("初始密码没有填写");
+            }
+
+            if (string.IsNullOrEmpty(rePassword))
+            {
+                throw new ArgumentException("确认初始密码没有填写");
+            }
+
+            if (password != rePassword)
+            {
+                throw new ArgumentException("两次输入密码不一致");
+            }
+
+
             if (Request.Files.Count == 0)
             {
                 throw new ArgumentException("你没有选择上传文件");
             }
             var file = Request.Files[0];
+            if (file.ContentLength == 0)
+            {
+                throw new ArgumentException("没有选择上传文件");
+            }
+
             var filePath = Core.FileManager.Upload(HttpContext, file);
-            var columns = NOPIHelper.ReadSimpleColumns(filePath);
-            return JsonSuccess();
+            var rows = NOPIHelper.ReadExcelData(Request.MapPath(filePath), 1);
+
+            //Func<List<object>,int,
+
+            var errors = new List<string>();
+            //0机构名称	
+            //1所在城市	2机构性质	 3法人代表  4技术负责人	 5工商登记号	 6税务登记号	 7工商登记机关	8注册资金（万元）	9成立日期	 10企业法人营业执照注册号
+            //11电子信箱	 12公司网站	13联系电话	 14手机	15传真电话 	16公司地址 	17联系地址 	18邮编	  19在职职工总数	从事土地规划工作人员总数	
+            //21从事土地规划工作办公用房面积（平方）
+            for (var i = 0; i < rows.Count; i++)
+            {
+                var row = rows[i];
+                if (row[0] == null)
+                {
+                    errors.Add("第" + (i + 2) + "行 机构名称为空");
+                    continue;
+                }
+                var name = row[0].ToString();
+                if (Core.UserManager.Exists(name))
+                {
+                    errors.Add(name + "机构名称已存在");
+                    continue;
+                }
+
+                var profile = new InstitutionProfile
+                {
+                    Name = name,
+                    City = row[1].AsNullOrString(),
+                    CompanyType = row[2].AsNullOrString(),
+                    LegalPerson = row[3].AsNullOrString(),
+                    TechLeader = row[4].AsNullOrString(),
+                    RegistrationNo = row[5].AsNullOrString(),
+                    TaxRegistryNo = row[6].AsNullOrString(),
+                    RegistrationInstitution = row[7].AsNullOrString(),
+                    RegisteredCapital = row[8].AsNullOrInt(),
+                    EstablishedDate = row[9].AsNullOrDate(),
+                    LegalpersonNo = row[10].AsNullOrString(),
+                    Email = row[11].AsNullOrString(),
+                    Website = row[12].AsNullOrString(),
+                    Tel = row[13].AsNullOrString(),
+                    MobilePhone = row[14].AsNullOrString(),
+                    Fax = row[15].AsNullOrString(),
+                    Address = row[16].AsNullOrString(),
+                    Address1 = row[17].AsNullOrString(),
+                    Postcode = row[18].AsNullOrString(),
+                    Postcode1 = row[18].AsNullOrString(),
+                    TotalMembers = row[19].AsNullOrInt(),
+                    ExpertMembers = row[20].AsNullOrInt(),
+                    OfficeArea = row[21].AsNullOrInt(),
+                };
+
+                var user = new User
+                {
+                    Username = profile.Name,
+                    Password = password.MD5(),
+                    Role = UserRole.Institution,
+                };
+
+                Core.UserManager.AddUser(user);
+                profile.ID = user.ID;
+                Core.InstitutionManager.Import(user, profile);
+
+            }
+
+
+            return JsonSuccess(errors);
+        }
+
+        public void Export(int id, int checkLogId = 0)
+        {
+            var inst = Core.InstitutionManager.GetInstitution(id);
+            if (inst == null)
+            {
+                throw new ArgumentException("没有找到这个机构");
+            }
+            var filePath = Request.MapPath("/templates/规划机构导出模板.xls");
+            var exportData = Core.InstitutionManager.GetExportData(id, checkLogId);
+            var stream = NOPIHelper.WriteCell(filePath, exportData);
+            Response.ContentType = "application/vnd.ms-excel;charset=UTF-8";
+            Response.AddHeader("Content-Disposition", string.Format("attachment;filename={0}", HttpUtility.UrlEncode(inst.Name) + ".xls"));
+            Response.BinaryWrite(((MemoryStream)stream).GetBuffer());
+            Response.End();
         }
     }
 }

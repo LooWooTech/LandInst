@@ -1,33 +1,20 @@
 ﻿@using Loowoo.LandInst.Model
+@using Loowoo.LandInst.Common
 @{
-    ViewBag.Title = "批量导入成绩";
+    ViewBag.Title = "批量导入会员";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
-    List<Exam> exams = ViewBag.Exams;
 }
-
-<form id="exam-form" action="?" role="form" class="form-horizontal" method="post" enctype="multipart/form-data" target="_uploadframe">
-    <div class="form-group">
-        <label class="control-label col-lg-2">选择培训</label>
-        <div class="col-sm-3">
-            <select name="examId" class="form-control input-sm">
-                @foreach (var exam in exams)
-                { 
-                    <option value="@(exam.ID)">@(exam.Name)</option>
-                }
-            </select>
-        </div>
-    </div>
+<form id="import-form" role="form" class="form-horizontal" method="post" enctype="multipart/form-data" action="import" target="_uploadframe">
     <div class="form-group">
         <label class="control-label col-lg-2">选择Excel文件</label>
         <div class="col-sm-3">
-            <input type="file" name="file" class="form-control input-sm" />
+            <input type="file" name="file" class="form-control" />
         </div>
     </div>
     <div class="form-group">
         <label class="control-label col-lg-2"></label>
         <div class="col-sm-3">
             <button type="submit" class="btn btn-primary"><i class="glyphicon glyphicon-upload"></i>上传导入</button>
-            <a href="examresult" class="btn btn-default">返回</a>
         </div>
     </div>
 </form>
@@ -45,7 +32,7 @@
                     if (errors.length > 0) {
                         var html = "以下为失败用户：";
                         for (var i = 0; i < errors.length; i++) {
-                            html += "<li>"+errors[i] + "</li>";
+                            html += "<li>" + errors[i] + "</li>";
                         }
                         $("#import-result").addClass("alert-warning").html(html);
                     } else {

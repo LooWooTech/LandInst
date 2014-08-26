@@ -8,25 +8,59 @@ using System.Text;
 
 namespace Loowoo.LandInst.Common
 {
+    public class ExcelCell
+    {
+        public ExcelCell(int row, int cell, string value)
+        {
+            Row = row;
+            Cell = cell;
+            Value = value;
+        }
+
+        public int Row { get; set; }
+
+        public int Cell { get; set; }
+
+        public string Value { get; set; }
+    }
+
     public class NOPIHelper
     {
-        //public static Dictionary<string, int> ReadColumnNameAndIndex(string filePath, int columnRowIndex = 0, int sheetIndex = 0)
-        //{
-        //    using (var fileStream = new FileStream(filePath, FileMode.Open))
-        //    {
-        //        var workbook = new HSSFWorkbook(fileStream);
-        //        var sheet = workbook.GetSheetAt(sheetIndex);
-        //        var result = new Dictionary<string, int>();
-        //        var row = sheet.GetRow(columnRowIndex);
-        //        foreach (var cell in row.Cells)
-        //        {
-        //            result.Add(cell.CellComment, cell.ColumnIndex);
-        //        }
+        public static Stream WriteCell(string filePath, List<ExcelCell> values, int sheetIndex = 0)
+        { 
+            var dict = new Dictionary<int,List<ExcelCell>>();
+            dict.Add(0, values);
+            return WriteCell(filePath, dict);
+        }
 
-        //        return result;
+        public static Stream WriteCell(string filePath, Dictionary<int, List<ExcelCell>> sheetValues)
+        {
+            HSSFWorkbook workbook = null;
+            using (var fileStream = new FileStream(filePath, FileMode.Open))
+            {
+                workbook = new HSSFWorkbook(fileStream);
+            }
+            ISheet sheet = null;
+            foreach (var kv in sheetValues)
+            {
+                sheet = workbook.GetSheetAt(kv.Key);
 
-        //    }
-        //}
+                foreach (var cellValue in kv.Value)
+                {
+                    var rowIndex = cellValue.Row;
+                    var cellIndex = cellValue.Cell;
+                    var value = cellValue.Value;
+
+                    var row = sheet.GetRow(rowIndex);
+                    var cell = row.GetCell(cellIndex);
+                    cell.SetCellValue(value);
+                }
+            }
+            var result = new MemoryStream();
+            workbook.Write(result);
+            return result;
+        }
+
 
         public static List<string> ReadSimpleColumns(string filePath, int columnRowIndex = 0, int sheetIndex = 0)
         {

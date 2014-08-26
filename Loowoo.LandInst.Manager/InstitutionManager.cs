@@ -34,6 +34,19 @@ namespace Loowoo.LandInst.Manager
             CacheHelper.Remove(_cacheKey);
         }
 
+        public int GetInstId(string instName)
+        {
+            if (string.IsNullOrEmpty(instName))
+            {
+                return 0;
+            }
+
+            using (var db = GetDataContext())
+            {
+                return db.Institutions.Where(e => e.Name == instName).Select(e => e.ID).FirstOrDefault();
+            }
+        }
+
         public Institution GetInstitution(int id)
         {
             using (var db = GetDataContext())
@@ -215,21 +228,245 @@ namespace Loowoo.LandInst.Manager
             }
         }
 
-        //public List<Shareholder> GetShareHolders(int id)
-        //{
-        //    return Core.InfoDataManager.GetModel<List<Shareholder>>(id, CheckType.Shareholder) ?? new List<Shareholder>();
-        //}
-
-        //public List<Certification> GetCertifications(int id)
-        //{
-        //    return Core.InfoDataManager.GetModel<List<Certification>>(id, CheckType.Certificatoin) ?? new List<Certification>();
-        //}
 
         public IEnumerable<CheckLog> GetProfileHistory(int instId)
         {
             return Core.CheckLogManager.GetList(instId)
                 .Where(e => e.CheckType == CheckType.Profile || e.CheckType == CheckType.Annual)
                 .ToList();
+        }
+
+        public void Import(User user, InstitutionProfile profile)
+        {
+            var inst = new Institution
+            {
+                ID = user.ID,
+                City = profile.City,
+                CreateTime = DateTime.Now,
+                LegalPerson = profile.LegalPerson,
+                Name = user.Username,
+                RegistrationNo = profile.RegistrationNo,
+                Status = InstitutionStatus.Registered,
+
+            };
+
+            Core.InstitutionManager.AddInstitution(inst);
+            Core.ProfileManager.AddProfile(user.ID, profile);
+        }
+
+        public Dictionary<int, List<ExcelCell>> GetExportData(int instId, int checkLogId = 0)
+        {
+            InstitutionProfile profile = null;
+
+            if (checkLogId > 0)
+            {
+                var checkLog = Core.CheckLogManager.GetCheckLog(checkLogId);
+                profile = GetProfile(checkLog);
+            }
+            else
+            {
+                profile = GetProfile(instId);
+            }
+            if (profile == null) return null;
+
+            var sheetValues = new Dictionary<int, List<ExcelCell>>();
+            sheetValues.Add(0, GetBasicInfoSheetValues(profile));
+            sheetValues.Add(1, GetMemberStatisticSheetValues(instId));
+            sheetValues.Add(2, GetMemberListSheetValues(instId));
+            sheetValues.Add(3, GetEquipmentAndSoftwareSheetValues(profile));
+
+            return sheetValues;
+        }
+
+        private List<ExcelCell> GetBasicInfoSheetValues(InstitutionProfile profile)
+        {
+            var list = new List<ExcelCell>();
+
+            list.Add(new ExcelCell(1, 1, profile.Name));
+
+            list.Add(new ExcelCell(2, 1, profile.CompanyType));
+            list.Add(new ExcelCell(2, 4, profile.RegisteredCapital + "（万元）"));
+
+            list.Add(new ExcelCell(3, 1, profile.CreateTime.ToShortDateString()));
+            list.Add(new ExcelCell(3, 5, profile.LegalpersonNo));
+
+            list.Add(new ExcelCell(4, 1, profile.Address));
+            list.Add(new ExcelCell(4, 5, profile.Postcode));
+
+            list.Add(new ExcelCell(5, 1, profile.Address1));
+            list.Add(new ExcelCell(5, 5, profile.Postcode1));
+
+            list.Add(new ExcelCell(6, 1, profile.LegalPerson));
+            list.Add(new ExcelCell(6, 5, profile.TechLeader));
+
+            list.Add(new ExcelCell(8, 1, profile.ContactPerson));
+            list.Add(new ExcelCell(8, 3, profile.Tel));
+            list.Add(new ExcelCell(8, 5, profile.Fax));
+
+            list.Add(new ExcelCell(9, 1, profile.MobilePhone));
+            list.Add(new ExcelCell(9, 3, profile.Email));
+
+            if (profile.TotalMembers.HasValue)
+            {
+                list.Add(new ExcelCell(10, 2, profile.TotalMembers + "（人）"));
+            }
+            else
+            {
+                list.Add(new ExcelCell(10, 2, "            （人）"));
+            }
+
+            if (profile.ExpertMembers.HasValue)
+            {
+                list.Add(new ExcelCell(10, 5, profile.ExpertMembers + "（人）"));
+            }
+            else
+            {
+                list.Add(new ExcelCell(10, 5, "       （人）"));
+            }
+
+            if (profile.OfficeArea.HasValue)
+            {
+                list.Add(new ExcelCell(11, 2, profile.OfficeArea + "（平方米）"));
+            }
+            else
+            {
+                list.Add(new ExcelCell(11, 2, "                                     （平方米）"));
+            }
+
+            switch (profile.CommendLevel)
+            {
+                case "甲级":
+                    list.Add(new ExcelCell(12, 2, "甲级√            乙级            准乙级"));
+                    break;
+                case "乙级":
+                    list.Add(new ExcelCell(12, 2, "甲级            乙级√            准乙级"));
+                    break;
+                case "准乙级":
+                    list.Add(new ExcelCell(12, 2, "甲级            乙级            准乙级√"));
+                    break;
+                default:
+                    list.Add(new ExcelCell(12, 2, "甲级            乙级            准乙级"));
+                    break;
+            }
+
+            return list;
+        }
+
+        private List<ExcelCell> GetMemberStatisticSheetValues(int instId)
+        {
+            var list = new List<ExcelCell>();
+
+            using (var db = GetDataContext())
+            {
+                var datas = db.Members.Where(e => e.InstitutionID == instId && e.Status != MemberStatus.Normal).Select(e => new
+                {
+                    e.Major,
+                    e.ProfessionalLevel,
+                    e.EduRecord
+                }).ToList();
+
+                db.Dispose();
+
+                var rowIndex = 3;
+
+                Action<Dictionary<Major, int>> writeRow = (rowData) =>
+                {
+                    foreach (var kv in rowData)
+                    {
+                        var cellIndex = (int)kv.Key + 1;
+                        list.Add(new ExcelCell(rowIndex, cellIndex, kv.Value.ToString()));
+                    }
+                    //合计
+                    list.Add(new ExcelCell(rowIndex, rowData.Count + 2, rowData.Sum(e => e.Value).ToString()));
+                    rowIndex++;
+                };
+
+
+                var columns = Enum.GetNames(typeof(Major)).Select(name => (Major)Enum.Parse(typeof(Major), name)).ToArray();
+                //第一行总计
+                var row1 = columns.ToDictionary(name => name, name => datas.Count(e => e.Major == name));
+                writeRow(row1);
+
+                foreach (ProfessionalLevel val in Enum.GetValues(typeof(ProfessionalLevel)))
+                {
+                    var row = columns.ToDictionary(name => name, name => datas.Count(e => e.Major == name && e.ProfessionalLevel == val));
+                    writeRow(row);
+                }
+
+                foreach (EduRecord val in Enum.GetValues(typeof(EduRecord)))
+                {
+                    var row = columns.ToDictionary(name => name, name => datas.Count(e => e.Major == name && e.EduRecord == val));
+                    writeRow(row);
+                }
+            }
+
+            return list;
+        }
+
+        private List<ExcelCell> GetMemberListSheetValues(int instId)
+        {
+            var list = new List<ExcelCell>();
+            using (var db = GetDataContext())
+            {
+                var ids = db.Members.Where(e => e.InstitutionID == instId && e.Status != MemberStatus.Normal).Select(e => e.ID).ToArray();
+                db.Dispose();
+                var rowIndex = 4;
+                foreach (var memberId in ids)
+                {
+                    var profile = Core.ProfileManager.GetLastProfile<MemberProfile>(memberId);
+                    list.Add(new ExcelCell(rowIndex, 0, profile.ID.ToString()));
+                    list.Add(new ExcelCell(rowIndex, 1, profile.RealName));
+                    list.Add(new ExcelCell(rowIndex, 2, profile.Gender));
+                    list.Add(new ExcelCell(rowIndex, 3, profile.Birthday.HasValue ? (DateTime.Now.Year - profile.Birthday.Value.Year).ToString() : null));
+                    list.Add(new ExcelCell(rowIndex, 4, profile.EduRecord.ToString()));
+                    list.Add(new ExcelCell(rowIndex, 5, profile.EduLevel));
+                    list.Add(new ExcelCell(rowIndex, 6, profile.School));
+                    list.Add(new ExcelCell(rowIndex, 7, profile.GraduationDate.HasValue ? profile.GraduationDate.Value.ToShortDateString() : null));
+                    list.Add(new ExcelCell(rowIndex, 8, profile.Major.ToString()));
+                    list.Add(new ExcelCell(rowIndex, 9, profile.ProfessionalLevel.ToString()));
+                    list.Add(new ExcelCell(rowIndex, 10, profile.StartWorkingDate.HasValue ? profile.StartWorkingDate.Value.ToShortDateString() : null));
+                    list.Add(new ExcelCell(rowIndex, 11, profile.Office));
+                    list.Add(new ExcelCell(rowIndex, 12, profile.WorkingYears == 0 ? null : profile.WorkingYears.ToString()));
+                    list.Add(new ExcelCell(rowIndex, 13, profile.Job));
+                    list.Add(new ExcelCell(rowIndex, 14, profile.IDNo));
+                    list.Add(new ExcelCell(rowIndex, 15, profile.IsFullTime ? "√" : null));
+                    list.Add(new ExcelCell(rowIndex, 16, !profile.IsFullTime ? "√" : null));
+
+
+                    rowIndex++;
+                }
+            }
+            return list;
+        }
+
+        private List<ExcelCell> GetEquipmentAndSoftwareSheetValues(InstitutionProfile profile)
+        {
+            var list = new List<ExcelCell>();
+            var rowIndex = 3;
+            foreach (var equipment in profile.Equipments)
+            {
+                list.Add(new ExcelCell(rowIndex, 0, equipment.Name));
+                list.Add(new ExcelCell(rowIndex, 1, equipment.Model));
+                list.Add(new ExcelCell(rowIndex, 2, equipment.Number.ToString()));
+                list.Add(new ExcelCell(rowIndex, 3, equipment.Performance));
+                list.Add(new ExcelCell(rowIndex, 4, equipment.Note));
+
+                rowIndex++;
+                if (rowIndex > 11) break;
+            }
+
+            rowIndex = 14;
+            foreach (var software in profile.Softwares)
+            {
+                list.Add(new ExcelCell(rowIndex, 0, software.Name));
+                list.Add(new ExcelCell(rowIndex, 1, software.Source));
+                list.Add(new ExcelCell(rowIndex, 2, software.Number.ToString()));
+                list.Add(new ExcelCell(rowIndex, 3, software.Purpose));
+                list.Add(new ExcelCell(rowIndex, 4, software.Note));
+                if (rowIndex > 22) break;
+            }
+
+            return list;
         }
     }
 }

@@ -32,6 +32,7 @@
     $.fn.setUpload = function (uploadUrl, callback, beforeUpload) {
         var file = $(this);
         var form = file.parents("form");
+        var formAction = form.attr("action");
         file.change(function () {
             if (beforeUpload && !beforeUpload()) {
                 reset();
@@ -63,7 +64,9 @@
 
         function reset() {
             file.replaceWith(file.clone());
-            console.log(file);
+            form.removeAttr("target");
+            form.removeAttr("enctype")
+            form.attr("action", formAction);
             $(file).setUpload(uploadUrl, callback, beforeUpload);
         }
     };

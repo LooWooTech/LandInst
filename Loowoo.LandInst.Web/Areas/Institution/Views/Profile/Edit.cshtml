@@ -3,7 +3,7 @@
     ViewBag.Title = "资料变更登记";
     Layout = "~/Areas/Institution/Views/Shared/_Layout.cshtml";
     CheckLog approval = ViewBag.CheckLog;
-    InstitutionProfile model = ViewBag.Profile;
+    InstitutionProfile model = ViewBag.Profile ?? new InstitutionProfile();
     //如果已提交还没审核，则不可以修改资
     var disabled = approval != null && !approval.Result.HasValue;
     //注册登记可以全部编辑

@@ -159,8 +159,6 @@
     <Content Include="Areas\Admin\Views\Exam\Approvals.cshtml" />
     <Content Include="Areas\Admin\Views\Exam\Results.cshtml" />
     <Content Include="Areas\Institution\Views\Profile\Shareholder.cshtml" />
-    <Content Include="Areas\Institution\Views\Shareholder\Index.cshtml" />
-    <Content Include="Areas\Institution\Views\Certification\Index.cshtml" />
     <Content Include="Areas\Admin\Views\Annual\Index.cshtml" />
     <Content Include="Areas\Admin\Views\Annual\Edit.cshtml" />
     <Content Include="Areas\Institution\Views\Annual\Index.cshtml" />
@@ -281,12 +279,6 @@
     <Content Include="Areas\Admin\Views\Institution\CheckAnnual.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Areas\Institution\Views\Shareholder\Edit.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Areas\Institution\Views\Certification\Edit.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Areas\Admin\Views\Shared\_approvalForm.cshtml" />
   </ItemGroup>
   <ItemGroup>
@@ -318,9 +310,16 @@
     <Content Include="Areas\Admin\Views\Shared\_batchApproval.cshtml" />
     <Content Include="Areas\Institution\Views\Profile\Index.cshtml" />
     <Content Include="Areas\Institution\Views\Profile\AnnualCheck.cshtml" />
+    <Content Include="Areas\Admin\Views\Member\Import.cshtml" />
     <None Include="Properties\PublishProfiles\LandInst.pubxml" />
     <Content Include="Views\User\ForgetPwd.cshtml" />
     <Content Include="Views\User\EditPassword.cshtml" />
+    <Content Include="templates\勘测机构导入模板.xls" />
+    <Content Include="templates\考试成绩导入模板.xls" />
+    <Content Include="templates\规划机构导入模板.xls" />
+    <Content Include="templates\规划机构导出模板.xls" />
+    <Content Include="templates\规划人员导入模板.xls" />
+    <Content Include="templates\规划人员导出模板.xls" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

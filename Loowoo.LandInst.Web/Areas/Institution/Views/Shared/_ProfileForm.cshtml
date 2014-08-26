@@ -8,7 +8,7 @@
     var isRegisterPage = action == "home.index";
 
     CheckLog checkLog = ViewBag.CheckLog;
-    InstitutionProfile profile = ViewBag.Profile;
+    InstitutionProfile profile = ViewBag.Profile ?? new InstitutionProfile();
     if (!isViewPage)
     {
         profile.ShareHolders.Add(new Shareholder());
@@ -46,7 +46,7 @@
         @if (isViewPage)
         {
             <ul style="position: absolute; right: 10px; top: 0px;">
-                <a href="export?id=@(profile.ID)" class="btn btn-primary"><i class="glyphicon glyphicon-export"></i>导出资料</a>
+                <a href="export?id=@(profile.ID)&checkLogId=@(checkLog.ID)" class="btn btn-primary"><i class="glyphicon glyphicon-export"></i>导出资料</a>
             </ul>
         }
     </div>

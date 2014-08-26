@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Loowoo.LandInst.Model;
 using Loowoo.LandInst.Model.Filters;
+using Loowoo.LandInst.Common;
 
 namespace Loowoo.LandInst.Manager
 {
@@ -107,6 +108,13 @@ namespace Loowoo.LandInst.Manager
             }
         }
 
+        public void Import(Member member, MemberProfile profile)
+        {
+            AddMember(member);
+            profile.ID = member.ID;
+            Core.ProfileManager.AddProfile(member.ID, profile);
+        }
+
         public Member GetMember(int memberId)
         {
             if (memberId == 0) return null;
@@ -116,14 +124,13 @@ namespace Loowoo.LandInst.Manager
             }
         }
 
-        public Member GetMember(string realName, string IDCardNo)
+        public Member GetMember(string idNo)
         {
+            if (string.IsNullOrEmpty(idNo)) return null;
+
             using (var db = GetDataContext())
             {
-                var query = db.Members.Where(e => e.RealName == realName);
-                if (query.Count() > 1)
-                    query = query.Where(e => e.IDNo == IDCardNo);
-                return query.FirstOrDefault();
+                return db.Members.FirstOrDefault(e => e.IDNo == idNo);
             }
         }
 
@@ -255,6 +262,135 @@ namespace Loowoo.LandInst.Manager
                 var query = db.Members.Where(e => e.InstitutionID == instId && realNames.Contains(e.RealName));
                 return query.Select(e => e.ID).ToList();
             }
+        }
+
+        public bool Exist(string idNo)
+        {
+            using (var db = GetDataContext())
+            {
+                return db.Members.Any(e => e.IDNo == idNo);
+            }
+        }
+
+        public List<ExcelCell> GetExportData(int memberId, int checkLogId)
+        {
+            MemberProfile profile = null;
+            if (checkLogId > 0)
+            {
+                var checkLog = Core.CheckLogManager.GetCheckLog(checkLogId);
+                profile = GetProfile(checkLog);
+            }
+            else
+            {
+                profile = GetProfile(memberId);
+            }
+
+            if (profile == null)
+            {
+                throw new ArgumentException("没有找到该会员资料");
+            }
+
+            if (profile.InstitutionID == 0)
+            {
+                throw new ArgumentException("没有权限导出该会员资料");
+            }
+
+            var inst = Core.InstitutionManager.GetInstitution(profile.InstitutionID);
+
+            if (inst == null)
+            {
+                throw new ArgumentException("没有权限导出该会员资料");
+            }
+
+
+            var list = new List<ExcelCell>();
+
+            var rowIndex = 1;
+
+            list.Add(new ExcelCell(rowIndex, 1, profile.RealName));
+            list.Add(new ExcelCell(rowIndex, 3, profile.Gender));
+            list.Add(new ExcelCell(rowIndex, 5, profile.Birthday.HasValue ? profile.Birthday.Value.ToShortDateString() : null));
+
+            rowIndex++;
+
+            list.Add(new ExcelCell(rowIndex, 1, profile.NativePlace));
+            list.Add(new ExcelCell(rowIndex, 3, profile.Nationality));
+            list.Add(new ExcelCell(rowIndex, 5, profile.Email));
+
+            rowIndex++;
+            list.Add(new ExcelCell(rowIndex, 1, profile.MobilePhone));
+            list.Add(new ExcelCell(rowIndex, 3, profile.IDNo));
+
+            rowIndex++;
+            list.Add(new ExcelCell(rowIndex, 1, profile.Address));
+            list.Add(new ExcelCell(rowIndex, 6, profile.Postcode));
+
+            rowIndex++;
+            list.Add(new ExcelCell(rowIndex, 1, profile.Major == 0 ? "" : profile.Major.ToString()));
+            list.Add(new ExcelCell(rowIndex, 6, profile.ProfessionalLevel == 0 ? "" : profile.ProfessionalLevel.ToString()));
+
+            rowIndex++;
+            list.Add(new ExcelCell(rowIndex, 1, profile.School));
+            list.Add(new ExcelCell(rowIndex, 6, profile.EduRecord == 0 ? "" : profile.EduRecord.ToString()));
+
+            rowIndex++;
+            list.Add(new ExcelCell(rowIndex, 5, profile.PracticeRegistrationNO));
+
+            rowIndex++;
+            list.Add(new ExcelCell(rowIndex, 3, profile.PersonalRecordsInstitution));
+            list.Add(new ExcelCell(rowIndex, 6, profile.PersonalRecordsNO));
+
+            rowIndex++;
+            list.Add(new ExcelCell(rowIndex, 3, profile.SocialSecurityInstitution));
+            list.Add(new ExcelCell(rowIndex, 6, profile.SocialSecurityNO));
+
+            rowIndex++;
+            list.Add(new ExcelCell(rowIndex, 3, inst.Name));
+            list.Add(new ExcelCell(rowIndex, 6, profile.Office));
+
+            rowIndex++;
+            list.Add(new ExcelCell(rowIndex, 3, inst.LegalPerson));
+            list.Add(new ExcelCell(rowIndex, 6, inst.MobilePhone));
+
+
+            rowIndex = 14;
+            foreach (var cert in profile.Certifications)
+            {
+                list.Add(new ExcelCell(rowIndex, 0, cert.Name));
+                list.Add(new ExcelCell(rowIndex, 2, cert.CertificationNo));
+                list.Add(new ExcelCell(rowIndex, 5, cert.ObtainDate.HasValue ? cert.ObtainDate.Value.ToShortDateString() : null));
+                rowIndex++;
+            }
+
+            rowIndex = 20;
+            foreach (var job in profile.Jobs)
+            {
+                list.Add(new ExcelCell(rowIndex, 0, job.StartDate + "~" + job.EndDate));
+                list.Add(new ExcelCell(rowIndex, 2, job.Institution));
+                list.Add(new ExcelCell(rowIndex, 5, job.Office));
+                list.Add(new ExcelCell(rowIndex, 6, job.Note));
+            }
+
+            rowIndex = 25;
+            using (var db = GetDataContext())
+            {
+                var examResult = db.ExamResults.OrderByDescending(e => e.ID).FirstOrDefault(e => e.MemberID == memberId);
+                if (examResult != null && !string.IsNullOrEmpty(examResult.Scores))
+                {
+                    var cellIndex = 0;
+                    foreach (var score in examResult.Scores.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                    {
+                        var values = score.Split(':');
+                        list.Add(new ExcelCell(rowIndex, cellIndex, values[0]));
+                        if (values.Length > 1)
+                        {
+                            list.Add(new ExcelCell(rowIndex + 1, cellIndex, values[1]));
+                        }
+                    }
+                }
+            }
+
+            return list;
         }
     }
 }

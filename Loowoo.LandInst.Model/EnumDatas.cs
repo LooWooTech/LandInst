@@ -25,7 +25,7 @@ namespace Loowoo.LandInst.Model
         其他
     }
 
-    public enum JobTitle
+    public enum ProfessionalLevel
     {
         高级 = 1,
         中级,
@@ -34,6 +34,6 @@ namespace Loowoo.LandInst.Model
 
     public enum EduRecord
     {
-        研究生及以上 = 1, 本科, 大专, 高中, 中专
+        研究生及以上 = 1, 本科, 大专, 中专
     }
 }

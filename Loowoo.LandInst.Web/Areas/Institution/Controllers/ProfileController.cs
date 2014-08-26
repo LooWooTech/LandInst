@@ -4,6 +4,8 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Loowoo.LandInst.Model;
+using Loowoo.LandInst.Common;
+using System.IO;
 
 namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
 {
@@ -106,6 +108,18 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
         {
             ViewBag.List = Core.InstitutionManager.GetProfileHistory(Identity.UserID);
             return View();
+        }
+
+        public void Export(int id, int checkLogId = 0)
+        {
+            var inst = GetCurrentInst();
+            var filePath = Request.MapPath("/templates/规划机构导出模板.xls");
+            var exportData = Core.InstitutionManager.GetExportData(id, checkLogId);
+            var stream = NOPIHelper.WriteCell(filePath, exportData);
+            Response.ContentType = "application/vnd.ms-excel;charset=UTF-8";
+            Response.AddHeader("Content-Disposition", string.Format("attachment;filename={0}", HttpUtility.UrlEncode(inst.Name) + ".xls"));
+            Response.BinaryWrite(((MemoryStream)stream).GetBuffer());
+            Response.End();
         }
     }
 }

@@ -4,30 +4,17 @@
     ViewBag.Title = "批量导入机构";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
-<form id="import-form" role="form" class="form-horizontal" method="post" enctype="multipart/form-data" action="importresult">
+<form id="import-form" role="form" class="form-horizontal" method="post" enctype="multipart/form-data" action="import" target="_uploadframe">
     <div class="form-group">
-        <label class="control-label col-lg-2">用户名前缀</label>
-        <div class="col-sm-3">
-            <input type="text" name="UsernamePrefix" class="form-control input-sm" />
-        </div>
-    </div>
-    <div class="form-group">
-        <label class="control-label col-lg-2">登录密码</label>
+        <label class="control-label col-lg-2">初始登录密码</label>
         <div class="col-sm-3">
             <input type="text" name="password" class="form-control input-sm" />
         </div>
     </div>
     <div class="form-group">
-        <label class="col-lg-2 control-label">机构类别</label>
+        <label class="control-label col-lg-2">确认初始登录密码</label>
         <div class="col-sm-3">
-            <div class="radio">
-                <label>
-                    <input type="radio" name="Type" value="1" />土地规划机构</label>
-            </div>
-            <div class="radio">
-                <label>
-                    <input type="radio" name="Type" value="2" />土地勘测机构</label>
-            </div>
+            <input type="text" name="repassword" class="form-control input-sm" />
         </div>
     </div>
     <div class="form-group">
@@ -43,6 +30,7 @@
         </div>
     </div>
 </form>
+<div id="import-result" class="alert"></div>
 <iframe id="_uploadframe" name="_uploadframe" width="0" height="0" frameborder="0"></iframe>
 <script>
     $(function () {
@@ -52,7 +40,16 @@
                 var json = eval("(" + content + ")");
                 if (json.result) {
                     alert("导入完成");
-                    window.location.href = "ExamResult";
+                    var errors = json.data || [];
+                    if (errors.length > 0) {
+                        var html = "以下为失败用户：";
+                        for (var i = 0; i < errors.length; i++) {
+                            html += "<li>" + errors[i] + "</li>";
+                        }
+                        $("#import-result").addClass("alert-warning").html(html);
+                    } else {
+                        window.location.href = "examresult";
+                    }
                 } else {
                     alert("导入失败");
                 }

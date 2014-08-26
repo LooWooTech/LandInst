@@ -12,6 +12,7 @@ namespace Loowoo.LandInst.Model
     {
         public MemberProfile()
         {
+            IsFullTime = true;
             Certifications = new List<Certification>();
             Jobs = new List<Job>();
         }
@@ -33,11 +34,6 @@ namespace Loowoo.LandInst.Model
             Status = member.Status;
             InstitutionID = member.InstitutionID;
         }
-
-
-        public string MobilePhone { get; set; }
-
-        public string Email { get; set; }
 
         /// <summary>
         /// 职称
@@ -98,6 +94,8 @@ namespace Loowoo.LandInst.Model
         /// 通信地址
         /// </summary>
         public string Address { get; set; }
+
+        public bool IsFullTime { get; set; }
 
         /// <summary>
         /// 其他资格证书

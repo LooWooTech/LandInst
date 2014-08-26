@@ -30,10 +30,16 @@ namespace Loowoo.LandInst.Model
         [Column(TypeName = "int")]
         public Major Major { get; set; }
 
+        /// <summary>
+        /// 学历
+        /// </summary>
         [Column(TypeName = "int")]
         public EduRecord EduRecord { get; set; }
 
         public string IDNo { get; set; }
+
+        [Column(TypeName = "int")]
+        public ProfessionalLevel ProfessionalLevel { get; set; }
 
         public string MobilePhone { get; set; }
 

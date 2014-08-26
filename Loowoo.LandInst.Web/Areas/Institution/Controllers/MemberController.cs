@@ -5,6 +5,8 @@ using System.Web;
 using System.Web.Mvc;
 using Loowoo.LandInst.Model;
 using Loowoo.LandInst.Model.Filters;
+using Loowoo.LandInst.Common;
+using System.IO;
 
 namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
 {
@@ -39,7 +41,7 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
 
             profile.Certifications = Certification.GetList(Request.Form);
             profile.Jobs = Job.GetList(Request.Form);
-            
+
             if (id == 0)
             {
                 var memberId = Core.MemberManager.AddMember(member);
@@ -51,7 +53,7 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
             if (type.Value == CheckType.Profile)
             {
                 Core.MemberManager.SubmitProfile(member, profile);
-                
+
             }
             else if (type.Value == CheckType.Practice)
             {
@@ -70,13 +72,26 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
             return JsonSuccess();
         }
 
-        public new ActionResult Profile(int id)
+        public new ActionResult Profile(int id, int checkLogId = 0)
         {
             var inst = GetCurrentInst();
             var member = Core.MemberManager.GetMember(id);
-            var profile = Core.MemberManager.GetProfile(id);
-            profile.SetMemberField(member);
-            ViewBag.Profile = profile;
+            if (checkLogId > 0)
+            {
+                var checkLog = Core.CheckLogManager.GetCheckLog(checkLogId);
+                ViewBag.CheckLog = checkLog;
+
+                var profile = Core.MemberManager.GetProfile(checkLog);
+                profile.SetMemberField(member);
+                ViewBag.Profile = profile;
+            }
+            else
+            {
+                var profile = Core.MemberManager.GetProfile(id);
+                profile.SetMemberField(member);
+                ViewBag.Profile = profile;
+            }
+
             ViewBag.Institution = inst;
             ViewBag.CheckLogs = Core.CheckLogManager.GetList(id);
             ViewBag.ExamResults = Core.ExamManager.GetVExamResults(new MemberFilter { UserID = id });
@@ -237,23 +252,33 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
                 throw new HttpException(401, "你不能为此会员申请执业登记");
                 return JsonSuccess();
             }
-            //TODO
-            //Core.MemberManager.SubmitPractice(member, profile);
 
-            //var checkLog = Core.CheckLogManager.GetLastLog(memberId, CheckType.Practice);
-            //if (checkLog == null || checkLog.Result.HasValue)
-            //{
+            if (member.Status == MemberStatus.Practice)
+            {
+                Core.MemberManager.SaveProfile(member, profile);
+                throw new Exception("该会员已申请过执业登记，如需修改资料请选择会员资料变更");
+            }
 
-            //    var practiceId = Core.PracticeManager.AddPracticeInfo(memberId, currentInst.ID, data);
-            //    Core.CheckLogManager.AddCheckLog(practiceId, memberId, CheckType.Practice);
-            //}
-            //else
-            //{
-            //    Core.PracticeManager.UpdatePracticeInfo(checkLog.InfoID, data);
-            //}
-
+            Core.MemberManager.SubmitPractice(member, profile);
 
             return JsonSuccess();
+        }
+
+        public void Export(int id, int checkLogId = 0)
+        {
+            var member = Core.MemberManager.GetMember(id);
+            if (member == null)
+            {
+                throw new ArgumentException("没有找到该会员的资料");
+            }
+
+            var filePath = Request.MapPath("/templates/规划人员导出模板.xls");
+            var exportData = Core.MemberManager.GetExportData(id, checkLogId);
+            var stream = NOPIHelper.WriteCell(filePath, exportData);
+            Response.ContentType = "application/vnd.ms-excel;charset=UTF-8";
+            Response.AddHeader("Content-Disposition", string.Format("attachment;filename={0}", HttpUtility.UrlEncode(member.RealName) + "(" + member.IDNo + ")" + ".xls"));
+            Response.BinaryWrite(((MemoryStream)stream).GetBuffer());
+            Response.End();
         }
 
     }

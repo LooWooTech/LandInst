@@ -127,38 +127,73 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
                 throw new ArgumentException("没有选择Excel文件");
             }
 
-            var filePath = Core.FileManager.Upload(HttpContext, file);
+            var filePath = Request.MapPath(Core.FileManager.Upload(HttpContext, file));
 
             var columns = NOPIHelper.ReadSimpleColumns(filePath);
             var data = NOPIHelper.ReadExcelData(filePath, 1);
+
+
+            var errors = new List<string>();
 
             foreach (var values in data)
             {
                 var realName = (string)values[0];
 
                 var idNo = (string)values[1];
-                var member = Core.MemberManager.GetMember(realName, idNo);
+
+                var user = realName + "(" + idNo + ")：";
+
+                var member = Core.MemberManager.GetMember(idNo);
                 if (member == null)
                 {
+                    errors.Add(user + "用户不存在");
+                    continue;
+                }
+
+                var checkLogs = Core.CheckLogManager.GetList(member.ID, CheckType.Exam);
+                var approvaled = checkLogs.Any(e => e.Result == true);
+                if (!approvaled)
+                {
+                    errors.Add(user + "未审批或为通过审批");
                     continue;
                 }
 
                 var examResult = Core.ExamManager.GetExamResult(examId, member.ID);
                 if (examResult == null)
                 {
+                    errors.Add(user + "未审批或为通过审批");
                     continue;
                 }
 
                 if (columns.Count > 2)
                 {
-                    try
+                    string notSignedSubject = null;
+                    for (var i = 2; i < columns.Count; i++)
                     {
-                        for (var i = 2; i < columns.Count; i++)
+                        var score = 0;
+                        if (values[i] != null)
                         {
-                            examResult.Scores += columns[i] + "\t" + values[i] + "\r\n";
+                            int.TryParse(values[i].ToString(), out score);
+                        }
+                        if (examResult.Subjects.Contains(columns[i]))
+                        {
+                            examResult.Scores += columns[i] + "\t" + score + "\r\n";
+                        }
+                        else
+                        {
+                            if(score>0)
+                            {
+                                notSignedSubject = columns[i];
+                            }
+                            break;
                         }
                     }
-                    catch { }
+
+                    if (!string.IsNullOrEmpty(notSignedSubject))
+                    {
+                        errors.Add(user + "没有申请科目" + notSignedSubject);
+                        continue;
+                    }
                 }
 
                 Core.ExamManager.ImportExamResult(examResult);
@@ -166,7 +201,7 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
 
             }
 
-            return JsonSuccess();
+            return JsonSuccess(errors);
         }
 
         [HttpGet]

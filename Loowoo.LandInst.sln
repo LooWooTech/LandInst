@@ -13,7 +13,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "dbscripts", "dbscripts", "{
 	ProjectSection(SolutionItems) = preProject
 		dbscripts\landinst.sql = dbscripts\landinst.sql
 		数据库文档.txt = 数据库文档.txt
-		dbscripts\考试成绩.xls = dbscripts\考试成绩.xls
 	EndProjectSection
 EndProject
 Global
