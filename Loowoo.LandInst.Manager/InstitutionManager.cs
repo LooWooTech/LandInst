@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 using Loowoo.LandInst.Model;
 using Loowoo.LandInst.Model.Filters;
 using Loowoo.LandInst.Common;
+using NPOI.HSSF.UserModel;
 
 namespace Loowoo.LandInst.Manager
 {
-    public class InstitutionManager : ManagerBase
+    public partial class InstitutionManager : ManagerBase
     {
         private string _cacheKey = "InstNames";
         private Dictionary<int, string> GetInstNames()
@@ -222,16 +223,6 @@ namespace Loowoo.LandInst.Manager
                 }
             }
         }
-
-        //public List<Shareholder> GetShareHolders(int id)
-        //{
-        //    return Core.InfoDataManager.GetModel<List<Shareholder>>(id, CheckType.Shareholder) ?? new List<Shareholder>();
-        //}
-
-        //public List<Certification> GetCertifications(int id)
-        //{
-        //    return Core.InfoDataManager.GetModel<List<Certification>>(id, CheckType.Certificatoin) ?? new List<Certification>();
-        //}
 
         public IEnumerable<CheckLog> GetProfileHistory(int instId)
         {

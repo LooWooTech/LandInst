@@ -4,6 +4,8 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Loowoo.LandInst.Model;
+using Loowoo.LandInst.Common;
+using System.IO;
 
 namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
 {
@@ -118,6 +120,28 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
         {
             ViewBag.List = Core.InstitutionManager.GetProfileHistory(Identity.UserID);
             return View();
+        }
+
+
+        public void Export(int checkLogId = 0)
+        {
+            var inst = GetCurrentInst();
+            if (inst == null)
+            {
+                throw new ArgumentException("没有找到这个机构");
+            }
+            var filePath = Request.MapPath("/templates/勘测机构导出模板.xls");
+            var profile = Core.InstitutionManager.GetExportProfile(inst.ID, checkLogId);
+
+            var excel = ExcelHelper.GetExcel(filePath);
+            Core.InstitutionManager.UpdateExcel(excel, profile);
+            var exportDatas = Core.InstitutionManager.GetExportData(profile);
+            var stream = excel.ToStream(exportDatas);
+
+            Response.ContentType = "application/vnd.ms-excel;charset=UTF-8";
+            Response.AddHeader("Content-Disposition", string.Format("attachment;filename={0}", HttpUtility.UrlEncode(inst.Name) + ".xls"));
+            Response.BinaryWrite(((MemoryStream)stream).GetBuffer());
+            Response.End();
         }
     }
 }

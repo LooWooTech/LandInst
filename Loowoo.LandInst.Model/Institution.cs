@@ -29,6 +29,7 @@ namespace Loowoo.LandInst.Model
         /// <summary>
         /// 机构名称
         /// </summary>
+        [MaxLength(255)]
         public string Name { get; set; }
 
         /// <summary>
@@ -36,18 +37,17 @@ namespace Loowoo.LandInst.Model
         /// </summary>
         public string RegistrationNo { get; set; }
 
+        [MaxLength(45)]
         public string City { get; set; }
 
         /// <summary>
         /// 法人代表
         /// </summary>
+        [MaxLength(45)]
         public string LegalPerson { get; set; }
-    }
 
-    public enum InstitutionType
-    {
-        土地规划 = 1,
-        土地勘测
+        [MaxLength(45)]
+        public string MobilePhone { get; set; }
     }
 
     [Flags]

@@ -51,7 +51,7 @@ namespace Loowoo.LandInst.Model
         /// <summary>
         /// 注册资金
         /// </summary>
-        public string RegisteredCapital { get; set; }
+        public int? RegisteredCapital { get; set; }
 
         /// <summary>
         /// 经营范围
@@ -103,9 +103,8 @@ namespace Loowoo.LandInst.Model
         /// <summary>
         /// 从事土地规划工作办公用房面积
         /// </summary>
-        public string OfficeArea { get; set; }
+        public int? OfficeArea { get; set; }
 
-        public string MobilePhone { get; set; }
         /// <summary>
         /// 传真电话
         /// </summary>

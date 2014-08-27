@@ -46,7 +46,7 @@
         @if (isViewPage)
         {
             <ul style="position: absolute; right: 10px; top: 0px;">
-                <a href="export?id=@(profile.ID)" class="btn btn-primary"><i class="glyphicon glyphicon-export"></i>导出资料</a>
+                <a href="export?id=@(profile.ID)&checkLogId=@(checkLog == null ? 0 : checkLog.ID)" class="btn btn-primary"><i class="glyphicon glyphicon-export"></i>导出资料</a>
             </ul>
         }
     </div>
@@ -325,7 +325,7 @@
                                 <input type="text" name="member.Birthday"  value="@(item.Birthday)" class="form-control input-sm datepicker"/>
                             </td>
                             <td><input type="text" name="member.IDno" value="@(item.IDNo)" class="form-control input-sm" /></td>
-@*                            <td>
+                            @*                            <td>
                                 <input type="text" name="member.CertificationNo"  value="@(item.CertificationNo)" class="form-control input-sm"/>
                             </td>*@
                             <td>
