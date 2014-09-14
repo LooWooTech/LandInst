@@ -250,7 +250,6 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
             if (member.InstitutionID != currentInst.ID && member.InstitutionID != 0)
             {
                 throw new HttpException(401, "你不能为此会员申请执业登记");
-                return JsonSuccess();
             }
 
             if (member.Status == MemberStatus.Practice)
@@ -261,6 +260,19 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
 
             Core.MemberManager.SubmitPractice(member, profile);
 
+            return JsonSuccess();
+        }
+
+        public ActionResult Delete(int memberId)
+        {
+            var currentInst = GetCurrentInst();
+            var member = Core.MemberManager.GetMember(memberId);
+            if (member == null || member.Status != MemberStatus.Normal || member.InstitutionID != currentInst.ID)
+            {
+                throw new Exception("该用户不能被删除");
+            }
+
+            Core.MemberManager.Delete(member.ID);
             return JsonSuccess();
         }
 

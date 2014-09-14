@@ -9,6 +9,11 @@
 
     CheckLog checkLog = ViewBag.CheckLog;
     InstitutionProfile profile = ViewBag.Profile ?? new InstitutionProfile();
+
+    if (isRegisterPage && checkLog != null && checkLog.Result == null && profile.Status == InstitutionStatus.Normal)
+    {
+        isViewPage = true;
+    }
     if (!isViewPage)
     {
         profile.ShareHolders.Add(new Shareholder());
@@ -21,7 +26,7 @@
 @if (checkLog != null)
 { 
     <div class="alert alert-@(checkLog.Result.HasValue ? (checkLog.Result.Value ? "success" : "danger") : "warning")">
-        贵机构已于“@(checkLog.CreateTime.ToString())”申请了“<b>@(checkLog.CheckType.GetDescription())</b>”，
+        贵机构已于“@(checkLog.CreateTime.ToString())”提交了“<b>@(checkLog.CheckType.GetDescription())</b>”，
         @if (checkLog.Result.HasValue)
         { 
             @:并且于“@(checkLog.UpdateTime.Value.ToString())”@Html.Raw(checkLog.Result.Value ? "“<b>通过审核</b>”" : "“<b>未通过审核</b>” ，审核意见：" + checkLog.Note)。
@@ -516,4 +521,14 @@
 
     </script>
 
+}
+else
+{
+    <script>
+        $(function () {
+            $("input,select", "#profile-form").each(function () {
+                $(this).attr("disabled", "disabled");
+            });
+        });
+    </script>
 }

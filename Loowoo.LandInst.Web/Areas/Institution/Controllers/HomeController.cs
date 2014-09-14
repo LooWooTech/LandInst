@@ -22,7 +22,7 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
                     currentInst.Status = InstitutionStatus.Registered;
                 }
                 ViewBag.CheckLog = checkLog;
-                ViewBag.Profile = Core.InstitutionManager.GetProfile(currentInst.ID);
+                ViewBag.Profile = Core.InstitutionManager.GetProfile(currentInst.ID) ?? new InstitutionProfile(currentInst);
             }
             else
             {

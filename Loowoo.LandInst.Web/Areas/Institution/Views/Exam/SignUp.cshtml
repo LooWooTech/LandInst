@@ -14,8 +14,8 @@
     ExamResult examResult = ViewBag.ExamResult;
     List<CheckLog> checkLogs = ViewBag.CheckLogs;
     MemberProfile member = ViewBag.MemberProfile;
-    List<ExamSubject> subjects = ViewBag.Subjects;
-    List<ExamSubject> signedSubjects = ViewBag.SignedSubjects;
+    List<ExamSubject> subjects = ViewBag.Subjects ?? new List<ExamSubject>();
+    List<ExamSubject> signedSubjects = ViewBag.SignedSubjects ?? new List<ExamSubject>();
 }
 @if (checkLogs != null && checkLogs.Count > 0)
 {
@@ -47,10 +47,13 @@
             <td colspan="3">
                 @foreach (var subject in subjects)
                 {
-                    var signed = signedSubjects != null && signedSubjects.Any(e => e != null && e.Name == subject.Name);
+                    if (subject != null)
+                    {
+                        var signed = signedSubjects != null && signedSubjects.Any(e => e != null && e.Name == subject.Name);
                     <div class="checkbox checkbox-inline">
                         <label><input type="checkbox" name="Subjects" value="@(subject.Name)" @(signed ? "checked=checked readonly=readonly" : null) />@(subject.Name)</label>
                     </div>
+                    }
                 }
 
             </td>

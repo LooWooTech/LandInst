@@ -136,7 +136,7 @@
                 <th>性别</th>
                 <th>出生年月</th>
                 <th>股份</th>
-                <th>手机</th>
+                <th>是否专业人员</th>
             </tr>
             @foreach (var sh in profile.ShareHolders)
             { 
@@ -145,7 +145,7 @@
                     <td>@(sh.Gender)</td>
                     <td>@(sh.Birthday)</td>
                     <td>@(sh.Shares)</td>
-                    <td>@(sh.Mobile)</td>
+                    <td>@(sh.Professionals.HasValue ? (sh.Professionals.Value ? "是" : "否") : "")</td>
                 </tr>
             }
         </table>

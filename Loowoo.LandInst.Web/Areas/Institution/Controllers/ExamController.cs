@@ -60,11 +60,13 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
                     var checkLogs = Core.CheckLogManager.GetList(memberId, CheckType.Exam);
                     var signedSubjects = checkLogs.Where(e => e.Result == true).Select(e => e.Data);
 
+                    if (!string.IsNullOrEmpty(exam.Subjects))
+                    {
 
-                    ViewBag.Subjects = exam.Subjects.Split(',').Where(name => !signedSubjects.Contains(name)).Select(name => Core.ExamManager.GetSubject(name)).ToList();
-                    //如果所有科目都已经报过，并且得到了批准，则不能再报名
-                    ViewBag.SignedSubjects = checkLogs.Where(e => !e.Result.HasValue).SelectMany(e => e.Data.Split(',')).Select(name => Core.ExamManager.GetSubject(name)).ToList();
-
+                        ViewBag.Subjects = exam.Subjects.Split(',').Where(name => !signedSubjects.Contains(name)).Select(name => Core.ExamManager.GetSubject(name)).ToList();
+                        //如果所有科目都已经报过，并且得到了批准，则不能再报名
+                        ViewBag.SignedSubjects = checkLogs.Where(e => !e.Result.HasValue).SelectMany(e => e.Data.Split(',')).Select(name => Core.ExamManager.GetSubject(name)).ToList();
+                    }
                     ViewBag.CheckLogs = checkLogs;
 
                     ViewBag.MemberProfile = Core.MemberManager.GetProfile(memberId);

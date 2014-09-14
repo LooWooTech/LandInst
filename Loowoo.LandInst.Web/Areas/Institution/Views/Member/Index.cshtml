@@ -26,29 +26,31 @@
         <th style="width: 120px;">出生年月</th>
         <th style="width: 150px;">专业</th>
         <th style="width: 150px;">学历</th>
-        <th style="width:100px;">状态</th>
+        <th style="width: 100px;">状态</th>
         <th style="width: 150px;">管理</th>
     </tr>
     @foreach (var item in list)
     { 
         <tr>
-            <td><a href="/institution/member/profile?id=@(item.ID)">@(string.IsNullOrEmpty(item.RealName)?"[无名氏]":item.RealName)</a> @Html.Raw(item.InstitutionID == 0 ? "<span class=\"label label-warning\">外</span>" : null)</td>
+            <td><a href="/institution/member/profile?id=@(item.ID)">@(string.IsNullOrEmpty(item.RealName) ? "[无名氏]" : item.RealName)</a> @Html.Raw(item.InstitutionID == 0 ? "<span class=\"label label-warning\">外</span>" : null)</td>
             <td>@(item.Gender)</td>
             <td>@(item.Birthday.HasValue ? item.Birthday.Value.ToShortDateString() : null)</td>
             <td>@(item.Major == 0 ? "" : item.Major.ToString())</td>
             <td>@(item.EduRecord == 0 ? "" : item.EduRecord.ToString())</td>
             <td>@(item.Status.GetDescription())</td>
             <td>
-                <a href="/institution/member/edit?id=@(item.ID)" class="btn btn-xs btn-primary"><i class="glyphicon glyphicon-edit"></i>&nbsp;资料变更</a>
                 @if (item.Status == MemberStatus.Normal)
                 {
-                    <a href="/institution/exam/signup?memberId=@(item.ID)" class="btn btn-xs btn-warning"><i class="glyphicon glyphicon-pencil"></i>&nbsp;培训</a>
+                    <a href="/institution/member/edit?id=@(item.ID)" class="btn btn-xs btn-default"><i class="glyphicon glyphicon-edit"></i>&nbsp;修改资料</a>
+                    <a href="/institution/exam/signup?memberId=@(item.ID)" class="btn btn-xs btn-primary"><i class="glyphicon glyphicon-pencil"></i>&nbsp;培训</a>
+                    <a href="/institution/member/delete?memberId=@(item.ID)" class="btn btn-xs btn-danger btn-delete"><i class="glyphicon glyphicon-delete"></i>&nbsp;删除</a>
                 }
                 else
                 {
-                <a href="/institution/member/practice?memberId=@(item.ID)" class="btn btn-xs btn-success"><i class="glyphicon glyphicon-ok"></i>&nbsp;执业</a>
+                    <a href="/institution/member/edit?id=@(item.ID)" class="btn btn-xs btn-primary"><i class="glyphicon glyphicon-edit"></i>&nbsp;资料变更</a>
+                    <a href="/institution/member/practice?memberId=@(item.ID)" class="btn btn-xs btn-success"><i class="glyphicon glyphicon-ok"></i>&nbsp;执业</a>
+                    <a href="/institution/member/transferout?memberId=@(item.ID)" class="btn btn-xs btn-warning"><i class="glyphicon glyphicon-transfer"></i>&nbsp;转出</a>
                 }
-                <a href="/institution/member/transferout?memberId=@(item.ID)" class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-transfer"></i>&nbsp;转出</a>
             </td>
         </tr>
     }
@@ -56,47 +58,19 @@
         <td colspan="7">@Html.Partial("_pagination", ViewBag.Page as object)</td>
     </tr>
 </table>
-
-@*<input type="button" value="转入会员" class="btn btn-primary" data="transfer-in" />
-
-<input type="button" value="转出会员" class="btn btn-primary" data="transfer-out" />
-
-<input type="button" value="执业登记" class="btn btn-primary" data="practice" />*@
-
-@*<script>
+<script>
     $(function () {
-        $("#btn-select").click(function () {
-            $("input[type='checkbox']").prop('checked', this.checked);
-        });
+        $(".btn-delete").bind("click", function () {
+            if (!confirm("你确认要删除该会员么？")) return false;
 
-
-        $(".btn-primary").click(function () {
-            var data = $(this).attr("data");
-            var ids = getSelected();
-            if (!ids) {
-                alert("没有选择会员");
-                return;
-            }
-            switch (data) {
-                case "transfer-in":
-                case "transfer-out":
-                    window.location.href = "/institution/member/transfer?mode=" + data + "&id=" + ids;
-                    break;
-                case "practice":
-                    window.location.href = "/institution/member/practice?id=" + ids;
-                    break;
-            }
-        });
-
-        function getSelected() {
-            var ids = [];
-            $("input[name='id']:checked").each(function () {
-                var val = $(this).val();
-                ids.push(val);
-
+            var href = $(this).attr("href");
+            $.request(href, null, function () {
+                alert("用户已删除");
+                window.location.href = "@(Request.Url.AbsoluteUri)";
             });
 
-            return ids.join();
-        }
+            return false;
+        });
+
     });
-</script>*@
+</script>

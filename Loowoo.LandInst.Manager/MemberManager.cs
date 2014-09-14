@@ -146,7 +146,14 @@ namespace Loowoo.LandInst.Manager
             var member = Core.MemberManager.GetMember(memberId);
             if (member == null) return null;
             var profile = Core.ProfileManager.GetLastProfile<MemberProfile>(memberId);
-            profile.SetMemberField(member);
+            if (profile != null)
+            {
+                profile.SetMemberField(member);
+            }
+            else
+            {
+                profile = new MemberProfile(member);
+            }
             return profile;
             //if (memberId == 0) return null;
             //var checkLog = Core.CheckLogManager.GetLastLog(memberId, CheckType.Profile, checkResult);
@@ -391,6 +398,19 @@ namespace Loowoo.LandInst.Manager
             }
 
             return list;
+        }
+
+        public void Delete(int memberId)
+        {
+            using (var db = GetDataContext())
+            {
+                var entity = db.Members.FirstOrDefault(e => e.ID == memberId);
+                if (entity != null)
+                {
+                    db.Members.Remove(entity);
+                    db.SaveChanges();
+                }
+            }
         }
     }
 }
