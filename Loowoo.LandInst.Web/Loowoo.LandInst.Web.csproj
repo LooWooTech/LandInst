@@ -265,6 +265,7 @@
     <Content Include="templates\规划机构导入模板.xls" />
     <Content Include="templates\规划机构导出模板.xls" />
     <Content Include="templates\勘测机构导出模板.xls" />
+    <None Include="Properties\PublishProfiles\LandInst1.pubxml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
