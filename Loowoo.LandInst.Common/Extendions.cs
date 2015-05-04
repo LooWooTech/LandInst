@@ -56,5 +56,15 @@ namespace Loowoo.LandInst.Common
 
             return result;
         }
+
+        public static string ToHtml(this string str)
+        {
+            if (string.IsNullOrEmpty(str))
+            {
+                return null;
+            }
+
+            return str.Replace(" ", "&nbsp;").Replace("\n", "<br />");
+        }
     }
 }

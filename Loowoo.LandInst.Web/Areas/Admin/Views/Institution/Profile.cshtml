@@ -12,12 +12,15 @@
     <ul class="nav nav-tabs">
         <li class="active"><a href="#profile-basic" data-toggle="tab">基本资料</a></li>
         <li class=""><a href="#profile-member" data-toggle="tab">技术人员</a></li>
+        <li class=""><a href="#profile-summary" data-toggle="tab">执业情况</a></li>
+        <li class=""><a href="#profile-result" data-toggle="tab">经营业绩</a></li>
         <li class=""><a href="#profile-shareholders" data-toggle="tab">股东</a></li>
         <li class=""><a href="#profile-equipments" data-toggle="tab">主要技术装备</a></li>
         <li class=""><a href="#profile-softwares" data-toggle="tab">应用软件情况</a></li>
         <li class=""><a href="#profile-files" data-toggle="tab">证件扫描件</a></li>
         <li class=""><a href="#profile-history" data-toggle="tab">审核记录</a></li>
     </ul>
+
     <ul style="position: absolute; right: 10px; top: 0px;">
         <a href="export?id=@(profile.ID)&checkLogId=@(approval == null ? 0 : approval.ID)" class="btn btn-primary" target="_blank"><i class="glyphicon glyphicon-export"></i>导出资料</a>
     </ul>
@@ -45,7 +48,6 @@
                     @(profile.TechLeader)
                 </td>
             </tr>
-
             <tr>
                 <th>工商登记号</th>
                 <td>
@@ -64,6 +66,22 @@
                 <th>注册资金（万元）</th>
                 <td>
                     @(profile.RegisteredCapital)
+                </td>
+            </tr>
+            <tr>
+                <th>资质证书起始时间</th>
+                <td>
+                    @(profile.CertificationStartDate)
+                </td>
+                <th>资质证书编号</th>
+                <td>
+                    @(profile.CertificationNo)
+                </td>
+            </tr>
+            <tr>
+                <th>经营范围</th>
+                <td colspan="3">
+                    @(profile.BusinessScope)
                 </td>
             </tr>
             <tr>
@@ -127,7 +145,6 @@
                 <td>@(profile.Website)</td>
             </tr>
         </table>
-
     </div>
     <div class="tab-pane fade" id="profile-shareholders">
         <table class="table table-bordered">
@@ -139,7 +156,7 @@
                 <th>是否专业人员</th>
             </tr>
             @foreach (var sh in profile.ShareHolders)
-            { 
+            {
                 <tr>
                     <td>@(sh.Name)</td>
                     <td>@(sh.Gender)</td>
@@ -159,7 +176,7 @@
                 <th>生产厂商</th>
             </tr>
             @foreach (var item in profile.Equipments)
-            { 
+            {
                 <tr>
                     <td>@(item.Name)</td>
                     <td>@(item.Number)</td>
@@ -179,7 +196,7 @@
                 <th>详情</th>
             </tr>
             @foreach (var checkLog in checkLogs)
-            { 
+            {
                 <tr>
                     <td>@(checkLog.CheckType.GetDescription())</td>
                     <td>@(checkLog.CreateTime.ToShortDateString())</td>
@@ -188,12 +205,12 @@
                         @if (checkLog.Result.HasValue)
                         {
                             if (checkLog.Result.Value)
-                            { 
-                            <span class="label label-success">审核通过</span>
+                            {
+                                <span class="label label-success">审核通过</span>
                             }
                             else
                             {
-                            <span class="label label-warning">审核不通过</span>
+                                <span class="label label-warning">审核不通过</span>
                             }
                         }
                         else
@@ -201,10 +218,12 @@
                             <span class="label label-default">尚未审核</span>
                         }
                     </td>
-                    <td>@if (checkLog.CheckType == CheckType.Profile || checkLog.CheckType == CheckType.Annual)
-                        { 
-                        <a href="?id=@(checkLog.UserID)&checkLogId=@(checkLog.ID)" class="btn btn-xs btn-primary">历史资料</a>
-                        }</td>
+                    <td>
+                        @if (checkLog.CheckType == CheckType.Profile || checkLog.CheckType == CheckType.Annual)
+                        {
+                            <a href="?id=@(checkLog.UserID)&checkLogId=@(checkLog.ID)" class="btn btn-xs btn-primary">历史资料</a>
+                        }
+                    </td>
                 </tr>
             }
         </table>
@@ -219,7 +238,7 @@
                 <th>学历</th>
             </tr>
             @foreach (var member in members)
-            { 
+            {
                 <tr>
                     <td><a href="../member/profile?id=@(member.ID)">@(member.RealName)</a></td>
                     <td>@(member.Gender)</td>
@@ -256,7 +275,8 @@
         {
             <div class="col-lg-2">
                 <a href="@(file.SavePath)" target="_blank" title="@(file.FileName)">
-                    <img src="@(file.SavePath)" class="img-preview" /></a>
+                    <img src="@(file.SavePath)" class="img-preview" />
+                </a>
             </div>
             <div class="col-lg-4">
                 <b>证件名称</b>@file.FileName
@@ -265,5 +285,57 @@
             </div>
         }
     </div>
+    <div class="tab-pane fade" id="profile-summary">
+        <table class="table table-bordered" >
+            <tr>
+                <th style="width: 150px;">从业人员操守（有无违规违纪情况）</th>
+                <td>
+                    @Html.Raw(profile.AnnualCheckProfile.EmployeeConduct.ToHtml())
+                </td>
+            </tr>
+            <tr>
+                <th style="width: 150px;">中介机构收费标准执行情况</th>
+                <td>
+                    @Html.Raw(profile.AnnualCheckProfile.StandardsImplementation.ToHtml())
+                </td>
+            </tr>
+            <tr>
+                <th style="width: 150px;">经营情况及主要业绩</th>
+                <td>
+                    @Html.Raw(profile.AnnualCheckProfile.BusinessSituation.ToHtml())
+                </td>
+            </tr>
+            <tr>
+                <th style="width: 150px;">获奖与投诉情况</th>
+                <td>
+                    @Html.Raw(profile.AnnualCheckProfile.AwardsAndComplaints.ToHtml())
+                </td>
+            </tr>
+            <tr>
+                <th style="width: 150px;">年度总结</th>
+                <td>
+                    @Html.Raw(profile.AnnualCheckProfile.Summary.ToHtml())
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="tab-pane fade" id="profile-result">
+        <table class="table table-bordered">
+            <tr>
+                <th>类别</th>
+                <th>件数</th>
+                <th>营收</th>
+            </tr>
+            @foreach (var item in profile.AnnualCheckProfile.Results)
+            {
+                <tr>
+                    <td>@(item.Category)</td>
+                    <td>@(item.Number)</td>
+                    <td>@(item.Income)</td>
+                </tr>
+            }
+        </table>
+    </div>
+
 </div>
 @Html.Partial("_approvalForm", approval)

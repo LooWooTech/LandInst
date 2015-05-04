@@ -248,7 +248,7 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
                 var user = new User
                 {
                     Username = profile.Name,
-                    Password = password.MD5(),
+                    Password = password,
                     Role = UserRole.Institution,
                 };
 
@@ -271,6 +271,10 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
             }
             var filePath = Request.MapPath("/templates/规划机构导出模板.xls");
             var exportData = Core.InstitutionManager.GetExportData(id, checkLogId);
+            if (exportData == null)
+            {
+                throw new Exception("该机构还未通过审核");
+            }
             var stream = NOPIHelper.WriteCell(filePath, exportData);
             Response.ContentType = "application/vnd.ms-excel;charset=UTF-8";
             Response.AddHeader("Content-Disposition", string.Format("attachment;filename={0}", HttpUtility.UrlEncode(inst.Name) + ".xls"));

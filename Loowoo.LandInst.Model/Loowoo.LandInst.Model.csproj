@@ -63,6 +63,7 @@
     <Compile Include="Filters\MemberFilter.cs" />
     <Compile Include="Filters\PageFilter.cs" />
     <Compile Include="Institution.cs" />
+    <Compile Include="AnnualCheckProfile.cs" />
     <Compile Include="InstitutionProfile.cs" />
     <Compile Include="CheckLog.cs" />
     <Compile Include="Job.cs" />

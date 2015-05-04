@@ -112,6 +112,7 @@
     <Compile Include="Areas\Institution\Controllers\HomeController.cs" />
     <Compile Include="Areas\Institution\Controllers\MemberController.cs" />
     <Compile Include="Areas\Institution\Controllers\ProfileController.cs" />
+    <Compile Include="Areas\Institution\Controllers\RequestHelper.cs" />
     <Compile Include="Areas\Institution\InstitutionAreaRegistration.cs" />
     <Compile Include="Areas\Institution\InstitutionControllerBase.cs" />
     <Compile Include="Common\UserPrincipal.cs" />

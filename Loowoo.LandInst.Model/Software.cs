@@ -18,32 +18,5 @@ namespace Loowoo.LandInst.Model
 
         public string Note { get; set; }
 
-        public static List<Software> GetList(NameValueCollection requestForm)
-        {
-            var list = new List<Software>();
-            try
-            {
-                var softwareNames = requestForm["software.Name"].Split(',');
-                var softwareNumbers = requestForm["software.Number"].Split(',');
-                var softwareSources = requestForm["software.Source"].Split(',');
-                var softwarePurposes = requestForm["software.Purpose"].Split(',');
-                var softwareNotes = requestForm["software.Note"].Split(',');
-                for (var i = 0; i < softwareNames.Length; i++)
-                {
-                    var number = 0;
-                    int.TryParse(softwareNames[i], out number);
-                    list.Add(new Software
-                    {
-                        Name = softwareNames[i],
-                        Number = number,
-                        Source = softwareSources[i],
-                        Purpose = softwarePurposes[i],
-                        Note = softwareNotes[i]
-                    });
-                }
-            }
-            catch { }
-            return list;
-        }
     }
 }

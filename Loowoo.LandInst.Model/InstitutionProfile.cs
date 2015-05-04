@@ -17,6 +17,7 @@ namespace Loowoo.LandInst.Model
             Equipments = new List<Equipment>();
             Softwares = new List<Software>();
             Files = new List<UploadFile>();
+            AnnualCheckProfile = new Model.AnnualCheckProfile();
         }
 
         public InstitutionProfile(Institution inst)
@@ -55,14 +56,11 @@ namespace Loowoo.LandInst.Model
         public int? RegisteredCapital { get; set; }
 
         /// <summary>
-        /// 经营范围
+        /// 注册的执业范围
         /// </summary>
         public string BusinessScope { get; set; }
 
-        /// <summary>
-        /// 注册证书号
-        /// </summary>
-        public string CertificateNo { get; set; }
+        public AnnualCheckProfile AnnualCheckProfile { get; set; }
 
         /// <summary>
         /// 利税总额
@@ -160,6 +158,17 @@ namespace Loowoo.LandInst.Model
         /// 中级及以上专业人员数
         /// </summary>
         public int? ExpertMembers { get; set; }
+
+
+        /// <summary>
+        /// 资质证书起始时间
+        /// </summary>
+        public DateTime? CertificationStartDate { get; set; }
+        
+        /// <summary>
+        /// 资质证书编号
+        /// </summary>
+        public string CertificationNo { get; set; }
 
         /// <summary>
         /// 成立日期
