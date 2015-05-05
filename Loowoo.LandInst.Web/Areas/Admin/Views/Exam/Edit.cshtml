@@ -71,7 +71,7 @@
             $.post("/admin/exam/edit?id=@(model.ID)", data, function (json) {
                 if (json.result) {
                     alert("保存成功");
-                    window.localtion.href = "/admin/exam/";
+                    window.location.href = "/admin/exam/";
                 }
             }, "json");
 

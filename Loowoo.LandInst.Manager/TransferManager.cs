@@ -25,7 +25,7 @@ namespace Loowoo.LandInst.Manager
 
         public void ApprovalTransfer(CheckLog checkLog)
         {
-            if (checkLog == null || checkLog.Checked) return;
+            if (checkLog == null) return;
             using (var db = GetDataContext())
             {
                 var entity = db.Members.FirstOrDefault(e => e.ID == checkLog.UserID);

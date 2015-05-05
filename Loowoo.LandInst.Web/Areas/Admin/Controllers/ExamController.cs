@@ -139,7 +139,7 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
             {
                 var realName = (string)values[0];
 
-                var idNo = (string)values[1];
+                var idNo = Convert.ToString(values[1]);
 
                 var user = realName + "(" + idNo + ")：";
 
@@ -151,17 +151,25 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
                 }
 
                 var checkLogs = Core.CheckLogManager.GetList(member.ID, CheckType.Exam);
-                var approvaled = checkLogs.Any(e => e.Result == true);
-                if (!approvaled)
+                var approvaled = checkLogs.FirstOrDefault(e => e.Result == true);
+                if (approvaled == null)
                 {
-                    errors.Add(user + "未审批或为通过审批");
+                    errors.Add(user + "报名培训未通过审批");
                     continue;
                 }
 
                 var examResult = Core.ExamManager.GetExamResult(examId, member.ID);
                 if (examResult == null)
                 {
-                    errors.Add(user + "未审批或为通过审批");
+                    //var exam = Core.ExamManager.GetExam(examId);
+                    //Core.ExamManager.ImportExamResult(new ExamResult
+                    //{
+                    //    ExamID = examId,
+                    //    MemberID = member.ID,
+                    //    CreateTime = approvaled.UpdateTime.Value,
+                    //    Subjects = exam.Subjects,
+                    //});
+                    errors.Add(user + "未找到成绩单");
                     continue;
                 }
 
@@ -181,7 +189,7 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
                         }
                         else
                         {
-                            if(score>0)
+                            if (score > 0)
                             {
                                 notSignedSubject = columns[i];
                             }
@@ -192,7 +200,7 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
                     if (!string.IsNullOrEmpty(notSignedSubject))
                     {
                         errors.Add(user + "没有申请科目" + notSignedSubject);
-                        continue;
+                        //continue;
                     }
                 }
 

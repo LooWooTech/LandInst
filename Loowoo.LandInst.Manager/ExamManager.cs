@@ -256,10 +256,6 @@ namespace Loowoo.LandInst.Manager
         {
             if (checkLog == null) return;
 
-            if (checkLog.Result.HasValue) return;
-
-            Core.CheckLogManager.UpdateCheckLog(checkLog);
-
             if (checkLog.Result == true)
             {
                 var member = Core.MemberManager.GetMember(checkLog.UserID);

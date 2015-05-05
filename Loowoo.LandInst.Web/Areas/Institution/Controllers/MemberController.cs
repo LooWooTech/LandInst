@@ -50,16 +50,7 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
                 return JsonSuccess();
             }
 
-            if (type.Value == CheckType.Profile)
-            {
-                Core.MemberManager.SubmitProfile(member, profile);
-
-            }
-            else if (type.Value == CheckType.Practice)
-            {
-                Core.MemberManager.SubmitPractice(member, profile);
-            }
-            else
+            if (type == null)
             {
                 //没参加考试的用户可以随时变更资料 不需要审核
                 if (member.Status == MemberStatus.Normal)
@@ -67,6 +58,15 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
                     Core.MemberManager.UpdateMember(member);
                 }
                 Core.MemberManager.SaveProfile(member, profile);
+            }
+            else if (type.Value == CheckType.Profile)
+            {
+                Core.MemberManager.SubmitProfile(member, profile);
+
+            }
+            else if (type.Value == CheckType.Practice)
+            {
+                Core.MemberManager.SubmitPractice(member, profile);
             }
 
             return JsonSuccess();

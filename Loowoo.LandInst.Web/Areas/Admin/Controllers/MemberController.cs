@@ -160,6 +160,7 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
             checkLog.Note = data.Note;
             checkLog.Result = data.Result;
             Core.CheckLogManager.UpdateCheckLog(checkLog);
+            
             switch (checkLog.CheckType)
             {
                 case CheckType.Exam:

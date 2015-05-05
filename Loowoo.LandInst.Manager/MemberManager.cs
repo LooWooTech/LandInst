@@ -58,8 +58,8 @@ namespace Loowoo.LandInst.Manager
 
         public void ApprovalMember(CheckLog checkLog)
         {
-            if (!checkLog.Result.HasValue) return;
-            if (checkLog.Result.Value == true)
+            if (checkLog == null) return;
+            if (checkLog.Result == true)
             {
                 var profile = Core.MemberManager.GetProfile(checkLog);
                 if (profile == null) return;
