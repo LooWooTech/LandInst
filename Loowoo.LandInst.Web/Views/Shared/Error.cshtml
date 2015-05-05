@@ -10,13 +10,16 @@
     else
     {
         ViewBag.Title = "程序异常";
-    <div>
-        @(ex.Message)
-    </div>
-    <script>
-        $(function () {
-            $("#main-panel").removeClass("panel-default").addClass("panel-danger");
-        });
-    </script>
+        <div>
+            @(ex.Message)
+        </div>
+        <!--
+        @(ex.StackTrace)
+        -->
+        <script>
+            $(function () {
+                $("#main-panel").removeClass("panel-default").addClass("panel-danger");
+            });
+        </script>
     }
 }

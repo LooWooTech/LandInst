@@ -44,8 +44,9 @@
         <ul class="nav nav-tabs">
             @if (isAnnualPage)
             {
-                <li class="active"><a href="#profile-summary" data-toggle="tab"><i class="glyphicon glyphicon-check"></i>&nbsp;年度总结</a></li>
+                <li class="active"><a href="#profile-basic" data-toggle="tab"><i class="glyphicon glyphicon-list-alt"></i>&nbsp;机构资料</a></li>
                 <li class=""><a href="#profile-result" data-toggle="tab"><i class="glyphicon glyphicon-check"></i>&nbsp;经营业绩表</a></li>
+                <li><a href="#profile-summary" data-toggle="tab"><i class="glyphicon glyphicon-time"></i>&nbsp;年度总结</a></li>
             }
             else
             {
@@ -68,33 +69,109 @@
     <div class="tab-content">
         @if (isAnnualPage)
         {
-            <div id="profile-summary" class="tab-pane fade active in">
+            <div id="profile-basic" class="tab-pane fade active in">
+                <div id="profile-basic-readonly">
+                    <div class="form-group ">
+                        <label class="control-label col-lg-2">机构名称</label>
+                        <div class="col-lg-3">
+                            <input type="text" name="Name" class="form-control input-sm" value="@(profile.Name)" />
+                        </div>
+                        <label class="control-label col-lg-2">法人代表</label>
+                        <div class="col-lg-3">
+                            <input type="text" name="LegalPerson" class="form-control input-sm" value="@(profile.LegalPerson)" />
+                        </div>
+                    </div>
+                    <div class="form-group ">
+                        <label class="control-label col-lg-2">机构地址</label>
+                        <div class="col-lg-8">
+                            <input type="text" name="CompanyType" class="form-control input-sm" value="@(profile.CompanyType)" />
+                        </div>
+                    </div>
+                    <div class="form-group ">
+                        <label class="control-label col-lg-2">办公电话</label>
+                        <div class="col-lg-3">
+                            <input type="text" name="LegalPerson" class="form-control input-sm" value="@(profile.Tel)" />
+                        </div>
+                        <label class="control-label col-lg-2">手机号码</label>
+                        <div class="col-lg-3">
+                            <input type="text" name="LegalPerson" class="form-control input-sm" value="@(profile.MobilePhone)" />
+                        </div>
+                    </div>
+                    <div class="form-group ">
+                        <label class="control-label col-lg-2">机构类型</label>
+                        <div class="col-lg-3">
+                            <input type="text" name="LegalPerson" class="form-control input-sm" value="@(profile.CompanyType)" />
+                        </div>
+                        <label class="control-label col-lg-2">传真</label>
+                        <div class="col-lg-3">
+                            <input type="text" name="LegalPerson" class="form-control input-sm" value="@(profile.Fax)" />
+                        </div>
+                    </div>
+                    <div class="form-group ">
+                        <label class="control-label col-lg-2">工商注册号</label>
+                        <div class="col-lg-3">
+                            <input type="text" name="LegalPerson" class="form-control input-sm" value="@(profile.RegistrationNo)" />
+                        </div>
+                        <label class="control-label col-lg-2">成立时间</label>
+                        <div class="col-lg-3">
+                            <input type="text" name="LegalPerson" class="form-control input-sm" value="@(profile.EstablishedDate.HasValue ? profile.EstablishedDate.Value.ToString("yyyy年mm月dd日") : null)" />
+                        </div>
+                    </div>
+                    <div class="form-group ">
+                        <label class="control-label col-lg-2">资质证书编号</label>
+                        <div class="col-lg-3">
+                            <input type="text" name="LegalPerson" class="form-control input-sm" value="@(profile.CertificationNo)" />
+                        </div>
+                        <label class="control-label col-lg-2">资质证书起始时间</label>
+                        <div class="col-lg-3">
+                            <input type="text" name="LegalPerson" class="form-control input-sm" value="@(profile.CertificationStartDate.HasValue ? profile.CertificationStartDate.Value.ToString("yyyy年mm月dd日") : null)" />
+                        </div>
+                    </div>
+                    <div class="form-group ">
+                        <label class="control-label col-lg-2">从业人员数</label>
+                        <div class="col-lg-2">
+                            <input type="text" name="LegalPerson" class="form-control input-sm" value="@(profile.TotalMembers)" />
+                        </div>
+                        <label class="control-label col-lg-3">其中：取得职业培训合格证人数</label>
+                        <div class="col-lg-2">
+                            <input type="text" name="LegalPerson" class="form-control input-sm" value="@(profile.ProMembers)" />
+                        </div>
+                    </div>
+                    <div class="form-group ">
+                        <label class="control-label col-lg-2">注册职业范围</label>
+                        <div class="col-lg-9">
+                            <input type="text" name="LegalPerson" class="form-control input-sm" value="@(profile.BusinessScope)" />
+                        </div>
+                    </div>
+              </div>
                 <div class="form-group ">
-                    <label class="control-label col-lg-3">从业人员操守</label>
-                    <div class="col-lg-8">
+                    <label class="control-label col-lg-2">从业人员操守</label>
+                    <div class="col-lg-9">
                         <textarea name="EmployeeConduct" class="form-control input-sm" rows="3">@(profile.AnnualCheckProfile.EmployeeConduct)</textarea>
                     </div>
                 </div>
                 <div class="form-group ">
-                    <label class="control-label col-lg-3">中介机构收费标准执行情况</label>
-                    <div class="col-lg-8">
+                    <label class="control-label col-lg-2">中介机构收费标准执行情况</label>
+                    <div class="col-lg-9">
                         <textarea name="StandardsImplementation" class="form-control input-sm" rows="3">@(profile.AnnualCheckProfile.StandardsImplementation)</textarea>
                     </div>
                 </div>
                 <div class="form-group ">
-                    <label class="control-label col-lg-3">经营情况及主要业绩</label>
-                    <div class="col-lg-8">
+                    <label class="control-label col-lg-2">经营情况及主要业绩</label>
+                    <div class="col-lg-9">
                         <textarea name="BusinessSituation" class="form-control input-sm" rows="3">@(profile.AnnualCheckProfile.BusinessSituation)</textarea>
                     </div>
                 </div>
                 <div class="form-group ">
-                    <label class="control-label col-lg-3">获奖与投诉情况</label>
-                    <div class="col-lg-8">
+                    <label class="control-label col-lg-2">获奖与投诉情况</label>
+                    <div class="col-lg-9">
                         <textarea name="AwardsAndComplaints" class="form-control input-sm" rows="3">@(profile.AnnualCheckProfile.AwardsAndComplaints)</textarea>
                     </div>
                 </div>
+            </div>
+            <div id="profile-summary" class="tab-pane fade">
                 <div class="form-group ">
-                    <label class="control-label col-lg-3">年度总结</label>
+                    <label class="control-label col-lg-2">年度总结</label>
                     <div class="col-lg-8">
                         <textarea name="Summary" class="form-control input-sm" rows="20">@(profile.AnnualCheckProfile.Summary)</textarea>
                     </div>
@@ -208,7 +285,7 @@
                     </div>
                 </div>
                 <div class="form-group ">
-                    <label class="control-label col-lg-3">经营范围</label>
+                    <label class="control-label col-lg-2">经营范围</label>
                     <div class="col-lg-8">
                         <input type="text" name="BusinessScope" class="form-control input-sm" value="@(profile.BusinessScope)" />
                     </div>
@@ -516,7 +593,7 @@
             <button id="btn-submit-draft" type="button" class="btn btn-primary"><i class="glyphicon glyphicon-floppy-saved"></i>&nbsp;保存资料</button>
             @if (isAnnualPage)
             {
-                <button id="btn-submit-annual" type="button" class="btn btn-success"><i class="glyphicon glyphicon-ok"></i>&nbsp;提交年检申请</button>
+                <button id="btn-submit-annual" type="button" class="btn btn-success"><i class="glyphicon glyphicon-ok"></i>&nbsp;@(checkLog == null ? "提交年检申请" : "修改年检申请")</button>
             }
             else
             {

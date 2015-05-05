@@ -6,26 +6,45 @@
     CheckLog checkLog = ViewBag.CheckLog;
     if (annualCheck == null)
     {
-    <div class="alert alert-warning">
-        当前没有年检审核，如需修改资料，请点击<a href="edit" class="btn btn-primary btn-xs">资料变更</a>
-    </div>
+        <div class="alert alert-warning">
+            当前没有年检审核，如需修改资料，请点击<a href="edit" class="btn btn-primary btn-xs">资料变更</a>
+        </div>
         return;
     }
 }
-@if (checkLog == null)
+@if (checkLog == null || checkLog.Result == false)
 {
     <div class="alert alert-warning">
         现在是<span class="label label-warning">@(annualCheck.Name)</span>期间，
-    年检时间段： <b>“@(annualCheck.StartDate.ToShortDateString()) ~ @(annualCheck.EndDate.ToShortDateString())”</b>，
-    请提交年检资料审核！
+        年检时间段： <b>“@(annualCheck.StartDate.ToShortDateString()) ~ @(annualCheck.EndDate.ToShortDateString())”</b>，
+        请提交年检资料审核。<b>如果需要修改基本资料，请提交资料变更申请。</b>
+
     </div>
+}
+else
+{
+    ViewBag.IsViewPage = 1;
 }
 
 @Html.Partial("_ProfileForm")
-<script>
-    $(function () {
-        $("#profile-basic input,#profile-basic select").each(function () {
-            $(this).attr("readonly", "readonly");
+@if (checkLog != null && checkLog.Result == true)
+{
+    <script>
+        $(function () {
+            $("#profile-form input,#profile-form select,#profile-form textarea").each(function () {
+                $(this).attr("readonly", "readonly");
+            });
+            $("#btn-group").hide();
         });
-    });
-</script>
+    </script>
+}
+else
+{
+    <script>
+        $(function () {
+            $("#profile-basic-readonly input,#profile-form-readonly select,#profile-form-readonly textarea").each(function () {
+                $(this).attr("readonly", "readonly");
+            });
+        });
+    </script>
+}
