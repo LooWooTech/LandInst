@@ -38,7 +38,59 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
             catch { }
             return model;
         }
-        
+
+        public static List<MemberProfile> GetMembers(this NameValueCollection requestForm)
+        {
+            var list = new List<MemberProfile>();
+            try
+            {
+                var realnames = requestForm["Members.RealName"].Split(',');
+                var genders = requestForm["Members.Gender"].Split(',');
+                var idnos = requestForm["Members.IDNo"].Split(',');
+                var eduRecords = requestForm["Members.EduRecord"].Split(',');
+                var majors = requestForm["Members.Major"].Split(',');
+                var professionalLevels = requestForm["Members.ProfessionalLevel"].Split(',');
+                var titles = requestForm["Members.Title"].Split(',');
+                var certificationNOs = requestForm["Members.CertificationNO"].Split(',');
+                var startWorkingDates = requestForm["Members.StartWorkingDate"].Split(',');
+                var conducts = requestForm["Members.Conduct"].Split(',');
+
+                for (var i = 0; i < realnames.Length; i++)
+                {
+                    var eduRecord = EduRecord.本科;
+                    Enum.TryParse<EduRecord>(eduRecords[i], out eduRecord);
+
+                    var major = Major.无;
+                    Enum.TryParse<Major>(eduRecords[i], out major);
+
+                    var professionalLevel = ProfessionalLevel.初级;
+                    Enum.TryParse<ProfessionalLevel>(professionalLevels[i], out professionalLevel);
+
+                    DateTime startWorkingDate;
+                    DateTime.TryParse(startWorkingDates[i], out startWorkingDate);
+
+                    list.Add(new MemberProfile
+                    {
+                        RealName = realnames[i],
+                        Gender = genders[i],
+                        IDNo = idnos[i],
+                        EduRecord = eduRecord,
+                        Major = major,
+                        ProfessionalLevel = professionalLevel,
+                        Title = titles[i],
+                        CertificationNO = certificationNOs[i],
+                        StartWorkingDate = startWorkingDate == DateTime.MinValue ? default(DateTime?) : startWorkingDate,
+                        Conduct = conducts[i]
+                    });
+                }
+            }
+            catch
+            {
+
+            }
+            return list;
+        }
+
         public static List<UploadFile> GetUploadFiles(this NameValueCollection requestForm)
         {
             var list = new List<UploadFile>();
@@ -63,7 +115,7 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
 
             return list;
         }
-        
+
         public static List<Software> GetSoftwares(this NameValueCollection requestForm)
         {
             var list = new List<Software>();
@@ -91,7 +143,7 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
             catch { }
             return list;
         }
-        
+
         public static List<Equipment> GetEquipments(this NameValueCollection requestForm)
         {
             var list = new List<Equipment>();
@@ -122,7 +174,7 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
 
             return list;
         }
-        
+
         public static List<Shareholder> GetShareholders(this NameValueCollection requestForm)
         {
             var list = new List<Shareholder>();

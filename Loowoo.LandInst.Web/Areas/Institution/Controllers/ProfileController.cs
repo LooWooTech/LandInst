@@ -67,6 +67,7 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
             {
                 var profile = Core.InstitutionManager.GetProfile(inst.ID);
                 profile.AnnualCheckProfile = Request.Form.GetAnnualProfile();
+                profile.Members = Request.Form.GetMembers();
                 Core.InstitutionManager.SubmitAnnaulCheck(inst, profile);
             }
             else
@@ -76,6 +77,8 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
                 data.Equipments = Request.Form.GetEquipments();
                 data.Softwares = Request.Form.GetSoftwares();
                 data.Files = Request.Form.GetUploadFiles();
+                data.Members = Request.Form.GetMembers();
+
                 if (type == CheckType.Profile)
                 {
                     Core.InstitutionManager.SubmitProfile(inst, data);

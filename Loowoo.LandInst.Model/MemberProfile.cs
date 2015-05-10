@@ -107,7 +107,6 @@ namespace Loowoo.LandInst.Model
         /// </summary>
         public List<Job> Jobs { get; set; }
 
-
         #region 执业资料
 
         /// <summary>
@@ -157,5 +156,7 @@ namespace Loowoo.LandInst.Model
 
         #endregion
 
+
+        public string Conduct { get; set; }
     }
 }

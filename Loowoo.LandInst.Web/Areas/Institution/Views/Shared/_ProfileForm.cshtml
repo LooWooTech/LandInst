@@ -16,6 +16,7 @@
     }
     if (!isViewPage)
     {
+        profile.Members.Add(new MemberProfile());
         profile.ShareHolders.Add(new Shareholder());
         profile.Equipments.Add(new Equipment());
         profile.Softwares.Add(new Software());
@@ -46,13 +47,15 @@
             {
                 <li class="active"><a href="#profile-basic" data-toggle="tab"><i class="glyphicon glyphicon-list-alt"></i>&nbsp;机构资料</a></li>
                 <li class=""><a href="#profile-result" data-toggle="tab"><i class="glyphicon glyphicon-check"></i>&nbsp;经营业绩表</a></li>
+                <li class=""><a href="#profile-members" data-toggle="tab"><i class="glyphicon glyphicon-user"></i>&nbsp;从业人员</a></li>
                 <li><a href="#profile-summary" data-toggle="tab"><i class="glyphicon glyphicon-time"></i>&nbsp;年度总结</a></li>
             }
             else
             {
-                <li class="active"><a href="#profile-basic" data-toggle="tab"><i class="glyphicon glyphicon-list-alt"></i>&nbsp;详细资料</a></li>
+                <li class="active"><a href="#profile-basic" data-toggle="tab"><i class="glyphicon glyphicon-list-alt"></i>&nbsp;机构资料</a></li>
                 <li class=""><a href="#profile-contact" data-toggle="tab"><i class="glyphicon glyphicon-phone-alt"></i>&nbsp;联系方式</a></li>
                 <li class=""><a href="#profile-sharehoder" data-toggle="tab"><i class="glyphicon glyphicon-user"></i>&nbsp;股东</a></li>
+                <li class=""><a href="#profile-members" data-toggle="tab"><i class="glyphicon glyphicon-user"></i>&nbsp;从业人员</a></li>
                 <li class=""><a href="#profile-equipment" data-toggle="tab"><i class="glyphicon glyphicon-cog"></i>&nbsp;主要技术设备</a></li>
                 <li class=""><a href="#profile-software" data-toggle="tab"><i class="glyphicon glyphicon-floppy-disk"></i>&nbsp;应用软件情况</a></li>
                 <li class=""><a href="#profile-files" data-toggle="tab"><i class="glyphicon glyphicon-floppy-disk"></i>&nbsp;证件扫描件</a></li>
@@ -584,6 +587,94 @@
                 </table>
             </div>
         }
+        <div class="tab-pane fade" id="profile-members">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th style="width: 90px;">姓名</th>
+                        <th style="width: 75px;">性别</th>
+                        <th style="width: 120px;">身份证号码</th>
+                        <th style="width: 85px;">学历</th>
+                        <th style="width: 120px;">专业</th>
+                        <th style="width: 90px;">资格名称</th>
+                        <th style="width: 85px;">专业名称</th>
+                        <th style="width: 100px;">职业培训<br />合格证号</th>
+                        <th style="width: 120px;">从业时间</th>
+                        <th style="width: 120px;">从业人员<br />操守</th>
+                        @if (!isViewPage)
+                        {
+                            <th style="width: 60px;">
+                                <button id="btn-add-members" class="btn btn-xs btn-primary">添加</button>
+                            </th>
+                        }
+                    </tr>
+                </thead>
+                <tbody id="list-members">
+                    @foreach (var item in profile.Members)
+                    {
+                        <tr>
+                            <td>
+                                <input type="text" name="Members.RealName" value="@(item.RealName)" class="form-control input-sm" />
+                            </td>
+                            <td>
+                                <select name="Members.Gender" class="form-control input-sm">
+                                    <option @(item.Gender == "男" ? "selected=selected" : null)>男</option>
+                                    <option @(item.Gender == "女" ? "selected=selected" : null)>女</option>
+                                </select>
+                            </td>
+                            <td>
+                                <input type="text" name="Members.IDNo" value="@(item.IDNo)" class="form-control input-sm" />
+                            </td>
+                            <td>
+                                <select name="Members.EduRecord" class="form-control input-sm">
+                                    @foreach (var name in Enum.GetNames(item.EduRecord.GetType()))
+                                    {
+                                        var val = (EduRecord)Enum.Parse(typeof(EduRecord), name);
+                                        <option value="@((int)val)" @(val == item.EduRecord ? "selected" : null)>@(name)</option>
+                                    }
+                                </select>
+                            </td>
+                            <td>
+                                <select name="Members.Major" class="form-control input-sm">
+                                    @foreach (var name in Enum.GetNames(item.Major.GetType()))
+                                    {
+                                        var val = (Major)Enum.Parse(typeof(Major), name);
+                                        <option value="@((int)val)" @(val == item.Major ? "selected" : null)>@(name)</option>
+                                    }
+                                </select>
+                            </td>
+                            <td>
+                                <select name="Members.ProfessionalLevel" class="form-control input-sm">
+                                    @foreach (var name in Enum.GetNames(item.ProfessionalLevel.GetType()))
+                                    {
+                                        var val = (ProfessionalLevel)Enum.Parse(typeof(ProfessionalLevel), name);
+                                        <option value="@((int)val)" @(val == item.ProfessionalLevel ? "selected" : null)>@(name)</option>
+                                    }
+                                </select>
+                            </td>
+                            <td>
+                                <input type="text" name="Members.Title" value="@(item.Title)" class="form-control input-sm" />
+                            </td>
+                            <td>
+                                <input type="text" name="Members.CertificationNO" value="@(item.CertificationNO)" class="form-control input-sm" />
+                            </td>
+                            <td>
+                                <input type="text" name="Members.StartWorkingDate" value="@(item.StartWorkingDate)" class="form-control input-sm datepicker" />
+                            </td>
+                            <td>
+                                <input type="text" name="Members.Conduct" value="@(item.Conduct)" class="form-control input-sm" />
+                            </td>
+                            @if (!isViewPage)
+                            {
+                                <td>
+                                    <a class="btn btn-xs btn-danger btn-delete">删除</a>
+                                </td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
     </div>
 
     @if (!isViewPage)
@@ -655,6 +746,7 @@
             }
 
 
+            setList("list-members", "btn-add-members");
             setList("list-result", "btn-add-result");
             setList("list-sh", "btn-add-sh");
             setList("list-software", "btn-add-software");

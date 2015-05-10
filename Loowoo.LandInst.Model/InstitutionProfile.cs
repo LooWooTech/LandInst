@@ -14,6 +14,7 @@ namespace Loowoo.LandInst.Model
         {
             CreateTime = DateTime.Now;
             ShareHolders = new List<Shareholder>();
+            Members = new List<MemberProfile>();
             Equipments = new List<Equipment>();
             Softwares = new List<Software>();
             Files = new List<UploadFile>();
@@ -184,5 +185,7 @@ namespace Loowoo.LandInst.Model
         public List<Software> Softwares { get; set; }
 
         public List<UploadFile> Files { get; set; }
+
+        public List<MemberProfile> Members { get; set; }
     }
 }

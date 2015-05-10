@@ -12,6 +12,7 @@ namespace Loowoo.LandInst.Model
     
     public enum Major
     {
+        无,
         土地利用规划 = 1,
         土地管理,
         城市与区域规划,
