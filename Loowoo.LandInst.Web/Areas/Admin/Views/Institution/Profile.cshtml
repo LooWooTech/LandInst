@@ -243,18 +243,21 @@
         </table>
     </div>
     <div class="tab-pane fade" id="profile-files">
-        @foreach (var file in profile.Files)
-        {
-            <div class="col-lg-2">
-                <a href="@(file.SavePath)" target="_blank" title="@(file.FileName)">
-                    <img src="@(file.SavePath)" class="img-preview" /></a>
-            </div>
+       @foreach (var file in profile.Files)
+       {
+        <div class="row" style="display:inline-block;float:left;width:49%;">
             <div class="col-lg-4">
-                <b>证件名称：</b>@file.FileName
-                <br />
-                <b>证件描述：</b>@(file.Description)
+                <a href="@(file.SavePath)" target="_blank" title="@(file.FileName)">
+                    <img src="@(file.SavePath)" class="img-preview" />
+                </a>
             </div>
-        }
+            <div class="col-lg-6">
+                <b>[证件名称]</b>@file.FileName
+                <br />
+                <b>[证件描述]</b>@(file.Description)
+            </div>
+        </div>
+       }
     </div>
 </div>
 @Html.Partial("_approvalForm", approval)

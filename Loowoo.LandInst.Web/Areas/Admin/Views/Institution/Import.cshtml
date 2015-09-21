@@ -40,6 +40,7 @@
         <label class="control-label col-lg-2"></label>
         <div class="col-sm-3">
             <button type="submit" class="btn btn-primary"><i class="glyphicon glyphicon-upload"></i>上传导入</button>
+            <a href="~/templates/勘测机构导入模板.xls">点击下载模板</a>
         </div>
     </div>
 </form>
@@ -52,7 +53,7 @@
                 var json = eval("(" + content + ")");
                 if (json.result) {
                     alert("导入完成");
-                    window.location.href = "ExamResult";
+                    window.location.href = "/admin/institution";
                 } else {
                     alert("导入失败");
                 }
