@@ -4,7 +4,7 @@
     Layout = "~/Areas/Institution/Views/Shared/_Layout.cshtml";
     List<Education> educations = ViewBag.Educations;
 }
-<form id="education-form" role="form" class="form-horizontal">
+<form id="education-form" method="post" action="ImportResult" class="form-horizontal">
     <div class="form-group">
         <label class="control-label col-lg-2">会员姓名</label>
         <div class="col-sm-3">
@@ -24,10 +24,11 @@
                     <th>简介</th>
                 </tr>
                 @foreach (var edu in educations)
-                { 
+                {
                     <tr>
                         <td>
-                            <input type="radio" name="eduId"   value="@(edu.ID)" /></td>
+                            <input type="radio" name="eduId" value="@(edu.ID)" />
+                        </td>
                         <td>@(edu.Name)</td>
                         <td>@(edu.StartDate.ToShortDateString()) ~　@(edu.EndDate.ToShortDateString())</td>
                         <td>@(edu.Hours)</td>
@@ -49,9 +50,9 @@
     $(function () {
         $("#education-form").submit(function () {
             var data = $(this).serialize();
-            $.request("/institution/education/submit?eduId=" + eduId, data, function () {
+            $.request("submit", data, function () {
                 alert("申请成功");
-                window.location.href = "/institution/education/";
+                window.location.href = "../education/";
             });
             return false;
         });

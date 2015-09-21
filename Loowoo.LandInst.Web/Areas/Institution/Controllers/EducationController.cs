@@ -30,14 +30,14 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
         }
 
         [HttpPost]
-        public ActionResult Submit(int eduId, int memberId = 0)
+        public ActionResult Submit(string realNames, int eduId = 0)
         {
             if (eduId == 0)
             {
-                throw new ArgumentException("EduId");
+                throw new ArgumentException("没有选择具体的继续教育");
             }
-            var realNames = Request.Form["RealNames"];
-            if (string.IsNullOrEmpty(realNames) && memberId == 0)
+
+            if (string.IsNullOrEmpty(realNames))
             {
                 throw new ArgumentException("用户参数错误");
             }
@@ -48,10 +48,6 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
             {
                 var names = realNames.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
                 memberIds = Core.MemberManager.GetMemberIds(names, Identity.UserID);
-            }
-            else if (memberId != 0)
-            {
-                memberIds.Add(memberId);
             }
 
             if (memberIds.Count == 0)
