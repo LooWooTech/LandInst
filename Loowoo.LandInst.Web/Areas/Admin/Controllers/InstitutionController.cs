@@ -193,8 +193,7 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
                 throw new ArgumentException("没有选择上传文件");
             }
 
-            var filePath = Core.FileManager.Upload(HttpContext, file);
-            var rows = NOPIHelper.ReadExcelData(Request.MapPath(filePath), 1);
+            var rows = NOPIHelper.ReadExcelData(file.InputStream, 1);
 
             //Func<List<object>,int,
 

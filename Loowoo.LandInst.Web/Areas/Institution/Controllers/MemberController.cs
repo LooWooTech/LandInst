@@ -112,8 +112,6 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
                 return JsonSuccess(null);
             }
 
-
-
             var filter = new MemberFilter
             {
                 Keyword = keyword,
@@ -151,6 +149,7 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
 
             ViewBag.CheckLog = Core.CheckLogManager.GetLastLog(memberId, CheckType.Transfer);
             ViewBag.MemberProfile = Core.MemberManager.GetProfile(memberId);
+            ViewBag.CurrentInstId = Identity.UserID;
             return View();
         }
 
@@ -168,7 +167,7 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
 
 
         [HttpPost]
-        public ActionResult Transfer(int memberId, TransferMode mode, int instId = 0)
+        public ActionResult Transfer(int memberId, TransferMode mode, int tagrgetId = 0)
         {
             var member = Core.MemberManager.GetMember(memberId);
             if (member == null)
@@ -182,11 +181,11 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
                 {
                     throw new ArgumentException("你没有权限转移此用户");
                 }
-                Core.MemberManager.SubmitTransfer(member, instId);
+                Core.MemberManager.SubmitTransfer(member, tagrgetId);
             }
             else
             {
-                Core.MemberManager.SubmitTransfer(member, instId);
+                Core.MemberManager.SubmitTransfer(member, GetCurrentInst().ID);
             }
 
 

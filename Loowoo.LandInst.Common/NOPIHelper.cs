@@ -1,5 +1,6 @@
 ﻿using NPOI.HSSF.UserModel;
 using NPOI.SS.UserModel;
+using NPOI.XSSF.UserModel;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -27,11 +28,29 @@ namespace Loowoo.LandInst.Common
     public class NOPIHelper
     {
         public static Stream WriteCell(string filePath, List<ExcelCell> values, int sheetIndex = 0)
-        { 
-            var dict = new Dictionary<int,List<ExcelCell>>();
-            dict.Add(0, values);
-            return WriteCell(filePath, dict);
+        {
+            XSSFWorkbook workbook;
+            ISheet sheet = null;
+            using (var fileStream = new FileStream(filePath, FileMode.Open))
+            {
+                workbook = new XSSFWorkbook(fileStream);
+                sheet = workbook.GetSheetAt(sheetIndex);
+            }
+            foreach (var cellValue in values)
+            {
+                var rowIndex = cellValue.Row;
+                var cellIndex = cellValue.Cell;
+                var value = cellValue.Value;
+
+                var row = sheet.GetRow(rowIndex);
+                var cell = row.GetCell(cellIndex);
+                cell.SetCellValue(value);
+            }
+            var result = new MemoryStream();
+            workbook.Write(result);
+            return result;
         }
+
 
         public static Stream WriteCell(string filePath, Dictionary<int, List<ExcelCell>> sheetValues)
         {
@@ -62,61 +81,55 @@ namespace Loowoo.LandInst.Common
         }
 
 
-        public static List<string> ReadSimpleColumns(string filePath, int columnRowIndex = 0, int sheetIndex = 0)
+        public static List<string> ReadSimpleColumns(Stream stream, int columnRowIndex = 0, int sheetIndex = 0)
         {
-            using (var fileStream = new FileStream(filePath, FileMode.Open))
+            var workbook = new XSSFWorkbook(stream);
+            var sheet = workbook.GetSheetAt(sheetIndex);
+            var result = new List<string>();
+
+            var row = sheet.GetRow(columnRowIndex);
+            foreach (var cell in row.Cells)
             {
-                var workbook = new HSSFWorkbook(fileStream);
-                var sheet = workbook.GetSheetAt(sheetIndex);
-                var result = new List<string>();
-
-                var row = sheet.GetRow(columnRowIndex);
-                foreach (var cell in row.Cells)
-                {
-                    result.Add(cell.StringCellValue);
-                }
-
-                return result;
+                result.Add(cell.StringCellValue);
             }
+
+            return result;
         }
 
-        public static List<List<object>> ReadExcelData(string filePath, int dataRowIndex, int sheetIndex = 0)
+        public static List<List<object>> ReadExcelData(Stream stream, int dataRowIndex, int sheetIndex = 0)
         {
-            using (var fileStream = new FileStream(filePath, FileMode.Open))
-            {
-                var workbook = new HSSFWorkbook(fileStream);
-                var sheet = workbook.GetSheetAt(sheetIndex);
-                var data = new List<List<object>>();
+            var workbook = new XSSFWorkbook(stream);
+            var sheet = workbook.GetSheetAt(sheetIndex);
+            var data = new List<List<object>>();
 
-                for (var i = dataRowIndex; i < sheet.LastRowNum; i++)
+            for (var i = dataRowIndex; i < sheet.LastRowNum; i++)
+            {
+                var row = sheet.GetRow(i);
+                var rowData = new List<object>();
+                var isBlankRow = true;
+                foreach (var cell in row.Cells)
                 {
-                    var row = sheet.GetRow(i);
-                    var rowData = new List<object>();
-                    var isBlankRow = true;
-                    foreach (var cell in row.Cells)
+                    switch (cell.CellType)
                     {
-                        switch (cell.CellType)
-                        {
-                            case CellType.Numeric:
-                                rowData.Add(cell.NumericCellValue);
-                                isBlankRow = false;
-                                break;
-                            case CellType.String:
-                                rowData.Add(cell.StringCellValue);
-                                isBlankRow = false;
-                                break;
-                            default:
-                                rowData.Add(null);
-                                break;
-                        }
-                    }
-                    if (!isBlankRow)
-                    {
-                        data.Add(rowData);
+                        case CellType.Numeric:
+                            rowData.Add(cell.NumericCellValue);
+                            isBlankRow = false;
+                            break;
+                        case CellType.String:
+                            rowData.Add(cell.StringCellValue);
+                            isBlankRow = false;
+                            break;
+                        default:
+                            rowData.Add(null);
+                            break;
                     }
                 }
-                return data;
+                if (!isBlankRow)
+                {
+                    data.Add(rowData);
+                }
             }
+            return data;
         }
     }
 }

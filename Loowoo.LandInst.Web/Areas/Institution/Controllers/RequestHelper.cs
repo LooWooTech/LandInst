@@ -196,7 +196,7 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
                         Birthday = shBirthdays[i],
                         Shares = shShares[i],
                         Title = shTitles[i],
-                        Professionals = shProfessionals[i] == "是"
+                        Professionals = shProfessionals[i] == "true"
                     });
                 }
             }

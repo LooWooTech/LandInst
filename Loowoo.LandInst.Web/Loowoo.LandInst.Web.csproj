@@ -315,12 +315,12 @@
     <None Include="Properties\PublishProfiles\LandInst.pubxml" />
     <Content Include="Views\User\ForgetPwd.cshtml" />
     <Content Include="Views\User\EditPassword.cshtml" />
-    <Content Include="templates\勘测机构导入模板.xls" />
-    <Content Include="templates\考试成绩导入模板.xls" />
-    <Content Include="templates\规划机构导入模板.xls" />
-    <Content Include="templates\规划机构导出模板.xls" />
-    <Content Include="templates\规划人员导入模板.xls" />
-    <Content Include="templates\规划人员导出模板.xls" />
+    <Content Include="templates\勘测机构导入模板.xlsx" />
+    <Content Include="templates\考试成绩导入模板.xlsx" />
+    <Content Include="templates\规划人员导入模板.xlsx" />
+    <Content Include="templates\规划人员导出模板.xlsx" />
+    <Content Include="templates\规划机构导入模板.xlsx" />
+    <None Include="templates\规划机构导出模板.xlsx" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

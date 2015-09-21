@@ -51,9 +51,8 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
             }
             var file = Request.Files[0];
 
-            var filePath = Core.FileManager.Upload(HttpContext, file);
             var errors = new List<string>();
-            var rows = NOPIHelper.ReadExcelData(Request.MapPath(filePath), 1);
+            var rows = NOPIHelper.ReadExcelData(file.InputStream, 1);
             for (var i = 0; i < rows.Count; i++)
             {
                 var row = rows[i];

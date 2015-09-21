@@ -659,7 +659,7 @@
                                 <input type="text" name="Members.CertificationNO" value="@(item.CertificationNO)" class="form-control input-sm" />
                             </td>
                             <td>
-                                <input type="text" name="Members.StartWorkingDate" value="@(item.StartWorkingDate)" class="form-control input-sm datepicker" />
+                                <input type="text" name="Members.StartWorkingDate" value="@(item.StartWorkingDate.HasValue?item.StartWorkingDate.Value.ToShortDateString():null)" class="form-control input-sm datepicker" />
                             </td>
                             <td>
                                 <input type="text" name="Members.Conduct" value="@(item.Conduct)" class="form-control input-sm" />

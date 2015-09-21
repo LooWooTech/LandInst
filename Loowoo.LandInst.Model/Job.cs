@@ -25,7 +25,7 @@ namespace Loowoo.LandInst.Model
             {
 
                 var startDates = requestForm["job.StartDate"].Split(',');
-                var endDates = requestForm["job.StartDate"].Split(',');
+                var endDates = requestForm["job.EndDate"].Split(',');
                 var insts = requestForm["job.Institution"].Split(',');
                 var offices = requestForm["job.Office"].Split(',');
                 var notes = requestForm["job.Note"].Split(',');

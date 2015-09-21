@@ -127,10 +127,8 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
                 throw new ArgumentException("没有选择Excel文件");
             }
 
-            var filePath = Request.MapPath(Core.FileManager.Upload(HttpContext, file));
-
-            var columns = NOPIHelper.ReadSimpleColumns(filePath);
-            var data = NOPIHelper.ReadExcelData(filePath, 1);
+            var columns = NOPIHelper.ReadSimpleColumns(file.InputStream);
+            var data = NOPIHelper.ReadExcelData(file.InputStream, 1);
 
 
             var errors = new List<string>();

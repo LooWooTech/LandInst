@@ -5,6 +5,8 @@
     MemberProfile profile = Model ?? new MemberProfile();
 }
 <legend>会员资料</legend>
+<input type="hidden" name="MemberID" value="@(profile.ID)" />
+<input type="hidden" name="" value="@(profile.InstitutionID)" />
 <table class="table table-bordered">
     <tr>
         <th style="width: 150px;">真实姓名</th>
