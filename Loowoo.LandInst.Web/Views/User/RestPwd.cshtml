@@ -1,0 +1,37 @@
+﻿@{
+    ViewBag.Title = "找回密码";
+    Layout = "_layout.cshtml";
+}
+<form id="user-form" method="post" class="form-horizontal" action="?">
+    <input type="hidden" name="key" value="@Request.QueryString["key"]" />
+    <div class="form-group">
+        <label class="col-sm-2 control-label">新密码</label>
+        <div class="col-sm-2">
+            <input type="password" name="password" class="form-control input-sm" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label">确认密码</label>
+        <div class="col-sm-2">
+            <input type="password" name="repassword" class="form-control input-sm" />
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-lg-10 col-lg-offset-2">
+            <input type="submit" id="btn-submit" value="提交" class="btn btn-primary" />
+        </div>
+    </div>
+</form>
+<script>
+    $(function () {
+        $("#user-form").submit(function () {
+            var data = $(this).serialize();
+            $.post("?", data, function (json) {
+                if (json.result) {
+                    alert("保存成功");
+                }
+            }, "json");
+            return false;
+        });
+    });
+</script>

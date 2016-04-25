@@ -2,7 +2,13 @@
     ViewBag.Title = "找回密码";
     Layout = "_layout.cshtml";
 }
-<form id="user-form" method="post" class="form-horizontal">
+<form id="user-form" method="post" class="form-horizontal" action="?">
+    <div class="form-group">
+        <label class="col-sm-2 control-label">用户名</label>
+        <div class="col-sm-2">
+            <input type="text" name="Username" class="form-control input-sm" />
+        </div>
+    </div>
     <div class="form-group">
         <label class="col-sm-2 control-label">密码提示问题</label>
         <div class="col-sm-3">
@@ -26,3 +32,16 @@
         </div>
     </div>
 </form>
+<script>
+    $(function () {
+        $("#user-form").submit(function () {
+            var data = $(this).serialize();
+            $.post("?", data, function (json) {
+                if (json.result) {
+                    location.href = "resetpwd?key=" + json.data;
+                }
+            }, "json");
+            return false;
+        });
+    });
+</script>

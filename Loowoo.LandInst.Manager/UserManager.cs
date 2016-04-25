@@ -115,6 +115,12 @@ namespace Loowoo.LandInst.Manager
             }
         }
 
+        public bool ValidateQuestion(string userName, string answer)
+        {
+            var user = GetUser(userName);
+            return user != null && user.Answer == answer;
+        }
+
         public void UpdatePassword(int userId, string newPwd)
         {
             using (var db = GetDataContext())
