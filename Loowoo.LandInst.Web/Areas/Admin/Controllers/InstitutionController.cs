@@ -144,7 +144,7 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
             }
             checkLog.Note = data.Note;
             checkLog.Result = data.Result;
-            Core.CheckLogManager.UpdateCheckLog(checkLog);
+            Core.CheckLogManager.ApprovalCheckLog(checkLog);
 
             if (checkLog.CheckType == CheckType.Profile || checkLog.CheckType == CheckType.Annual)
             {
@@ -279,6 +279,12 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
             Response.AddHeader("Content-Disposition", string.Format("attachment;filename={0}", HttpUtility.UrlEncode(inst.Name) + ".xls"));
             Response.BinaryWrite(((MemoryStream)stream).GetBuffer());
             Response.End();
+        }
+
+        public ActionResult Delete(int id)
+        {
+            Core.InstitutionManager.Delete(id);
+            return JsonSuccess();
         }
     }
 }

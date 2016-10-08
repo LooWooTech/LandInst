@@ -53,6 +53,7 @@
     <Compile Include="AnnualCheck.cs" />
     <Compile Include="Certification.cs" />
     <Compile Include="Education.cs" />
+    <Compile Include="EducationMember.cs" />
     <Compile Include="Equipment.cs" />
     <Compile Include="Exam.cs" />
     <Compile Include="ExamResult.cs" />

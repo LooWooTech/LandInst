@@ -5,6 +5,7 @@
     ViewBag.Title = model.ID > 0 ? "修改继续教育设置" : "添加继续教育";
 }
 <form id="education-form" role="form" class="form-horizontal">
+    <input type="hidden" name="ID" value="@(model.ID)" />
     <div class="form-group">
         <label class="control-label col-lg-2">名称</label>
         <div class="col-sm-3">
@@ -62,7 +63,7 @@
         $("#education-form").submit(function () {
             var data = $(this).serialize();
             $.request("/admin/education/edit", data, function (json) {
-                alert("添加成功");
+                alert("操作成功");
                 window.location.href = "/admin/education/";
             });
             return false;

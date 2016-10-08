@@ -12,6 +12,6 @@ namespace Loowoo.LandInst.Model
 
         public string EduName { get; set; }
 
-        public VCheckMember Member { get; set; }
+        public VCheckMember CheckMember { get; set; }
     }
 }

@@ -25,29 +25,58 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
 
         public ActionResult Import()
         {
+            ViewBag.Members = Core.MemberManager.GetMembers(new Model.Filters.MemberFilter
+            {
+                InfoID = Identity.UserID,
+            });
             ViewBag.Educations = Core.EducationManager.GetEducations().Where(e => e.EndDate > DateTime.Now).ToList();
             return View();
         }
 
+        public ActionResult Delete(int id)
+        {
+            Core.CheckLogManager.Delete(id);
+            return JsonSuccess();
+        }
+
         [HttpPost]
-        public ActionResult Submit(string realNames, int eduId = 0)
+        public ActionResult Submit(string[] memberNames, string[] memberGenders, string[] memberMobiles, int eduId = 0)
         {
             if (eduId == 0)
             {
                 throw new ArgumentException("没有选择具体的继续教育");
             }
 
-            if (string.IsNullOrEmpty(realNames))
+            if (memberNames == null || memberGenders == null || memberMobiles == null)
             {
-                throw new ArgumentException("用户参数错误");
+                throw new ArgumentException("请填写参与人员的姓名及其他资料");
             }
 
             var memberIds = new List<int>();
 
-            if (!string.IsNullOrEmpty(realNames))
+            for (var i = 0; i < memberNames.Length; i++)
             {
-                var names = realNames.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
-                memberIds = Core.MemberManager.GetMemberIds(names, Identity.UserID);
+                var memberName = memberNames[i];
+                if (string.IsNullOrWhiteSpace(memberName))
+                {
+                    continue;
+                }
+                var member = Core.MemberManager.GetMember(memberName, Identity.UserID);
+                if (member == null)
+                {
+                    var memberId = Core.MemberManager.AddMember(new Model.Member
+                    {
+                        RealName = memberName,
+                        Gender = memberGenders[i],
+                        MobilePhone = memberMobiles[i],
+                        InstitutionID = Identity.UserID
+                    });
+                    memberIds.Add(memberId);
+                }
+                else
+                {
+                    memberIds.Add(member.ID);
+                }
             }
 
             if (memberIds.Count == 0)
@@ -57,12 +86,7 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
 
             foreach (var id in memberIds)
             {
-                Core.EducationManager.SignupEducation(eduId, id);
-                //var checkLog = Core.CheckLogManager.GetLastLog(id, Model.CheckType.Education);
-                //if (checkLog == null || checkLog.Result == false)
-                //{
-                //    Core.CheckLogManager.AddCheckLog(eduId, id, Model.CheckType.Education);
-                //}
+                Core.EducationManager.SignupEducation(eduId, id, Identity.UserID);
             }
             return JsonSuccess();
         }

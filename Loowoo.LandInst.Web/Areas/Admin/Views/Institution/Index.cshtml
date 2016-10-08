@@ -30,6 +30,7 @@
         <th style="width: 120px;">注册时间</th>
         <th style="width: 90px;">当前状态</th>
         <th style="width: 100px;">法人代表</th>
+        @*<th style="width:100px;">操作</th>*@
     </tr>
     @foreach (var item in list)
     { 
@@ -38,6 +39,9 @@
             <td>@(item.CreateTime.ToShortDateString())</td>
             <td>@(item.Status.GetDescription())</td>
             <td>@(item.LegalPerson)</td>
+            @*<td>
+                <a href="@(Url.Action("delete","institution",null))?id=@(item.ID)" class="btn btn-xs btn-danger  btn-delete"><i class="glyphicon glyphicon-remove"></i> 删除</a>
+            </td>*@
         </tr>
     }
     <tr>
@@ -46,3 +50,19 @@
         </td>
     </tr>
 </table>
+
+<script>
+    $(function () {
+        $(".btn-delete").click(function () {
+            var self = this;
+            if (confirm("你确定要删除该机构和其相关的所有记录吗？")) {
+                var url = $(self).attr("href");
+                $.request(url, null, function () {
+                    alert("删除成功");
+                    $(self).parent().parent().remove();
+                });
+            }
+            return false;
+        });
+    });
+</script>

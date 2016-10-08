@@ -3,14 +3,22 @@
     ViewBag.Title = "继续教育审核";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
     List<VCheckEducation> list = ViewBag.List;
+    List<Education> educations = ViewBag.Educations;
     var hasCheck = Request.QueryString["hasCheck"];
 }
-<form class="form-inline search-form">
-    <div class="col-lg-8">
+<form class="form-inline search-form" id="form-search">
+    <div class="col-lg-12">
         <div class="input-group">
             <span class="input-group-addon">查询会员</span>
             <input type="text" class="form-control" name="name" placeholder="会员姓名" value="@(Request.QueryString["name"])">
             <div class="input-group-btn">
+                <select name="eduId" class="form-control">
+                    <option value="0">---请选择继续教育--</option>
+                    @foreach (var edu in educations)
+                    {
+                        <option value="@(edu.ID)" @(Request.QueryString["eduId"] == edu.ID.ToString() ? "selected" : null)>@(edu.Name)</option>
+                    }
+                </select>
                 <select name="hasCheck" class="form-control">
                     <option value="false" @(hasCheck == "false" ? "selected=selected" : "")>未审核</option>
                     <option value="" @(string.IsNullOrEmpty(hasCheck) ? "selected=selected" : "")>全部</option>
@@ -21,44 +29,53 @@
                 <button type="submit" class="btn btn-primary"><i class="glyphicon glyphicon-search"></i>查询</button>
             </div>
         </div>
-    </div>
+        &nbsp;&nbsp;&nbsp;<button id="btn-export" type="button" class="btn btn-success"><i class="glyphicon glyphicon-export"></i> 导出结果</button>
+   </div>
 </form>
 <table class="table table-bordered">
     <tr>
-        <th style="width: 120px;">会员姓名</th>
+        <th style="width: 120px;">姓名</th>
+        <th style="width: 80px;">性别</th>
+        <th style="width: 120px;">联系电话</th>
         <th>继续教育名称</th>
         <th style="width: 120px;">申请时间</th>
-        <th style="width: 120px;">审核状态</th>
-        <th style="width: 120px;">审核时间</th>
+        @*<th style="width: 120px;">审核状态</th>
+            <th style="width: 120px;">审核时间</th>*@
+        <th style="width:120px;">操作</th>
     </tr>
     @foreach (var item in list)
-    { 
+    {
         <tr>
             @*            <td>
-                <input type="checkbox" name="id" value="@(item.ID)" />
-            </td>*@
-            <td><a href="/admin/member/profile?id=@(item.Member.UserID)&checkLogId=@(item.Member.ID)">@(item.Member.RealName)</a></td>
+                    <input type="checkbox" name="id" value="@(item.ID)" />
+                </td>*@
+            <td><a href="/admin/member/profile?id=@(item.CheckMember.UserID)&checkLogId=@(item.CheckMember.ID)">@(item.CheckMember.RealName)</a></td>
+            <td>@(item.CheckMember.Gender)</td>
+            <td>@(item.CheckMember.MobilePhone)</td>
             <td>@(item.EduName)</td>
-            <td>@(item.Member.CreateTime.ToShortDateString())</td>
-            <td>
-                @if (item.Member.Result.HasValue)
-                {
-                    if (item.Member.Result.Value)
-                    { 
-                    <span class="label label-success">已通过</span>
+            <td>@(item.CheckMember.CreateTime.ToShortDateString())</td>
+            @*<td>
+                    @if (item.CheckMember.Result.HasValue)
+                    {
+                        if (item.CheckMember.Result.Value)
+                        {
+                        <span class="label label-success">已通过</span>
+                        }
+                        else
+                        {
+                        <span class="label label-warning">未通过</span>
+                        }
                     }
                     else
                     {
-                    <span class="label label-warning">未通过</span>
+                        <span class="label label-default">尚未审核</span>
                     }
-                }
-                else
-                {
-                    <span class="label label-default">尚未审核</span>
-                }
 
+                </td>
+                <td>@(item.CheckMember.UpdateTime.HasValue ? item.CheckMember.UpdateTime.Value.ToShortDateString() : null)</td>*@
+            <td>
+                <a href="@(Url.Action("DeleteCheckLog","education",null))?id=@(item.CheckMember.ID)" class="btn btn-xs btn-danger  btn-delete"><i class="glyphicon glyphicon-remove"></i> 删除</a>
             </td>
-            <td>@(item.Member.UpdateTime.HasValue ? item.Member.UpdateTime.Value.ToShortDateString() : null)</td>
         </tr>
     }
     <tr>
@@ -68,36 +85,57 @@
     </tr>
 </table>
 
-@*<script>
+<script>
     $(function () {
-        $("#btn-select").click(function () {
-            $("input[type='checkbox']").prop('checked', this.checked);
+        $(".btn-delete").click(function () {
+            var self = this;
+            if (confirm("你确定要删除该会员的继续教育申请记录吗？")) {
+                var url = $(self).attr("href");
+                $.request(url, null, function () {
+                    alert("删除成功");
+                    $(self).parent().parent().remove();
+                });
+            }
+            return false;
         });
-
-        $("#btn-agree").click(function () {
-            submitApproval(true);
+        $("#btn-export").click(function () {
+            var query = $("#form-search").serialize();
+            var url = "@(Url.Action("export","education"))?" + query;
+            window.open(url);
         });
-
-        $("#btn-disagree").click(function () {
-            submitApproval(false);
-        });
-
-        function submitApproval(result) {
-            var data = getData();
-            $.post("/admin/education/approval?result=" + result, data, function () {
-
-            });
-        }
-
-        function getData() {
-            var ids = [];
-            $("input[name='id']:checked").each(function () {
-                var val = $(this).val();
-                ids.push(val);
-
-            });
-            return { id: ids };
-        }
     });
+</script>
 
-</script>*@
+@*<script>
+        $(function () {
+            $("#btn-select").click(function () {
+                $("input[type='checkbox']").prop('checked', this.checked);
+            });
+
+            $("#btn-agree").click(function () {
+                submitApproval(true);
+            });
+
+            $("#btn-disagree").click(function () {
+                submitApproval(false);
+            });
+
+            function submitApproval(result) {
+                var data = getData();
+                $.post("/admin/education/approval?result=" + result, data, function () {
+
+                });
+            }
+
+            function getData() {
+                var ids = [];
+                $("input[name='id']:checked").each(function () {
+                    var val = $(this).val();
+                    ids.push(val);
+
+                });
+                return { id: ids };
+            }
+        });
+
+    </script>*@

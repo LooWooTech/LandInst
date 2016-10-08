@@ -352,6 +352,23 @@ namespace Loowoo.LandInst.Manager
             return list;
         }
 
+        public void Delete(int id)
+        {
+            using (var db = GetDataContext())
+            {
+                var user = db.Users.FirstOrDefault(e => e.ID == id);
+                db.Users.Remove(user);
+
+                var inst = db.Institutions.FirstOrDefault(e => e.ID == user.ID);
+                db.Institutions.Remove(inst);
+
+                var profiles = db.Profiles.Where(e => e.UserID == inst.ID);
+                db.Profiles.RemoveRange(profiles);
+
+                db.SaveChanges();
+            }
+        }
+
         private List<ExcelCell> GetMemberStatisticSheetValues(int instId)
         {
             var list = new List<ExcelCell>();

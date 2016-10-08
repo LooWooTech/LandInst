@@ -32,7 +32,6 @@
         <tr>
             @*            <th>
                 <input id="btn-select" type="checkbox" /></th>*@
-            <th>ID</th>
             <th>机构名称</th>
             <th>法人代表</th>
             <th>所在地</th>
@@ -45,7 +44,6 @@
             <tr>
                 @*                <td>
                     <input type="checkbox" name="id" value="@(item.ID)" /></td>*@
-                <td>@(item.UserID)</td>
                 <td><a href="/admin/institution/profile?id=@(item.UserID)&approvalId=@(item.ID)">@(item.InstName)</a></td>
                 <td>@(item.LegalPerson)</td>
                 <td>@(item.City)</td>

@@ -3,12 +3,47 @@
     ViewBag.Title = "继续教育申请";
     Layout = "~/Areas/Institution/Views/Shared/_Layout.cshtml";
     List<Education> educations = ViewBag.Educations;
+    List<Member> members = ViewBag.Members;
+
 }
 <form id="education-form" method="post" action="ImportResult" class="form-horizontal">
     <div class="form-group">
-        <label class="control-label col-lg-2">会员姓名</label>
-        <div class="col-sm-3">
-            <textarea class="form-control input-sm" rows="15" name="realNames"></textarea>
+        <label class="control-label col-lg-2">参与会员</label>
+        <div class="col-sm-10">
+            <span class="help-block">如果是添加过的会员，则只需要填写姓名。</span>
+       <table id="member-list" class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th style="width: 150px;">姓名</th>
+                        <th style="width: 100px;">性别</th>
+                        <th style="width: 200px;">电话</th>
+                        <th style="width: 100px;">
+                            <button id="btn-add-member" type="button" class="btn btn-xs btn-primary">添加</button>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+            <script id="member-item-template" type="text/template">
+                <tr>
+                    <td>
+                        <input type="text" name="MemberNames"  class="form-control input-sm"/>
+                    </td>
+                    <td>
+                        <select name="MemberGenders" class="form-control input-sm">
+                            <option>男</option>
+                            <option>女</option>
+                        </select>
+                    </td>
+                    <td>
+                        <input type="text" name="MemberMobiles"  class="form-control input-sm"/>
+                    </td>
+                    <td>
+                        <a class="btn btn-xs btn-danger btn-delete">删除</a>
+                    </td>
+                </tr>
+            </script>
         </div>
     </div>
     <div class="form-group">
@@ -48,6 +83,15 @@
 </form>
 <script>
     $(function () {
+        var memberTemplate = $("#member-item-template").html();
+        $("#btn-add-member").click(function () {
+            $("#member-list tbody").append(memberTemplate);
+            $(".btn-delete").unbind("click").bind("click", function () {
+                var tr = $(this).parent().parent();
+                tr.remove();
+            });
+        }).trigger("click");
+
         $("#education-form").submit(function () {
             var data = $(this).serialize();
             $.request("submit", data, function () {

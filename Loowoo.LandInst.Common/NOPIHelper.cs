@@ -70,8 +70,10 @@ namespace Loowoo.LandInst.Common
                     var cellIndex = cellValue.Cell;
                     var value = cellValue.Value;
 
-                    var row = sheet.GetRow(rowIndex);
-                    var cell = row.GetCell(cellIndex);
+                    var row = sheet.GetRow(rowIndex) ?? sheet.CreateRow(rowIndex);
+
+                    var cell = row.GetCell(cellIndex)?? row.CreateCell(cellIndex);
+
                     cell.SetCellValue(value);
                 }
             }

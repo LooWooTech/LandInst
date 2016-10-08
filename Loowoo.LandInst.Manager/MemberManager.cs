@@ -262,6 +262,14 @@ namespace Loowoo.LandInst.Manager
             return query;
         }
 
+        public Member GetMember(string memberName,int instId)
+        {
+            using (var db = GetDataContext())
+            {
+                return db.Members.FirstOrDefault(e => e.InstitutionID == instId && e.RealName == memberName);
+            }
+        }
+
         public List<int> GetMemberIds(string[] realNames, int instId)
         {
             using (var db = GetDataContext())
@@ -408,6 +416,15 @@ namespace Loowoo.LandInst.Manager
                 if (entity != null)
                 {
                     db.Members.Remove(entity);
+
+                    //删除考试成绩
+                    var results = db.ExamResults.Where(e => e.MemberID == entity.ID);
+                    db.ExamResults.RemoveRange(results);
+
+                    //删除申请记录
+                    var checkLogs = db.CheckLogs.Where(e => e.InfoID == entity.ID);
+                    db.CheckLogs.RemoveRange(checkLogs);
+
                     db.SaveChanges();
                 }
             }

@@ -19,7 +19,7 @@ namespace Loowoo.LandInst.Manager
             else
             {
                 checkLog.Data = targetInstId.ToString();
-                Core.CheckLogManager.UpdateCheckLog(checkLog);
+                Core.CheckLogManager.ApprovalCheckLog(checkLog);
             }
         }
 

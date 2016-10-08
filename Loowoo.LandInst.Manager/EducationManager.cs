@@ -67,13 +67,29 @@ namespace Loowoo.LandInst.Manager
         //    }
         //}
 
-        public void SignupEducation(int eduId, int memberId)
+        public void SignupEducation(int eduId, int memberId, int instId)
         {
-            var checkLog = Core.CheckLogManager.GetLastLog(memberId, CheckType.Education);
-            if (checkLog == null || checkLog.Result.HasValue)
+            //TODO 这里默认是通过审核的
+            Core.CheckLogManager.AddCheckLog(eduId, memberId, CheckType.Education, instId.ToString(), true);
+        }
+
+        public Dictionary<int, List<ExcelCell>> GetExportData(List<VCheckEducation> list)
+        {
+            var cells = new List<ExcelCell>();
+            var row = 1;
+            foreach (var item in list)
             {
-                Core.CheckLogManager.AddCheckLog(eduId, memberId, CheckType.Education);
+                cells.Add(new ExcelCell(row, 0, item.CheckMember.RealName));
+                cells.Add(new ExcelCell(row, 1, item.CheckMember.Gender));
+                cells.Add(new ExcelCell(row, 2, item.CheckMember.MobilePhone));
+                cells.Add(new ExcelCell(row, 3, item.EduName));
+                cells.Add(new ExcelCell(row, 4, item.CheckMember.CreateTime.ToShortDateString()));
+
+                row++;
             }
+            var result = new Dictionary<int, List<ExcelCell>>();
+            result.Add(0, cells);
+            return result;
         }
 
         private string GetEduName(int eduId)
@@ -110,7 +126,7 @@ namespace Loowoo.LandInst.Manager
                 {
                     EduID = e.InfoID,
                     EduName = GetEduName(e.InfoID),
-                    Member = e
+                    CheckMember = e
                 }).ToList();
             }
         }

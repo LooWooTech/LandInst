@@ -158,7 +158,7 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
             var checkLog = Core.CheckLogManager.GetCheckLog(id);
             checkLog.Note = data.Note;
             checkLog.Result = data.Result;
-            Core.CheckLogManager.UpdateCheckLog(checkLog);
+            Core.CheckLogManager.ApprovalCheckLog(checkLog);
             
             switch (checkLog.CheckType)
             {

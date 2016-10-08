@@ -20,36 +20,45 @@
     <thead>
         <tr>
             <th>姓名</th>
+            <th>性别</th>
+            <th>电话</th>
             <th>继续教育名称</th>
             <th style="width: 120px;">申请日期</th>
-            <th style="width: 120px;">审核日期</th>
-            <th style="width: 100px;">审核状态</th>
+            @*<th style="width: 120px;">审核日期</th>
+    <th style="width: 100px;">审核状态</th>*@
+            <th style="width:100px;">删除</th>
         </tr>
     </thead>
     <tbody>
         @foreach (var item in list)
-        { 
+        {
             <tr>
-                <td><a href="/institution/member/profile?id=@(item.Member.UserID)">@(item.Member.RealName)</a></td>
+                <td><a href="/institution/member/profile?id=@(item.CheckMember.UserID)">@(item.CheckMember.RealName)</a></td>
+                <td>@(item.CheckMember.Gender)</td>
+                <td>@(item.CheckMember.MobilePhone)</td>
                 <td>@(item.EduName)</td>
-                <td>@(item.Member.CreateTime.ToShortDateString())</td>
-                <td>@(item.Member.UpdateTime.HasValue ? item.Member.UpdateTime.Value.ToShortDateString() : null)</td>
+                <td>@(item.CheckMember.CreateTime.ToShortDateString())</td>
+                @*
+    <td>@(item.CheckMember.UpdateTime.HasValue ? item.CheckMember.UpdateTime.Value.ToShortDateString() : null)</td>
+    <td>
+        @if (item.CheckMember.Result.HasValue)
+        {
+            if (item.CheckMember.Result.Value)
+            {
+                <span class="label label-success">审核通过</span>
+            }
+            else
+            {
+                <span class="label label-warning">未通过</span>
+            }
+        }
+        else
+        {
+            <span class="label label-default">未审核</span>
+        }
+    </td>*@
                 <td>
-                    @if (item.Member.Result.HasValue)
-                    {
-                        if (item.Member.Result.Value)
-                        { 
-                        <span class="label label-success">审核通过</span>
-                        }
-                        else
-                        {
-                        <span class="label label-warning">未通过</span>
-                        }
-                    }
-                    else
-                    {
-                        <span class="label label-default">未审核</span>
-                    }
+                    <a href="@(Url.Action("delete","education",null))?id=@(item.CheckMember.ID)" class="btn btn-xs btn-danger  btn-delete"><i class="glyphicon glyphicon-remove"></i> 删除</a>
                 </td>
             </tr>
         }
@@ -60,3 +69,19 @@
         </tr>
     </tfoot>
 </table>
+
+<script>
+    $(function () {
+        $(".btn-delete").click(function () {
+            var self = this;
+            if (confirm("你确定要删除该会员的继续教育申请记录吗？")) {
+                var url = $(self).attr("href");
+                $.request(url, null, function () {
+                    alert("删除成功");
+                    $(self).parent().parent().remove();
+                });
+            }
+            return false;
+        });
+    });
+</script>
