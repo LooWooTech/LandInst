@@ -9,7 +9,7 @@ namespace Loowoo.LandInst.Web
 {
     public static class AuthUtils
     {
-        private const string _cookieName = ".inst_user";
+        private const string _cookieName = ".kc_user";
 
         public static void SaveAuth(this HttpContextBase context, User user)
         {
