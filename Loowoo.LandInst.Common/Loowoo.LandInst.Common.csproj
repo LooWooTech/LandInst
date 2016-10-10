@@ -63,7 +63,7 @@
     <Compile Include="EnumExtensions.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="JsonExtensions.cs" />
-    <Compile Include="ExcelHelper.cs" />
+    <Compile Include="NOPIHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StringHelper.cs" />
   </ItemGroup>

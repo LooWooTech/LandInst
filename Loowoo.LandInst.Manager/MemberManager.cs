@@ -1,4 +1,5 @@
 ﻿using Loowoo.LandInst.Model;
+using Loowoo.LandInst.Model.Filters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -41,6 +42,57 @@ namespace Loowoo.LandInst.Manager
                 }
                 db.SaveChanges();
             }
+        }
+
+        public List<VCheckMember> GetVCheckMembers(MemberFilter filter)
+        {
+            using (var db = GetDataContext())
+            {
+                var query = db.VCheckMembers.AsQueryable().GetCheckBaseQuery(filter);
+
+                if (filter.InstID.HasValue && filter.InstID.Value > 0)
+                {
+                    query = query.Where(e => e.InstID == filter.InstID.Value);
+                }
+
+                if (!string.IsNullOrEmpty(filter.Keyword))
+                {
+                    query = query.Where(e => e.RealName.Contains(filter.Keyword));
+                }
+
+                return query.OrderByDescending(e => e.ID).SetPage(filter.Page).ToList();
+            }
+        }
+
+        public Member GetMember(string memberName, int instId)
+        {
+            using (var db = GetDataContext())
+            {
+                return db.Members.FirstOrDefault(e => e.RealName == memberName && e.InstID == instId);
+            }
+        }
+
+        public int AddMember(Member member)
+        {
+            using (var db = GetDataContext())
+            {
+                db.Members.Add(member);
+                db.SaveChanges();
+                return member.ID;
+            }
+        }
+
+        internal IQueryable<VCheckMember> GetVCheckMembers(IQueryable<VCheckMember> query, CheckLogFilter filter)
+        {
+            query = query.GetCheckBaseQuery(filter);
+
+            if (!string.IsNullOrEmpty(filter.Keyword))
+            {
+                query = query.Where(e => e.RealName.Contains(filter.Keyword.Trim()));
+            }
+
+
+            return query;
         }
     }
 }

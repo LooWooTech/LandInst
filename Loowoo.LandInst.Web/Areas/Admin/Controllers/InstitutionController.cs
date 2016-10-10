@@ -142,7 +142,7 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
             }
             checkLog.Note = data.Note;
             checkLog.Result = data.Result;
-            Core.CheckLogManager.UpdateCheckLog(checkLog);
+            Core.CheckLogManager.ApprovalCheckLog(checkLog);
 
             if (checkLog.CheckType == CheckType.Profile || checkLog.CheckType == CheckType.Annual)
             {
@@ -191,8 +191,7 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
                 throw new ArgumentException("没有选择上传文件");
             }
 
-            var filePath = Core.FileManager.Upload(HttpContext, file);
-            var rows = ExcelHelper.ReadExcelData(Request.MapPath(filePath), 1);
+            var rows = NOPIHelper.ReadExcelData(file.InputStream, 1);
 
             //Func<List<object>,int,
 
@@ -275,11 +274,9 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
             }
             var filePath = Request.MapPath("/templates/勘测机构导出模板.xls");
             var profile = Core.InstitutionManager.GetExportProfile(id, checkLogId);
-
-            var excel = ExcelHelper.GetExcel(filePath);
-            Core.InstitutionManager.UpdateExcel(excel, profile);
             var exportDatas = Core.InstitutionManager.GetExportData(profile);
-            var stream = excel.ToStream(exportDatas);
+
+            var stream = NOPIHelper.WriteCell(filePath, exportDatas);
 
             Response.ContentType = "application/vnd.ms-excel;charset=UTF-8";
             Response.AddHeader("Content-Disposition", string.Format("attachment;filename={0}", HttpUtility.UrlEncode(inst.Name) + ".xls"));

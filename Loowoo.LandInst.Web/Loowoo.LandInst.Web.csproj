@@ -115,9 +115,11 @@
     <Compile Include="Areas\Admin\AdminAreaRegistration.cs" />
     <Compile Include="Areas\Admin\AdminControllerBase.cs" />
     <Compile Include="Areas\Admin\Controllers\AnnualController.cs" />
+    <Compile Include="Areas\Admin\Controllers\EducationController.cs" />
     <Compile Include="Areas\Admin\Controllers\HomeController.cs" />
     <Compile Include="Areas\Admin\Controllers\InstitutionController.cs" />
     <Compile Include="Areas\Institution\Controllers\AnnualController.cs" />
+    <Compile Include="Areas\Institution\Controllers\EducationController.cs" />
     <Compile Include="Areas\Institution\Controllers\FileController.cs" />
     <Compile Include="Areas\Institution\Controllers\HomeController.cs" />
     <Compile Include="Areas\Institution\Controllers\ProfileController.cs" />
@@ -251,6 +253,11 @@
     <Content Include="Areas\Admin\Views\Institution\Import.cshtml" />
     <Content Include="Areas\Institution\Views\Profile\AnnualCheck.cshtml" />
     <Content Include="Areas\Institution\Views\Profile\Index.cshtml" />
+    <Content Include="Areas\Institution\Views\Education\Index.cshtml" />
+    <Content Include="Areas\Institution\Views\Education\Import.cshtml" />
+    <Content Include="Areas\Admin\Views\Education\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\Education\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\Education\Approvals.cshtml" />
     <None Include="Properties\PublishProfiles\LandInst.pubxml" />
     <Content Include="Views\User\ForgetPwd.cshtml" />
     <Content Include="Views\User\EditPassword.cshtml" />

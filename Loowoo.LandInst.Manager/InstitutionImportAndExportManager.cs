@@ -42,26 +42,6 @@ namespace Loowoo.LandInst.Manager
             }
         }
 
-        public void UpdateExcel(HSSFWorkbook excel, InstitutionProfile profile)
-        {
-            var sheet = excel.GetSheetAt(0);
-            var rowIndex = 15;
-            if (profile.ShareHolders.Count > 3)
-            {
-                sheet.InsertRow(rowIndex, profile.ShareHolders.Count - 3);
-                rowIndex += profile.ShareHolders.Count + 2;
-            }
-            else
-            {
-                rowIndex = 20;
-            }
-
-            if (profile.Equipments.Count > 3)
-            {
-                sheet.InsertRow(rowIndex, profile.Equipments.Count - 3);
-            }
-        }
-
         public List<ExcelCell> GetExportData(InstitutionProfile profile)
         {
 

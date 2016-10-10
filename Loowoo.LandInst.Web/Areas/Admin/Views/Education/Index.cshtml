@@ -1,0 +1,54 @@
+﻿@using Loowoo.LandInst.Model
+@{
+    ViewBag.Title = "继续教育管理";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    List<Education> list = ViewBag.List;
+}
+<form class="form-inline search-form">
+    <div class="col-lg-8">
+        <a href="/admin/education/edit" class="btn btn-primary"><i class="glyphicon glyphicon-plus"></i> 添加继续教育</a>
+    </div>
+</form>
+
+<table class="table table-bordered">
+    <tr>
+        <th>名称</th>
+        <th style="width: 100px;">起始时间</th>
+        <th style="width: 100px;">结束时间</th>
+        <th style="width: 100px;">学时</th>
+        <th style="width: 150px;">教育机构</th>
+        <th style="width: 100px;">管理</th>
+    </tr>
+    @foreach (var edu in list)
+    {
+        <tr>
+            <td>@(edu.Name)</td>
+            <td>@(edu.StartDate.ToShortDateString())</td>
+            <td>@(edu.EndDate.ToShortDateString())</td>
+            <td>@(edu.Hours)小时</td>
+            <td>@(edu.Agency)</td>
+            <td>
+                <a class="btn btn-xs btn-primary" href="/admin/education/edit?id=@(edu.ID)">编辑</a>
+                <a class="btn btn-xs btn-danger btn-delete" href="/admin/education/delete?id=@(edu.ID)">删除</a>
+            </td>
+        </tr>
+    }
+    <tr>
+        <td colspan="6">
+            @(Html.Partial("_pagination", ViewBag.Page as object))
+        </td>
+    </tr>
+</table>
+<script>
+    $(function () {
+        $("a.btn-delete").click(function () {
+            if (!confirm("确定要删除吗？")) return false;
+
+            var url = $(this).attr("href");
+            $.post(url, function (json) {
+                window.location.href = "/admin/education/";
+            }, "json");
+            return false;
+        });
+    });
+</script>

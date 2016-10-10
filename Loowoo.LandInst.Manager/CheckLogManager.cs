@@ -43,6 +43,19 @@ namespace Loowoo.LandInst.Manager
             }
         }
 
+        public void Delete(int id)
+        {
+            using (var db = GetDataContext())
+            {
+                var entity = db.CheckLogs.FirstOrDefault(e => e.ID == id);
+                if (entity != null)
+                {
+                    db.CheckLogs.Remove(entity);
+                    db.SaveChanges();
+                }
+            }
+        }
+
         public List<CheckLog> GetList(int userId, CheckType? type = null)
         {
             using (var db = GetDataContext())
@@ -56,7 +69,7 @@ namespace Loowoo.LandInst.Manager
             }
         }
 
-        public void UpdateCheckLog(CheckLog model)
+        public void ApprovalCheckLog(CheckLog model)
         {
             using (var db = GetDataContext())
             {
@@ -69,7 +82,7 @@ namespace Loowoo.LandInst.Manager
             }
         }
 
-        public int AddCheckLog(int infoId, int userId, CheckType type, string extendData = null)
+        public int AddCheckLog(int infoId, int userId, CheckType type, string extendData = null, bool? result = null)
         {
             using (var db = GetDataContext())
             {
@@ -77,6 +90,7 @@ namespace Loowoo.LandInst.Manager
                 if (entity != null && !entity.Result.HasValue)
                 {
                     entity.Data = extendData;
+                    entity.Result = result;
                     db.SaveChanges();
                     return entity.ID;
                 }
@@ -87,10 +101,13 @@ namespace Loowoo.LandInst.Manager
                         InfoID = infoId,
                         UserID = userId,
                         CheckType = type,
-                        CreateTime = DateTime.Now,
-                        Data = extendData
+                        Data = extendData,
+                        Result = result
                     };
-
+                    if (result.HasValue)
+                    {
+                        entity.UpdateTime = DateTime.Now;
+                    }
                     db.CheckLogs.Add(entity);
                 }
                 db.SaveChanges();

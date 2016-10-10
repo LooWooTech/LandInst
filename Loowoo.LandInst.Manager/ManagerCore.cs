@@ -59,11 +59,11 @@ namespace Loowoo.LandInst.Manager
         //    get { return _examManager == null ? _examManager = new ExamManager() : _examManager; }
         //}
 
-        //private EducationManager _educationManager;
-        //public EducationManager EducationManager
-        //{
-        //    get { return _educationManager == null ? _educationManager = new EducationManager() : _educationManager; }
-        //}
+        private EducationManager _educationManager;
+        public EducationManager EducationManager
+        {
+            get { return _educationManager == null ? _educationManager = new EducationManager() : _educationManager; }
+        }
 
 
         //private TransferManager _transferManager;

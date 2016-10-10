@@ -1,34 +1,52 @@
 ﻿@using Loowoo.LandInst.Model;
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
+    var routeValues = new { area = "Institution" };
 }
 @section nav{
     @{
         Institution inst = ViewBag.CurrentInst;
     }
-   <ul class="nav navbar-nav">
-       @if(inst.Status == InstitutionStatus.Registered)
-       {
-        <li><a href="/institution/"><i class="glyphicon glyphicon-home"></i>&nbsp;首页</a></li>
-        <li><a href="/institution/profile/edit"><i class="glyphicon glyphicon-list-alt"></i>&nbsp;资料变更</a></li>
-        <li><a href="/institution/profile/annualcheck"><i class="glyphicon glyphicon-check"></i>&nbsp;申请年检</a></li>
-        <li><a href="/institution/profile/history"><i class="glyphicon glyphicon-time"></i>&nbsp;历史信息</a></li>
-         <li><a href="/user/editpassword"><i class="glyphicon glyphicon-edit"></i>&nbsp;修改密码</a></li>
-        <li><a href="/institution/profile/logout"><i class="glyphicon glyphicon-remove"></i>&nbsp;注销机构</a></li>
-      }
+    <ul class="nav navbar-nav">
+        @if (inst.Status == InstitutionStatus.Registered)
+        {
+            <li><a href="@(Url.Action("Index", "Home",routeValues))"><i class="glyphicon glyphicon-home"></i>&nbsp;首页</a></li>
+            <li><a href="@(Url.Action("Edit", "Profile",routeValues))"><i class="glyphicon glyphicon-list-alt"></i>&nbsp;资料变更</a></li>
+            <li><a href="@(Url.Action("annualcheck", "profile",routeValues))"><i class="glyphicon glyphicon-check"></i>&nbsp;申请年检</a></li>
+            <li><a href="@(Url.Action("history", "profile",routeValues))"><i class="glyphicon glyphicon-time"></i>&nbsp;历史信息</a></li>
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                    <i class="glyphicon glyphicon glyphicon-book"></i>&nbsp;继续教育 <b class="caret"></b>
+                </a>
+                <ul class="dropdown-menu">
+                    <li><a href="@(Url.Action("Index", "Education",routeValues))">继续教育申请记录</a></li>
+                    <li><a href="@(Url.Action("Import", "Education",routeValues))">继续教育申请</a></li>
+                </ul>
+            </li>
+        }
     </ul>
     <ul class="nav navbar-nav navbar-right">
-        <li><a href="/user/signout">(@{
-            var name = System.Threading.Thread.CurrentPrincipal.Identity.Name;
-            if(name.Length>6)
-            {
-                <span>@(name.Substring(0,6))...</span>
-            }
-            else
-            {
-                <span>@(name)</span>
-            }
-            })退出</a></li>
+        <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                @{
+                    var name = System.Threading.Thread.CurrentPrincipal.Identity.Name;
+                    if (name.Length > 6)
+                    {
+                        <span>@(name.Substring(0, 6))...</span>
+                    }
+                    else
+                    {
+                        <span>@(name)</span>
+                    }
+                }<b class="caret"></b>
+            </a>
+            <ul class="dropdown-menu">
+                <li><a href="/user/signout">退出</a></li>
+                <li class="divider"></li>
+                <li><a href="/user/editpassword"><i class="glyphicon glyphicon-edit"></i>&nbsp;修改密码</a></li>
+                <li><a href="@(Url.Action("logout", "profile",routeValues))"><i class="glyphicon glyphicon-remove"></i>&nbsp;注销机构</a></li>
+            </ul>
+        </li>
     </ul>
 
 }

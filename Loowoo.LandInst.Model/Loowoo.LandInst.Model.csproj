@@ -52,9 +52,11 @@
   <ItemGroup>
     <Compile Include="AnnualCheck.cs" />
     <Compile Include="Certification.cs" />
+    <Compile Include="Education.cs" />
     <Compile Include="Equipment.cs" />
     <Compile Include="Filters\CheckLogFilter.cs" />
     <Compile Include="Filters\InstitutionFilter.cs" />
+    <Compile Include="Filters\MemberFilter.cs" />
     <Compile Include="Filters\PageFilter.cs" />
     <Compile Include="Institution.cs" />
     <Compile Include="InstitutionProfile.cs" />
@@ -68,10 +70,12 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="VCheckBase.cs" />
+    <Compile Include="VCheckEducation.cs" />
     <Compile Include="VCheckInst.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Shareholder.cs" />
     <Compile Include="User.cs" />
+    <Compile Include="VCheckMember.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

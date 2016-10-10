@@ -133,10 +133,9 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
             var filePath = Request.MapPath("/templates/勘测机构导出模板.xls");
             var profile = Core.InstitutionManager.GetExportProfile(inst.ID, checkLogId);
 
-            var excel = ExcelHelper.GetExcel(filePath);
-            Core.InstitutionManager.UpdateExcel(excel, profile);
             var exportDatas = Core.InstitutionManager.GetExportData(profile);
-            var stream = excel.ToStream(exportDatas);
+
+            var stream = NOPIHelper.WriteCell(filePath, exportDatas);
 
             Response.ContentType = "application/vnd.ms-excel;charset=UTF-8";
             Response.AddHeader("Content-Disposition", string.Format("attachment;filename={0}", HttpUtility.UrlEncode(inst.Name) + ".xls"));
