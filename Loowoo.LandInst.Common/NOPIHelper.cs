@@ -1,4 +1,4 @@
-﻿using NPOI.HSSF.UserModel;
+using NPOI.HSSF.UserModel;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
 using System;
@@ -27,15 +27,19 @@ namespace Loowoo.LandInst.Common
 
     public class NOPIHelper
     {
-        public static Stream WriteCell(string filePath, List<ExcelCell> values, int sheetIndex = 0)
+        private static IWorkbook GetWorkbook(string filePath)
         {
-            XSSFWorkbook workbook;
-            ISheet sheet = null;
             using (var fileStream = new FileStream(filePath, FileMode.Open))
             {
-                workbook = new XSSFWorkbook(fileStream);
-                sheet = workbook.GetSheetAt(sheetIndex);
+               return WorkbookFactory.Create(fileStream);
             }
+        }
+
+        public static Stream WriteCell(string filePath, List<ExcelCell> values, int sheetIndex = 0)
+        {
+            var workbook = GetWorkbook(filePath);
+            var sheet = workbook.GetSheetAt(sheetIndex);
+
             foreach (var cellValue in values)
             {
                 var rowIndex = cellValue.Row;
@@ -54,15 +58,10 @@ namespace Loowoo.LandInst.Common
 
         public static Stream WriteCell(string filePath, Dictionary<int, List<ExcelCell>> sheetValues)
         {
-            HSSFWorkbook workbook = null;
-            using (var fileStream = new FileStream(filePath, FileMode.Open))
-            {
-                workbook = new HSSFWorkbook(fileStream);
-            }
-            ISheet sheet = null;
+            var workbook = GetWorkbook(filePath);
             foreach (var kv in sheetValues)
             {
-                sheet = workbook.GetSheetAt(kv.Key);
+                var sheet = workbook.GetSheetAt(kv.Key);
 
                 foreach (var cellValue in kv.Value)
                 {
@@ -72,7 +71,7 @@ namespace Loowoo.LandInst.Common
 
                     var row = sheet.GetRow(rowIndex) ?? sheet.CreateRow(rowIndex);
 
-                    var cell = row.GetCell(cellIndex)?? row.CreateCell(cellIndex);
+                    var cell = row.GetCell(cellIndex) ?? row.CreateCell(cellIndex);
 
                     cell.SetCellValue(value);
                 }
@@ -85,7 +84,7 @@ namespace Loowoo.LandInst.Common
 
         public static List<string> ReadSimpleColumns(Stream stream, int columnRowIndex = 0, int sheetIndex = 0)
         {
-            var workbook = new XSSFWorkbook(stream);
+            var workbook = WorkbookFactory.Create(stream);
             var sheet = workbook.GetSheetAt(sheetIndex);
             var result = new List<string>();
 
@@ -100,7 +99,7 @@ namespace Loowoo.LandInst.Common
 
         public static List<List<object>> ReadExcelData(Stream stream, int dataRowIndex, int sheetIndex = 0)
         {
-            var workbook = new XSSFWorkbook(stream);
+            var workbook = WorkbookFactory.Create(stream);
             var sheet = workbook.GetSheetAt(sheetIndex);
             var data = new List<List<object>>();
 
