@@ -9,7 +9,7 @@
         page.PageSize = 10;
     }
 
-    var pageCount = page.RecordCount / page.PageSize;
+    var pageCount = (page.RecordCount-1) / page.PageSize + 1;
     
     if(pageCount<2)
     {
@@ -24,10 +24,11 @@
     { 
         <li><a href="?page=@(page.PageIndex - 1)">上一页</a></li>
     }
-    @if (page.PageIndex < pageCount - 1)
+    <li><a href="javacript:void()">@(page.PageIndex)/@(pageCount)</a></li>
+    @if (page.PageIndex < pageCount )
     { 
         <li><a href="?page=@(page.PageIndex + 1)">下一页</a></li>
     }
     <li><a href="?page=@(pageCount)">尾页</a></li>
-    @(page.PageIndex)/@(pageCount)
+    
 </ul>

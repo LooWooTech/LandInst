@@ -103,7 +103,7 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
         //    return JsonSuccess();
         //}
 
-        public ActionResult Profile(int id, int checkLogId = 0)
+        public new ActionResult Profile(int id, int checkLogId = 0)
         {
             var inst = Core.InstitutionManager.GetInstitution(id);
             if (inst == null)
