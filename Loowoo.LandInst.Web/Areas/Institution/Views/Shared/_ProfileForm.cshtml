@@ -93,58 +93,58 @@
                     <div class="form-group ">
                         <label class="control-label col-lg-2">办公电话</label>
                         <div class="col-lg-3">
-                            <input type="text" name="LegalPerson" class="form-control input-sm" value="@(profile.Tel)" />
+                            <input type="text" name="Tel" class="form-control input-sm" value="@(profile.Tel)" />
                         </div>
                         <label class="control-label col-lg-2">手机号码</label>
                         <div class="col-lg-3">
-                            <input type="text" name="LegalPerson" class="form-control input-sm" value="@(profile.MobilePhone)" />
+                            <input type="text" name="MobilePhone" class="form-control input-sm" value="@(profile.MobilePhone)" />
                         </div>
                     </div>
                     <div class="form-group ">
                         <label class="control-label col-lg-2">机构类型</label>
                         <div class="col-lg-3">
-                            <input type="text" name="LegalPerson" class="form-control input-sm" value="@(profile.CompanyType)" />
+                            <input type="text" name="CompanyType" class="form-control input-sm" value="@(profile.CompanyType)" />
                         </div>
                         <label class="control-label col-lg-2">传真</label>
                         <div class="col-lg-3">
-                            <input type="text" name="LegalPerson" class="form-control input-sm" value="@(profile.Fax)" />
+                            <input type="text" name="Fax" class="form-control input-sm" value="@(profile.Fax)" />
                         </div>
                     </div>
                     <div class="form-group ">
                         <label class="control-label col-lg-2">工商注册号</label>
                         <div class="col-lg-3">
-                            <input type="text" name="LegalPerson" class="form-control input-sm" value="@(profile.RegistrationNo)" />
+                            <input type="text" name="RegistrationNo" class="form-control input-sm" value="@(profile.RegistrationNo)" />
                         </div>
                         <label class="control-label col-lg-2">成立时间</label>
                         <div class="col-lg-3">
-                            <input type="text" name="LegalPerson" class="form-control input-sm" value="@(profile.EstablishedDate.HasValue ? profile.EstablishedDate.Value.ToString("yyyy年mm月dd日") : null)" />
+                            <input type="text" name="EstablishedDate" class="form-control input-sm" value="@(profile.EstablishedDate.HasValue ? profile.EstablishedDate.Value.ToString("yyyy年mm月dd日") : null)" />
                         </div>
                     </div>
                     <div class="form-group ">
                         <label class="control-label col-lg-2">资质证书编号</label>
                         <div class="col-lg-3">
-                            <input type="text" name="LegalPerson" class="form-control input-sm" value="@(profile.CertificationNo)" />
+                            <input type="text" name="CertificationNo" class="form-control input-sm" value="@(profile.CertificationNo)" />
                         </div>
                         <label class="control-label col-lg-2">资质证书起始时间</label>
                         <div class="col-lg-3">
-                            <input type="text" name="LegalPerson" class="form-control input-sm" value="@(profile.CertificationStartDate.HasValue ? profile.CertificationStartDate.Value.ToString("yyyy年mm月dd日") : null)" />
+                            <input type="text" name="CertificationStartDate" class="form-control input-sm datepicker" value="@(profile.CertificationStartDate == null?"":profile.CertificationStartDate.Value.ToString("yyyy-MM-dd"))" />
                         </div>
                     </div>
                     <div class="form-group ">
                         <label class="control-label col-lg-2">注册职业范围</label>
                         <div class="col-lg-9">
-                            <input type="text" name="LegalPerson" class="form-control input-sm" value="@(profile.BusinessScope)" />
+                            <input type="text" name="BusinessScope" class="form-control input-sm" value="@(profile.BusinessScope)" />
                         </div>
                     </div>
                 </div>
                 <div class="form-group ">
                     <label class="control-label col-lg-2">从业人员数</label>
                     <div class="col-lg-2">
-                        <input type="text" name="LegalPerson" class="form-control input-sm" value="@(profile.TotalMembers)" />
+                        <input type="number" name="TotalMembers" class="form-control input-sm" value="@(profile.TotalMembers)" />
                     </div>
                     <label class="control-label col-lg-3">其中：取得职业培训合格证人数</label>
                     <div class="col-lg-2">
-                        <input type="text" name="LegalPerson" class="form-control input-sm" value="@(profile.ProMembers)" />
+                        <input type="number" name="ProMembers" class="form-control input-sm" value="@(profile.ProMembers)" />
                     </div>
                 </div>
                 <div class="form-group ">
@@ -280,7 +280,7 @@
                 <div class="form-group ">
                     <label class="control-label col-lg-2">资质证书起始时间</label>
                     <div class="col-lg-3">
-                        <input type="text" name="CertificationStartDate" class="form-control input-sm" value="@(profile.CertificationStartDate)" />
+                        <input type="text" name="CertificationStartDate" class="form-control input-sm datepicker" value="@(profile.CertificationStartDate == null?"":profile.CertificationStartDate.Value.ToString("yyyy-MM-dd"))" />
                     </div>
                     <label class="control-label col-lg-3">资质证书编号</label>
                     <div class="col-lg-3">
@@ -296,11 +296,11 @@
                 <div class="form-group ">
                     <label class="control-label col-lg-2">机构当年在职职工总数</label>
                     <div class="col-lg-1">
-                        <input type="text" name="TotalMembers" class="form-control input-sm" value="@(profile.TotalMembers)" />
+                        <input type="number" name="TotalMembers" class="form-control input-sm" value="@(profile.TotalMembers)" />
                     </div>
                     <label class="control-label col-lg-5">从事土地规划工作人员总数</label>
                     <div class="col-lg-1">
-                        <input type="text" name="ProMembers" class="form-control input-sm" value="@(profile.ProMembers)" />
+                        <input type="number" name="ProMembers" class="form-control input-sm" value="@(profile.ProMembers)" />
                     </div>
                 </div>
                 <div class="form-group ">
@@ -659,7 +659,7 @@
                                 <input type="text" name="Members.CertificationNO" value="@(item.CertificationNO)" class="form-control input-sm" />
                             </td>
                             <td>
-                                <input type="text" name="Members.StartWorkingDate" value="@(item.StartWorkingDate.HasValue?item.StartWorkingDate.Value.ToShortDateString():null)" class="form-control input-sm datepicker" />
+                                <input type="text" name="Members.StartWorkingDate" value="@(item.StartWorkingDate.HasValue?item.StartWorkingDate.Value.ToString("yyyy-MM-dd"):null)" class="form-control input-sm datepicker" />
                             </td>
                             <td>
                                 <input type="text" name="Members.Conduct" value="@(item.Conduct)" class="form-control input-sm" />
@@ -736,7 +736,6 @@
 
                     var type = controlSubmitType.val();
                     var data = $(this).serialize();
-                    console.log(data);
                     $.request("/institution/profile/submit?id=@(profile.ID)&type=" + type, data, function () {
                         alert((type ? "提交" : "保存") + "成功");
                         window.location.href = "@(Request.Url.AbsoluteUri)";
@@ -782,17 +781,16 @@
                 $("tr", list).last().remove();
                 $("#" + btnAddId).bind("click", function () {
                     list.append(template);
-                    setBtnDelete();
+                    setEvents();
                     if (customFunc) {
                         customFunc();
                     }
                     return false;
                 });
 
-                setBtnDelete();
-
-                function setBtnDelete() {
-                    $(".btn-delete").unbind("click").bind("click", function () {
+                function setEvents() {
+                    $(".datepicker",list).datepicker();
+                   $(".btn-delete",list).on("click", function () {
                         var tr = $(this).parents("tr");
                         tr.remove();
                     });

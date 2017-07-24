@@ -58,16 +58,15 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
                 for (var i = 0; i < realnames.Length; i++)
                 {
                     var eduRecord = EduRecord.本科;
-                    Enum.TryParse<EduRecord>(eduRecords[i], out eduRecord);
+                    Enum.TryParse(eduRecords[i], out eduRecord);
 
                     var major = Major.无;
-                    Enum.TryParse<Major>(eduRecords[i], out major);
+                    Enum.TryParse(majors[i], out major);
 
                     var professionalLevel = ProfessionalLevel.初级;
-                    Enum.TryParse<ProfessionalLevel>(professionalLevels[i], out professionalLevel);
+                    Enum.TryParse(professionalLevels[i], out professionalLevel);
 
-                    DateTime startWorkingDate;
-                    DateTime.TryParse(startWorkingDates[i], out startWorkingDate);
+                    DateTime.TryParse(startWorkingDates[i], out DateTime startWorkingDate);
 
                     list.Add(new MemberProfile
                     {
@@ -128,8 +127,7 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
                 var softwareNotes = requestForm["software.Note"].Split(',');
                 for (var i = 0; i < softwareNames.Length; i++)
                 {
-                    var number = 0;
-                    int.TryParse(softwareNames[i], out number);
+                    int.TryParse(softwareNumbers[i], out int number);
                     list.Add(new Software
                     {
                         Name = softwareNames[i],
@@ -157,8 +155,7 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
                 var equipmentNotes = requestForm["equipment.Note"].Split(',');
                 for (var i = 0; i < equipmentNames.Length; i++)
                 {
-                    var number = 0;
-                    int.TryParse(equipmentNames[i], out number);
+                    int.TryParse(equipmentNumbers[i], out int number);
                     list.Add(new Equipment
                     {
                         Name = equipmentNames[i],

@@ -54,7 +54,7 @@ namespace Loowoo.LandInst.Manager
         {
             using (var db = GetDataContext())
             {
-                return db.Users.Count(e => e.Username.ToLower() == username.ToLower()) > 0;
+                return db.Users.Any(e => e.Username == username.ToLower());
             }
         }
 
@@ -62,7 +62,7 @@ namespace Loowoo.LandInst.Manager
         {
             using (var db = GetDataContext())
             {
-                return db.Users.FirstOrDefault(e => e.Username.ToLower() == username.ToLower());
+                return db.Users.FirstOrDefault(e => e.Username == username.ToLower());
             }
         }
 

@@ -292,7 +292,7 @@
                                 <input type="text" name="Cert.No"  value="@(item.CertificationNo)" class="form-control input-sm"/>
                             </td>
                             <td>
-                                <input type="text" name="Cert.ObtainDate"  value="@(item.ObtainDate)" class="form-control input-sm datepicker"/>
+                                <input type="text" name="Cert.ObtainDate"  value="@(item.ObtainDate.HasValue?item.ObtainDate.Value.ToString("yyyy-MM-dd"):"")" class="form-control input-sm datepicker"/>
                             </td>
                             @if (!isViewPage)
                             {
