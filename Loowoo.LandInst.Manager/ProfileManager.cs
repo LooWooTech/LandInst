@@ -16,7 +16,7 @@ namespace Loowoo.LandInst.Manager
                 var entity = db.Profiles.FirstOrDefault(e => e.ID == profileId);
                 if (entity == null)
                     return default(T);
-                return entity.Data.Convert<T>();
+                return entity.Convert<T>();
             }
         }
 
@@ -36,7 +36,7 @@ namespace Loowoo.LandInst.Manager
         public T GetLastProfile<T>(int userId, bool? checkResult = null)
         {
             var entity = GetLastProfile(userId, checkResult);
-            return entity == null ? default(T) : entity.Data.Convert<T>();
+            return entity == null ? default(T) : entity.Convert<T>();
         }
 
         internal int AddProfile<T>(int userId, T profile)
@@ -46,7 +46,7 @@ namespace Loowoo.LandInst.Manager
                 var entity = new Profile
                 {
                     UserID = userId,
-                    Data = profile.ToBytes(),
+                    Json = profile.ToJson(),
                     CreateTime = DateTime.Now,
                 };
                 db.Profiles.Add(entity);
@@ -62,7 +62,7 @@ namespace Loowoo.LandInst.Manager
                 var entity = db.Profiles.FirstOrDefault(e => e.ID == profileId);
                 if (entity != null)
                 {
-                    entity.Data = profile.ToBytes();
+                    entity.Json = profile.ToJson();
                     entity.UpdateTime = DateTime.Now;
                     db.SaveChanges();
                 }
@@ -108,29 +108,5 @@ namespace Loowoo.LandInst.Manager
         //        return entity == null ? 0 : entity.ProfileID;
         //    }
         //}
-    }
-
-    public static class ProfileExtension
-    {
-        //public static T Convert<T>(this Profile model)
-        //{
-        //    if (model != null && model.Data != null)
-        //    {
-        //        return Encoding.UTF8.GetString(model.Data).ToObject<T>();
-        //    }
-        //    return default(T);
-        //}
-
-        public static T Convert<T>(this byte[] data)
-        {
-            if (data == null) return default(T);
-            return Encoding.UTF8.GetString(data).ToObject<T>();
-        }
-
-        public static byte[] ToBytes<T>(this T data)
-        {
-            if (data == null) return null;
-            return Encoding.UTF8.GetBytes(data.ToJson());
-        }
     }
 }
