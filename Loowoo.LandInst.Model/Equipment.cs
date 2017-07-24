@@ -39,8 +39,7 @@ namespace Loowoo.LandInst.Model
                 var equipmentNotes = requestForm["equipment.Note"].Split(',');
                 for (var i = 0; i < equipmentNames.Length; i++)
                 {
-                    var number = 0;
-                    int.TryParse(equipmentNames[i], out number);
+                    int.TryParse(equipmentNumbers[i], out int number);
                     list.Add(new Equipment
                     {
                         Name = equipmentNames[i],

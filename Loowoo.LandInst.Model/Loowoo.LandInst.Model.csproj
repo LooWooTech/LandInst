@@ -80,6 +80,12 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Loowoo.LandInst.Common\Loowoo.LandInst.Common.csproj">
+      <Project>{2B92B3B7-122E-47C6-AE45-97FA663A2D80}</Project>
+      <Name>Loowoo.LandInst.Common</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

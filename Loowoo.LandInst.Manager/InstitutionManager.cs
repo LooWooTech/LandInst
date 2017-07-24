@@ -112,7 +112,7 @@ namespace Loowoo.LandInst.Manager
             var profile = Core.ProfileManager.GetLastProfile(checkLog.UserID, null);
             if (checkLog.Result == true)
             {
-                UpdateInst(checkLog.UserID, profile.Data.Convert<InstitutionProfile>());
+                UpdateInst(checkLog.UserID, profile.Convert<InstitutionProfile>());
             }
             Core.ProfileManager.UpdateProfileCheckResult(profile.ID, checkLog.Result);
         }
