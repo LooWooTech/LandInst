@@ -681,6 +681,7 @@
     {
         <div style="clear: both; margin: 20px;" id="btn-group">
             <input id="profile-submit-type" type="hidden" name="type" />
+            <input id="profile-isSubmit" type="hidden" name="isSubmit" />
             <button id="btn-submit-draft" type="button" class="btn btn-primary"><i class="glyphicon glyphicon-floppy-saved"></i>&nbsp;保存资料</button>
             @if (isAnnualPage)
             {
@@ -703,9 +704,11 @@
             var form = $("#profile-form");
 
             var controlSubmitType = $("#profile-submit-type");
+            var controlIsSubmit = $("#profile-isSubmit");
 
             $("#btn-submit-draft").click(function () {
-                controlSubmitType.val("");
+                controlSubmitType.val("@(isAnnualPage?"annual":"profile")");
+                controlIsSubmit.val("false");
                 submitFormBySave();
                 form.submit();
                 return false;
@@ -713,6 +716,7 @@
 
             $("#btn-submit-annual").click(function () {
                 controlSubmitType.val("annual");
+                controlIsSubmit.val("true");
                 submitFormBySave();
                 form.submit();
                 return false;
@@ -720,6 +724,7 @@
 
             $("#btn-submit-profile").click(function () {
                 controlSubmitType.val("profile");
+                controlIsSubmit.val("true");
                 submitFormBySave();
                 form.submit();
                 return false;

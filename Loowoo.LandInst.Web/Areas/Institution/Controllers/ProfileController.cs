@@ -63,30 +63,36 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
         public ActionResult Submit(InstitutionProfile data, CheckType? type, bool isSubmit = false)
         {
             var inst = GetCurrentInst();
+            var profile = Core.InstitutionManager.GetProfile(inst.ID);
             if (type == CheckType.Annual)
             {
-                var profile = Core.InstitutionManager.GetProfile(inst.ID);
                 profile.AnnualCheckProfile = Request.Form.GetAnnualProfile();
                 profile.Members = Request.Form.GetMembers();
-                Core.InstitutionManager.SubmitAnnaulCheck(inst, profile);
             }
             else
             {
-                data.ID = inst.ID;
                 data.ShareHolders = Request.Form.GetShareholders();
                 data.Equipments = Request.Form.GetEquipments();
                 data.Softwares = Request.Form.GetSoftwares();
                 data.Files = Request.Form.GetUploadFiles();
                 data.Members = Request.Form.GetMembers();
-
-                if (type == CheckType.Profile)
+                data.AnnualCheckProfile = profile.AnnualCheckProfile;
+                profile = data;
+            }
+            if (isSubmit)
+            {
+                if (type == CheckType.Annual)
                 {
-                    Core.InstitutionManager.SubmitProfile(inst, data);
+                    Core.InstitutionManager.SubmitAnnaulCheck(inst, profile);
                 }
                 else
                 {
-                    Core.InstitutionManager.SaveProfile(inst, data);
+                    Core.InstitutionManager.SubmitProfile(inst, profile);
                 }
+            }
+            else
+            {
+                Core.InstitutionManager.SaveProfile(inst, profile);
             }
 
             return JsonSuccess();
