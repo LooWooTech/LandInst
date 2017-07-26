@@ -9,7 +9,7 @@ namespace Loowoo.LandInst.Model
     {
         浙江省, 杭州市, 宁波市, 温州市, 嘉兴市, 湖州市, 绍兴市, 金华市, 衢州市, 舟山市, 台州市, 丽水市
     }
-    
+
     public enum Major
     {
         无,
@@ -28,6 +28,7 @@ namespace Loowoo.LandInst.Model
 
     public enum ProfessionalLevel
     {
+        无 = 0,
         高级 = 1,
         中级,
         初级,

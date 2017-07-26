@@ -1,11 +1,11 @@
 ﻿@using Loowoo.LandInst.Common
 @using Loowoo.LandInst.Model
 @{
-    var action = (ViewBag.Controller + "." + ViewBag.Action).ToLower();
-    var isViewPage = action == "profile.index";
-    var isEditPage = action == "profile.edit";
-    var isAnnualPage = action == "profile.annualcheck";
-    var isRegisterPage = action == "home.index";
+    var pageName = (ViewBag.Controller + "." + ViewBag.Action).ToLower();
+    var isViewPage = pageName == "profile.index";
+    var isEditPage = pageName == "profile.edit";
+    var isAnnualPage = pageName == "profile.annualcheck";
+    var isRegisterPage = pageName == "home.index";
 
     CheckLog checkLog = ViewBag.CheckLog;
     InstitutionProfile profile = ViewBag.Profile ?? new InstitutionProfile();
@@ -62,7 +62,7 @@
             }
         </ul>
 
-        @if (isViewPage)
+        @if (isViewPage && checkLog!=null)
         {
             <ul style="position: absolute; right: 10px; top: 0px;">
                 <a href="export?id=@(profile.ID)&checkLogId=@(checkLog.ID)" class="btn btn-primary"><i class="glyphicon glyphicon-export"></i>导出资料</a>
@@ -87,7 +87,7 @@
                     <div class="form-group ">
                         <label class="control-label col-lg-2">机构地址</label>
                         <div class="col-lg-8">
-                            <input type="text" name="CompanyType" class="form-control input-sm" value="@(profile.CompanyType)" />
+                            <input type="text" name="Address" class="form-control input-sm" value="@(profile.Address)" />
                         </div>
                     </div>
                     <div class="form-group ">
@@ -117,7 +117,7 @@
                         </div>
                         <label class="control-label col-lg-2">成立时间</label>
                         <div class="col-lg-3">
-                            <input type="text" name="EstablishedDate" class="form-control input-sm" value="@(profile.EstablishedDate.HasValue ? profile.EstablishedDate.Value.ToString("yyyy年mm月dd日") : null)" />
+                            <input type="text" name="EstablishedDate" class="form-control input-sm" value="@(profile.EstablishedDate.HasValue ? profile.EstablishedDate.Value.ToString("yyyy年MM月dd日") : null)" />
                         </div>
                     </div>
                     <div class="form-group ">
@@ -680,8 +680,7 @@
     @if (!isViewPage)
     {
         <div style="clear: both; margin: 20px;" id="btn-group">
-            <input id="profile-submit-type" type="hidden" name="type" />
-            <input id="profile-isSubmit" type="hidden" name="isSubmit" />
+            <input type="hidden" name="type" value="@(isAnnualPage?"annual":"profile")" />
             <button id="btn-submit-draft" type="button" class="btn btn-primary"><i class="glyphicon glyphicon-floppy-saved"></i>&nbsp;保存资料</button>
             @if (isAnnualPage)
             {
@@ -700,32 +699,22 @@
         $(function () {
             $(".datepicker").datepicker();
 
-
             var form = $("#profile-form");
 
-            var controlSubmitType = $("#profile-submit-type");
-            var controlIsSubmit = $("#profile-isSubmit");
-
             $("#btn-submit-draft").click(function () {
-                controlSubmitType.val("@(isAnnualPage?"annual":"profile")");
-                controlIsSubmit.val("false");
-                submitFormBySave();
+                submitFormData(false);
                 form.submit();
                 return false;
             });
 
             $("#btn-submit-annual").click(function () {
-                controlSubmitType.val("annual");
-                controlIsSubmit.val("true");
-                submitFormBySave();
+                submitFormData(true);
                 form.submit();
                 return false;
             });
 
             $("#btn-submit-profile").click(function () {
-                controlSubmitType.val("profile");
-                controlIsSubmit.val("true");
-                submitFormBySave();
+                submitFormData(true);
                 form.submit();
                 return false;
             });
@@ -734,15 +723,14 @@
                 form.unbind("submit").bind("submit", function () { });
             }
 
-            function submitFormBySave() {
+            function submitFormData(isSubmit) {
                 form.removeAttr("target");
                 form.removeAttr("enctype");
                 form.unbind("submit").bind("submit", function () {
 
-                    var type = controlSubmitType.val();
                     var data = $(this).serialize();
-                    $.request("/institution/profile/submit?id=@(profile.ID)&type=" + type, data, function () {
-                        alert((type ? "提交" : "保存") + "成功");
+                    $.request("/institution/profile/submit?id=@(profile.ID)&isSubmit=" + isSubmit, data, function () {
+                        alert((isSubmit ? "提交" : "保存") + "成功");
                         window.location.href = "@(Request.Url.AbsoluteUri)";
                     });
                     return false;
