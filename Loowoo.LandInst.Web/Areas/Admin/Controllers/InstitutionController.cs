@@ -114,9 +114,17 @@ namespace Loowoo.LandInst.Web.Areas.Admin.Controllers
             if (checkLogId == 0)
             {
                 checkLog = Core.CheckLogManager.GetLastLog(id, CheckType.Profile);
-                if (checkLog == null || checkLog.Result.HasValue)
+                if (checkLog == null)
                 {
                     checkLog = Core.CheckLogManager.GetLastLog(id, CheckType.Annual);
+                }
+                else if (checkLog.Result == true)
+                {
+                    var annualCheck = Core.CheckLogManager.GetLastLog(id, CheckType.Annual);
+                    if (annualCheck != null && annualCheck.Result == true && annualCheck.CreateTime > checkLog.CreateTime)
+                    {
+                        checkLog = annualCheck;
+                    }
                 }
             }
             else

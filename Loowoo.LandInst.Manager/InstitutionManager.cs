@@ -271,8 +271,8 @@ namespace Loowoo.LandInst.Manager
 
             var sheetValues = new Dictionary<int, List<ExcelCell>>();
             sheetValues.Add(0, GetBasicInfoSheetValues(profile));
-            sheetValues.Add(1, GetMemberStatisticSheetValues(instId));
-            sheetValues.Add(2, GetMemberListSheetValues(instId));
+            sheetValues.Add(1, GetMemberStatisticSheetValues(profile));
+            sheetValues.Add(2, GetMemberListSheetValues(profile));
             sheetValues.Add(3, GetEquipmentAndSoftwareSheetValues(profile));
 
             return sheetValues;
@@ -369,89 +369,68 @@ namespace Loowoo.LandInst.Manager
             }
         }
 
-        private List<ExcelCell> GetMemberStatisticSheetValues(int instId)
+        private List<ExcelCell> GetMemberStatisticSheetValues(InstitutionProfile profile)
         {
             var list = new List<ExcelCell>();
+            var datas = profile.Members;
+            var rowIndex = 3;
 
-            using (var db = GetDataContext())
+            Action<Dictionary<Major, int>> writeRow = (rowData) =>
             {
-                var datas = db.Members.Where(e => e.InstitutionID == instId && e.Status != MemberStatus.Normal).Select(e => new
+                foreach (var kv in rowData)
                 {
-                    e.Major,
-                    e.ProfessionalLevel,
-                    e.EduRecord
-                }).ToList();
-
-                db.Dispose();
-
-                var rowIndex = 3;
-
-                Action<Dictionary<Major, int>> writeRow = (rowData) =>
-                {
-                    foreach (var kv in rowData)
-                    {
-                        var cellIndex = (int)kv.Key + 1;
-                        list.Add(new ExcelCell(rowIndex, cellIndex, kv.Value.ToString()));
-                    }
-                    //合计
-                    list.Add(new ExcelCell(rowIndex, rowData.Count + 2, rowData.Sum(e => e.Value).ToString()));
-                    rowIndex++;
-                };
-
-
-                var columns = Enum.GetNames(typeof(Major)).Select(name => (Major)Enum.Parse(typeof(Major), name)).ToArray();
-                //第一行总计
-                var row1 = columns.ToDictionary(name => name, name => datas.Count(e => e.Major == name));
-                writeRow(row1);
-
-                foreach (ProfessionalLevel val in Enum.GetValues(typeof(ProfessionalLevel)))
-                {
-                    var row = columns.ToDictionary(name => name, name => datas.Count(e => e.Major == name && e.ProfessionalLevel == val));
-                    writeRow(row);
+                    var cellIndex = (int)kv.Key + 1;
+                    list.Add(new ExcelCell(rowIndex, cellIndex, kv.Value == 0 ? "" : kv.Value.ToString()));
                 }
+                //合计
+                list.Add(new ExcelCell(rowIndex, rowData.Count + 1, rowData.Sum(e => e.Value).ToString()));
+                rowIndex++;
+            };
 
-                foreach (EduRecord val in Enum.GetValues(typeof(EduRecord)))
-                {
-                    var row = columns.ToDictionary(name => name, name => datas.Count(e => e.Major == name && e.EduRecord == val));
-                    writeRow(row);
-                }
+
+            var columns = Enum.GetNames(typeof(Major)).Select(name => (Major)Enum.Parse(typeof(Major), name)).ToArray();
+            //第一行总计
+            var row1 = columns.ToDictionary(name => name, name => datas.Count(e => e.Major == name));
+            writeRow(row1);
+
+            foreach (ProfessionalLevel val in Enum.GetValues(typeof(ProfessionalLevel)))
+            {
+                var row = columns.ToDictionary(name => name, name => datas.Count(e => e.Major == name && e.ProfessionalLevel == val));
+                writeRow(row);
             }
 
+            foreach (EduRecord val in Enum.GetValues(typeof(EduRecord)))
+            {
+                var row = columns.ToDictionary(name => name, name => datas.Count(e => e.Major == name && e.EduRecord == val));
+                writeRow(row);
+            }
             return list;
         }
 
-        private List<ExcelCell> GetMemberListSheetValues(int instId)
+        private List<ExcelCell> GetMemberListSheetValues(InstitutionProfile profile)
         {
             var list = new List<ExcelCell>();
-            using (var db = GetDataContext())
+            var rowIndex = 4;
+            foreach (var member in profile.Members)
             {
-                var ids = db.Members.Where(e => e.InstitutionID == instId && e.Status != MemberStatus.Normal).Select(e => e.ID).ToArray();
-                db.Dispose();
-                var rowIndex = 4;
-                foreach (var memberId in ids)
-                {
-                    var profile = Core.ProfileManager.GetLastProfile<MemberProfile>(memberId);
-                    list.Add(new ExcelCell(rowIndex, 0, profile.ID.ToString()));
-                    list.Add(new ExcelCell(rowIndex, 1, profile.RealName));
-                    list.Add(new ExcelCell(rowIndex, 2, profile.Gender));
-                    list.Add(new ExcelCell(rowIndex, 3, profile.Birthday.HasValue ? (DateTime.Now.Year - profile.Birthday.Value.Year).ToString() : null));
-                    list.Add(new ExcelCell(rowIndex, 4, profile.EduRecord.ToString()));
-                    list.Add(new ExcelCell(rowIndex, 5, profile.EduLevel));
-                    list.Add(new ExcelCell(rowIndex, 6, profile.School));
-                    list.Add(new ExcelCell(rowIndex, 7, profile.GraduationDate.HasValue ? profile.GraduationDate.Value.ToShortDateString() : null));
-                    list.Add(new ExcelCell(rowIndex, 8, profile.Major.ToString()));
-                    list.Add(new ExcelCell(rowIndex, 9, profile.ProfessionalLevel.ToString()));
-                    list.Add(new ExcelCell(rowIndex, 10, profile.StartWorkingDate.HasValue ? profile.StartWorkingDate.Value.ToShortDateString() : null));
-                    list.Add(new ExcelCell(rowIndex, 11, profile.Office));
-                    list.Add(new ExcelCell(rowIndex, 12, profile.WorkingYears == 0 ? null : profile.WorkingYears.ToString()));
-                    list.Add(new ExcelCell(rowIndex, 13, profile.Job));
-                    list.Add(new ExcelCell(rowIndex, 14, profile.IDNo));
-                    list.Add(new ExcelCell(rowIndex, 15, profile.IsFullTime ? "√" : null));
-                    list.Add(new ExcelCell(rowIndex, 16, !profile.IsFullTime ? "√" : null));
-
-
-                    rowIndex++;
-                }
+                list.Add(new ExcelCell(rowIndex, 0, member.ID.ToString()));
+                list.Add(new ExcelCell(rowIndex, 1, member.RealName));
+                list.Add(new ExcelCell(rowIndex, 2, member.Gender));
+                list.Add(new ExcelCell(rowIndex, 3, member.Birthday.HasValue ? (DateTime.Now.Year - member.Birthday.Value.Year).ToString() : null));
+                list.Add(new ExcelCell(rowIndex, 4, member.EduRecord.ToString()));
+                list.Add(new ExcelCell(rowIndex, 5, member.EduLevel));
+                list.Add(new ExcelCell(rowIndex, 6, member.School));
+                list.Add(new ExcelCell(rowIndex, 7, member.GraduationDate.HasValue ? member.GraduationDate.Value.ToShortDateString() : null));
+                list.Add(new ExcelCell(rowIndex, 8, member.Major.ToString()));
+                list.Add(new ExcelCell(rowIndex, 9, member.ProfessionalLevel.ToString()));
+                list.Add(new ExcelCell(rowIndex, 10, member.StartWorkingDate.HasValue ? member.StartWorkingDate.Value.ToShortDateString() : null));
+                list.Add(new ExcelCell(rowIndex, 11, member.Office));
+                list.Add(new ExcelCell(rowIndex, 12, member.WorkingYears == 0 ? null : member.WorkingYears.ToString()));
+                list.Add(new ExcelCell(rowIndex, 13, member.Job));
+                list.Add(new ExcelCell(rowIndex, 14, member.IDNo));
+                list.Add(new ExcelCell(rowIndex, 15, member.IsFullTime ? "√" : null));
+                list.Add(new ExcelCell(rowIndex, 16, !member.IsFullTime ? "√" : null));
+                rowIndex++;
             }
             return list;
         }
@@ -469,10 +448,10 @@ namespace Loowoo.LandInst.Manager
                 list.Add(new ExcelCell(rowIndex, 4, equipment.Note));
 
                 rowIndex++;
-                if (rowIndex > 11) break;
+                if (rowIndex > 23) break;
             }
 
-            rowIndex = 14;
+            rowIndex = 26;
             foreach (var software in profile.Softwares)
             {
                 list.Add(new ExcelCell(rowIndex, 0, software.Name));
@@ -480,7 +459,9 @@ namespace Loowoo.LandInst.Manager
                 list.Add(new ExcelCell(rowIndex, 2, software.Number.ToString()));
                 list.Add(new ExcelCell(rowIndex, 3, software.Purpose));
                 list.Add(new ExcelCell(rowIndex, 4, software.Note));
-                if (rowIndex > 22) break;
+
+                rowIndex++;
+                if (rowIndex > 36) break;
             }
 
             return list;

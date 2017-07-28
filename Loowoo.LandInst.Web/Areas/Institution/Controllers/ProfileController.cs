@@ -37,7 +37,14 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
             {
                 ViewBag.AnnualCheck = annualCheck;
                 var checkLog = Core.CheckLogManager.GetLastLog(currentInst.ID, CheckType.Annual);
-                ViewBag.Profile = Core.InstitutionManager.GetProfile(checkLog) ?? Core.InstitutionManager.GetProfile(currentInst.ID, true);
+                if (checkLog == null || checkLog.Result == false)
+                {
+                    ViewBag.Profile = Core.InstitutionManager.GetProfile(currentInst.ID);
+                }
+                else
+                {
+                    ViewBag.Profile = Core.InstitutionManager.GetProfile(checkLog);
+                }
                 ViewBag.CheckLog = checkLog;
             }
             else
@@ -66,6 +73,9 @@ namespace Loowoo.LandInst.Web.Areas.Institution.Controllers
             var profile = Core.InstitutionManager.GetProfile(inst.ID);
             if (type == CheckType.Annual)
             {
+                profile.TotalMembers = data.TotalMembers;
+                profile.ProMembers = data.ProMembers;
+
                 profile.AnnualCheckProfile = Request.Form.GetAnnualProfile();
                 profile.Members = Request.Form.GetMembers();
             }
